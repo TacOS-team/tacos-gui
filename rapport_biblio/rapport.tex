@@ -1,0 +1,121 @@
+\documentclass[a4paper,11pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{url}
+\usepackage{lmodern}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+\geometry{hmargin=2cm, vmargin=2cm}
+
+\def\blurb{%
+État de l'art associé au projet tuteuré}
+
+\def\abstract{%
+	\input{abstract}
+}
+
+\def\ligne#1{%
+  \hbox to \hsize{%
+    \vbox{\centering #1}}}%
+
+\makeatletter
+\def\maketitle{%
+	\null
+	\vfill
+	\vbox{\centering \Large \textbf{\blurb}}
+	\vspace{15mm}
+	\vbox{\centering \LARGE \textbf{\@title}}
+	\vspace{15mm}
+	\vbox{\centering \@author}
+	\vspace{8mm}
+	\vbox{\centering \@date}
+	\vspace{15mm}
+	\vbox{\centering \textbf{Résumé du projet}}
+	\vspace{5mm}
+	\vbox{%
+		\setlength{\fboxsep}{10pt}
+		\centering \fbox{%
+		\begin{minipage}{0.9\textwidth}
+			\setlength{\parindent}{1cm}
+			\setlength{\parskip}{2ex plus .4ex minus .4ex}
+			\abstract
+		\end{minipage}%
+	}
+%
+	}
+	\vfill
+	\clearpage
+}
+
+\title{Développement d'une interface graphique pour TacOS}
+\author{Nicolas Hug \texttt{<hug@etud.insa-toulouse.fr>}\\
+Julien Marchand \texttt{<jmarchan@etud.insa-toulouse.fr>}\\
+Benoît Morgan \texttt{<morgan@etud.insa-toulouse.fr>}\\
+Adrien Sulpice \texttt{<sulpice@etud.insa-toulouse.fr>}}
+\date{4ème année Informatique}
+
+\begin{document}
+  \pagestyle{fancyplain}
+  \setlength{\parskip}{.6ex plus .4ex minus .4ex}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0.6pt}
+  \fancyhf{}
+  \fancyhead{} 
+  \lfoot{\blurb}
+  \rfoot{Page \thepage}
+  \maketitle \clearpage
+  \tableofcontents \clearpage
+  
+  \setlength{\parskip}{1ex plus .4ex minus .4ex}
+
+\chapter{Généralités sur les interfaces graphiques}
+
+Dans cette partie, nous présenterons les concepts fondamentaux relatifs aux interfaces graphiques. Nous commencerons par une définition et un historique de l'évolution des interfaces graphiques des années 1960 à aujourd'hui. Nous détaillerons ensuite le paradigme WIMP, puis nous présenterons les différents composants d'une interface graphique. Enfin, nous étudierons les mécanismes permettant à l'utilisateur d'interagir avec l'interface.
+
+\input{benoit}
+
+\input{nico}
+
+\paragraph{Conclusion} 
+Alors qu'il était dans le passé relativement flou et incohérent, le modèle structurel d'une GUI est aujourd'hui bien défini grâce au paradigme WIMP, qui a fait ses preuves : toutes les applications de bureau sont aujourd'hui basées sur ce paradigme. Nous avons présenté de façon succinte comment étaient gérés les événements utilisateurs, ce qui nous a permis d'entrevoir la grande complexité de l'implémentation d'une interface graphique. Nous détaillerons plus précisément les composants qui entrent en jeu dans une GUI dans la partie suivante.
+
+\chapter{Architecture d'une interface graphique}
+
+Dans cette partie, nous présenterons les quatre couches qui composent une interface graphique, de la plus basse (proche du matériel) à la plus haute. Nous détaillerons leur rôle, leur fonctionnement et la manière dont elles communiquent entre elles pour former un ensemble cohérent. 
+
+\input{julien}
+
+\input{adrien}
+
+\paragraph{Conclusion} Nous avons maintenant une vue d'ensemble de l'architecture d'une interface graphique :
+\begin{itemize}
+ \item le matériel (carte graphique), et la couche logicielle qui permet de dialoguer avec ce matériel (pilote),
+ \item le système de fenêtrage, qui permet aux différentes applications de dessiner dans des zones rectangulaires qui leur sont dédiées (fenêtres) et à l'utilisateur d'interagir avec ces applications,
+ \item le gestionnaire de fenêtres, qui décore les fenêtres et permet à l'utilisateur de les manipuler,
+ \item l'environnement de bureau, qui définit des conventions (notamment la librairie de widgets utilisée, qui conditionne l'apparence des applications) et fournit une collection de logiciels formant un environnement graphique cohérent.
+\end{itemize}
+
+\vspace{1em}
+
+Nous avons présenté plus en détails le système X Window, dans lequel chaque couche est bien distincte. Ce choix tend aujourd'hui a être remis en cause pour des raisons de performances : ainsi, Wayland, proposé comme successeur à X.Org, est à la fois système de fenêtrage, gestionnaire de fenêtres et compositeur (il gère les effets visuels). Il élimine ainsi des intermédiaires entre les applications et le matériel. Des distributions Linux comme Ubuntu, Fedora ou encore Mandriva envisagent de remplacer X.Org par Wayland dans leurs futures versions.
+
+\chapter*{Conclusion}
+
+\input{conclu}
+
+\bibliographystyle{alpha}
+\bibliography{biblio}
+\footnote[1]{Note : en raison de la nature du sujet de notre recherche bibliographique (un domaine assez technique de l'informatique), la majorité des sources sur lesquelles nous nous sommes basés sont des ressources en ligne.}
+
+\end{document}

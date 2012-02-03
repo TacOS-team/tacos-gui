@@ -1,0 +1,151 @@
+\section{Matériel}
+Commençons notre exploration de l'architecture d'une interface graphique par ses fondements : le matériel. Le but final étant d'afficher des informations à l'écran, il faut communiquer avec la carte graphique. Pour ce faire, trois solutions existent :
+\begin{itemize} \vspace{1ex} \itemsep1ex
+ \item Écrire un pilote spécifique à la carte graphique utilisée,
+ \item Écrire un pilote VGA,
+ \item Utiliser les modes standards VGA par l'intermédiaire des fonctions du BIOS.
+\end{itemize}
+
+\vspace{1em}
+L'écriture d'un pilote de carte graphique est un travail long et complexe, car il existe très peu de documentation à ce sujet. Il présente également l'inconvénient d'être spécifique à une carte, et donc d'être très peu réutilisable. Nous nous intéresserons donc ici à VGA, qui est universel. Notons tout de même que le développement d'un pilote de carte graphique est incontournable si l'on veut disposer de fonctionnalités avancées comme l'accélération 3D.
+
+\subsection{VGA}
+\textbf{VGA}, pour Video Graphics Array, est un standard d'affichage lancé en 1987 par IBM, qui définit un ensemble de modes d'affichage (texte ou graphique) que les cartes graphiques doivent supporter. Les modes graphiques standard sont :
+\begin{itemize} \vspace{1ex} \itemsep1ex
+ \item 640x480 en 16 couleurs, résolution la plus souvent associée au VGA
+ \item 640x350 en 16 couleurs
+ \item 320x200 en 16 couleurs
+ \item 320x200 en 256 couleurs
+\end{itemize} \vspace{1ex}
+
+Ces 16 ou 256 couleurs peuvent être choisies parmi une palette de 262144 couleurs ($2^{6+6+6}$, 6 bits par composante RVB). Les cartes VGA disposent d'au moins 256 Kio de mémoire vidéo \cite{FreeVGA}.\\
+
+Bien qu'aujourd'hui, les cartes graphiques reposent sur des standards beaucoup plus récents et évolués que VGA, elles émulent toujours les composants des premières cartes VGA pour des raisons de compatibilité. L'intérêt de VGA est donc double : 
+\begin{itemize} \vspace{1ex} \itemsep1ex
+ \item D'une part, sa relative simplicité en fait un très bon sujet d'étude. Un pilote VGA simple mais fonctionnel peut s'écrire en moins de 200 lignes de code.
+ \item D'autre part, étant le dernier standard IBM que la majorité des fabricants de PC ont suivi, il est considéré comme le plus petit dénominateur commun que toutes les cartes graphiques sont censées supporter, sans recourir à un driver spécifique.
+\end{itemize}
+
+\vspace{1em}
+
+Présentons maintenant brièvement les composants d'une carte VGA et leurs fonctions (figure~\ref{fig:vga}) :
+\begin{itemize} \vspace{1ex} \itemsep1ex
+ \item La \textbf{mémoire vidéo} : elle contient l'image affichée à l'écran. En mode texte, les codes ASCII des caractères ainsi que leurs attributs (couleur, couleur de fond... ) y sont stockés ; en mode graphique, la couleur de chaque pixel (ou plutôt son index dans la palette) y est stockée.
+ \item Le \textbf{CRTC} (Cathod Ray Tube Controller) : comme son nom l'indique, il contrôle le déplacement du spot sur l'écran\footnote{Aujourd'hui, les écrans LCD procèdent à une conversion analogique/numérique du signal et l'interprètent pour afficher les pixels au bon endroit.}. C'est grâce à ses registres de configuration que l'on peut changer la résolution de l'écran par exemple. Comme il connaît en permanence la position du spot, il est également chargé de déterminer l'adresse en mémoire vidéo de l'information (caractère ou pixel) à afficher à l'écran.
+ \item Le \textbf{GDC} (Graphics Data Controller) : c'est l'intermédiaire entre le processeur et la mémoire graphique. Il propose plusieurs modes d'accès à la mémoire vidéo en lecture et en écriture, en jouant sur les différents ``plans'' sur lesquels est répartie la mémoire vidéo (voir la section sur le TS).
+ \item L'\textbf{ATC} (Attribute Controller) : c'est lui qui détermine ce qui doit être affiché à l'écran en fonction des informations présentes en mémoire vidéo (caractères ou pixels). En mode graphique par exemple, c'est lui qui détermine l'index à utiliser dans la palette du DAC.
+ \item Le \textbf{DAC} (Digital to Analog Converter) : il est chargé de convertir les signaux numériques (index sur 8 bits dans sa palette de couleurs) en signaux analogiques permettant au moniteur de commander l'intensité des 3 faisceaux d'électrons (rouge, vert, bleu) qui constituent les couleurs affichées.
+ \item Le \textbf{TS} (Timing Sequencer) : c'est le chef d'orchestre de tous les composants sus-cités. Il gère l'horloge et est donc chargé du rafraîchissement de la mémoire vidéo. Il gère également le découpage en ``plans'' de cette mémoire : nous avons vu que les cartes VGA disposent de 256 Kio de mémoire vidéo, mais cette mémoire est en réalité découpée en 4 ``plans'' de 64 Kio. Le séquenceur gère le plan auquel le processeur accède lorsqu'il veut lire ou écrire en mémoire vidéo.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=14cm]{figures/vga}
+  \caption{Interaction entre les 6 composants principaux d'une carte VGA}
+  \label{fig:vga}
+\end{figure}
+
+Ces composants sont configurables de deux manières \cite{OSDev:VGA} :
+\begin{itemize} \vspace{1ex} \itemsep1ex
+ \item La plus simple est d'utiliser les fonctions du BIOS, qui permettent de configurer un mode standard à l'aide d'une interruption. La résolution 320x200 en 256 couleurs correspond par exemple au mode 13h. La configuration de l'ensemble des registres est alors assurée par le BIOS.
+ \item On peut également configurer tous ces registres manuellement, grâce aux ports d'entrée/sortie de la carte utilisée. Cela permet de ``créer'' de nouveaux modes, puisque l'on n'est alors plus limité aux modes standard. En théorie, n'importe quelle résolution jusqu'à 800$\times$600 est possible. C'est également très utile lorsque l'on n'a pas accès aux interruptions du BIOS, par exemple en mode protégé.
+\end{itemize}
+
+\vspace{1em}
+
+Notons l'existence de \textbf{Super VGA} ou \textbf{SVGA} pour Super Video Graphics Array, une extension du standard VGA lancée la même année que VGA par IBM. À la différence de VGA, SVGA n'est pas un standard officiellement défini par IBM. La Video Electronics Standard Association (VESA), un consortium de fabriquants de matériel informatique visant à définir des standards vidéo, a cependant défini les extensions VBE (VESA Bios Extensions) qui s'approchent d'une définition officielle de SVGA \cite{VBE2}. Elles permettent des résolutions jusqu'à 1600$\times$1200 selon les cartes graphiques, les résolutions supérieures à 1280$\times$1024 n'étant pas couvertes par le standard VBE. La dernière version de VBE (VBE 3.0) date de 1998 \cite{VBE3}.
+
+\subsection{La couche d'accès au matériel : le pilote graphique}
+
+La couche logicielle permettant le dialogue avec la carte graphique est le pilote (ou driver) graphique. Il permet à la couche supérieure, le système de fenêtrage, de dessiner à l'écran en s'abstrayant de la configuration du mode graphique.
+
+Le fonctionnement de VGA présenté en section 3.1.1 peut laisser penser que l'écriture d'un pilote graphique est relativement simple, mais il ne faut pas oublier que les cartes graphiques actuelles mettent en œuvre des technologies beaucoup plus complexes (accélération 3D, CUDA...). Leur taille peut alors atteindre la centaine de Mio... Comme tout logiciel volumineux, ces pilotes sont alors découpés en composants distincts s'acquittant chacun d'une tâche particulière. Dans le monde Linux, les drivers graphiques libres s'articulent autour de 3 composants \cite{GraphStack} :
+\begin{itemize} \vspace{1ex} \itemsep1ex
+ \item \textbf{DDX}, pour Device Dependent X : c'est le pilote d'affichage du serveur X (le système de fenêtrage utilisé sous Linux). Le système de fenêtrage l'utilise pour les manipulations matérielles de base, son rôle principal étant de configurer le mode d'affichage : résolution, profondeur des couleurs... Comme son nom l'indique, il est spécifique à chaque matériel. Il est également utilisé pour déléguer certaines opérations au processeur graphique (GPU pour Graphics Processing Unit) pour qu'elles puissent être accélérées (déplacement des fenêtres, scroll, effets visuels, rendu vidéo...). En résumé, il s'occupe de toute la partie 2D, et uniquement de la 2D.
+ \item \textbf{DRI}, pour Direct Rendering Infrastructure, le pilote Mesa : Mesa est l'implémentation libre pour Linux d'OpenGL, un procédé d'accélération 3D. Elle se compose de deux parties : une bibliothèque compatible avec OpenGL que les applications 3D peuvent utiliser, et des pilotes DRI qui traduisent les instructions internes à Mesa en instructions que la carte graphique peut comprendre et exécuter. Après un appel à une fonction de la librairie Mesa et sa conversion en un langage spécifique au GPU, les instructions correspondantes doivent être envoyées au matériel pour être exécutées. Mesa ne peut s'acquitter de cette tâche, car elle s'exécute en espace utilisateur (seul du code noyau peut accéder directement au matériel). Elle pourrait transmettre ces instructions via X par l'intermédiaire de DDX, mais cela poserait de sérieux problèmes de performance. Elle s'appuie donc sur un dernier composant :
+ \item \textbf{DRM}, pour Direct Rendering Manager, le pilote du noyau : c'est un module du noyau Linux. Il expose certaines fonctionnalités du matériel en fournissant une couche d'abstraction à l'espace utilisateur, permettant à des applications comme Mesa d'exploiter le GPU plus efficacement.
+\end{itemize}
+
+\section{Système de fenêtrage}
+Le système de fenêtrage (windowing system) permet à l'utilisateur d'interagir avec plusieurs applications graphiques, affichées dans des zones rectangulaires appelées fenêtres, par l'intermédiaire d'un clavier et d'un dispositif de pointage (souris, trackball, touchpad...).
+
+Le système de fenêtrage n'est pas chargé de la décoration des fenêtres (bordures, barre de titre...) ni de l'apparence (``look and feel'') de leur contenu. Il propose des primitives graphiques (tracé de lignes, de rectangles, rendu de polices de caractères...) qui constituent une couche d'abstraction pour la couche supérieure, le gestionnaire de fenêtres.
+
+\subsection{Zoom sur X Window}
+\label{xwindow}
+Le système de fenêtrage le plus célèbre est X, ou X Window System, qui est le système de fenêtrage des systèmes UNIX. À l'origine publié par le MIT en 1984, la version actuelle de X (X11) date de 1987 \cite{Gettys86} \cite{Gettys90}.
+
+X utilise un modèle client/serveur (figure~\ref{fig:xclientserv}) : un serveur X s'exécute sur un ordinateur qui dispose d'un écran, d'un clavier et d'une souris, et communique avec plusieurs clients. Il sert d'intermédiaire entre l'utilisateur et les programmes graphiques (clients X) : il accepte les requêtes d'affichage des clients, ce qui leur permet de s'afficher sur l'écran de l'utilisateur, et reçoit les entrées de l'utilisateur (clavier, souris) pour les transmettre aux programmes clients.
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=5cm]{figures/x-client-server}
+  \caption{Exemple d'utilisation de X Window dans un contexte client/serveur}
+  \label{fig:xclientserv}
+\end{figure}
+
+Le protocole de communication entre clients et serveur X (X protocol) peut utiliser le réseau de manière totalement transparente : dans le cas le plus courant (poste de travail local), le client et le serveur s'exécutent tous deux sur la même machine, mais ils peuvent également s'exécuter sur deux machines différentes (avec des architectures et/ou des systèmes d'exploitation différents) et communiquer à travers le réseau. Un exemple bien connu est l'utilisation de la commande ssh avec renvoi graphique (option -X).\\
+
+Observons de plus près la communication entre client et serveur X : le client initie la connexion en envoyant le premier paquet. Le serveur peut éventuellement demander une authentification puis répond en indiquant l'acceptation ou le refus de la connexion. Dans le cas d'une acceptation, le serveur fournit au client un identifiant à utiliser pour les échanges suivants. À partir de là, 4 types de paquets peuvent être échangés :
+\begin{itemize} \vspace{1ex} \itemsep1ex
+ \item \textbf{Requête} : le client souhaite obtenir une information du serveur ou lui demande d'effectuer une action.
+ \item \textbf{Réponse} : le serveur répond à une requête du client.
+ \item \textbf{Événement} : le serveur envoie un événement au client : entrée clavier/souris, déplacement ou redimensionnement de fenêtre...
+ \item \textbf{Erreur} : le serveur envoie un paquet d'erreur au client lorsqu'il a formulé une requête invalide.
+\end{itemize}
+
+\vspace{1em}
+
+Grâce à ces 4 types de paquets, client/serveur et clients entre eux vont pouvoir collaborer pour présenter une interface graphique à l'utilisateur \cite{JonesIXW} \cite{MansfieldJXO}.
+
+\subsubsection{Fenêtres}
+Lorsque l'on parle de ``fenêtre'' dans le langage courant, on parle en réalité de ``fenêtre de premier ordre'' (``top-level window''). Le terme ``fenêtre'' est ambiguë car il est également utilisé pour désigner les fenêtres filles d'une fenêtre mère. Au sens de X, une fenêtre n'est rien d'autre qu'une zone rectangulaire : les widgets affichés à l'intérieur d'une application (menus, icônes, boutons...) sont des fenêtres filles de la fenêtre principale de l'application.
+
+Toute fenêtre est rattachée à une fenêtre mère : les fenêtres forment un arbre, dont la racine (``root window'') est créée automatiquement par le serveur X. Cette fenêtre spéciale a les mêmes dimensions que l'écran, et située en dessous de toutes les autres. Les fenêtres de premier ordre sont les filles directes de la fenêtre racine.
+
+\subsubsection{Identifiants}
+Tous les objets créés par le serveur X possèdent un identifiant unique (un entier) que les clients peuvent utiliser lorsqu'ils dialoguent avec le serveur. Un client peut par exemple demander au serveur X de créer une fenêtre avec un identifiant donné, identifiant qui lui permettra plus tard d'afficher du texte à l'intérieur de ladite fenêtre. Ces identifiants sont bien entendus uniques pour le serveur (et pas seulement pour le client), ce qui permet à un client d'accéder à un objet grâce à son identifiant, même s'il n'a pas lui-même créé cet objet. Cela permet par exemple aux gestionnaires de fenêtres d'interagir avec les fenêtres créées par les autres applications.
+
+\subsubsection{Attributs et propriétés}
+Le serveur X stocke, pour chaque fenêtre, un ensemble d'attributs et de propriétés. Les attributs sont des données caractérisant la fenêtre (taille, position, couleur de fond...) tandis que les propriétés ne sont que des données arbitraires associées à la fenêtre, qui n'ont aucun sens pour X. Ces attributs et propriétés peuvent être lus et écrits par les clients, via les requêtes appropriées. Un exemple de propriété est \verb|WM_NAME|, qui contient le nom de la fenêtre. X n'a que faire de cette information (ce n'est pas lui qui gère la décoration des fenêtres), mais elle permet au gestionnaire de fenêtres de faire son travail : lors de la décoration de la fenêtre, il peut lire la valeur de cette propriété et l'afficher dans la barre de titre. Les propriétés sont donc un bon moyen pour les clients de communiquer entre eux.
+
+\subsubsection{Événements}
+Les événements permettent au serveur d'indiquer à un client que quelque chose susceptible de l'intéresser a eu lieu. Ils peuvent également être utilisés pour la communication entre clients : un client peut demander au serveur d'envoyer un événement à un autre client. Si par exemple un client veut récupérer le texte actuellement sélectionné, il peut demander au serveur X d'envoyer un événement au client à qui appartient la fenêtre qui a actuellement le focus.
+
+Les entrées clavier/souris ou la création de nouvelles fenêtres sont d'autres exemples d'événements qui sont notifiés aux clients. La création de nouvelles fenêtres intéresse tout particulièrement les gestionnaires de fenêtres.
+
+Bien que certains types d'événements soient systématiquement envoyés aux clients, la majorité ne sont envoyés que si le client a manifesté son intérêt pour ce type d'événements. Un client peut ainsi s'``abonner'' aux entrées souris mais pas clavier.
+
+\subsubsection{Couleurs}
+X représente les couleurs à l'aide d'un entier de 32 bits appelé ``pixelvalue''. Cet entier est en réalité un index dans une table (la ``colormap'') qui contient des triplets RVB. Il existe plusieurs modes de représentation des couleurs sur ce principe, selon que le client puisse ou non modifier la colormap, que celle-ci soit monochrome (niveaux de gris) ou non, et que le pixelvalue soit utilisé dans son intégralité pour indexer une unique colormap ou divisé en 3 parties pour indexer 3 colormaps distinctes (une pour le rouge, une pour le vert, une pour le bleu). Le mode de représentation des couleurs est négocié à la connexion du client.
+
+\subsubsection{Xlib et bibliothèques de widgets}
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=8cm]{figures/x-libraries}
+  \caption{Librairies utilisées pour la programmation X : Xlib et librairies de widgets}
+  \label{fig:xlib}
+\end{figure}
+
+Différents choix s'offrent aux développeurs d'applications X pour dialoguer avec le serveur X (figure~\ref{fig:xlib}) \cite{XHowto} :
+\begin{itemize} \vspace{1ex} \itemsep1ex
+ \item Programmer directement au niveau du protocole X. Cette solution n'est évidemment jamais retenue.
+ \item Utiliser la bibliothèque X ou Xlib, qui propose un premier niveau d'abstraction mais n'est guère très commode à utiliser car elle reste très proche du protocole X. Elle est donc en pratique surtout utilisée pour développer des surchouches, appelées ``toolkits'' ou ``librairies de widgets''.
+ \item Utiliser le niveau d'abstraction suivant : le X Toolkit (Xt), qui est orienté objets et permet de manipuler des widgets. Il existe plusieurs jeux de widgets pour Xt, on peut en particulier citer Xaw (X Athena Widgets) et Motif. Ces librairies sont aujourd'hui de moins en moins utilisées.
+ \item Utiliser de nouvelles surcouches de la Xlib, disjointes de Xt, plus complètes et plus simples à utiliser que les solutions vieillissantes basées sur Xt. GTK+ et Qt, utilisées respectivement par les environnements de bureau GNOME et KDE, sont les deux librairies de widgets les plus répandues aujourd'hui. On comprend alors que ce sont ces librairies qui se chargeront du dessin des widgets à l'écran en faisant des appels à la Xlib, et que ce sont donc elles qui contrôlent l'apparence (le ``look and feel'') de l'intérieur des fenêtres.
+\end{itemize}
+
+\subsubsection{Gestionnaire de session et gestionnaire d'affichage}
+
+Deux logiciels s'acquittent de tâches intimement liées au système de fenêtrage, mais que celui-ci ne prend pas en charge lui-même :
+\begin{itemize} \vspace{1ex} \itemsep1ex
+ \item Le gestionnaire de session ou session manager permet à l'utilisateur de retrouver lors de sa reconnexion les fenêtres ouvertes avant sa déconnexion, dans l'état dans lequel il les avait laissées. Pour cela, le gestionnaire de session mémorise la liste des applications ouvertes au moment de la déconnexion de l'utilisateur, et les relance à sa reconnexion. Pour que l'état de ces applications puisse être restauré, elles doivent être capables de sauvegarder leur état d'exécution sur demande du gestionnaire de session, et de le recharger lors de leur prochain lancement. X Window inclut un gestionnaire de session par défaut nommé \textit{xsm}, mais la plupart des environnements de bureau proposent leur propre gestionnaire de session (\textit{ksmserver} pour KDE, \textit{gnome-session} pour GNOME par exemple).
+ \item Le gestionnaire d'affichage ou display manager lance un serveur X local et s'y connecte pour proposer à l'utilisateur un écran de connexion graphique. Il peut également accepter des connexions provenant de serveurs X distants et permettre ainsi à des machines distantes d'ouvrir une session et d'utiliser des applications graphiques de la machine locale : les applications sont lancées sur la même machine que le gestionnaire d'affichage, mais leurs entrées/sorties dont redirigées depuis/vers la machine distance (sur laquelle un serveur X est lancé). X Window inclut un gestionnaire d'affichage appelé \textit{XDM}, mais la plupart des environnements de bureau proprosent leur propre gestionnaire de d'affichage (\textit{KDM} pour KDE, \textit{GDM} pour GNOME par exemple).
+\end{itemize}
+
+\vspace{1em}
+
+Jusqu'à 2004, XFree86 était l'implémentation de X la plus répandue sur les systèmes Unix. Depuis 2004, X.Org, un fork de XFree86, est devenu prédominant.\\
+
+Maintenant que nous avons décrit le rôle et le fonctionnement du système de fenêtrage, intéressons nous de plus près à un client particulier que nous avons évoqué plusieurs fois dans cette section : le gestionnaire de fenêtres.

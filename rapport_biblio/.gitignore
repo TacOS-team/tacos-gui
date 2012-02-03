@@ -1,0 +1,17 @@
+*.aux
+*.backup
+*.bak
+*.bbl
+*.bl
+*.blg
+*.bst
+*.dvi
+*.idx
+*.lof
+*.log
+*.lot
+*.nav
+*.out
+*.ps
+*.snm
+*.toc

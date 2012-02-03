@@ -1,0 +1,164 @@
+\section{Éléments d'une GUI}
+Dans cette partie nous décrirons divers éléments de base d'une GUI tels que les widgets, les images, ainsi que les polices de caractères.
+\subsection{Widgets}
+
+Les widgets%
+\footnote{Il convient de ne pas confondre les widgets d'interface graphique
+avec les widgets dits interactifs qui sont, eux, de petits programmes
+ou outils intégrés dans une page web, un système d'exploitation, ou
+encore un logiciel.%
+} se trouvent aussi sous le nom de \textit{control} (appellation propre
+à Microsoft), ou encore de \textit{composant d'interface graphique}
+en français. La notion de widget est très abstraite, puisqu'elle définit
+l'élément de base de l'interface graphique d'une application. C'est
+en disposant différents widgets dans une ou plusieurs fenêtres qu'un
+développeur conçoit l'interface graphique d'un programme. 
+
+Les widgets permettent à un utilisateur et à une application de s'échanger
+des informations et d'interagir. Ils se présentent sous des formes
+très diverses, et se classent selon différentes catégories. Parmi
+les plus courantes, on trouve les boutons (bouton radio, bouton poussoir,
+case à cocher), qui permettent à un utilisateur de valider (ou invalider)
+une donnée, et les zones de texte (zone de saisie, d'affichage) qui
+sont utilisées pour transmettre une information textuelle de l'utilisateur
+vers l'application, ou dans le sens inverse. Il en existe bien d'autres,
+comme les conteneurs par exemple qui sont des widgets de haut niveau
+pouvant regrouper d'autres widgets.
+
+Pour mettre en place les widgets qui constitueront l'interface graphique
+de son application, le développeur utilise une bibliothèque logicielle
+appelée boîte à outils graphique, ou widget toolkit. C'est dans cette
+bibliothèque que sont définies toutes les catégories de widget disponibles
+(boutons, zones de texte, etc.), ainsi que leur style graphique. Le
+développeur y trouve aussi les fonctions permettant d'associer à
+un widget un comportement particulier, comme par exemple la fermeture
+de l'application sur pression du bouton approprié. Swing, Qt (utilisé par KDE) et GTK+
+(utilisé par Gnome) sont trois des widget toolkit les plus utilisés.
+
+\subsection{Images}
+
+Un ordinateur stocke une image sous forme de fichier.
+Il existe deux types d'images numériques distincts : les images vectorielles
+et les images matricielles. 
+
+Les images vectorielles sont des compositions de formes géométriques
+simples (courbes, segments, points, plans) auxquelles sont associées
+des caractéristiques comme la couleur ou la position. Une fois agencées
+les unes par rapport aux autres, ces formes géométriques constituent
+une image. Comme ces images sont essentiellement basées sur les équations
+mathématiques des formes géométiques qui les composent, elles demandent
+à l'ordinateur un certain calcul avant chaque affichage. Ainsi, travailler
+sur des images vectorielles est assez gourmand en ressources. Pour
+les mêmes raisons, ces images sont considérées comme étant zoomables
+à l'infini, puisque la représentation graphique d'une équation est
+continue (du moins dans le cas des figures géométriques simples).
+
+Les images matricielles sont quant à elles représentées d'une manière
+totalement différente : ce sont de simples tableaux de pixels (ou
+bitmap) auxquels sont associées des couleurs. Elles sont caractérisées,
+entre autres, par leur résolution qui s'exprime en pixel par unité
+de surface, et qui est une mesure de la qualité visuelle de l'image
+: plus la résolution est bonne, plus la quantité d'information visuelle
+est concentrée, et donc plus l'image est détaillée.
+
+On notera que malgré les avantages que présentent les images vectorielles,
+elles restent beaucoup moins utilisées que les images matricielles,
+car il est à l'heure actuelle difficile de vectoriser un document
+numérisé. De plus, même si les images vectorielles sont composées
+de formes géométriques et non de grilles de pixels, elles sont tout
+de même converties en bitmaps pour leur affichage : on dit que l'image
+est rasterisée.
+
+Qu'une image soit matricielle ou vectorielle, elle est stockée dans
+un certain format. C'est le format de l'image qui définira comment
+les données de l'image (formes géométriques ou pixels) seront représentées
+en mémoire, puis lues par un visionneur. Selon le format, les données peuvent être compressées ou non. Dans le cas d'un format avec compression, la compression peut se faire avec ou sans perte d'information. Les pertes se font généralement sur les couleurs de la manière suivante : pour une zone de l'image où les couleurs sont sensiblement les mêmes, on affecte à la zone en question une seule et unique couleur. Parmi les formats d'images les plus courants, on trouve BMP (sans compression), JPEG (compression avec perte), et PNG (compression sans perte) \cite{Jab96}. 
+
+Le format PBM est un format sans compression moins utilisé, mais nous allons le détailler car il a le mérite d'illustrer clairement le
+principe selon lequel les images matricielles ne sont que des tableaux
+de pixels colorés. PBM fait partie de la famille des formats du projet Netpbm,
+qui visait à faciliter l'échange de fichiers d'images. C'est un format
+extrêmement simpliste : on peut représenter une image au format PBM grâce
+à du texte. Il suffit d'écrire P1 sur la première ligne du fichier
+(ce signe indique que le fichier est un fichier PBM), puis sur la
+seconde le nombre de colonnes et le nombre de lignes, séparés par
+des espaces. Enfin, chaque pixel sera identifié par sa ligne et sa
+colonne, ainsi que par sa valeur : 1 ou 0, selon que le pixel doit
+être noir ou blanc (le format PBM est un format d'images en noir et
+blanc) \cite{Pbm06}.
+
+\begin{figure}[H]
+  \centering
+    \includegraphics{figures/image1}
+  \caption{Version texte d'une image au format PBM}
+  \label{fig:pbmtext}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[scale=0.2]{figures/image2}
+  \caption{Version visuelle de l'image}
+  \label{fig:pbmpic}
+\end{figure}
+
+\subsection{Polices de caractères}
+
+Une police de caractères, ou police d'écriture, est un ensemble logiciel
+de glyphes%
+\footnote{Un glyphe est un élément typographique de base comme un caractère,
+un accent, un symbole, ou encore un casseau.%
+} qui sont utilisés pour représenter du texte dans un style graphique
+particulier. Les glyphes sont représentés, selon les polices, en tant
+qu'images matricielles ou bien vectorielles. On parle alors de police
+matricielle ou de police vectorielle. Les caractéristiques de ces
+deux types de polices ne sont pas difficiles à entrevoir : une police
+matricielle sera plus rapide et plus facile à afficher pour l'ordinateur,
+mais il faudra dessiner autant de versions d'un glyphe qu'il y aura
+de tailles possibles pour la police. Ce n'est pas le cas des polices
+vectorielles, qui peuvent être redimensionnées sans perte de qualité.
+Par contre, pour des soucis de lisibilité, il convient de ne pas agrandir
+(ou rétrécir) toutes les formes géométriques qui composent les glyphes
+avec le même coefficient de proportionalité. Il faut donc, pour une
+police vectorielle, instaurer des règles de mise à l'échelle afin
+de rendre les glyphes lisibles, quelque soit leur taille d'affichage \cite{Tan04}. Avant les années 90, les polices matricielles étaient les plus couramment utilisées. Elles ont été ensuite remplacées pour la plupart par les
+polices TrueType, qui sont des polices vectorielles.
+
+\section{Interactions avec l'utilisateur}
+Cette partie traite des interactions entre un utilisateur et sa machine.
+\subsection{Claviers et souris}
+
+Sur un ordinateur grand public, c'est essentiellement par le biais du
+clavier et de la souris qu'un utilisateur transmet des informations
+à sa machine. 
+
+Jusqu'à la fin des années 80, les claviers utilisaient un connecteur
+de type DIN relié directement à la carte mère, qui fut remplacé pour
+des raisons marketing par un connecteur PS/2 \cite{PS/2}, qui ne présentait aucun
+nouvel avantage, si ce n'est celui de pouvoir vendre une nouvelle
+catégorie de claviers. En fait, le protocole de communication était le même, et il suffifisait d'un simple connecteur PS/2 - DIN (ou l'inverse) pour passer de l'un à l'autre. Aujourd'hui, la grande majorité des claviers
+récents sont connectés à l'ordinateur par le biais d'un port USB,
+et certains disposent d'une connectique sans fil comme la
+technologie Bluetooth. 
+
+Les souris sont des dispositifs relativement simples. L'évolution
+de leur connectique est semblable à celle des claviers : autrefois
+branchées grâce à des connecteurs PS/2 (le protocole de communication
+était par contre différent de celui des claviers), elles sont maintenant
+majoritairement USB ou sans fil. Les deux types de souris les plus
+répendus sont les souris à boule, et les souris optiques. Les premières
+peuvent déterminer leurs déplacements grâce aux rotations de deux
+rouleaux entraînés par la boule lorsqu'elle tourne, l'un étant placé
+selon l'axe des abscisses, et l'autre selon l'axe des ordonnées. Les
+souris optiques, elles, sont munies de photodétecteurs, et peuvent
+percevoir un déplacement en comparant deux images successives du support
+sur lequel elles sont posées.
+
+\subsection{Gestion des événements utilisateurs}
+
+Dans cette partie, nous allons détailler la façon dont Linux gère les événements clavier, depuis la pression d'une touche jusqu'à sa transmission à un programme applicatif. La gestion des événements souris est assez similaire. Linux a été pris comme support d'étude car il est plus aisé de trouver de la documentation pour ce système, mais les principes sous-jacents sont généralisables aux autres systèmes d'exploitation.
+
+Le clavier possède en interne un microprocesseur qui vérifie en permanence si une touche a été pressée ou relâchée. Lorsqu'un événement a eu lieu, le microprocesseur en informe le contrôleur de clavier (keyboard controller). Le contrôleur de clavier récupère alors un scancode : le scancode correspond à l'identifiant unique d'une touche. Il est dépendant du matériel, ainsi que du layout utilisé (aussi appelé ``disposition'', et qui varie selon la langue de l'utilisateur et la disposition des touches du clavier). Le scancode est ensuite fourni au pilote de clavier (keyboard driver). 
+
+Il existe trois modes de fonctionnement pour un pilote de clavier \cite{Keb02}, lorsqu'il reçoit un scancode. Le premier est le mode raw. Dans ce mode, le pilote n'effectue aucun traitement et transmet tel quel le scancode au programme applicatif. Ce mode permet à l'application d'établir un contrôle très fin des entrées de l'utilisateur. C'est à l'application de déterminer alors quelle touche a été pressée, ou quelle combinaison de touche a été effectuée. Le second mode est le mode medium raw. Ce mode est similaire au mode raw, mais plutôt que d'envoyer un scancode, le pilote de clavier enverra un keycode, qui identifie lui aussi la touche, mais de manière normalisée : le keycode est indépendant du matériel et du layout. Enfin, il existe le mode ASCII/Unicode (qui sont en fait deux modes distincts mais très similaires puisqu'ils ne diffèrent que par l'encodage des caractères), dans lequel le pilote détermine lui même le code ASCII ou Unicode de la touche pressée, ou de la combinaison de touche : il faudra envoyer le numéro 65 qui correspond au code ASCII du caractère "A" si les touches pressées par l'utilisateur sont \textit{MAJ} et \textit{a}.
+
+Le serveur X demande au pilote clavier de passer en mode raw \cite{gun}, et le pilote de clavier envoie donc au serveur X des scancodes. C'est alors au serveur X, qui reçoit le scancode dans sa file d'événéments, de savoir quelle est la fenêtre qui a le focus (ou plutôt quel widget de quelle fenêtre a le focus). Le serveur envoie alors une information au bon client, qui est sans cesse en attente d'un événement de la part du serveur. Cet événement est ensuite traité par les couches successives de la librairie de widget (très souvent GTK+ ou Qt) pour être enfin exploitable par l'application.

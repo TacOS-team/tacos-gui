@@ -1,0 +1,52 @@
+\section{Gestionnaire de fenêtres}
+
+\subsection{Rôle}
+
+Le gestionnaire de fenêtres a pour rôle principal de permettre à l’utilisateur d’intéragir entre les différentes fenêtres des applications, notamment leur position, leur taille et la possibilité d’icônifier la fenêtre. Pour celà, il commence par “décorer” les fenêtres des applications avec un cadre qui contiendra le titre de la fenêtre ainsi que des boutons permettant de la manipuler. Ce cadre est géré par le gestionnaire et permettra à l’utilisateur de manipuler la fenêtre. Pour gérer l’icônification, le gestionnaire propose le plus souvent une barre de tâches contenant toutes les icônes des applications ouvertes.
+
+Pour pouvoir démarrer les applications, le gestionnaire propose également des barres de menus ainsi que des zones de notification. Pour une meilleure expérience utilisateur, il peut également proposer d’autres services tels que la gestion de bureaux virtuels permettant de séparer des groupes de fenêtres ainsi que des raccourcis claviers divers.
+
+Selon le gestionnaire, l’ensemble de ces éléments peut être plus ou moins personnalisé par l’utilisateur. Il peut par exemple modifier le thème de l’affichage (look and feel), le fond d’écran, créer/déplacer les barres de tâches et menus, créer de nouvelles zones de notifications, etc.
+
+Il existe deux principales catégories de gestionnaire de fenêtres. Les gestionnaires de fenêtres “fottants” et “tilling” \cite{SdzGestionnaireBureau}. Les flottants sont ceux pour lesquels nous sommes les plus familiers. Les fenêtres sont gérées comme une pile. En cas de superposition, c’est la fenêtre le plus en haut de la pile qui est affichée. Comme un tas de feuilles qu’on peut réorganiser. La fenêtre au premier plan est celle du haut de la pile. Les gestionnaires de fenêtres “tilling” organisent, comme leur nom l’indique, les fenêtres comme un carrelage. Les fenêtres sont donc affichées et l’écran est partagé entre toutes les fenêtres. Il est possible de personnaliser l’agencement pour arriver à avoir des fenêtres plus grandes que d’autres comme la disposition suivante par exemple :
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=\linewidth]{figures/adrien}
+  \caption{Bureau avec Awesome}
+  \label{fig:adrien}
+\end{figure}
+
+\subsection{Implémentation avec X server}
+
+Dans le cas de X, l’interfaçage du gestionnaire de fenêtre est assez déroutant. Le gestionnaire est en fait un client comme n’importe quelle application au détail prêt qu’elle s’affiche sur toute l’étendue de la fenêtre racine du serveur X. Comme nous l’avons vu précédemment, les applications peuvent modifier les paramètres des autres applications. Lors de son démarrage, le gestionnaire de fenêtres s’abonne à des évènements spéciaux tels que la création d’une nouvelle application. Lorsqu’une application (disons gedit) démarre, elle va créer une nouvelle fenêtre fille de la fenêtre racine du serveur X qu’elle a choisi. Le serveur va annoncer cette création au gestionnaire de fenêtres qui va créer une nouvelle fenêtre contenant les décorations et va rendre la fenêtre de gedit fille de celle-ci. La fenêtre de gedit sera donc gérée par cette fenêtre mère qui affichera la barre de titre et les bordures. L’utilisateur interagira sur la fenêtre mère pour la déplacer/redimensionner/icônifier. Mais quand il interagira avec le contenu de la fenêtre, les signaux seront interprétés directement par l’application soit gedit.
+
+\textbf{Remarque :} Un gestionnaire de fenêtre est considéré par le serveur X comme une application comme une autre. En revanche, lorsqu’on essaye de lancer un second gestionnaire de fenêtres, le lancement échoue car il détecte qu’il y a déjà un autres gestionnaire de fenêtre lancé. Le gestionnaire de fenêtre se déclare donc pas exactement de la même façon que n'importe quelle application. Il est cependant possible de demander de remplacer le gestionnaire par un nouveau.
+
+Les gestionnaire de fenêtres les plus répandus sont les gestionnaires de fenêtres flottants. Dans le monde d’Unix on trouve metacity maintenant remplacé par Mutter depuis la version 3 de l’environnement de bureau Gnome dont nous allons bientôt parler. Compiz est particulièrement utilisé pour remplacer metacity car il permet un affichage 3D des bureaux virtuels. Un dernier est KWin qui est le gestionnaire de fenêtre de l’environnement de bureau KDE. Ce dernier a une interface assez proche de Windows et est dit plus convivial que metacity qui a une interface très sobre.
+
+Les gestionnaires de fenêtres “tilling” sont beaucoup moins répandus. Nous citerons Awesome qui est réputé être très configurable et xmonad qui a été écrit avec seulement 1000 lignes de code. Il est donc très léger mais tout de même réputé pour sa stabilité et son extensibilité.
+
+Un gestionnaire de fenêtres est indispensable mais il n’est pas suffisant pour créer une interface graphique complète. Pour cela, on utilise un environnement de bureau qui, lui, comprend un gestionnaire de fenêtres mais aussi d’autres outils indispensables.
+
+\section{Environnement de bureau}
+Lorsqu'on installe une distribution Linux, en général, on a le choix entre plusieurs environnements de bureau. Un environnement de bureau est en fait un ensemble de logiciels et de standardisations qui rend le système cohérent d'un point de vue graphique mais permet également de standardiser les communications entre les applications. Par exemple, l'environnement de bureau GNOME conseille l'utilisation de la bibliothèque graphique GTK+ pour ses applications alors que KDE préfère la bibliothèque Qt. Ces bibliothèques ont chacune leur façon d'afficher les widgets. Si toutes les applications utilisent la même bibliothèque, leurs affichages seront similaires. Les boutons par exemple seront affichés de la même façon. Quand on démarre une application faite pour KDE sous GNOME, on le remarque très rapidement : le rendu visuel est totalement différent. Le choix d'une bibliothèque graphique commune à toutes permet donc d'avoir un rendu visuel cohérent entre les différentes applications.
+
+Le rôle de l'environnement de bureau ne s'arrête cependant pas à rendre l'aspect graphique cohérent. Il offre également une suite d'outils et de logiciels qui permet d'utiliser son ordinateur de manière graphique. Ces logiciels sont d'ailleurs entre autres choisis en fonction de la bibliothèque graphique qu'ils utilisent. Les principaux outils logiciels sont les suivants :
+\begin{itemize}
+ \item Un gestionnaire de fenêtres
+ \item Un outil graphique de configuration du système
+ \item Un outil graphique de configuration du réseau
+ \item Un système de connexion à sa session utilisateur
+ \item Un éditeur de texte graphique
+ \item Un navigateur de fichiers permettant de manipuler graphiquement le système de fichier
+ \item Un moteur de rendu de pages web
+ \item Un système de fichiers virtuel
+ \item Des logiciels de communication (mails, messagerie instantanée, communication audio et vidéo...)
+\end{itemize}
+
+\vspace{1em}
+
+Les deux environnements de bureau les plus utilisés sous Linux sont GNOME et KDE \cite{FreeDesktop}. Ces deux suivent des standards de Freedesktop.org qui proposent des règles à respecter pour faciliter l’interopérabilité entre les différents environnements de bureau sans pour autant uniformiser ceux-ci.
+
+Il est très conseillé de respecter ces règles mais ce n'est pas pour autant obligatoire. Il est donc possible d'utiliser une application codée pour KDE sous GNOME. Seulement, d'un point de vue autre que graphique, il se peut que certaines fonctionnalités ne fonctionnent pas par défaut. Par exemple, si ce programme souhaite utiliser une application qui est installée par défaut sous KDE mais pas sous GNOME, il risque d'y avoir des erreurs lors de la tentative d'utilisation si celle-ci n'est pas installée.

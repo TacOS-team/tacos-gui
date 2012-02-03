@@ -1,0 +1,78 @@
+\section{Historique}
+
+\subsection{Définitions}
+
+Un environnement graphique est ``un ensemble de programmes qui fournit un cadre de travail simplifiant la manipulation des appareils informatiques à l'aide d'interfaces graphiques'' \cite{wiki:environnementgraphique}.
+
+Une interface graphique se définit quant à elle un comme ``dispositif de dialogue homme-machine, dans lequel les objets à manipuler sont dessinés sous forme de pictogrammes à l'écran, que l'usager peut opérer en imitant la manipulation physique de ces objets avec un dispositif de pointage, le plus souvent une souris''. Les interfaces graphiques sont communément appelées GUI, pour Graphical User Interface.
+
+\subsection{Événements majeurs}
+Le \textbf{SketchPad} (figure \ref{fig:sketchpad}) est la première solution matérielle et logicielle graphique interactive.
+Présenté en 1963 et développé au sein du MIT, ce logiciel était destiné à dessiner des schémas techniques, en deux dimensions, sur écran à l'aide d'un stylo optique. Ce logiciel est considéré comme l'ancêtre des logiciels de conception assistée par ordinateur (CAO). C'est grâce à cette innovation que son concepteur, Ivan Sutherland, obtient en 1988 le prestigieux prix Turing.
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=10cm]{figures/ivan_sutherland_sketchpad.jpg}
+  \caption{Démonstration du SketchPad \cite{myosnet}}
+  \label{fig:sketchpad}
+\end{figure}
+
+Douglas Carl Engelbart, chercheur à la \textit{Stanford Research Institude}, invente la souris en 1968.
+C'est cette même année qu'il présente le premier environnement graphique fenêtré manipulable à l'aide d'une souris (figure \ref{fig:first_mouse}). Sur ce système est notamment développé un logiciel de travail collaboratif, de traitement de texte mais aussi un des premiers systèmes hypertexte. Il est à noter que Douglas C. Engelbart est également un des pionniers de la recherche sur l'hypertexte. 
+
+\begin{figure}[H]
+   \centering
+    \includegraphics[width=10cm]{figures/image3.png}
+  \caption{Schéma technique de la première souris \cite{wiki:souris}}
+  \label{fig:first_mouse}
+\end{figure}
+
+\paragraph{}
+Le \textbf{Xerox Alto} \label{inline:xerox_alto}, conçu en 1973 au Xerox PARC (Palo Alto Research Center), est cité comme le premier ordinateur personnel même si d'autres machines disputent également ce titre. Il est en outre le premier à définir le concept de \textit{bureau} que nous connaissons bien aujourd'hui (figure \ref{fig:alto_desktop}). Cet ordinateur n'est pourtant qu'un prototype n'ayant pas de but commercial. Son concepteur principal, Charles P. (Chuck) Thacker, a lui aussi reçu en 2009 le prix Turing pour ces travaux sur ce projet.
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=10cm]{figures/alto_desktop.jpg}
+  \caption{Premier bureau \cite{digibarn:alto}}
+  \label{fig:alto_desktop}
+\end{figure}
+
+\paragraph{}
+Dick Shoup en Avril 1973, propose une machine dotée d'une carte graphique couleur capable d'afficher des images d'une résolution de 640 pixels de largeur par 480 de hauteur le tout avec une profondeur de 256 couleurs mais aussi d'acquérir un signal vidéo. De plus il développe un logiciel de dessin et d'effet vidéos, \textbf{Superpaint}. 
+
+%\begin{figure}[H]
+%  \centering
+%    \includegraphics[width=10cm]{figures/superpaint.jpg}
+%  \caption{Logiciel de dessin et d'effets vidéos Superpaint}
+%  \label{fig:superpaint}
+%\end{figure}
+
+\paragraph{}
+C'est en Avril 1981 que Xerox sort un produit étonnamment en avance sur son temps, le \textbf{Xerox Star} (figure \ref{fig:xerox_star}). Cette machine reprend et améliore tous les concepts mis en place par son grand frère, le Xerox Alto au Xerox PARC. Elle innove sur trois grands axes des interfaces graphiques. Tout d'abord, elle utilise au maximum le \textit{drag \& drop} (\textit{glisser/déposer} en français). De plus, elle utilise pour la première fois le concept de presse papier et de copier coller : on peut, simplement grâce à l'interface graphique, recopier du texte présent dans la mémoire et l'interface d'un programme vers un autre programme. Enfin, elle marque l'apparition de menus contextuels à la manière du plus célèbre Macintosh, qui, selon le programme ayant le focus, changent de contenu. Cette machine, trop en avance sur son temps et trop onéreuse (17000\$ USD), n'aura aucun succès commercial.
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[width=10cm]{figures/xerox_star.jpg}
+  \caption{Environnement de bureau du Xerox Star \cite{aresluna}}
+  \label{fig:xerox_star}
+\end{figure}
+
+\paragraph{}
+En 1984, le MIT commence à développer un serveur graphique pour les machines Unix : X Window System. Ce système n'est pas une simple interface graphique, c'est également et surtout un serveur évolué capable de gérer plusieurs écrans locaux ou distants. Le système X Window sera détaillé dans la section \ref{xwindow}.
+
+\section{WIMP}
+
+\subsection{Introduction}
+
+\paragraph{}
+\textbf{WIMP} est un paradigme informatique dont l'acronyme signifie \textbf{W}indows, \textbf{I}cons, \textbf{M}enus, \textbf{P}ointer. WIMP est une manière de concevoir les interfaces graphiques développée par Xerox et implémentée avec le Xerox Alto par des ingénieurs du PARC (cf section \ref{inline:xerox_alto}). Ce concept a ensuite été popularisé avec la sortie du \textbf{Macintosh} qui améliora la gestion des fenêtres et ajouta le concept de barres de menus. Les systèmes utilisant ces concepts sont aussi appelés \textbf{WIMPS}.
+
+\subsection{Structure}
+
+Une fenêtre (\textbf{W}indow) ne représente qu'un seul processus encapsulé et isolé s'exécutant en concurrence avec les autres processus de la même machine.
+
+Les icônes (\textbf{I}cons) représentent des raccourcis pour exécuter des opérations sur le système comme par exemple exécuter un programme.
+
+Un menu ou menu contextuel (\textbf{M}enu) est un système permettant d'exécuter des sous programmes, en relation avec le contexte courant pour le deuxième. Il pourront être textuels ou représentés l'aide d'icônes ou les deux. 
+
+Enfin, le pointeur (\textbf{P}ointer) est une marque précise sur l'espace de l'écran, toujours (ou presque) au premier plan. Il permet de manipuler les fenêtres, les menus et les icônes. Ce pointeur est déplacé avec la souris mais aussi avec les flèches de direction dans des systèmes plus anciens.
