@@ -45,6 +45,7 @@ void __attribute__((constructor)) init() {
 	SDL_EventState(0xFF, SDL_IGNORE); // Ignore all events
 	SDL_EventState(SDL_QUIT, SDL_ENABLE);
 	SDL_ShowCursor(SDL_DISABLE);
+	SDL_WM_SetCaption("TacOS Emulator", "TacOS Emulator");
 
 	signal(SIGALRM, alarm_handler);
 	alarm(1);
