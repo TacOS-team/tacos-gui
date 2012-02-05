@@ -18,4 +18,7 @@ runcubev2:
 runzen:
 	LD_PRELOAD=./libtacos.so applications/zen_graph
 
+runpong:
+	LD_PRELOAD=./libtacos.so applications/pong
+
 .PHONY: applications drivers runcube runcubev2 runzen
