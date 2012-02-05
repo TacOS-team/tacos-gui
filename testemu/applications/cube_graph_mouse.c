@@ -28,12 +28,19 @@
 
 #include <fcntl.h>
 #include <string.h>
+#include <fcntl.h>
+#include <stdio.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
-#include "vga_types.h"
+#include <vga_types.h>
+#include <mouse_types.h>
+
+#define PI 3.14159f
 
 #define LARGEUR 320
 #define HAUTEUR 200
+
+#define FRICTION 0.9f
 
 static char buffer[LARGEUR*HAUTEUR];
 
@@ -62,6 +69,20 @@ int lignes[][2] = {
 	{2, 6},
 	{3, 7}
 };
+
+float cos(float angle) {
+	float angle_radians = angle*(2*PI)/360;
+	float result;
+	asm("fcos" : "=t" (result) : "0" (angle_radians));
+	return result;
+}
+
+float sin(float angle) {
+	float angle_radians = angle*(2*PI)/360;
+	float result;
+	asm("fsin" : "=t" (result) : "0" (angle_radians));
+	return result;
+}
 
 void clear_buffer(char* buffer) {
 	memset(buffer, 0, LARGEUR*HAUTEUR); 
@@ -118,15 +139,14 @@ void draw_line(int x1, int y1, int x2, int y2, char color, char *buffer) {
 	}
 }
 
-void rotate_point(float point[3]) {
+void rotate_point(float point[3], float theta, float phi) {
 	float temp[3];
-	// theta = 4°
-	float cos_theta = 	0.99984769f;
-	float sin_theta = 	0.01745240f;
 	
-	// phi = 1°
-	float cos_phi = 	0.99756405f;
-	float sin_phi = 	0.06975647f;
+	float cos_theta = 	cos(theta);
+	float sin_theta = 	sin(theta);
+	
+	float cos_phi = 	cos(phi);
+	float sin_phi = 	sin(phi);
 	
 	temp[0] = point[0];
 	temp[1] = point[1]*cos_theta - point[2]*sin_theta;
@@ -149,19 +169,61 @@ void draw_cube(char *buffer) {
 	}
 }
 
+void draw_mouse(int x,int y) {
+	draw_line(x-1, y-1, x+5, y+5, 3, buffer);
+	draw_line(x, y, x+3, y, 3, buffer);
+	draw_line(x, y, x, y+3, 3, buffer);
+	
+}
+
+int mouse_fd = 0;
+
+void read_mouse(mousestate_t* data) {
+	if(mouse_fd == 0) {
+		mouse_fd = open("/dev/mouse", O_RDONLY);
+	}
+	read(mouse_fd, data, sizeof(mousestate_t));
+	data->y = 199 - data->y;
+}
+
+
+
 int main() {
+	int i = 0;
+	
 	int vga_fd = open("/dev/vga", O_RDONLY);
 	ioctl(vga_fd, SETMODE, (void*)vga_mode_320x200x256); 
 	init();
-
+	mousestate_t data;
+	int prevx,prevy;
+	
+	float theta = 0.0f;
+	float phi = 0.0f;
+	
 	while (1) {	
-		clear_buffer(buffer);
-		int i = 0;
-		for (i = 0; i < 8; i++) {
-			rotate_point(cube[i]);
+		clear_buffer(buffer);	
+		read_mouse(&data);
+		
+		if(data.b1) {
+			phi = (float)(data.x-prevx) * FRICTION;
+			theta = (float)(data.y-prevy) * FRICTION;
 		}
+		else {
+			phi = FRICTION * phi;
+			theta = FRICTION * theta;
+		}
+		for (i = 0; i < 8; i++) {
+			rotate_point(cube[i],theta,phi);
+		}
+		
 		draw_cube(buffer);
+		draw_mouse(data.x, data.y);
+		
 		ioctl(vga_fd, FLUSH, buffer);
+		
+		prevx = data.x;
+		prevy = data.y;
+		
 		usleep(10000);
 	}
 

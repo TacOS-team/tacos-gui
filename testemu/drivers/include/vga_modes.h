@@ -29,7 +29,7 @@
 #ifndef _VGA_MODES_H_
 #define _VGA_MODES_H_
 
-#include "vga_types.h"
+#include <vga_types.h>
 
 /**
  * Describes a VGA mode

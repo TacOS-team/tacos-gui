@@ -5,7 +5,7 @@
 #include <sys/ioctl.h>
 #include <time.h>
 #include <unistd.h>
-#include "vga_types.h"
+#include <vga_types.h>
 
 #define LARGEUR 320
 #define HAUTEUR 200
