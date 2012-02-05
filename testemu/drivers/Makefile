@@ -10,3 +10,5 @@ all: vga.o mouse.o
 
 clean:
 	rm -f *.o
+
+.PHONY: clean

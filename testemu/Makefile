@@ -9,6 +9,11 @@ drivers:
 libtacos: libtacos.o drivers
 	$(LD) -o libtacos.so -shared drivers/vga.o drivers/mouse.o libtacos.o -lSDL -ldl
 
+clean:
+	$(MAKE) $@ $(MFLAGS) -C applications
+	$(MAKE) $@ $(MFLAGS) -C drivers
+	rm -f *.o libtacos.so
+
 runcube:
 	LD_PRELOAD=./libtacos.so applications/cube_graph
 
@@ -21,4 +26,4 @@ runzen:
 runpong:
 	LD_PRELOAD=./libtacos.so applications/pong
 
-.PHONY: applications drivers runcube runcubev2 runzen
+.PHONY: applications drivers clean runcube runcubev2 runzen
