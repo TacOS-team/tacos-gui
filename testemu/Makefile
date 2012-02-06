@@ -26,4 +26,7 @@ runzen:
 runpong:
 	LD_PRELOAD=./libtacos.so applications/pong
 
+runsnake:
+	LD_PRELOAD=./libtacos.so applications/snake_graph
+
 .PHONY: applications drivers clean runcube runcubev2 runzen

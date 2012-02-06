@@ -44,6 +44,8 @@ void __attribute__((constructor)) init() {
 
 	SDL_EventState(0xFF, SDL_IGNORE); // Ignore all events
 	SDL_EventState(SDL_QUIT, SDL_ENABLE);
+	SDL_EventState(SDL_KEYDOWN, SDL_ENABLE);
+	SDL_EnableUNICODE(SDL_ENABLE);
 	SDL_ShowCursor(SDL_DISABLE);
 	SDL_WM_SetCaption("TacOS Emulator", "TacOS Emulator");
 
@@ -126,5 +128,19 @@ int ioctl(int fd, unsigned long request, void *data) {
 		}
 	}
 
+	return ret;
+}
+
+int getchar() {
+	int ret;
+	SDL_PumpEvents();
+	SDL_Event event;
+	if (SDL_PeepEvents(&event, 1, SDL_GETEVENT, SDL_KEYDOWNMASK)) {
+		printf("%d %d\n", event.key.keysym.scancode, event.key.keysym.unicode);
+		ret = event.key.keysym.unicode;
+	} else {
+		ret = EOF;
+	}
+	printf("getchar %d\n", ret);
 	return ret;
 }
