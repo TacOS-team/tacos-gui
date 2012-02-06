@@ -1,3 +1,9 @@
+INCLUDES= -I./include/
+CFLAGS=-Wall -g
+
+%.o: %.c
+	$(CC) -o $@ -c $< $(CFLAGS) $(INCLUDES) -fPIC
+
 all: applications libtacos
 
 applications:
