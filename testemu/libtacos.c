@@ -6,6 +6,7 @@
 #include <SDL/SDL.h>
 
 #define MAX_FD 128
+#define MAX_SDL_EVENTS 128
 
 SDL_Surface *screen;
 
@@ -23,9 +24,22 @@ enum tacos_descriptor_type {
 enum tacos_descriptor_type tacos_descriptors[MAX_FD];
 
 void alarm_handler(int signum) {
+	static int i = 0;
 	if (SDL_QuitRequested()) {
 		exit(0);
 	}
+
+	if (i % 5 == 0) {
+		SDL_Event events[MAX_SDL_EVENTS];
+		int nb_pending_events = SDL_PeepEvents(events, MAX_SDL_EVENTS, SDL_PEEKEVENT, SDL_ALLEVENTS);
+		printf("[Leek monitor] %d pending event(s).\n", nb_pending_events);
+		if (nb_pending_events >= MAX_SDL_EVENTS - 1) {
+			printf("[Leek monitor] Event queue full - exiting.\n");
+			exit(1);
+		}
+	}
+
+	i = (i + 1) % 5;
 
 	alarm(1);
 }
@@ -61,7 +75,7 @@ void __attribute__((destructor)) destroy() {
 int open(const char *pathname, int flags) {
 	int fd;
 
-	printf("open %s %d!\n", pathname, flags);
+	//printf("open %s %d!\n", pathname, flags);
 
 	if (strcmp(pathname, "/dev/vga") == 0) {
 		// VGA driver
@@ -80,7 +94,7 @@ int open(const char *pathname, int flags) {
 }
 
 int close(int fd) {
-	printf("close!\n");
+	//printf("close!\n");
 
 	return libc_close(fd);
 }
@@ -88,7 +102,7 @@ int close(int fd) {
 ssize_t read(int fd, void *buf, size_t count) {
 	int ret;
 
-	printf("read!\n");
+	//printf("read!\n");
 
 	switch (tacos_descriptors[fd]) {
 		case NONE: {
@@ -111,7 +125,7 @@ ssize_t read(int fd, void *buf, size_t count) {
 int ioctl(int fd, unsigned long request, void *data) {
 	int ret;
 
-	printf("ioctl!\n");
+	//printf("ioctl!\n");
 	
 	switch (tacos_descriptors[fd]) {
 		case NONE: {
@@ -136,11 +150,11 @@ int getchar() {
 	SDL_PumpEvents();
 	SDL_Event event;
 	if (SDL_PeepEvents(&event, 1, SDL_GETEVENT, SDL_KEYDOWNMASK)) {
-		printf("%d %d\n", event.key.keysym.scancode, event.key.keysym.unicode);
+		//printf("%d %d\n", event.key.keysym.scancode, event.key.keysym.unicode);
 		ret = event.key.keysym.unicode;
 	} else {
 		ret = EOF;
 	}
-	printf("getchar %d\n", ret);
+	//printf("getchar %d\n", ret);
 	return ret;
 }
