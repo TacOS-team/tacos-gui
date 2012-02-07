@@ -45,8 +45,8 @@ void alarm_handler(int signum) {
 	alarm(1);
 }
 
-void __attribute__((constructor)) init() {
-	printf("Initializing hooklib.\n");
+void __attribute__((constructor)) libtacos_init() {
+	printf("Initializing libtacos.\n");
 	libc_open = dlsym(RTLD_NEXT, "open");
 	libc_close = dlsym(RTLD_NEXT, "close");
 	libc_read = dlsym(RTLD_NEXT, "read");
@@ -68,8 +68,8 @@ void __attribute__((constructor)) init() {
 	alarm(1);
 }
 
-void __attribute__((destructor)) destroy() {
-	printf("Destroying hooklib.\n");
+void __attribute__((destructor)) libtacos_destroy() {
+	printf("Destroying libtacos.\n");
 	SDL_Quit();
 }
 
