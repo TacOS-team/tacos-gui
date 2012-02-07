@@ -1,11 +1,10 @@
 #ifndef TSOCK_H
 #define TSOCK_H
 
-#include <sys/types.h>
-#include <sys/socket.h>
 
+#define UNIX_PATH_MAX    108
 
-int tsockListen (const struct sockaddr * servAddr,struct sockaddr * clientAddr, socklen_t servAddrLen);
+int tsockListen (char * path);
     
 void tsockConnect();
 
