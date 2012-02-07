@@ -3,16 +3,16 @@
 
 #include <sys/types.h>
 
-int tsockListen (char * path);
+int tsock_listen(char *path);
     
-int tsockConnect(char * path) ;
+int tsock_connect(char *path);
 
-int tsockAccept(int tsockServer) ;
+int tsock_accept(int tsockServer);
 
-ssize_t tsockRead(int tsock, void * buffer, size_t len) ;
+ssize_t tsock_read(int tsock, void *buffer, size_t len);
 
-ssize_t tsockWrite(int tsock, void * buffer, size_t len);
+ssize_t tsock_write(int tsock, void *buffer, size_t len);
 
-void tsockClose();
+void tsock_close();
 
 #endif
