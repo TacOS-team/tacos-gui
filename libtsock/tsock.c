@@ -1,29 +1,39 @@
 #include <stdio.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+#include <string.h>
 
 #include "tsock.h"
 
 
-int tsockListen (const struct sockaddr * servAddr,struct sockaddr * clientAddr, socklen_t servAddrLen) {
+int tsockListen (char * path){
     int tsockServ = 0;
-    int tsockCanal = 0;
-    socklen_t clientAddrLen = sizeof(*clientAddr);
+    struct sockaddr_un addr;
+    socklen_t addrLen = sizeof(struct sockaddr_un);
 
+    // Paramétrage de l'adresse
+    addr.sun_family = AF_UNIX;
+    strcpy(addr.sun_path,path);
+    
     // Creation de la socket
-    tsockServ = socket (AF_UNIX,SOCK_DGRAM,0);
+    // d'aprèsle man SOCK_SEQPACKET préserve aussi l'ordre des paquets (et pas SOCK_DGRAM)
+    tsockServ = socket (AF_UNIX,SOCK_SEQPACKET,0);
     if (tsockServ == -1) {
 	perror("Revoyez les entrees sorties de votre programme ");
     }
 
     // Bind
-    if (! bind (tsockServ, servAddr, servAddrLen) ) {
+    if (! bind (tsockServ, (struct sockaddr *) &addr, addrLen) ) {
 	perror("Revoyez les entrees sorties de votre programme ");
     }
 
-    // accept
-    tsockCanal = accept (tsockServ, clientAddr, &clientAddrLen);
+    // listen
+    if (! listen (tsockServ, 5)) {
+	perror("Revoyez les entrees sorties de votre programme ");
+    }
 
-
-    return tsockCanal;
+    return tsockServ;
 }
 
 void tsockConnect() {
