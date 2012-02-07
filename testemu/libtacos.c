@@ -18,6 +18,7 @@ int (*libc_ioctl)(int fd, unsigned long request, void *data);
 enum tacos_descriptor_type {
 	NONE,
 	VGA,
+	VESA,
 	MOUSE,
 };
 
@@ -81,6 +82,10 @@ int open(const char *pathname, int flags) {
 		// VGA driver
 		fd = libc_open("/tmp", 0); // dummy fd
 		tacos_descriptors[fd] = VGA;
+	} else if (strcmp(pathname, "/dev/vesa") == 0) {
+		// VESA driver
+		fd = libc_open("/tmp", 0); // dummy fd
+		tacos_descriptors[fd] = VESA;
 	} else if (strcmp(pathname, "/dev/mouse") == 0) {
 		// Mouse driver
 		fd = libc_open("/tmp", 0); // dummy fd
@@ -113,6 +118,10 @@ ssize_t read(int fd, void *buf, size_t count) {
 			ret = -1;
 			break;
 		}
+		case VESA: {
+			ret = -1;
+			break;
+		}
 		case MOUSE: {
 			ret = mouse_read(buf);
 			break;
@@ -134,6 +143,10 @@ int ioctl(int fd, unsigned long request, void *data) {
 		}
 		case VGA: {
 			ret = vga_ioctl(request, data);
+			break;
+		}
+		case VESA: {
+			ret = vesa_ioctl(request, data);
 			break;
 		}
 		case MOUSE: {

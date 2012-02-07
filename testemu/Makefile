@@ -4,7 +4,7 @@ CFLAGS=-Wall -g
 %.o: %.c
 	$(CC) -o $@ -c $< $(CFLAGS) $(INCLUDES) -fPIC
 
-all: applications libtacos
+all: libtacos applications
 
 applications:
 	$(MAKE) $(MFLAGS) -C applications
@@ -13,7 +13,7 @@ drivers:
 	$(MAKE) $(MFLAGS) -C drivers
 
 libtacos: libtacos.o drivers
-	$(LD) -o libtacos.so -shared drivers/vga.o drivers/mouse.o libtacos.o -lSDL -ldl
+	$(LD) -o libtacos.so -shared drivers/*.o libtacos.o -lSDL -ldl
 
 clean:
 	$(MAKE) $@ $(MFLAGS) -C applications
@@ -34,5 +34,8 @@ runpong:
 
 runsnake:
 	LD_PRELOAD=./libtacos.so applications/snake_graph
+
+runclock:
+	LD_PRELOAD=./libtacos.so applications/clock_graph
 
 .PHONY: applications drivers clean runcube runcubev2 runzen

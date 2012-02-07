@@ -3,7 +3,7 @@ CFLAGS=-Wall -g
 
 SRCS=*.c
 
-all: vga.o mouse.o
+all: vga.o vesa.o mouse.o
 
 %.o: %.c
 	$(CC) -o $@ -c $< $(CFLAGS) $(INCLUDES) -fPIC
