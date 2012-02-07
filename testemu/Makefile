@@ -20,22 +20,22 @@ clean:
 	$(MAKE) $@ $(MFLAGS) -C drivers
 	rm -f *.o libtacos.so
 
-runcube:
+runcube: applications libtacos
 	LD_PRELOAD=./libtacos.so applications/cube_graph
 
-runcubev2:
+runcubev2: applications libtacos
 	LD_PRELOAD=./libtacos.so applications/cube_graph_mouse
 
-runzen:
+runzen: applications libtacos
 	LD_PRELOAD=./libtacos.so applications/zen_graph
 
-runpong:
+runpong: applications libtacos
 	LD_PRELOAD=./libtacos.so applications/pong
 
-runsnake:
+runsnake: applications libtacos
 	LD_PRELOAD=./libtacos.so applications/snake_graph
 
-runclock:
+runclock: applications libtacos
 	LD_PRELOAD=./libtacos.so applications/clock_graph
 
-.PHONY: applications drivers clean runcube runcubev2 runzen
+.PHONY: applications drivers clean
