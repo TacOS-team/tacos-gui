@@ -5,11 +5,11 @@ CFLAGS=-Wall -g
 
 all: x_danny
 
-x_danny: x_danny.o 
-	$(CC)  $< -o $@ -lX11
+x_danny: x_danny.o images.o
+	$(CC) $^ -o $@ -lX11
 
 %.o: %.c
-	$(CC) -o $@ -c $< $(CFLAGS) $(INCLUDES) -lX11
+	$(CC) -o $@ -c $< $(CFLAGS) $(INCLUDES)
 
 clean:
 	rm -f *.o

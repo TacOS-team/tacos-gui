@@ -3,11 +3,19 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <unistd.h>
+#include "images.h"
 
 /**
  * Danny program
  */
 int main (int argc, char **argv){
+  
+  image_info image = malloc(sizeof(image_info));
+  coulIm im = lireCoulImage ("figures/kim.ppm",image);
+  
+  //infos de l'image chargée en mémoire
+  printf("ma danny image fait %d par %d\n", image->width, image->height);
+
   //on se connecte au display
   Display * display = XOpenDisplay(NULL);
 
@@ -42,10 +50,6 @@ int main (int argc, char **argv){
   XEvent report;
 
   colormap = DefaultColormap(display, 0);
-  /*if(colormap == NULL){
-    fprintf(stderr,"Error creating the colormap\n");
-    return 1;
-    }*/
   green_gc = XCreateGC(display, window, 0, 0);
   if(XParseColor(display, colormap, green, &green_col) == 0){
     fprintf(stderr,"Error parsing the color\n");
@@ -56,6 +60,64 @@ int main (int argc, char **argv){
   XDrawRectangle(display, window, green_gc, 1, 1, 497, 497);
   XDrawRectangle(display, window, green_gc, 50, 50, 398, 398);
 
+
+  //on dessine une image
+
+  /*
+  for (y = 0 ; y < image_height ; y++) {
+    for (x = 0 ; x < image_width ; x++) {
+      
+      if (nplanes > 8) {
+	red >>= (8 - red_bits);
+	green >>= (8 - green_bits);
+	blue >>= (8 - blue_bits);
+	
+	pixel = ((red << red_shift) & red_mask) | ((green << green_shift) & green_mask) 
+	  | ((blue << blue_shift) & blue_mask);
+	
+      }
+      
+      //8 planes
+      else {
+	XColor color;
+	
+	red <<= 8;
+	green <<= 8;
+	blue <<= 8;
+	
+	for (i = 0 ; i != last_color ; i++) {
+	  if (color_cache[i].red == red && color_cache[i].green == green 
+	      && color_cache[i].blue == blue)
+	    break;
+	}
+	
+	if (i == last_color) {
+	  color.red = red;
+	  color.green = green;
+	  color.blue = blue;
+	  
+	  if (!XAllocColor (display, current_cmap, &color)) {
+	    fprintf (stderr, "Can't allocate %d %d %d\n", red, green, blue);
+	    exit (1);
+	  }
+	  else {
+	    color_cache[i].red = red;
+	    color_cache[i].green = green;
+	    color_cache[i].blue = blue;
+	    color_cache[i].pixel = pixel = color.pixel;
+	  }
+	  
+	  last_color++;
+	  if (last_color > 256)  {
+	    fprintf (stderr, "Too many colors...\n");
+	    exit (1);
+	  }
+	}
+      }
+    }
+  }
+*/	
+	
   while (1)  {
     XNextEvent(display, &report);
     switch  (report.type) {
@@ -66,7 +128,7 @@ int main (int argc, char **argv){
       XFlush(display);
       break;
     case KeyPress:
-      /*Close the program if q is pressed.*/
+      //Close the program if q is pressed.
       if (XLookupKeysym(&report.xkey, 0) == XK_q) {
 	exit(0);
       }
