@@ -1,19 +1,18 @@
 #ifndef TSOCK_H
 #define TSOCK_H
 
+#include <sys/types.h>
 
-#define UNIX_PATH_MAX    108
-
-int tsockListen (char * path);
+int tsock_listen(char *path);
     
-void tsockConnect();
+int tsock_connect(char *path);
 
-void tsockAccept();
+int tsock_accept(int tsockServer);
 
-void tsockRead();
+ssize_t tsock_read(int tsock, void *buffer, size_t len);
 
-void tsockWrite();
+ssize_t tsock_write(int tsock, void *buffer, size_t len);
 
-void tsockClose();
+void tsock_close();
 
 #endif
