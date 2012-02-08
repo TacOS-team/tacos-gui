@@ -38,9 +38,9 @@ void lireEnTete (FILE *descFic, struct image_info * image){
   }
   // Lecture des dimensions
   fscanf (descFic, "%d", &v);
-  image->height = v;
-  fscanf (descFic, "%d", &v);
   image->width = v;
+  fscanf (descFic, "%d", &v);
+  image->height = v;
   // Et lecture de la valeur maximale d'une intensite
   fscanf (descFic, "%d", &v);
   if (v != VAL_MAX){
@@ -66,7 +66,6 @@ struct pixel * lireCoulImage (char *nom, struct image_info * image){
 #endif
 
   //création de l'espace mémoire de l'image
-
   struct pixel * im = malloc(image->width * image->height * sizeof(struct pixel));
   
   for (y=0; y < image->height; y++){  

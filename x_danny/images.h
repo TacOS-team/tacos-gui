@@ -3,10 +3,6 @@
 
 #define VAL_MAX 255
 
-#define R 0
-#define G 1
-#define B 2
-
 //#define DEBUG
 
 /** 
@@ -15,9 +11,10 @@
  * Les pixels sont lu de ligne en ligne 
  */
 struct pixel{
-  unsigned char r;
-  unsigned char g;
   unsigned char b;
+  unsigned char g;
+  unsigned char r;
+  unsigned char a;
 };
 
 struct image_info{

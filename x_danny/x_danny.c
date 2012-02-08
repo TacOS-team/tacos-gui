@@ -3,6 +3,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <unistd.h>
+#include <string.h>
 #include "images.h"
 
 /**
@@ -36,101 +37,36 @@ int main (int argc, char **argv){
   printf("Display Height : %d \n", XDisplayHeightMM(display, 0));
   
   //creation d'une fenêtre simple
-  Window window = XCreateSimpleWindow(display, RootWindow(display,0), 1, 1, display_width, display_height,0, BlackPixel (display, 0), BlackPixel(display, 0));
-  
-  XMapWindow(display, window);
-  
+  Window window = XCreateSimpleWindow(display, RootWindow(display,0), 1, 1, 
+				      image->width, image->height, 0, 
+				      BlackPixel (display, 0), BlackPixel(display, 0));
+  XMapWindow(display, window);  
   XSelectInput(display, window, ExposureMask | KeyPressMask | ButtonPressMask);
   
   //dessine un danny
-  GC green_gc;
-  XColor green_col;
-  Colormap colormap;
-  char green[] = "#00FF00";
-  XEvent report;
+  XEvent report;  
+  //creation de l'image
+  int screen = DefaultScreen(display);
+  Visual * visual = DefaultVisual(display, screen);
+  int depth = DefaultDepth(display, screen);
+   
+  printf("depth %d\n", depth);
+  XImage * xi = XCreateImage(display, visual, depth, ZPixmap, 0,
+			     (char *)im, image->width, image->height, 32, 0);
 
-  colormap = DefaultColormap(display, 0);
-  green_gc = XCreateGC(display, window, 0, 0);
-  if(XParseColor(display, colormap, green, &green_col) == 0){
-    fprintf(stderr,"Error parsing the color\n");
-    return 1;
-  }
-  XAllocColor(display, colormap, &green_col);
-  XSetForeground(display, green_gc, green_col.pixel);
-  XDrawRectangle(display, window, green_gc, 1, 1, 497, 497);
-  XDrawRectangle(display, window, green_gc, 50, 50, 398, 398);
-
-
-  //on dessine une image
-
-  /*
-  for (y = 0 ; y < image_height ; y++) {
-    for (x = 0 ; x < image_width ; x++) {
-      
-      if (nplanes > 8) {
-	red >>= (8 - red_bits);
-	green >>= (8 - green_bits);
-	blue >>= (8 - blue_bits);
-	
-	pixel = ((red << red_shift) & red_mask) | ((green << green_shift) & green_mask) 
-	  | ((blue << blue_shift) & blue_mask);
-	
-      }
-      
-      //8 planes
-      else {
-	XColor color;
-	
-	red <<= 8;
-	green <<= 8;
-	blue <<= 8;
-	
-	for (i = 0 ; i != last_color ; i++) {
-	  if (color_cache[i].red == red && color_cache[i].green == green 
-	      && color_cache[i].blue == blue)
-	    break;
-	}
-	
-	if (i == last_color) {
-	  color.red = red;
-	  color.green = green;
-	  color.blue = blue;
-	  
-	  if (!XAllocColor (display, current_cmap, &color)) {
-	    fprintf (stderr, "Can't allocate %d %d %d\n", red, green, blue);
-	    exit (1);
-	  }
-	  else {
-	    color_cache[i].red = red;
-	    color_cache[i].green = green;
-	    color_cache[i].blue = blue;
-	    color_cache[i].pixel = pixel = color.pixel;
-	  }
-	  
-	  last_color++;
-	  if (last_color > 256)  {
-	    fprintf (stderr, "Too many colors...\n");
-	    exit (1);
-	  }
-	}
-      }
-    }
-  }
-*/	
-	
-  while (1)  {
+  int has_finished = 0;
+  while (!has_finished)  {
     XNextEvent(display, &report);
     switch  (report.type) {
     case Expose:   
       fprintf(stdout, "I have been exposed.\n");
-      XDrawRectangle(display, window, green_gc, 1, 1, 497, 497);
-      XDrawRectangle(display, window, green_gc, 50, 50, 398, 398);
+      XPutImage(display, window, DefaultGC(display,0), xi, 0, 0, 0, 0, image->width, image->height);
       XFlush(display);
       break;
     case KeyPress:
       //Close the program if q is pressed.
       if (XLookupKeysym(&report.xkey, 0) == XK_q) {
-	exit(0);
+	has_finished = 1;
       }
       break;
     }
