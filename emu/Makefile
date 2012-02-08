@@ -1,28 +1,44 @@
-INCLUDES= -I./include/
-CFLAGS=-Wall -g
+DEBUG=-D DEBUG
+CURRENTDIR=$(realpath .)
+INCLUDES= -I. -I$(CURRENTDIR)/include/ -I$(CURRENTDIR)/drivers/include/ -I$(CURRENTDIR)libs/libtacos/include/
+CFLAGS=-Wall -g $(DEBUG)
+
 BUILDDIR=$(realpath .)/build
 BUILDDIROBJECT=$(BUILDDIR)/objects
-BUILDDIRLIBS=$(BUILDDIR)/objects
+BUILDDIRLIBS=$(BUILDDIR)/libs
+BUILDDIRAPPS=$(BUILDDIR)/applications
+
 LIBTACOS=$(BUILDDIRLIBS)/libtacos.so
+PRONLIB=$(BUILDDIRLIBS)/pronlib.so
+
 export LIBTACOS
+export PRONLIB
+
+export INCLUDES
+export CFLAGS
+
+export BUILDDIROBJECT
+export BUILDDIRLIBS
+export BUILDDIRAPPS
 
 all: applications
 
-applications: libtacos
+debug:
+	$(MAKE) $(MAKEFILE) DEBUG="-D DEBUG"
+
+applications: libs
 	$(MAKE) $(MFLAGS) -C applications
 
 drivers:
 	$(MAKE) $(MFLAGS) -C drivers
 
-libtacos: $(BUILDDIROBJECT)/libtacos.o drivers
-	$(LD) -o $(LIBTACOS) -shared $(BUILDDIROBJECT)/vga.o $(BUILDDIROBJECT)/mouse.o $(BUILDDIROBJECT)/vesa.o $(BUILDDIROBJECT)/libtacos.o -lSDL -ldl
+libs: drivers
+	$(MAKE) $(MFLAGS) -C libs
 
 $(BUILDDIROBJECT)/%.o: %.c
 	$(CC) -o $@ -c $< $(CFLAGS) $(INCLUDES) -fPIC
 
 clean:
-	$(MAKE) $@ $(MFLAGS) -C applications
-	$(MAKE) $@ $(MFLAGS) -C drivers
-	rm -f $(BUILDDIROBJECT)/* libtacos.so
+	rm -f $(BUILDDIROBJECT)/* $(BUILDDIRLIBS)/* $(BUILDDIRAPPS)/*
 
-.PHONY: applications drivers clean
+.PHONY: applications drivers clean libs
