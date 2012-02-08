@@ -1,6 +1,9 @@
 INCLUDES= -I./include/
 CFLAGS=-Wall -g
-LIBTACOS=$(realpath .)/libtacos.so
+BUILDDIR=$(realpath .)/build
+BUILDDIROBJECT=$(BUILDDIR)/objects
+BUILDDIRLIBS=$(BUILDDIR)/objects
+LIBTACOS=$(BUILDDIRLIBS)/libtacos.so
 export LIBTACOS
 
 all: applications
@@ -11,15 +14,15 @@ applications: libtacos
 drivers:
 	$(MAKE) $(MFLAGS) -C drivers
 
-libtacos: libtacos.o drivers
-	$(LD) -o $(LIBTACOS) -shared drivers/*.o libtacos.o -lSDL -ldl
+libtacos: $(BUILDDIROBJECT)/libtacos.o drivers
+	$(LD) -o $(LIBTACOS) -shared $(BUILDDIROBJECT)/vga.o $(BUILDDIROBJECT)/mouse.o $(BUILDDIROBJECT)/vesa.o $(BUILDDIROBJECT)/libtacos.o -lSDL -ldl
 
-%.o: %.c
+$(BUILDDIROBJECT)/%.o: %.c
 	$(CC) -o $@ -c $< $(CFLAGS) $(INCLUDES) -fPIC
 
 clean:
 	$(MAKE) $@ $(MFLAGS) -C applications
 	$(MAKE) $@ $(MFLAGS) -C drivers
-	rm -f *.o libtacos.so
+	rm -f $(BUILDDIROBJECT)/* libtacos.so
 
 .PHONY: applications drivers clean

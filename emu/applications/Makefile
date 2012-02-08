@@ -1,15 +1,23 @@
 INCLUDES=-I. -I../include/
 CFLAGS=-Wall -g
+BUILDDIR=../build
+BUILDDIRAPP=$(BUILDDIR)/applications
 
-all: guacamole cube_graph cube_graph_mouse zen_graph pong snake_graph clock_graph
+all:  guacamole \
+			$(BUILDDIRAPP)/cube_graph \
+			$(BUILDDIRAPP)/cube_graph_mouse \
+			$(BUILDDIRAPP)/zen_graph \
+			$(BUILDDIRAPP)/pong \
+			$(BUILDDIRAPP)/snake_graph \
+			$(BUILDDIRAPP)/clock_graph
 
 guacamole:
 	$(MAKE) $(MFLAGS) -C guacamole
 
-%: %.c
-	$(CC) -o ../build/$@ $< $(LIBTACOS) $(CFLAGS) $(INCLUDES)
+$(BUILDDIRAPP)/%: %.c
+	$(CC) -o $@ $< $(LIBTACOS) $(CFLAGS) $(INCLUDES)
 
 clean:
-	rm -f ../build/* 
+	rm -f $(BUILDDIRAPP)/* 
 
 .PHONY: clean guacamole

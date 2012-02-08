@@ -1,14 +1,18 @@
 INCLUDES=-I. -I./include/ -I../include/
 CFLAGS=-Wall -g
+BUILDDIR=../build
+BUILDDIROBJECT=$(BUILDDIR)/objects
 
 SRCS=*.c
 
-all: vga.o vesa.o mouse.o
+all:  $(BUILDDIROBJECT)/vga.o \
+			$(BUILDDIROBJECT)/vesa.o \
+			$(BUILDDIROBJECT)/mouse.o
 
-%.o: %.c
+$(BUILDDIROBJECT)/%.o: %.c
 	$(CC) -o $@ -c $< $(CFLAGS) $(INCLUDES) -fPIC
 
 clean:
-	rm -f *.o
+	rm -f $(BUILDDIROBJECT)/*
 
 .PHONY: clean

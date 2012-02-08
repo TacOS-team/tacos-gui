@@ -1,13 +1,15 @@
 INCLUDES=-I. -I../../include/ -I../../libs
 CFLAGS=-Wall -g
+BUILDDIR=../../build
+BUILDDIRAPP=$(BUILDDIR)/applications
 
-all: guacamole
+all: $(BUILDDIRAPP)/guacamole
 
-guacamole:
-	$(CXX) -o ../../build/$@ guacamole.cpp $(LIBTACOS) $(CFLAGS) $(INCLUDES)
+$(BUILDDIRAPP)/guacamole:
+	$(CXX) -o $@ guacamole.cpp $(CFLAGS) $(INCLUDES)
 
 
 clean:
-	rm -f ../../build/* 
+	rm -f $(BUILDDIRAPP)/* 
 
 .PHONY: clean
