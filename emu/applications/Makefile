@@ -12,4 +12,4 @@ guacamole:
 clean:
 	rm -f ../build/* 
 
-.PHONY: clean
+.PHONY: clean guacamole
