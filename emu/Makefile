@@ -10,9 +10,11 @@ BUILDDIRAPPS=$(BUILDDIR)/applications
 
 LIBTACOS=$(BUILDDIRLIBS)/libtacos.so
 PRONLIB=$(BUILDDIRLIBS)/pronlib.so
+LIBSOCK=$(BUILDDIRLIBS)/libsock.so
 
 export LIBTACOS
 export PRONLIB
+export LIBSOCK
 
 export INCLUDES
 export CFLAGS
