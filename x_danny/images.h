@@ -14,22 +14,22 @@
  * Image couleur
  * Les pixels sont lu de ligne en ligne 
  */
-typedef struct pixel{
+struct pixel{
   unsigned char r;
   unsigned char g;
   unsigned char b;
-} *coulIm;
+};
 
-typedef struct image_info{
+struct image_info{
   char mode;
   int width;
   int height;
   int profondeur;
-} *image_info;
+};
 
 /**
  * Permet de lire une image PPM ASCII
  */
-coulIm lireCoulImage(char *nom, image_info image);
+struct pixel * lireCoulImage(char * nom, struct image_info * image);
 
 #endif//__IMAGES_H__

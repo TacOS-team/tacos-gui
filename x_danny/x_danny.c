@@ -10,8 +10,8 @@
  */
 int main (int argc, char **argv){
   
-  image_info image = malloc(sizeof(image_info));
-  coulIm im = lireCoulImage ("figures/kim.ppm",image);
+  struct image_info * image = malloc(sizeof(struct image_info));
+  struct pixel * im = lireCoulImage ("figures/kim.ppm",image);
   
   //infos de l'image chargée en mémoire
   printf("ma danny image fait %d par %d\n", image->width, image->height);

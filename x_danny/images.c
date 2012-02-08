@@ -21,7 +21,7 @@ void ouvrirFichier (char *nom, FILE **desc, char *mode){
 
 // Lecture et verification que l'en-tete est correcte et correspond 
 // bien a notre mode (P2 = ndg ASCII, P3 = rgb ASCII)
-void lireEnTete (FILE *descFic, image_info image){
+void lireEnTete (FILE *descFic, struct image_info * image){
   char c;
   int v;
   
@@ -50,14 +50,14 @@ void lireEnTete (FILE *descFic, image_info image){
   image->profondeur = v;  
 }
 
-coulIm lireCoulImage (char *nom, image_info image){
+struct pixel * lireCoulImage (char *nom, struct image_info * image){
   FILE *descFic = NULL;
   int c, x, y;
   
   ouvrirFichier (nom, &descFic, "r");
   
   //récupération des infos de l'image
-  memset(image, 0, sizeof(image_info));
+  memset(image, 0, sizeof(struct image_info));
   image->mode = '3';
   lireEnTete (descFic, image);
 
@@ -67,7 +67,7 @@ coulIm lireCoulImage (char *nom, image_info image){
 
   //création de l'espace mémoire de l'image
 
-  coulIm im = malloc(image->width * image->height * sizeof(coulIm));
+  struct pixel * im = malloc(image->width * image->height * sizeof(struct pixel));
   
   for (y=0; y < image->height; y++){  
     for (x=0; x < image->width; x++){
