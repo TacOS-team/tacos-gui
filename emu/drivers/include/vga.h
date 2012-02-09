@@ -1,7 +1,7 @@
 #ifndef __VGA_H__
 #define __VGA_H__
 
-#include <vga_modes.h>
+#include <vga_types.h>
 
 void vga_set_mode(enum vga_mode mode);
 void vga_write_buf(char *buffer);

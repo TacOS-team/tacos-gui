@@ -1,4 +1,5 @@
 #include <vga.h>
+#include <vga_modes.h>
 #include <SDL/SDL.h>
 
 extern SDL_Surface *screen;
