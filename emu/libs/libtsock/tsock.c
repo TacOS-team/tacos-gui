@@ -4,6 +4,7 @@
 #include <sys/un.h>
 #include <string.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 #include "tsock.h"
 
