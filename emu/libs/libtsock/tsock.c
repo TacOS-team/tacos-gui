@@ -38,6 +38,8 @@ int tsock_listen(char *path) {
 	perror("socket : revoyez les entrées/sorties de votre programme");
     }
 
+    setNonBlockMode(tsockServ);
+
     // Bind
     if (bind(tsockServ, (struct sockaddr*) &addr, addrLen) != 0) {
 	perror("bind : revoyez les entrées/sorties de votre programme");
@@ -68,6 +70,8 @@ int tsock_connect(char *path) {
     if (tsockClient == -1) {
 	perror("socket : revoyez les entrées/sorties de votre programme");
     }
+    
+    setNonBlockMode(tsockClient);
 
     // Connect
     if (connect(tsockClient, (struct sockaddr*) &addr, addrLen) != 0) {
@@ -83,9 +87,9 @@ int tsock_accept(int tsockServer) {
     int tsockCanal = 0; // socket du canal client <--> serveur
 
     tsockCanal = accept(tsockServer, (struct sockaddr*) &addrClientOSEF, &addrLenOSEF);
-    if (tsockCanal == -1) {
+    /*if (tsockCanal == -1) {
 	perror("accept : revoyez les entrées/sorties de votre programme");
-    }
+    }*/
 
     return tsockCanal;
 }

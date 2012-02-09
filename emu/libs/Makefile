@@ -1,4 +1,4 @@
-SUBDIRS = libtacos pronlib libtsock
+SUBDIRS = libtacos libtsock pronlib
 
 all:
 	@for i in $(SUBDIRS); do \

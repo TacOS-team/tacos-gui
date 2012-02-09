@@ -1,6 +1,7 @@
-#include <pronlib.hpp>
-#include <pron_types.hpp>
+#include <pronlib.h>
+extern "C" {
 #include <tsock.h>
+}
 #include <cstdio>
 
 Display* pronConnect() {
@@ -9,6 +10,8 @@ Display* pronConnect() {
 	if (fd < -1) {
 		fprintf(stderr, "FUQUE.\n");
 	}
+	RqHello h(42);
+	tsock_write(fd, &h, sizeof(h));
 
 	return d;	
 }
