@@ -1,8 +1,7 @@
-
 all: libtsock
 
 libtsock: $(BUILDDIROBJECT)/tsock.o
-	$(LD) -o $(LIBSOCK) -shared $^
+	$(LD) -o $(LIBTSOCK) -shared $<
 
 $(BUILDDIROBJECT)/%.o: %.c
-	$(CC) -o $@ -c $< $(CFLAGS) $(INCLUDES) -fPIC
+	$(CC) -o $@ -c $< $(CFLAGS) $(INCLUDES)
