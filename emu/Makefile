@@ -15,7 +15,7 @@ export LD=@printf "\033[31m   LD   $$@\033[0m\n" && ld
 DEBUG=-DDEBUG
 CURRENTDIR=$(realpath .)
 INCLUDES= -I. -I$(CURRENTDIR)/include/ -I$(CURRENTDIR)/drivers/include/ -I$(CURRENTDIR)/libs/libtacos/include/ -I$(CURRENTDIR)/libs/pronlib/ -I$(CURRENTDIR)/libs/libtsock/
-CFLAGS=-Wall -g $(DEBUG)
+CFLAGS=-Wall -g $(DEBUG) -Wno-write-strings
 export MFLAGS=-s
 
 BUILDDIR=$(realpath .)/build
