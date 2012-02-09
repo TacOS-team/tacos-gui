@@ -193,7 +193,7 @@ void game() {
 	fcntl(STDIN_FILENO, F_SETFL, (void*)O_NONBLOCK);
 	
 	int vga_fd = open("/dev/vga", O_RDONLY);
-	ioctl(vga_fd, SETMODE, (void*)vga_mode_320x200x256); 
+	ioctl(vga_fd, SETVGAMODE, (void*)vga_mode_320x200x256); 
 	init_snake();
 
 	int lig, col;
@@ -209,7 +209,7 @@ void game() {
 	while(avance_snake() != -1) {
 		usleep(100000);
 		thread_input();
-		ioctl(vga_fd, FLUSH, buffer);
+		ioctl(vga_fd, FLUSHVGA, buffer);
 	}
 	
 	close(vga_fd);

@@ -1,5 +1,5 @@
-#include <mouse_types.h>
-#include <SDL/SDL.h>
+#include <mouse.h>
+
 
 extern SDL_Surface *screen;
 

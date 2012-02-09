@@ -151,7 +151,7 @@ void draw_cube(char *buffer) {
 
 int main() {
 	int vga_fd = open("/dev/vga", O_RDONLY);
-	ioctl(vga_fd, SETMODE, (void*)vga_mode_320x200x256); 
+	ioctl(vga_fd, SETVGAMODE, (void*)vga_mode_320x200x256); 
 	init();
 
 	while (1) {	
@@ -161,7 +161,7 @@ int main() {
 			rotate_point(cube[i]);
 		}
 		draw_cube(buffer);
-		ioctl(vga_fd, FLUSH, buffer);
+		ioctl(vga_fd, FLUSHVGA, buffer);
 		usleep(10000);
 	}
 

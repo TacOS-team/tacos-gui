@@ -31,6 +31,6 @@
 
 enum vga_mode { vga_mode_80x25_text, vga_mode_320x200x256, vga_mode_320x200x256_modex };
 
-enum vga_req_codes { SETMODE, FLUSH, BACKTOTEXTMODE };
+enum vga_req_codes { SETVGAMODE, FLUSHVGA, BACKTOTEXTMODE };
 
 #endif
