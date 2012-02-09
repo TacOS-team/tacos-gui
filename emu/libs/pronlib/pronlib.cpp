@@ -34,3 +34,8 @@ void pronDrawLine(Display *d, Window w, GC gc, int x1, int y1, int x2, int y2) {
 void pronDisconnect(Display *d) {
 	
 }
+
+void pronSubscribeEvent(Display *d, uint32 events) {
+	
+}
+

@@ -7,6 +7,10 @@ enum MessageType {
 	RQ_DRAW_LINE
 };
 
+enum EventType {
+	CREATE_NOTIFY = 1,
+};
+
 struct RqWelcome {
 	RqWelcome(int protoVersion) {
 		this->type = RQ_WELCOME;
