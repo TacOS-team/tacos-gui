@@ -1,7 +1,9 @@
-all: libtacos
+OBJS = vga.o mouse.o vesa.o
 
-libtacos: $(BUILDDIROBJECT)/libtacos.o
-	$(LD) -o $(LIBTACOS) -shared $(BUILDDIROBJECT)/vga.o $(BUILDDIROBJECT)/mouse.o $(BUILDDIROBJECT)/vesa.o $< -lSDL -ldl -lc
+all: $(LIBTACOS)
 
-$(BUILDDIROBJECT)/%.o: %.c
+$(LIBTACOS): $(BUILDDIROBJS)/libtacos.o
+	$(LD) -o $@ -shared $< $(addprefix $(BUILDDIROBJS)/, $(OBJS)) -lSDL -ldl -lc
+
+$(BUILDDIROBJS)/%.o: %.c
 	$(CC) -o $@ -c $< $(CFLAGS) $(INCLUDES) -fPIC

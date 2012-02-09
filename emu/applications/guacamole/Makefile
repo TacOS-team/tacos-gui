@@ -1,4 +1,3 @@
-
 all: $(BUILDDIRAPPS)/guacamole
 
 $(BUILDDIRAPPS)/guacamole: guacamole.cpp

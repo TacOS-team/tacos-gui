@@ -1,9 +1,8 @@
+OBJS = vga.o vesa.o mouse.o
 
-all:  $(BUILDDIROBJECT)/vga.o \
-			$(BUILDDIROBJECT)/vesa.o \
-			$(BUILDDIROBJECT)/mouse.o
+all: $(addprefix $(BUILDDIROBJS)/, $(OBJS))
 
-$(BUILDDIROBJECT)/%.o: %.c
+$(BUILDDIROBJS)/%.o: %.c
 	$(CC) -o $@ -c $< $(CFLAGS) $(INCLUDES) -fPIC
 
 .PHONY: clean

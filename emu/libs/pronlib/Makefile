@@ -1,7 +1,7 @@
-all: pronlib
+all: $(PRONLIB)
 
-pronlib: $(BUILDDIROBJECT)/pronlib.o
-	$(LD) -o $(PRONLIB) -shared $< -fc
+$(PRONLIB): $(BUILDDIROBJS)/pronlib.o
+	$(LD) -o $@ -shared $< -fc
 
-$(BUILDDIROBJECT)/%.o: %.cpp
+$(BUILDDIROBJS)/%.o: %.cpp
 	$(CXX) -o $@ -c $< $(CFLAGS) $(INCLUDES) -fPIC
