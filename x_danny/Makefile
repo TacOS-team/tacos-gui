@@ -6,7 +6,7 @@ CFLAGS=-Wall -g
 all: x_danny
 
 x_danny: x_danny.o images.o
-	$(CC) $^ -o $@ -lX11
+	$(CC) $^ -o $@ -lX11 -lm
 
 %.o: %.c
 	$(CC) -o $@ -c $< $(CFLAGS) $(INCLUDES)
