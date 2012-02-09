@@ -2,19 +2,17 @@
 #define TSOCK_H
 
 #include <sys/types.h>
-#include <sys/socket.h>
 
-
-int tsockListen (const struct sockaddr * servAddr,struct sockaddr * clientAddr, socklen_t servAddrLen);
+int tsock_listen(char *path);
     
-void tsockConnect();
+int tsock_connect(char *path);
 
-void tsockAccept();
+int tsock_accept(int tsockServer);
 
-void tsockRead();
+ssize_t tsock_read(int tsock, void *buffer, size_t len);
 
-void tsockWrite();
+ssize_t tsock_write(int tsock, void *buffer, size_t len);
 
-void tsockClose();
+void tsock_close(int tsock);
 
 #endif
