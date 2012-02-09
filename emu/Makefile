@@ -15,7 +15,7 @@ export LD=@printf "\033[31m   LD   $$@\033[0m\n" && ld
 
 DEBUG=-D DEBUG
 CURRENTDIR=$(realpath .)
-INCLUDES= -I. -I$(CURRENTDIR)/include/ -I$(CURRENTDIR)/drivers/include/ -I$(CURRENTDIR)libs/libtacos/include/
+INCLUDES= -I. -I$(CURRENTDIR)/include/ -I$(CURRENTDIR)/drivers/include/ -I$(CURRENTDIR)/libs/libtacos/include/
 CFLAGS=-Wall -g $(DEBUG)
 
 BUILDDIR=$(realpath .)/build

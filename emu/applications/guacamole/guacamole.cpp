@@ -1,10 +1,8 @@
 #include <iostream>
-
+#include <clibtacos>
 
 
 int main() {
   std::cout << "ok" << std::endl;
-#ifdef DEBUG
-  std::cout << "DEBUG" << std::endl;
-#endif
+  debug("oh yeah ! %d\n", 15);
 }
