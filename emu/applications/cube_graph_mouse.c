@@ -70,14 +70,14 @@ int lignes[][2] = {
 	{3, 7}
 };
 
-float cos(float angle) {
+float my_cos(float angle) {
 	float angle_radians = angle*(2*PI)/360;
 	float result;
 	asm("fcos" : "=t" (result) : "0" (angle_radians));
 	return result;
 }
 
-float sin(float angle) {
+float my_sin(float angle) {
 	float angle_radians = angle*(2*PI)/360;
 	float result;
 	asm("fsin" : "=t" (result) : "0" (angle_radians));
@@ -142,11 +142,11 @@ void draw_line(int x1, int y1, int x2, int y2, char color, char *buffer) {
 void rotate_point(float point[3], float theta, float phi) {
 	float temp[3];
 	
-	float cos_theta = 	cos(theta);
-	float sin_theta = 	sin(theta);
+	float cos_theta = 	my_cos(theta);
+	float sin_theta = 	my_sin(theta);
 	
-	float cos_phi = 	cos(phi);
-	float sin_phi = 	sin(phi);
+	float cos_phi = 	my_cos(phi);
+	float sin_phi = 	my_sin(phi);
 	
 	temp[0] = point[0];
 	temp[1] = point[1]*cos_theta - point[2]*sin_theta;
@@ -192,7 +192,7 @@ int main() {
 	int i = 0;
 	
 	int vga_fd = open("/dev/vga", O_RDONLY);
-	ioctl(vga_fd, SETMODE, (void*)vga_mode_320x200x256); 
+	ioctl(vga_fd, SETVGAMODE, (void*)vga_mode_320x200x256); 
 	init();
 	mousestate_t data;
 	int prevx,prevy;
@@ -219,7 +219,7 @@ int main() {
 		draw_cube(buffer);
 		draw_mouse(data.x, data.y);
 		
-		ioctl(vga_fd, FLUSH, buffer);
+		ioctl(vga_fd, FLUSHVGA, buffer);
 		
 		prevx = data.x;
 		prevy = data.y;

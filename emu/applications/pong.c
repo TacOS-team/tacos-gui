@@ -105,7 +105,7 @@ void moveBall(int * x, int * y, int * velX, int * velY, int racketY) {
 
 int main() {
     vga_fd = open("/dev/vga", O_RDONLY);
-    ioctl(vga_fd, SETMODE, (void*)vga_mode_320x200x256); 
+    ioctl(vga_fd, SETVGAMODE, (void*)vga_mode_320x200x256); 
 
     int fd = open("/dev/mouse", O_RDONLY);
     mousestate_t data;
@@ -130,7 +130,7 @@ int main() {
 	moveBall(&ballX,&ballY,&velX,&velY,data.y);
 	drawBall(ballX,ballY,color);
 	drawRacket(data.y,color);
-	ioctl(vga_fd, FLUSH, buffer);
+	ioctl(vga_fd, FLUSHVGA, buffer);
 	
 	usleep(10000);
     }
