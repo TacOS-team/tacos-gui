@@ -1,3 +1,18 @@
+
+HASCOLOR = $(shell if test `which colorgcc`; then echo true; else echo false; fi)
+ifneq ($(HASCOLOR),true)
+	export CC=@printf "\033[34m   CC   $$@\033[0m\n" && gcc
+else
+	export CC=@printf "\033[34m   CC   $$@\033[0m\n" && colorgcc
+endif
+
+export CXX=@printf "\033[34m   CPPC   $$@\033[0m\n" && g++
+
+
+export AR=@printf "\033[32m   AR   $$@\033[0m\n" && ar
+
+export LD=@printf "\033[31m   LD   $$@\033[0m\n" && ld
+
 DEBUG=-D DEBUG
 CURRENTDIR=$(realpath .)
 INCLUDES= -I. -I$(CURRENTDIR)/include/ -I$(CURRENTDIR)/drivers/include/ -I$(CURRENTDIR)libs/libtacos/include/
@@ -10,9 +25,11 @@ BUILDDIRAPPS=$(BUILDDIR)/applications
 
 LIBTACOS=$(BUILDDIRLIBS)/libtacos.so
 PRONLIB=$(BUILDDIRLIBS)/pronlib.so
+LIBSOCK=$(BUILDDIRLIBS)/libsock.so
 
 export LIBTACOS
 export PRONLIB
+export LIBSOCK
 
 export INCLUDES
 export CFLAGS
@@ -21,22 +38,18 @@ export BUILDDIROBJECT
 export BUILDDIRLIBS
 export BUILDDIRAPPS
 
-all: applications
+SUBDIRS = drivers libs applications
+
+all:
+	@for i in $(SUBDIRS); do \
+		printf "\033[1m>>> [$$i]\033[0m\n"; \
+		$(MAKE) -s -C $$i; \
+		if [ $$? = 0 ]; then printf "\033[1m<<< [$$i] [OK]\033[0m\n"; else printf "\033[31m\033[1m<<< [$$i] [FAIL]\033[0m\n"; exit 1; fi; \
+	done
 
 debug:
 	$(MAKE) $(MAKEFILE) DEBUG="-D DEBUG"
 
-applications: libs
-	$(MAKE) $(MFLAGS) -C applications
-
-drivers:
-	$(MAKE) $(MFLAGS) -C drivers
-
-libs: drivers
-	$(MAKE) $(MFLAGS) -C libs
-
-$(BUILDDIROBJECT)/%.o: %.c
-	$(CC) -o $@ -c $< $(CFLAGS) $(INCLUDES) -fPIC
 
 clean:
 	rm -f $(BUILDDIROBJECT)/* $(BUILDDIRLIBS)/* $(BUILDDIRAPPS)/*
