@@ -1,5 +1,8 @@
+#ifndef _PRON_TYPES_H_
+#define _PRON_TYPES_H_
+
 enum MessageType {
-	RQ_WELCOME,
+	RQ_HELLO,
 	RESP_WELCOME,
 	RQ_CREATE_WINDOW,
 	RQ_MAP_WINDOW,
@@ -11,9 +14,9 @@ enum EventType {
 	CREATE_NOTIFY = 1,
 };
 
-struct RqWelcome {
-	RqWelcome(int protoVersion) {
-		this->type = RQ_WELCOME;
+struct RqHello {
+	RqHello(int protoVersion) {
+		this->type = RQ_HELLO;
 		this->protoVersion = protoVersion;
 	}
 
@@ -67,3 +70,5 @@ struct Window {
 struct GC {
 
 };
+
+#endif

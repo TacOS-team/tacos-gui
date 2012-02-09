@@ -5,6 +5,7 @@ all:  $(BUILDDIRAPPS)/cube_graph \
 			$(BUILDDIRAPPS)/zen_graph \
 			$(BUILDDIRAPPS)/pong \
 			$(BUILDDIRAPPS)/snake_graph \
+			$(BUILDDIRAPPS)/pouet \
 			$(BUILDDIRAPPS)/clock_graph
 	@for i in $(SUBDIRS); do \
 		printf "\033[1m>>> [$$i]\033[0m\n"; \
@@ -14,5 +15,8 @@ all:  $(BUILDDIRAPPS)/cube_graph \
 
 $(BUILDDIRAPPS)/%: %.c
 	$(CC) -o $@ $< $(LIBTACOS) $(CFLAGS) $(INCLUDES)
+
+$(BUILDDIRAPPS)/%: %.cpp
+	$(CXX) -o $@ $< $(LIBTACOS) $(PRONLIB) $(LIBTSOCK) $(CFLAGS) $(INCLUDES)
 
 .PHONY: clean guacamole

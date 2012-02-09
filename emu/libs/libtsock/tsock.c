@@ -8,6 +8,18 @@
 
 #include "tsock.h"
 
+void setNonBlockMode(int tsock) {
+    int flags = 0;
+    flags = fcntl(tsock, F_GETFL);
+    if (flags < 0) {
+	perror ("olol problème : ");
+    }
+    else {
+	flags += O_NONBLOCK;
+    }
+    fcntl(tsock, F_SETFL,flags);
+}
+
 int tsock_listen(const char *path) {
     int tsockServ = 0;
     struct sockaddr_un addr;
@@ -25,6 +37,8 @@ int tsock_listen(const char *path) {
     if (tsockServ == -1) {
 	perror("socket : revoyez les entrées/sorties de votre programme");
     }
+
+    setNonBlockMode(tsockServ);
 
     // Bind
     if (bind(tsockServ, (struct sockaddr*) &addr, addrLen) != 0) {
@@ -56,6 +70,8 @@ int tsock_connect(const char *path) {
     if (tsockClient == -1) {
 	perror("socket : revoyez les entrées/sorties de votre programme");
     }
+    
+    setNonBlockMode(tsockClient);
 
     // Connect
     if (connect(tsockClient, (struct sockaddr*) &addr, addrLen) != 0) {
@@ -71,9 +87,9 @@ int tsock_accept(int tsockServer) {
     int tsockCanal = 0; // socket du canal client <--> serveur
 
     tsockCanal = accept(tsockServer, (struct sockaddr*) &addrClientOSEF, &addrLenOSEF);
-    if (tsockCanal == -1) {
+    /*if (tsockCanal == -1) {
 	perror("accept : revoyez les entrées/sorties de votre programme");
-    }
+    }*/
 
     return tsockCanal;
 }

@@ -1,7 +1,10 @@
-#include <pronlib.hpp>
-#include <pron_types.hpp>
+#include <pronlib.h>
+extern "C" {
 #include <tsock.h>
+}
 #include <cstdio>
+
+#include <stdint.h>
 
 Display* pronConnect() {
 	Display *d = new Display();
@@ -9,6 +12,8 @@ Display* pronConnect() {
 	if (fd < -1) {
 		fprintf(stderr, "FUQUE.\n");
 	}
+	RqHello h(42);
+	tsock_write(fd, &h, sizeof(h));
 
 	return d;	
 }
@@ -35,7 +40,7 @@ void pronDisconnect(Display *d) {
 	
 }
 
-void pronSubscribeEvent(Display *d, uint32 events) {
+void pronSubscribeEvent(Display *d, uint32_t events) {
 	
 }
 
