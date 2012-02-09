@@ -8,19 +8,7 @@
 
 #include "tsock.h"
 
-void setNonBlockMode(int tsock) {
-    int flags = 0;
-    flags = fcntl(tsock, F_GETFL);
-    if (flags < 0) {
-	perror ("olol problème : ");
-    }
-    else {
-	flags += O_NONBLOCK;
-    }
-    fcntl(tsock, F_SETFL,flags);
-}
-
-int tsock_listen(char *path) {
+int tsock_listen(const char *path) {
     int tsockServ = 0;
     struct sockaddr_un addr;
     socklen_t addrLen = 0;
@@ -53,7 +41,7 @@ int tsock_listen(char *path) {
     return tsockServ;
 }
 
-int tsock_connect(char *path) {
+int tsock_connect(const char *path) {
     int tsockClient = 0;
     struct sockaddr_un addr;
     socklen_t addrLen = 0;

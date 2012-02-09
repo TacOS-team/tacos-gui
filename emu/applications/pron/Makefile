@@ -1,6 +1,8 @@
+
 all: $(BUILDDIRAPPS)/pron
 
-$(BUILDDIRAPPS)/pron:
-	$(CXX) -o $@ pron.cpp $(LIBTACOS) $(LIBTSOCK) $(CFLAGS) $(INCLUDES)
+$(BUILDDIRAPPS)/pron: pron.cpp
+	$(CXX) -o $@ pron.cpp $(LIBTACOS) $(LIBTSOCK) $(CXXFLAGS) $(INCLUDES)
+	
 
 .PHONY: clean

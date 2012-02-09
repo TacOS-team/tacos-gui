@@ -3,9 +3,9 @@
 
 #include <sys/types.h>
 
-int tsock_listen(char *path);
+int tsock_listen(const char *path);
     
-int tsock_connect(char *path);
+int tsock_connect(const char *path);
 
 int tsock_accept(int tsockServer);
 

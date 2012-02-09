@@ -15,7 +15,9 @@ export LD=@printf "\033[31m   LD   $$@\033[0m\n" && ld
 DEBUG=-DDEBUG
 CURRENTDIR=$(realpath .)
 INCLUDES= -I. -I$(CURRENTDIR)/include/ -I$(CURRENTDIR)/drivers/include/ -I$(CURRENTDIR)/libs/libtacos/include/ -I$(CURRENTDIR)/libs/pronlib/ -I$(CURRENTDIR)/libs/libtsock/
-CFLAGS=-Wall -g $(DEBUG) -Wno-write-strings
+CFLAGS=-Wall -g $(DEBUG)
+CXXFLAGS=-Wall -g $(DEBUG)
+
 export MFLAGS=-s
 
 BUILDDIR=$(realpath .)/build
@@ -33,6 +35,7 @@ export LIBTSOCK
 
 export INCLUDES
 export CFLAGS
+export CXXFLAGS
 
 export BUILDDIROBJECT
 export BUILDDIRLIBS
@@ -44,7 +47,7 @@ all:
 	@for i in $(SUBDIRS); do \
 		printf "\033[1m>>> [$$i]\033[0m\n"; \
 		$(MAKE) $(MFLAGS) -C $$i; \
-		if [ $$? = 0 ]; then printf "\033[1m<<< [$$i] [OK]\033[0m\n"; else printf "\033[31m\033[1m<<< [$$i] [FAIL]\033[0m\n"; exit 1; fi; \
+		if [ $$? = 0 ]; then printf "\033[1m<<< [$$i] [\033[32mOK\033[30m]\033[0m\n"; else printf "\033[31m\033[1m<<< [$$i] [FAIL]\033[0m\n"; exit 1; fi; \
 	done
 
 debug:
