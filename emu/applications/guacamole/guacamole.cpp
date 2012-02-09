@@ -4,5 +4,5 @@
 
 int main() {
   std::cout << "ok" << std::endl;
-  debug("oh yeah ! %d\n", 15);
+  debug("oh yeah ! %d\n", 25);
 }

@@ -7,7 +7,7 @@
 
 #include "tsock.h"
 
-int tsock_listen(char *path) {
+int tsock_listen(const char *path) {
     int tsockServ = 0;
     struct sockaddr_un addr;
     socklen_t addrLen = 0;
@@ -38,7 +38,7 @@ int tsock_listen(char *path) {
     return tsockServ;
 }
 
-int tsock_connect(char *path) {
+int tsock_connect(const char *path) {
     int tsockClient = 0;
     struct sockaddr_un addr;
     socklen_t addrLen = 0;
