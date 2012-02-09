@@ -4,8 +4,21 @@
 #include <sys/un.h>
 #include <string.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 #include "tsock.h"
+
+
+void setNonBlockMode(int tsock) {
+    int flags = 0;
+    flags = fcntl(tsock, F_GETFL);
+    if (flags < 0) {
+	perror ("olol problème : ");
+    }
+    else {
+	flags += O_NONBLOCK;
+    }
+}
 
 int tsock_listen(char *path) {
     int tsockServ = 0;
@@ -18,6 +31,8 @@ int tsock_listen(char *path) {
     strcpy(addr.sun_path, path);
 
     addrLen = sizeof(addr);
+
+    setNonBlockMode(tsockServ);    
 
     // Création de la socket
     tsockServ = socket(PF_UNIX, SOCK_SEQPACKET, 0);
@@ -50,6 +65,8 @@ int tsock_connect(char *path) {
 
     addrLen = sizeof(addr);
 
+    setNonBlockMode(tsockClient);    
+    
     // Création de la socket
     tsockClient = socket(PF_UNIX, SOCK_SEQPACKET, 0);
     if (tsockClient == -1) {
