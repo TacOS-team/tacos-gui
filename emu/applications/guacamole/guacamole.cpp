@@ -1,8 +1,10 @@
 #include <iostream>
 #include <clibtacos>
 
+#include <pronlib.h>
+
 
 int main() {
-  std::cout << "ok" << std::endl;
-  debug("oh yeah ! %d\n", 25);
+  Display* display = pronConnect();
+  pronSubscribeEvent(display, CREATE_NOTIFY);
 }

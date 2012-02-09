@@ -11,7 +11,7 @@ enum MessageType {
 };
 
 enum EventType {
-	CREATE_NOTIFY = 1,
+	CREATE_NOTIFY = 1 << 0,
 };
 
 struct RqHello {

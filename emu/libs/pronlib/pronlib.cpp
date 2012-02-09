@@ -4,8 +4,6 @@ extern "C" {
 }
 #include <cstdio>
 
-#include <stdint.h>
-
 Display* pronConnect() {
 	Display *d = new Display();
 	int fd = tsock_connect("/tmp/pron.sock");

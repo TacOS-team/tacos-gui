@@ -8,9 +8,9 @@ endif
 
 export CXX=@printf "\033[34m   CPPC   $$@\033[0m\n" && g++
 
-export AR=@printf "\033[32m   AR   $$@\033[0m\n" && ar
+export AR=@printf "\033[34m   AR   $$@\033[0m\n" && ar
 
-export LD=@printf "\033[31m   LD   $$@\033[0m\n" && ld
+export LD=@printf "\033[35m   LD   $$@\033[0m\n" && ld
 
 # Compilation flags
 DEBUG=-DDEBUG
