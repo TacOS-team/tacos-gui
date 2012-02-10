@@ -129,7 +129,7 @@ int main (int argc, char **argv){
   XSelectInput(display, window, ExposureMask | KeyPressMask | ButtonPressMask | PointerMotionMask);
   XSetWindowAttributes xswa;
   xswa.override_redirect = True;
-  XChangeWindowAttributes(display, window, CWOverrideRedirect, &xswa);
+  //XChangeWindowAttributes(display, window, CWOverrideRedirect, &xswa);
   //on demande le focus
   XRaiseWindow(display, window);
   
@@ -240,10 +240,10 @@ int main (int argc, char **argv){
 	R = eye_left_radius;
 	ax = eye_left_x - r;
 	ay = eye_left_y - r;
-	px = ((sx - ax) * (R - r)) / 
-	  sqrt( pow2(sx - ax) * pow2(sy - ay) ) + ax;
-	py = ((sy - ay) * (R - r)) /
-	  sqrt( pow2(sx - ax) * pow2(sy - ay) ) +  ay;
+	px = ((sx - ax) * (R - r)) * 
+	  Q_rsqrt( pow2(sx - ax) + pow2(sy - ay) ) + ax;
+	py = ((sy - ay) * (R - r)) *
+	  Q_rsqrt( pow2(sx - ax) + pow2(sy - ay) ) +  ay;
 	printf("oeil gauche %d %d\n", (int)px, (int)py);
       
 	XFillArc(display, window, DefaultGC(display,0), (int)px, (int)py, 
@@ -255,10 +255,10 @@ int main (int argc, char **argv){
 	R = eye_right_radius;
 	ax = eye_right_x - r;
 	ay = eye_right_y - r;
-	px = (sx - ax) * (R - r) / 
-	  sqrt( pow2(sx - ax) * pow2(sy - ay) ) + ax;
-	py = (sy - ay) * (R - r) /
-	  sqrt( pow2(sx - ax) * pow2(sy - ay) ) +  ay;
+	px = (sx - ax) * (R - r) *
+	  Q_rsqrt( pow2(sx - ax) + pow2(sy - ay) ) + ax;
+	py = (sy - ay) * (R - r) *
+	  Q_rsqrt( pow2(sx - ax) + pow2(sy - ay) ) +  ay;
 	printf("oeil droit %d %d\n", (int)px, (int)py);
       
 	XFillArc(display, window, DefaultGC(display,0), (int)px, (int)py, 
