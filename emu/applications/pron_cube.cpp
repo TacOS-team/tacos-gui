@@ -52,11 +52,14 @@ void draw_cube(Display *d, Window w) {
 	int ligne;
 	
 	for (ligne = 0; ligne < 12; ligne++) {
-		pronDrawLine(d, w, 0, 
+		if (!pronDrawLine(d, w, 0, 
 				(int)(cube[lignes[ligne][0]][0]*50+150),
 				(int)(cube[lignes[ligne][0]][1]*50+100),
 				(int)(cube[lignes[ligne][1]][0]*50+150),
-				(int)(cube[lignes[ligne][1]][1]*50+100));
+				(int)(cube[lignes[ligne][1]][1]*50+100))) {
+			fprintf(stderr, "pron has closed the connection.\n");
+			exit(1);
+		}
 	}
 }
 
@@ -73,6 +76,11 @@ int main(int argc, char *argv[]) {
 	}
 
 	Display *d = pronConnect();
+	if (d == NULL) {
+		fprintf(stderr, "Unable to connect to pron.\n");
+		exit(1);
+	}
+
 	Window w = pronCreateWindow(d, d->rootWindow, x, y, 320, 240);
 
 	while (1) {
@@ -82,8 +90,7 @@ int main(int argc, char *argv[]) {
 			rotate_point(cube[i]);
 		}
 		draw_cube(d, w);
-		pronFlushWindow(d, w);
-		usleep(100000);
+		usleep(20000);
 	}
 
 	pronDisconnect(d);

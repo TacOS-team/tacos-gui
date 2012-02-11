@@ -3,8 +3,6 @@
 
 #include <pron_proto.h>
 
-using namespace std;
-
 struct Client {
 	int fd;
 };

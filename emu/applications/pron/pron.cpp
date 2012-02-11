@@ -1,7 +1,10 @@
-#include <pron.h>
 #include <cstdio>
+#include <pron.h>
 #include <tsock.h>
 #include <unistd.h>
+#include <signal.h>
+#include <sys/time.h>
+
 #define MAX_CLIENTS 128
 #define MAX_MSG_SIZE 1024
 
@@ -9,12 +12,17 @@ static Screen *screen;
 static Client clients[MAX_CLIENTS+1];
 static int nbClients = 0;
 
+static void alarm_handler(int signum) {
+	screen->flush();
+}
+
 void handleClientRequest(int client, void *buf, int size) {
 	int reqType = *((int*)buf);
 	switch (reqType) {
 		case RQ_HELLO: {
 			//printf("Received RQ_HELLO from client %d!\n", client);
 			//RqHello *rq = (RqHello*)buf;
+			// Identifiers: 16 upper bits for client id, 16 lower bits for resource id
 			RespWelcome welcome(screen->root->id, client << 16, (client << 17) - 1);
 			tsock_write(clients[client].fd, &welcome, sizeof(welcome));
 			break;
@@ -30,12 +38,6 @@ void handleClientRequest(int client, void *buf, int size) {
 			//printf("Received RQ_CLEAR_WINDOW from client %d!\n", client);
 			RqClearWindow *rq = (RqClearWindow*)buf;
 			screen->getWindow(rq->window)->clear();
-			break;
-		}
-		case RQ_FLUSH_WINDOW: {
-			//printf("Received RQ_FLUSH_WINDOW from client %d!\n", client);
-			RqFlushWindow *rq = (RqFlushWindow*)buf;
-			screen->getWindow(rq->window)->flush();
 			break;
 		}
 		case RQ_MAP_WINDOW: {
@@ -56,19 +58,31 @@ void handleClientRequest(int client, void *buf, int size) {
 }
 
 int main() {
-	int fd = tsock_listen("/tmp/pron.sock");
-	int continuer = 1;
-	int newFd;
-	int client;
-	int lRead;
-	char buf[MAX_MSG_SIZE];
-
 	printf("Welcome to pr0n \\o/\n");
 
+	// Initialize screen
 	screen = new Screen(800, 600, 24);
+	// Create root window
 	screen->root = new Window(screen, 0, NULL, 0, 0, 800, 600);
 	screen->addWindow(screen->root);
 
+	// Set up the flush timer
+	signal(SIGALRM, alarm_handler);
+	struct itimerval flushTimer;
+	flushTimer.it_interval.tv_usec = 40000;
+	flushTimer.it_interval.tv_sec = 1;
+	flushTimer.it_value.tv_usec = 40000;
+	flushTimer.it_value.tv_sec = 1;
+	setitimer(ITIMER_REAL, &flushTimer, 0);
+	
+	// Listen for clients
+	unlink("/tmp/pron.sock");
+	int fd = tsock_listen("/tmp/pron.sock");
+
+	// Main loop
+	bool continuer = true;
+	int newFd, lRead;
+	char buf[MAX_MSG_SIZE];
 	while (continuer) {
 		// Try to accept new client
 		if ((newFd = tsock_accept(fd)) > 0) {
@@ -78,12 +92,13 @@ int main() {
 		}
 
 		// Read requests from clients
-		for (client = 1; client <= nbClients; client++) {
+		for (int client = 1; client <= nbClients; client++) {
 			if ((lRead = tsock_read(clients[client].fd, buf, sizeof(buf))) > 0) {
 				handleClientRequest(client, buf, lRead);
 			}
 		}
 	}
 
+	// Close the listening socket
 	tsock_close(fd);
 }
