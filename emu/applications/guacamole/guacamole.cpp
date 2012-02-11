@@ -6,5 +6,5 @@
 
 int main() {
   Display* display = pronConnect();
-  pronSubscribeEvent(display, CREATE_NOTIFY);
+  pronSelectInput(display, display->rootWindow, CREATE_NOTIFY);
 }
