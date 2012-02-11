@@ -1,10 +1,15 @@
 #ifndef _PRON_H_
 #define _PRON_H_
 
-#include <pron_types.h>
+#include <pron_proto.h>
 
-typedef struct {
+using namespace std;
+
+struct Client {
 	int fd;
-} Client;
+};
+
+#include <window.h>
+#include <screen.h>
 
 #endif

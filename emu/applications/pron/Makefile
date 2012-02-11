@@ -1,6 +1,11 @@
+OBJS = pron.o window.o screen.o
+
 all: $(BUILDDIRAPPS)/pron
 
-$(BUILDDIRAPPS)/pron: pron.cpp
-	$(CXX) -o $@ $< $(LIBTACOS) $(LIBTSOCK) $(CXXFLAGS) $(INCLUDES)
+$(BUILDDIRAPPS)/pron: $(addprefix $(BUILDDIROBJS)/, $(OBJS))
+	$(CXX) -o $@ $^ $(LIBTACOS) $(LIBTSOCK) $(CXXFLAGS) $(INCLUDES)
+
+$(BUILDDIROBJS)/%.o: %.cpp
+	$(CC) -o $@ -c $< $(CFLAGS) $(INCLUDES)
 	
 .PHONY: clean

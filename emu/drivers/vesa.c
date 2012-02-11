@@ -19,7 +19,7 @@ void vesa_set_mode(struct vesa_setmode_req* mode) {
 
 void vesa_flush() {
 	SDL_UpdateRect(screen, 0, 0, screen->w, screen->h);
-	memset(screen->pixels, 0, screen->w * screen->h * screen->format->BytesPerPixel);
+	//memset(screen->pixels, 0, screen->w * screen->h * screen->format->BytesPerPixel);
 }
 
 int vesa_ioctl(unsigned long request, void *data) {
