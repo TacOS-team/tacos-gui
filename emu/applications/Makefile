@@ -1,4 +1,4 @@
-APPS = cube_graph cube_graph_mouse zen_graph pong snake_graph pouet clock_graph
+APPS = cube_graph cube_graph_mouse zen_graph pong snake_graph pouet clock_graph pron_cube
 SUBDIRS = guacamole pron
 
 all: $(addprefix $(BUILDDIRAPPS)/, $(APPS))
