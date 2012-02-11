@@ -53,7 +53,7 @@ int tsock_connect(const char *path) {
     addrLen = sizeof(addr);
 
     // Création de la socket
-    tsockClient = socket(PF_UNIX, SOCK_SEQPACKET | SOCK_NONBLOCK, 0);
+    tsockClient = socket(PF_UNIX, SOCK_SEQPACKET/* | SOCK_NONBLOCK*/, 0);
     if (tsockClient == -1) {
 	perror("socket");
     }
@@ -61,6 +61,7 @@ int tsock_connect(const char *path) {
     // Connect
     if (connect(tsockClient, (struct sockaddr*) &addr, addrLen) != 0) {
 	perror("connect");
+	return -1;
     }
 
     return tsockClient;
