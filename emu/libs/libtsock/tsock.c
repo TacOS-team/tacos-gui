@@ -5,20 +5,9 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <errno.h>
 
 #include "tsock.h"
-
-void setNonBlockMode(int tsock) {
-    int flags = 0;
-    flags = fcntl(tsock, F_GETFL);
-    if (flags < 0) {
-	perror ("olol problème : ");
-    }
-    else {
-	flags += O_NONBLOCK;
-    }
-    fcntl(tsock, F_SETFL,flags);
-}
 
 int tsock_listen(const char *path) {
     int tsockServ = 0;
@@ -33,21 +22,19 @@ int tsock_listen(const char *path) {
     addrLen = sizeof(addr);
 
     // Création de la socket
-    tsockServ = socket(PF_UNIX, SOCK_SEQPACKET, 0);
+    tsockServ = socket(PF_UNIX, SOCK_SEQPACKET | SOCK_NONBLOCK, 0);
     if (tsockServ == -1) {
-	perror("socket : revoyez les entrées/sorties de votre programme");
+	perror("socket");
     }
-
-    setNonBlockMode(tsockServ);
 
     // Bind
     if (bind(tsockServ, (struct sockaddr*) &addr, addrLen) != 0) {
-	perror("bind : revoyez les entrées/sorties de votre programme");
+	perror("bind");
     }
 
     // Listen
     if (listen(tsockServ, 5) != 0) {
-	perror("listen : revoyez les entrées/sorties de votre programme");
+	perror("listen");
     }
 
     return tsockServ;
@@ -66,16 +53,14 @@ int tsock_connect(const char *path) {
     addrLen = sizeof(addr);
 
     // Création de la socket
-    tsockClient = socket(PF_UNIX, SOCK_SEQPACKET, 0);
+    tsockClient = socket(PF_UNIX, SOCK_SEQPACKET | SOCK_NONBLOCK, 0);
     if (tsockClient == -1) {
-	perror("socket : revoyez les entrées/sorties de votre programme");
+	perror("socket");
     }
     
-    setNonBlockMode(tsockClient);
-
     // Connect
     if (connect(tsockClient, (struct sockaddr*) &addr, addrLen) != 0) {
-	perror("connect : revoyez les entrées/sorties de votre programme");
+	perror("connect");
     }
 
     return tsockClient;
@@ -88,7 +73,7 @@ int tsock_accept(int tsockServer) {
 
     tsockCanal = accept(tsockServer, (struct sockaddr*) &addrClientOSEF, &addrLenOSEF);
     /*if (tsockCanal == -1) {
-	perror("accept : revoyez les entrées/sorties de votre programme");
+	perror("accept");
     }*/
 
     return tsockCanal;
@@ -98,7 +83,7 @@ ssize_t tsock_read(int tsock, void *buffer, size_t len) {
     ssize_t nbBytesRcvd = recv(tsock, buffer, len, 0);
 
     if (nbBytesRcvd == -1) {
-	perror("read : revoyez les entrées/sorties de votre programme");
+	//perror("read");
     }
 
     return nbBytesRcvd;
@@ -108,7 +93,9 @@ ssize_t tsock_write(int tsock, void * buffer, size_t len) {
     ssize_t nbBytesSent = send(tsock, buffer, len, 0);
 
     if (nbBytesSent == -1) {
-	perror("write : revoyez les entrées/sorties de votre programme");
+	perror("write");
+	printf("errno = %d, waiting a bit...\n", errno);
+	usleep(1000000);
     }
 
     return nbBytesSent;
@@ -116,6 +103,6 @@ ssize_t tsock_write(int tsock, void * buffer, size_t len) {
 
 void tsock_close(int tsock) {
     if (close(tsock) != 0) {
-	perror("close : revoyez les entrées/sorties de votre programme");
+	perror("close");
     }
 }
