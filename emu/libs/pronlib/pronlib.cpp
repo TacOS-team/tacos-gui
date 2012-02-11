@@ -1,16 +1,20 @@
+/**
+ * @file pronlib.cpp
+ * Implementation of the pronlib.
+ */
+#include <cstdio>
 #include <pronlib.h>
 extern "C" {
 #include <tsock.h>
 }
-#include <cstdio>
 #include <unistd.h>
 
-#define MAX_MSG_SIZE 1024
+#define MAX_MSG_SIZE 1024 /**< max size of a message (1Kio) */
 
 Display* pronConnect() {
 	int fd = tsock_connect("/tmp/pron.sock");
-	if (fd < -1) {
-		fprintf(stderr, "FUQUE.\n");
+	if (fd < 0) {
+		return NULL;
 	}
 	printf("Sending hello...\n");
 	RqHello rq(42);
@@ -43,11 +47,6 @@ void pronClearWindow(Display *d, Window w) {
 	tsock_write(d->fd, &rq, sizeof(rq));
 }
 
-void pronFlushWindow(Display *d, Window w) {
-	RqFlushWindow rq(w);
-	tsock_write(d->fd, &rq, sizeof(rq));
-}
-
 GC pronCreateGC(Display *d) {
 	GC gc = 0;
 	return gc;
@@ -57,9 +56,9 @@ void pronMapWindow(Display *d, Window w) {
 
 }
 
-void pronDrawLine(Display *d, Window w, GC gc, int x1, int y1, int x2, int y2) {
+int pronDrawLine(Display *d, Window w, GC gc, int x1, int y1, int x2, int y2) {
 	RqDrawLine rq(gc, w, x1, y1, x2, y2);
-	tsock_write(d->fd, &rq, sizeof(rq));
+	return (tsock_write(d->fd, &rq, sizeof(rq)) > 0);
 }
 
 void pronDisconnect(Display *d) {
@@ -67,7 +66,6 @@ void pronDisconnect(Display *d) {
 	delete d;	
 }
 
-void pronSubscribeEvent(Display *d, uint32_t events) {
+void pronSelectInput(Display *d, Window w, uint32_t event_mask) {
 	
 }
-
