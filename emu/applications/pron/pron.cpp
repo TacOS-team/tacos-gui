@@ -1,8 +1,6 @@
 #include <pron.h>
 #include <cstdio>
-extern "C" {
 #include <tsock.h>
-}
 #include <unistd.h>
 #define MAX_CLIENTS 128
 #define MAX_MSG_SIZE 1024

@@ -4,9 +4,7 @@
  */
 #include <cstdio>
 #include <pronlib.h>
-extern "C" {
 #include <tsock.h>
-}
 #include <unistd.h>
 
 #define MAX_MSG_SIZE 1024 /**< max size of a message (1Kio) */
