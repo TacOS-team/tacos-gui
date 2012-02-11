@@ -1,6 +1,5 @@
 #define _GNU_SOURCE
 #include <dlfcn.h>
-#include <signal.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <SDL/SDL.h>
@@ -29,7 +28,7 @@ enum tacos_descriptor_type {
 
 enum tacos_descriptor_type tacos_descriptors[MAX_FD];
 
-void alarm_handler(int signum) {
+Uint32 libtacos_periodic_checks(Uint32 interval, void *param) {
 	static int i = 0;
 	if (SDL_QuitRequested()) {
 		exit(0);
@@ -47,7 +46,7 @@ void alarm_handler(int signum) {
 
 	i = (i + 1) % 5;
 
-	alarm(1);
+	return interval;
 }
 
 void __attribute__((constructor)) libtacos_init() {
@@ -57,7 +56,7 @@ void __attribute__((constructor)) libtacos_init() {
 	libc_read = dlsym(RTLD_NEXT, "read");
 	libc_ioctl = dlsym(RTLD_NEXT, "ioctl");
 
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
 		fprintf(stderr, "Vous n'avez pas compris les concepts : %s\n", SDL_GetError());
 		exit(1);
 	}
@@ -69,8 +68,7 @@ void __attribute__((constructor)) libtacos_init() {
 	SDL_ShowCursor(SDL_DISABLE);
 	SDL_WM_SetCaption("TacOS Emulator", "TacOS Emulator");
 
-	signal(SIGALRM, alarm_handler);
-	alarm(1);
+	SDL_AddTimer(1000, libtacos_periodic_checks, NULL); 
 }
 
 void __attribute__((destructor)) libtacos_destroy() {
