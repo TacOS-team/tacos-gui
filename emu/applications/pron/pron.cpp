@@ -70,9 +70,9 @@ int main() {
 	signal(SIGALRM, alarm_handler);
 	struct itimerval flushTimer;
 	flushTimer.it_interval.tv_usec = 40000;
-	flushTimer.it_interval.tv_sec = 1;
+	flushTimer.it_interval.tv_sec = 0;
 	flushTimer.it_value.tv_usec = 40000;
-	flushTimer.it_value.tv_sec = 1;
+	flushTimer.it_value.tv_sec = 0;
 	setitimer(ITIMER_REAL, &flushTimer, 0);
 	
 	// Listen for clients
