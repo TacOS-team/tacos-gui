@@ -76,21 +76,29 @@ void Screen::drawLine(int x1, int y1, int x2, int y2/*, color_t color*/) {
 // TODO: couleurs
 void Screen::fillRectangle(int x1, int y1, int x2, int y2/*, color_t color*/) {
 	//test the points
-	if(x1 < this->width && x2 < this->width && 
+	if(x1 >= 0 && x2 >= 0 && y1 >= 0 && y2 >= 0 &&
+	   x1 < this->width && x2 < this->width && 
 	   y1 < this->height && y2 < this-> height && 
-	   y2 >= y1 && x2 >= x2){
+	   y2 > y1 && x2 > x1){
 		// XXX: the pixel which is drawn
 		color_t c;
 		COLOR(c, 24).r = 255;
 		COLOR(c, 24).g = 77;
 		COLOR(c, 24).b = 182;
-		//number of iterations to fill the pixmap
+		//number of lines in the rectangle
 		int h = y2 - y1;
+		//number of pixels in a line
+		int w = x2 - x1;
 		//current line
 		int l;
+		//current pixel
+		int p;
 		for(l = 0 ; l < h ; l++){
 			//draw the line 
-			memcpy(this->videoBuffer + ( (l + y1) * this->width + x1) * sizeof(COLOR(c, 24)) , &COLOR(c,24), (x2 - x1) * sizeof(COLOR(c, 24)));
+			for(p = 0 ; p < w ; p++){
+				//draw a pixel
+				memcpy(this->videoBuffer + ((l + y1) * this->width + p + x1) * sizeof(COLOR(c, 24)) , &COLOR(c,24), sizeof(COLOR(c, 24)));
+			}
 		}
 	}
 }

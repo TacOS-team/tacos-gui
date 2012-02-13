@@ -55,7 +55,7 @@ void handleClientRequest(int client, void *buf, int size) {
 			break;
 		}
 		case RQ_FILL_RECTANGLE: {
-			printf("Received RQ_FILL_RECTANGLE from client %d!\n", client);
+			//printf("Received RQ_FILL_RECTANGLE from client %d!\n", client);
 			RqFillRectangle *rq = (RqFillRectangle*)buf;
 			screen->getWindow(rq->drawable)->fillRectangle(rq->x1, rq->y1, rq->x2, rq->y2);
 			break;
