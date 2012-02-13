@@ -73,6 +73,10 @@ void Screen::drawLine(int x1, int y1, int x2, int y2/*, color_t color*/) {
 	}
 }
 
+// TODO: couleurs
+void Screen::fillRectangle(int x1, int y1, int x2, int y2/*, color_t color*/) {
+}
+
 Window* Screen::getWindow(int id) {
 	for (unsigned int i = 0; i < this->windows.size(); i++) {
 		if (windows[i]->id == id) {

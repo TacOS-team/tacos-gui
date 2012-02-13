@@ -13,7 +13,8 @@ enum MessageType {
 	RQ_CLEAR_WINDOW,
 	RQ_MAP_WINDOW,
 	RQ_CREATE_GC,
-	RQ_DRAW_LINE
+	RQ_DRAW_LINE,
+	RQ_FILL_RECTANGLE
 };
 
 /** Pron event types. */
@@ -133,6 +134,32 @@ struct RqDrawLine {
 	/** Constructor. */
 	RqDrawLine(int gc, int drawable, int x1, int y1, int x2, int y2) {
 		this->type = RQ_DRAW_LINE;
+		this->gc = gc;
+		this->drawable = drawable;
+		this->x1 = x1;
+		this->y1 = y1;
+		this->x2 = x2;
+		this->y2 = y2;
+	}
+
+	MessageType type; /**< message type, always first */
+	int gc; /**< id of the graphics context to use */
+	int drawable; /**< id of the drawable in which to draw */ 
+	int x1; /**< x-coordinate of the first point to join */
+	int y1; /**< y-coordinate of the first point to join */
+	int x2; /**< x-coordinate of the second point to join */
+	int y2; /**< y-coordinate of the second point to join */
+};
+
+
+/**
+ * FillRectangle request.
+ * Sent by a client to draw the rectangle (x,y) .
+ */
+struct RqFillRectangle {
+	/** Constructor. */
+	RqFillRectangle(int gc, int drawable, int x1, int y1, int x2, int y2) {
+		this->type = RQ_FILL_RECTANGLE;
 		this->gc = gc;
 		this->drawable = drawable;
 		this->x1 = x1;

@@ -36,14 +36,8 @@
 #define WIDTH 320
 #define HEIGHT 200
 
-/*
-  #define BALL_SIZE 7
-  #define RACKET_WIDTH 6
-  #define RACKET_HEIGHT 50
-*/
-
-#define BALL_SIZE 1
-#define RACKET_WIDTH 1
+#define BALL_SIZE 7
+#define RACKET_WIDTH 6
 #define RACKET_HEIGHT 50
 
 void moveBall(int * x, int * y, int * velX, int * velY, int racketY) {
@@ -77,6 +71,7 @@ int main() {
   int ballY = HEIGHT/2 - BALL_SIZE /2;
   int velX = 10;
   int velY = 10;
+  int racketY = 0;
 
   Display *d = pronConnect();
   if (d == NULL) {
@@ -86,13 +81,20 @@ int main() {
 
   Window w = pronCreateWindow(d, d->rootWindow, 0, 0, WIDTH, HEIGHT);
 
+  //Creating graphical context
+  GC gc = pronCreateGC(d);
+
   while (1) {
     // read mouse position
-    //TODO: ask pronlib the mouse position
-
+    //TODO: ask to pronlib event the mouse position
+    
     pronClearWindow(d, w);	
     //TODO: draw ball and racket
-    //moveBall(&ballX,&ballY,&velX,&velY,NULL);
+    moveBall(&ballX,&ballY,&velX,&velY,racketY);
+    //draw the ball
+    pronFillRectangle(d, w, gc, ballX, ballY, ballX + BALL_SIZE, ballY + BALL_SIZE);
+    //drax the racket
+    pronFillRectangle(d, w, gc, 0, racketY, RACKET_WIDTH, racketY + RACKET_HEIGHT);
     usleep(10000);
 
   }

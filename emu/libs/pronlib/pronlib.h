@@ -95,6 +95,19 @@ void pronMapWindow(Display *d, Window w);
 int pronDrawLine(Display *d, Window w, GC gc, int x1, int y1, int x2, int y2);
 
 /**
+ * Fills a rectangle between (x1, y1) and (x2, y2).
+ * @todo Implement drawables instead of just windows
+ * @param d The connection to pron
+ * @param w The window in which to draw the line
+ * @param gc The graphics context to use
+ * @param x1 The x-coordinate of the first point to join
+ * @param y1 The y-coordinate of the first point to join
+ * @param x2 The x-coordinate of the second point to join
+ * @param y2 The y-coordinate of the second point to join
+ */
+int pronFillRectangle(Display *d, Window w, GC gc, int x1, int y1, int x2, int y2);
+
+/**
  * Closes the connection to pron.
  * @param d The connection to pron
  */

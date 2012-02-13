@@ -44,6 +44,10 @@ void Window::drawLine(int x1, int y1, int x2, int y2) {
 	this->screen->drawLine(this->x + x1, this->y + y1, this->x + x2, this->y + y2);
 }
 
+void Window::fillRectangle(int x1, int y1, int x2, int y2) {
+	this->screen->drawLine(this->x + x1, this->y + y1, this->x + x2, this->y + y2);
+}
+
 void Window::clear() {
 	for (int h = 0; h < this->height; h++) {
 		memset(this->screen->videoBuffer + 3 * ((this->y + h) * this->screen->width + this->x), (this->id >> 16) << 3, this->width * 3);
