@@ -20,7 +20,7 @@
 
 /** Pron message types. */
 enum MessageType {
-	MESSAGE_TYPE
+  MESSAGE_TYPE
 };
 
 #ifdef DEBUG
@@ -38,7 +38,7 @@ const char * MessageTypeStrings[] = {
 
 /** Pron event types. */
 enum EventType {
-	CREATE_NOTIFY = 1 << 0,
+  CREATE_NOTIFY = 1 << 0,
 };
 
 
