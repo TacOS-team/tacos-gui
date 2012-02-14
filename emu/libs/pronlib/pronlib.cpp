@@ -67,9 +67,11 @@ int pronFillRectangle(Display *d, Window w, GC gc, int x1, int y1, int x2, int y
 void pronGetWindowAttributes(Display * d, Window w, PronWindowAttributes * attr) {
   RqGetWindowAttributes rq(w);
   tsock_write(d->fd, &rq, sizeof(rq)) ;
-  while (tsock_read(d->fd, attr, sizeof(PronWindowAttributes)) < 0) {
+  void * buffer = malloc(sizeof(RespWindowAttributes));
+  while (tsock_read(d->fd, buffer, sizeof(RespWindowAttributes)) < 0) {
     usleep(100000);
   }
+  *attr = ((RespWindowAttributes*) buffer)->attributes;
 }
 
 void pronDisconnect(Display *d) {
