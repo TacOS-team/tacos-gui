@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <cstdio>
 #include <pronlib_structs.h>
+#include <pronlib_enums.h>
 
 float cube[][3]= {
   {  1.0f,  1.0f, -1.0f },
@@ -87,7 +88,7 @@ int main(int argc, char *argv[]) {
 
   while (1) {
     newAttr.x = (newAttr.x + 1) % 500;
-    pronSetWindowAttributes(d, w, newAttr, (1<<0));
+    pronSetWindowAttributes(d, w, newAttr, WIN_ATTR_X);
     pronClearWindow(d, w);  
     int i = 0;
     for (i = 0; i < 8; i++) {
