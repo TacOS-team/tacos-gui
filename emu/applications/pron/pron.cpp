@@ -64,6 +64,7 @@ void handleClientRequest(int client, void *buf, int size) {
       //printf("Received RQ_SELECT_INPUT from client %d!\n", client);
       RqSelectInput *rq = (RqSelectInput*) buf;
       screen->getWindow(rq->window)->selectInput(client, rq->eventMask);
+      break;
     }
   }
 }

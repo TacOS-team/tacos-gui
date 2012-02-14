@@ -122,8 +122,9 @@ void pronSelectInput(Display *d, Window w, uint32_t eventMask);
  * Wait a new event.
  * @todo Implement this
  * @param d The connection to pron
+ * @param e Event returned
  */
-void pronNextEvent(Display *d);
+void pronNextEvent(Display *d, PronEvent * e);
 
 /**
  * Subscribes to the events associated with the specified event mask.

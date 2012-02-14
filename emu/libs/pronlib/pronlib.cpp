@@ -73,3 +73,7 @@ void pronSelectInput(Display *d, Window w, uint32_t eventMask) {
   RqSelectInput rq(w, eventMask);
   tsock_write(d->fd, &rq, sizeof(rq));
 }
+
+void pronNextEvent(Display *d, PronEvent * e) {
+
+}
