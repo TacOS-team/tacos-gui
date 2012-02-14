@@ -23,7 +23,7 @@ public: // XXX: bourrin
 	
 	void drawLine(int x1, int y1, int x2, int y2/*, color_t color*/);
 
-	void fillRectangle(int x1, int y1, int x2, int y2/*, color_t color*/);
+	void fillRectangle(int x, int y, int width, int height/*, color_t color*/);
 
 	Window* getWindow(int id);
 

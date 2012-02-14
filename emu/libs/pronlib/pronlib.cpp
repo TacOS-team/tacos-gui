@@ -59,8 +59,8 @@ int pronDrawLine(Display *d, Window w, GC gc, int x1, int y1, int x2, int y2) {
 	return (tsock_write(d->fd, &rq, sizeof(rq)) > 0);
 }
 
-int pronFillRectangle(Display *d, Window w, GC gc, int x1, int y1, int x2, int y2) {
-	RqFillRectangle rq(gc, w, x1, y1, x2, y2);
+int pronFillRectangle(Display *d, Window w, GC gc, int x, int y, int width, int height) {
+	RqFillRectangle rq(gc, w, x, y, width, height);
 	return (tsock_write(d->fd, &rq, sizeof(rq)) > 0);
 }
 
