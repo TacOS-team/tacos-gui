@@ -72,3 +72,7 @@ void pronDisconnect(Display *d) {
 void pronSelectInput(Display *d, Window w, uint32_t event_mask) {
 	
 }
+
+void pronNextEvent(Display *d, PronEvent * e) {
+
+}
