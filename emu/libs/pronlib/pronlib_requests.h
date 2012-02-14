@@ -36,7 +36,6 @@ struct RqCreateWindow : public PronRequest {
   /** Constructor. */
   RqCreateWindow(int id, int parent, int x, int y, int width, int height)
        : PronRequest(RQ_CREATE_WINDOW) {
-    this->type = RQ_CREATE_WINDOW;
     this->id = id;
     this->parent = parent;
     this->x = x;
@@ -61,7 +60,6 @@ struct RqClearWindow : public PronRequest {
   /** Constructor. */
   RqClearWindow(int window)
        : PronRequest(RQ_CLEAR_WINDOW) {
-    this->type = RQ_CLEAR_WINDOW;
     this->window = window;
   }
 
@@ -76,7 +74,6 @@ struct RqMapWindow : public PronRequest {
   /** Constructor. */
   RqMapWindow(int window)
        : PronRequest(RQ_MAP_WINDOW) {
-    this->type = RQ_MAP_WINDOW;
     this->window = window;
   }
 
@@ -91,7 +88,6 @@ struct RqCreateGC : public PronRequest {
   /** Constructor. */
   RqCreateGC(int gc)
        : PronRequest(RQ_CREATE_GC){
-    this->type = RQ_CREATE_GC;
     this->id = id;
   }
 
@@ -106,7 +102,6 @@ struct RqDrawLine : public PronRequest {
   /** Constructor. */
   RqDrawLine(int gc, int drawable, int x1, int y1, int x2, int y2)
        : PronRequest(RQ_DRAW_LINE) {
-    this->type = RQ_DRAW_LINE;
     this->gc = gc;
     this->drawable = drawable;
     this->x1 = x1;
@@ -132,7 +127,6 @@ struct RqFillRectangle : public PronRequest {
   /** Constructor. */
   RqFillRectangle(int gc, int drawable, int x1, int y1, int x2, int y2)
        : PronRequest(RQ_FILL_RECTANGLE) {
-    this->type = RQ_FILL_RECTANGLE;
     this->gc = gc;
     this->drawable = drawable;
     this->x1 = x1;
@@ -158,7 +152,6 @@ struct RqGetWindowAttributes : public PronRequest {
   /** Constructor. */
   RqGetWindowAttributes(unsigned int w)
        : PronRequest(RQ_GET_WINDOW_ATTRIBUTES) {
-    this->type = RQ_GET_WINDOW_ATTRIBUTES;
     this->w = w;
   }
 
