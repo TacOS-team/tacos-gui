@@ -66,6 +66,12 @@ void handleClientRequest(int client, void *buf, int size) {
       screen->getWindow(rq->window)->selectInput(client, rq->eventMask);
       break;
     }
+    case RQ_GET_WINDOW_ATTRIBUTES: {
+      RqGetWindowAttributes *rq = (RqGetWindowAttributes *) buf;	
+      RespWindowAttributes resp (screen->getWindow(rq->w)->getAttributes());
+      tsock_write(clients[client].fd, &resp, sizeof(resp)); 
+      break;
+    }
   }
 }
 

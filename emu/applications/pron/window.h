@@ -48,7 +48,7 @@ public: //XXX: bourrin
 
   void flush();
 
-  PronWindowAttributes *getAttributes();
+  PronWindowAttributes getAttributes();
 
   void setAttributes(PronWindowAttributes *newAttributes, unsigned int mask);
 

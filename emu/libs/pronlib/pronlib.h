@@ -127,10 +127,9 @@ void pronSelectInput(Display *d, Window w, uint32_t eventMask);
 void pronNextEvent(Display *d, PronEvent * e);
 
 /**
- * Subscribes to the events associated with the specified event mask.
- * @todo Implement this
+ * Get the attributes of a given window.
  * @param d The connection to pron
+ * @param w The window whose attributes to get
  */
-PronWindowAttributes pronGetWindowAttributes(Display *d, Window w);
-
+void pronGetWindowAttributes(Display * d, Window w, PronWindowAttributes * attr);
 #endif

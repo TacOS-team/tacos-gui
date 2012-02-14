@@ -62,12 +62,12 @@ void Window::flush() {
   this->screen->flush();
 }
 
-PronWindowAttributes* Window::getAttributes() {
-  PronWindowAttributes *attr = new PronWindowAttributes();
-  attr->x = this->x;
-  attr->y = this->y;
-  attr->width = this->width;
-  attr->height = this->height;
+PronWindowAttributes Window::getAttributes() {
+  PronWindowAttributes attr ;
+  attr.x = this->x;
+  attr.y = this->y;
+  attr.width = this->width;
+  attr.height = this->height;
 
   return attr;
 }
