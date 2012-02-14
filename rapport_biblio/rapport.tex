@@ -70,6 +70,25 @@ Adrien Sulpice \texttt{<sulpice@etud.insa-toulouse.fr>}}
   \setlength{\parskip}{.6ex plus .4ex minus .4ex}
   \renewcommand{\headrulewidth}{0pt}
   \renewcommand{\footrulewidth}{0.6pt}
+\renewenvironment{thebibliography}[1]
+     {\chapter*{\bibname}%
+  \paragraph{Note} En raison de la nature du sujet de notre recherche bibliographique (un domaine assez technique de l'informatique), la majorité des sources sur lesquelles nous nous sommes basés sont des ressources en ligne.
+
+      \@mkboth{\MakeUppercase\bibname}{\MakeUppercase\bibname}%
+      \list{\@biblabel{\@arabic\c@enumiv}}%
+           {\settowidth\labelwidth{\@biblabel{#1}}%
+            \leftmargin\labelwidth
+            \advance\leftmargin\labelsep
+            \@openbib@code
+            \usecounter{enumiv}%
+            \let\p@enumiv\@empty
+            \renewcommand\theenumiv{\@arabic\c@enumiv}}%
+      \sloppy
+      \clubpenalty4000
+      \@clubpenalty \clubpenalty
+      \widowpenalty4000%
+      \sfcode`\.\@m}
+
   \fancyhf{}
   \fancyhead{} 
   \lfoot{\blurb}
@@ -116,6 +135,5 @@ Nous avons présenté plus en détails le système X Window, dans lequel chaque 
 
 \bibliographystyle{alpha}
 \bibliography{biblio}
-\footnote[1]{Note : en raison de la nature du sujet de notre recherche bibliographique (un domaine assez technique de l'informatique), la majorité des sources sur lesquelles nous nous sommes basés sont des ressources en ligne.}
 
 \end{document}
