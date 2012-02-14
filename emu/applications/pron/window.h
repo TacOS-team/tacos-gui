@@ -31,7 +31,7 @@ class Window {
 
 	void flush();
 
-	PronWindowAttributes * getAttributes();
+	PronWindowAttributes getAttributes();
 
 	void setAttributes(PronWindowAttributes * newAttributes, int mask);
 };

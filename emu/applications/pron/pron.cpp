@@ -60,6 +60,12 @@ void handleClientRequest(int client, void *buf, int size) {
       screen->getWindow(rq->drawable)->fillRectangle(rq->x1, rq->y1, rq->x2, rq->y2);
       break;
     }
+    case RQ_GET_WINDOW_ATTRIBUTES: {
+      RqGetWindowAttributes *rq = (RqGetWindowAttributes *) buf;	
+      RespWindowAttributes resp (screen->getWindow(rq->w)->getAttributes());
+      tsock_write(clients[client].fd, &resp, sizeof(resp)); 
+      break;
+    }
   }
 }
 
