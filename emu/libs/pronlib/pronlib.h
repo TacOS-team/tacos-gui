@@ -133,4 +133,13 @@ void pronNextEvent(Display *d, PronEvent * e);
  */
 void pronGetWindowAttributes(Display * d, Window w, PronWindowAttributes * attr);
 
+/**
+ * Set the attributes of a given window.
+ * @param d The connection to pron
+ * @param w The window whose attributes to get
+ * @param newAttr The new attributes structure
+ * @param mask The mask that indiquates the attributes to be set
+ */
+void pronSetWindowAttributes(Display * d, Window w, PronWindowAttributes newAttr, unsigned int mask) ;  
+
 #endif

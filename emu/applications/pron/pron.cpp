@@ -73,6 +73,12 @@ void handleClientRequest(int client, void *buf, int size) {
       tsock_write(clients[client].fd, &resp, sizeof(resp)); 
       break;
     }
+    case RQ_SET_WINDOW_ATTRIBUTES: {
+      RqSetWindowAttributes *rq = (RqSetWindowAttributes *) buf;
+      printf("lol\n");
+      printf("%d %d %d %d\n", rq->newAttr.x, rq->newAttr.y, rq->newAttr.width, rq->newAttr.height);
+      screen->getWindow(rq->w)->setAttributes(&(rq->newAttr), rq->mask);
+    }
   }
 #ifdef DEBUG
 debug("message reçu : %s\n", MessageTypeStrings[reqType]);

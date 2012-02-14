@@ -161,6 +161,24 @@ struct RqGetWindowAttributes : public PronRequest {
   unsigned int w; /**< id of Window */
 };
 
+/**
+ * SetWindowAttributes request.
+ * Sent by a client to set the attributes of a window
+ */
+struct RqSetWindowAttributes : public PronRequest {
+  /** Constructor. */
+  RqSetWindowAttributes(unsigned int w , PronWindowAttributes newAttr,unsigned int mask)
+      : PronRequest(RQ_SET_WINDOW_ATTRIBUTES) {
+    this->w = w;
+    this->newAttr = newAttr;
+    this->mask = mask;
+  }
+
+  unsigned int w; /**< id of Window */
+  PronWindowAttributes newAttr; /**< new attributes of the window */
+  unsigned int mask; /**< indiquates which attributes have to be set */
+};
+
 
 /**
  * SelectInput request.

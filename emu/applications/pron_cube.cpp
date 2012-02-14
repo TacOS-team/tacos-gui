@@ -35,15 +35,15 @@ void rotate_point(float point[3]) {
   // theta = 4°
   float cos_theta =   0.99984769f;
   float sin_theta =   0.01745240f;
-  
+
   // phi = 1°
   float cos_phi =   0.99756405f;
   float sin_phi =   0.06975647f;
-  
+
   temp[0] = point[0];
   temp[1] = point[1]*cos_theta - point[2]*sin_theta;
   temp[2] = point[1]*sin_theta + point[2]*cos_theta;
-  
+
   point[0] = temp[0]*cos_phi - temp[2]*sin_phi;
   point[1] = temp[1];
   point[2] = temp[0]*sin_phi + temp[2]*cos_phi;
@@ -51,13 +51,13 @@ void rotate_point(float point[3]) {
 
 void draw_cube(Display *d, Window w) {
   int ligne;
-  
+
   for (ligne = 0; ligne < 12; ligne++) {
     if (!pronDrawLine(d, w, 0, 
-        (int)(cube[lignes[ligne][0]][0]*50+150),
-        (int)(cube[lignes[ligne][0]][1]*50+100),
-        (int)(cube[lignes[ligne][1]][0]*50+150),
-        (int)(cube[lignes[ligne][1]][1]*50+100))) {
+	  (int)(cube[lignes[ligne][0]][0]*50+150),
+	  (int)(cube[lignes[ligne][0]][1]*50+100),
+	  (int)(cube[lignes[ligne][1]][0]*50+150),
+	  (int)(cube[lignes[ligne][1]][1]*50+100))) {
       fprintf(stderr, "pron has closed the connection.\n");
       exit(1);
     }
@@ -66,6 +66,7 @@ void draw_cube(Display *d, Window w) {
 
 int main(int argc, char *argv[]) {
   int x, y;
+  PronWindowAttributes newAttr;
 
   if (argc > 2) {
     x = atoi(argv[1]);
@@ -84,13 +85,9 @@ int main(int argc, char *argv[]) {
 
   Window w = pronCreateWindow(d, d->rootWindow, x, y, 320, 240);
 
-  PronWindowAttributes attr;
-  
-  pronGetWindowAttributes (d, w, &attr);
-
-  printf("%d %d %d %d\n", attr.x, attr.y, attr.width, attr.height);
-  
-    while (1) {
+  while (1) {
+    newAttr.x = (newAttr.x + 1) % 500;
+    pronSetWindowAttributes(d, w, newAttr, (1<<0));
     pronClearWindow(d, w);  
     int i = 0;
     for (i = 0; i < 8; i++) {

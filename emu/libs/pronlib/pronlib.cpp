@@ -74,6 +74,10 @@ void pronGetWindowAttributes(Display * d, Window w, PronWindowAttributes * attr)
   *attr = ((RespWindowAttributes*) buffer)->attributes;
 }
 
+void pronSetWindowAttributes(Display * d, Window w, PronWindowAttributes newAttr, unsigned int mask) {  
+  RqSetWindowAttributes rq(w,newAttr,mask);
+  tsock_write(d->fd,&rq,sizeof(RqSetWindowAttributes));
+}
 void pronDisconnect(Display *d) {
   tsock_close(d->fd);
   delete d;	
