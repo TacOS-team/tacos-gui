@@ -6,38 +6,34 @@
 #define _PRONLIB_H_
 
 #include <pron_proto.h>
+#include <pronlib_types.h>
 #include <stdint.h>
-
-/** Identifier of a window. */
-typedef int Window;
-/** Identifier of a graphics context. */
-typedef int GC;
 
 /** Describes a connection to pron. */
 struct Display {
-	/** Constructor. */
-	Display(int fd, RespWelcome *welcome) {
-		this->fd = fd;
-		this->rootWindow = welcome->rootWindow;
-		this->startId = welcome->startId;
-		this->endId = welcome->endId;
-		this->curId = this->startId;
-	}
+  /** Constructor. */
+  Display(int fd, RespWelcome *welcome) {
+    this->fd = fd;
+    this->rootWindow = welcome->rootWindow;
+    this->startId = welcome->startId;
+    this->endId = welcome->endId;
+    this->curId = this->startId;
+  }
 
-	/**
-	 * Generates a new unique resource id.
-	 * @todo check bounds
-	 * @return the new resource id
-	 */
-	int newResourceId() {
-		return this->curId++;
-	}
+  /**
+   * Generates a new unique resource id.
+   * @todo check bounds
+   * @return the new resource id
+   */
+  int newResourceId() {
+    return this->curId++;
+  }
 
-	int fd; /**< file descriptor used for the connection to pron */
-	Window rootWindow; /**< id of the root window */
-	int startId; /**< first usable resource id */
-	int endId; /**< last usable resource id */
-	int curId; /**< current resource id */
+  int fd; /**< file descriptor used for the connection to pron */
+  Window rootWindow; /**< id of the root window */
+  int startId; /**< first usable resource id */
+  int endId; /**< last usable resource id */
+  int curId; /**< current resource id */
 };
 
 /**
@@ -121,5 +117,19 @@ void pronDisconnect(Display *d);
  * @param event_mask The event mask
  */
 void pronSelectInput(Display *d, Window w, uint32_t event_mask);
+
+/**
+ * Wait a new event.
+ * @todo Implement this
+ * @param d The connection to pron
+ */
+void pronNextEvent(Display *d);
+
+/**
+ * Subscribes to the events associated with the specified event mask.
+ * @todo Implement this
+ * @param d The connection to pron
+ */
+PronWindowAttributes pronGetWindowAttributes(Display *d, Window w);
 
 #endif
