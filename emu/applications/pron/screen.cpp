@@ -12,110 +12,105 @@ extern "C" {
 #define COLOR(_p, _bpp) _COLOR(_p, _bpp)
 
 Screen::Screen(int width, int height, int bitsPerPixel) {
-	this->width = width;
-	this->height = height;
-	this->bitsPerPixel = bitsPerPixel;
-	this->bytesPerPixel = bitsPerPixel/8;
+  this->width = width;
+  this->height = height;
+  this->bitsPerPixel = bitsPerPixel;
+  this->bytesPerPixel = bitsPerPixel/8;
 
-	this->vesa_fd = open("/dev/vesa", O_RDONLY);
-	struct vesa_setmode_req req = { this->width, this->height, this->bitsPerPixel };
-	ioctl(this->vesa_fd, SETMODE, &req);
-	ioctl(this->vesa_fd, GETVIDEOADDR, &this->videoBuffer);
+  this->vesa_fd = open("/dev/vesa", O_RDONLY);
+  struct vesa_setmode_req req = { this->width, this->height, this->bitsPerPixel };
+  ioctl(this->vesa_fd, SETMODE, &req);
+  ioctl(this->vesa_fd, GETVIDEOADDR, &this->videoBuffer);
 }
 
 // TODO: couleurs
 void Screen::drawPoint(int x, int y/*, color_t c*/) {
-	// XXX: constantes en dur moches
-	color_t c;
-	COLOR(c, 24).r = 255;
-	COLOR(c, 24).g = 77;
-	COLOR(c, 24).b = 182;
-	if (x >= 0 && x < this->width && y >= 0 && y < this->height) {
-		memcpy(this->videoBuffer + (y * this->width + x) * 3, &COLOR(c, 24), sizeof(COLOR(c, 24)));
-	}
+  // XXX: constantes en dur moches
+  color_t c;
+  COLOR(c, 24).r = 255;
+  COLOR(c, 24).g = 77;
+  COLOR(c, 24).b = 182;
+  if (x >= 0 && x < this->width && y >= 0 && y < this->height) {
+    memcpy(this->videoBuffer + (y * this->width + x) * 3, &COLOR(c, 24), sizeof(COLOR(c, 24)));
+  }
 }
 
 // TODO: couleurs
 void Screen::drawLine(int x1, int y1, int x2, int y2/*, color_t color*/) {
-	int i, dx, dy, sdx, sdy, dxabs, dyabs, x, y, px, py;
+  int i, dx, dy, sdx, sdy, dxabs, dyabs, x, y, px, py;
 
-	dx = x2 - x1; /* the horizontal distance of the line */
-	dy = y2 - y1; /* the vertical distance of the line */
-	dxabs = (dx >= 0 ? dx : -dx);
-	dyabs = (dy >= 0 ? dy : -dy);
-	sdx = (dx >= 0 ? 1 : -1);
-	sdy = (dy >= 0 ? 1 : -1);
-	x = dyabs >> 1;
-	y = dxabs >> 1;
-	px = x1;
-	py = y1;
+  dx = x2 - x1; /* the horizontal distance of the line */
+  dy = y2 - y1; /* the vertical distance of the line */
+  dxabs = (dx >= 0 ? dx : -dx);
+  dyabs = (dy >= 0 ? dy : -dy);
+  sdx = (dx >= 0 ? 1 : -1);
+  sdy = (dy >= 0 ? 1 : -1);
+  x = dyabs >> 1;
+  y = dxabs >> 1;
+  px = x1;
+  py = y1;
 
-	if (dxabs >= dyabs) { /* the line is more horizontal than vertical */
-		for (i = 0; i < dxabs; i++) {
-			y += dyabs;
-			if (y >= dxabs) {
-				y -= dxabs;
-				py += sdy;
-			}
-			px += sdx;
-			this->drawPoint(px, py/*, color*/);
-		}
-	} else { /* the line is more vertical than horizontal */
-		for (i = 0; i < dyabs; i++) {
-			x += dxabs;
-			if (x >= dyabs) {
-				x -= dyabs;
-				px += sdx;
-			}
-			py += sdy;
-			this->drawPoint(px, py/*, color*/);
-		}
-	}
+  if (dxabs >= dyabs) { /* the line is more horizontal than vertical */
+    for (i = 0; i < dxabs; i++) {
+      y += dyabs;
+      if (y >= dxabs) {
+	y -= dxabs;
+	py += sdy;
+      }
+      px += sdx;
+      this->drawPoint(px, py/*, color*/);
+    }
+  } else { /* the line is more vertical than horizontal */
+    for (i = 0; i < dyabs; i++) {
+      x += dxabs;
+      if (x >= dyabs) {
+	x -= dyabs;
+	px += sdx;
+      }
+      py += sdy;
+      this->drawPoint(px, py/*, color*/);
+    }
+  }
 }
 
 // TODO: couleurs
-void Screen::fillRectangle(int x1, int y1, int x2, int y2/*, color_t color*/) {
-	//test the points
-	if(x1 >= 0 && x2 >= 0 && y1 >= 0 && y2 >= 0 &&
-	   x1 < this->width && x2 < this->width && 
-	   y1 < this->height && y2 < this-> height && 
-	   y2 > y1 && x2 > x1){
-		// XXX: the pixel which is drawn
-		color_t c;
-		COLOR(c, 24).r = 255;
-		COLOR(c, 24).g = 77;
-		COLOR(c, 24).b = 182;
-		//number of lines in the rectangle
-		int h = y2 - y1;
-		//number of pixels in a line
-		int w = x2 - x1;
-		//current line
-		int l;
-		//current pixel
-		int p;
-		for(l = 0 ; l < h ; l++){
-			//draw the line 
-			for(p = 0 ; p < w ; p++){
-				//draw a pixel
-				memcpy(this->videoBuffer + ((l + y1) * this->width + p + x1) * sizeof(COLOR(c, 24)) , &COLOR(c,24), sizeof(COLOR(c, 24)));
-			}
-		}
-	}
+void Screen::fillRectangle(int x, int y, int width, int height/*, color_t color*/) {
+  //test the points
+  if( x >= 0 && y >= 0 &&
+      x < this->width && x + width < this->width &&
+      y < this->height && y + height < this->height ) {
+    // XXX: the pixel which is drawn
+    color_t c;
+    COLOR(c, 24).r = 255;
+    COLOR(c, 24).g = 77;
+    COLOR(c, 24).b = 182;
+    //current line
+    int l;
+    //current pixel
+    int p;
+    for(l = 0 ; l < height ; l++){
+      //draw the line 
+      for(p = 0 ; p < width ; p++){
+	//draw a pixel
+	memcpy(this->videoBuffer + ((l + y) * this->width + p + x) * sizeof(COLOR(c, 24)) , &COLOR(c,24), sizeof(COLOR(c, 24)));
+      }
+    }
+  }
 }
 
 Window* Screen::getWindow(int id) {
-	for (unsigned int i = 0; i < this->windows.size(); i++) {
-		if (windows[i]->id == id) {
-			return windows[i];
-		}
-	}
-	return NULL;
+  for (unsigned int i = 0; i < this->windows.size(); i++) {
+    if (windows[i]->id == id) {
+      return windows[i];
+    }
+  }
+  return NULL;
 }
-
+     
 void Screen::addWindow(Window *w) {
-	this->windows.push_back(w);
+  this->windows.push_back(w);
 }
 
 void Screen::flush() {
-	ioctl(this->vesa_fd, FLUSH, 0);
+  ioctl(this->vesa_fd, FLUSH, 0);
 }
