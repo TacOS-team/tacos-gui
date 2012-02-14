@@ -18,7 +18,7 @@ static void alarm_handler(int signum) {
 
 void handleClientRequest(int client, void *buf, int size) {
   int reqType = *((int*)buf);
-  switch (reqType) {
+  switch (reqType) { 
     case RQ_HELLO: {
       //printf("Received RQ_HELLO from client %d!\n", client);
       //RqHello *rq = (RqHello*)buf;
@@ -29,14 +29,14 @@ void handleClientRequest(int client, void *buf, int size) {
     }
     case RQ_CREATE_WINDOW: {
       //printf("Received RQ_CREATE_WINDOW from client %d!\n", client);
-      RqCreateWindow *rq = (RqCreateWindow*)buf;
+      RqCreateWindow *rq = (RqCreateWindow*) buf;
       Window *w = new Window(screen, rq->id, screen->getWindow(rq->parent), rq->x, rq->y, rq->width, rq->height);
       screen->addWindow(w);
       break;
     }
     case RQ_CLEAR_WINDOW: {
       //printf("Received RQ_CLEAR_WINDOW from client %d!\n", client);
-      RqClearWindow *rq = (RqClearWindow*)buf;
+      RqClearWindow *rq = (RqClearWindow*) buf;
       screen->getWindow(rq->window)->clear();
       break;
     }
@@ -50,14 +50,20 @@ void handleClientRequest(int client, void *buf, int size) {
     }
     case RQ_DRAW_LINE: {
       //printf("Received RQ_DRAW_LINE from client %d!\n", client);
-      RqDrawLine *rq = (RqDrawLine*)buf;
+      RqDrawLine *rq = (RqDrawLine*) buf;
       screen->getWindow(rq->drawable)->drawLine(rq->x1, rq->y1, rq->x2, rq->y2);
       break;
     }
     case RQ_FILL_RECTANGLE: {
       //printf("Received RQ_FILL_RECTANGLE from client %d!\n", client);
       RqFillRectangle *rq = (RqFillRectangle*)buf;
-      screen->getWindow(rq->drawable)->fillRectangle(rq->x1, rq->y1, rq->x2, rq->y2);
+      screen->getWindow(rq->drawable)->fillRectangle(rq->x, rq->y, rq->width, rq->height);
+      break;
+    }
+    case RQ_SELECT_INPUT: {
+      //printf("Received RQ_SELECT_INPUT from client %d!\n", client);
+      RqSelectInput *rq = (RqSelectInput*) buf;
+      screen->getWindow(rq->window)->selectInput(client, rq->eventMask);
       break;
     }
     case RQ_GET_WINDOW_ATTRIBUTES: {

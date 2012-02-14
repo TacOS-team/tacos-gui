@@ -91,17 +91,17 @@ void pronMapWindow(Display *d, Window w);
 int pronDrawLine(Display *d, Window w, GC gc, int x1, int y1, int x2, int y2);
 
 /**
- * Fills a rectangle between (x1, y1) and (x2, y2).
+ * Sent by a client to fill a rectangle to (x,y) width height sized.
  * @todo Implement drawables instead of just windows
  * @param d The connection to pron
  * @param w The window in which to draw the line
  * @param gc The graphics context to use
- * @param x1 The x-coordinate of the first point to join
- * @param y1 The y-coordinate of the first point to join
- * @param x2 The x-coordinate of the second point to join
- * @param y2 The y-coordinate of the second point to join
+ * @param x The x-coordinate of the point to join
+ * @param y The y-coordinate of the point to join
+ * @param width of the rectangle
+ * @param height of the rectangle
  */
-int pronFillRectangle(Display *d, Window w, GC gc, int x1, int y1, int x2, int y2);
+int pronFillRectangle(Display *d, Window w, GC gc, int x, int y, int width, int height);
 
 /**
  * Closes the connection to pron.
@@ -116,7 +116,7 @@ void pronDisconnect(Display *d);
  * @param w The window whose events to subscribe
  * @param event_mask The event mask
  */
-void pronSelectInput(Display *d, Window w, uint32_t event_mask);
+void pronSelectInput(Display *d, Window w, uint32_t eventMask);
 
 /**
  * Wait a new event.

@@ -29,7 +29,7 @@ Display* pronConnect() {
   printf("Welcome from server [%x - %x, root = %d]\n", resp->startId, resp->endId, resp->rootWindow);
   Display *d = new Display(fd, resp);
 
-  return d;	
+  return d; 
 }
 
 Window pronCreateWindow(Display *d, Window parent, int x, int y, int width, int height) {
@@ -77,8 +77,10 @@ void pronDisconnect(Display *d) {
   delete d;	
 }
 
-void pronSelectInput(Display *d, Window w, uint32_t event_mask) {
 
+void pronSelectInput(Display *d, Window w, uint32_t eventMask) {
+  RqSelectInput rq(w, eventMask);
+  tsock_write(d->fd, &rq, sizeof(rq));
 }
 
 void pronNextEvent(Display *d, PronEvent * e) {

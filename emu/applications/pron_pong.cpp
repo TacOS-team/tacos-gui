@@ -92,9 +92,9 @@ int main() {
     //TODO: draw ball and racket
     moveBall(&ballX,&ballY,&velX,&velY,racketY);
     //draw the ball
-    pronFillRectangle(d, w, gc, ballX, ballY, ballX + BALL_SIZE, ballY + BALL_SIZE);
+    pronFillRectangle(d, w, gc, ballX, ballY, BALL_SIZE, BALL_SIZE);
     //drax the racket
-    pronFillRectangle(d, w, gc, 0, racketY, RACKET_WIDTH, racketY + RACKET_HEIGHT);
+    pronFillRectangle(d, w, gc, 0, racketY, RACKET_WIDTH, RACKET_HEIGHT);
     usleep(10000);
 
   }
