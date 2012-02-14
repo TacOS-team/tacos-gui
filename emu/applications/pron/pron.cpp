@@ -18,7 +18,7 @@ static void alarm_handler(int signum) {
 
 void handleClientRequest(int client, void *buf, int size) {
   int reqType = *((int*)buf);
-  switch (reqType) {
+  switch (reqType) { 
     case RQ_HELLO: {
       //printf("Received RQ_HELLO from client %d!\n", client);
       //RqHello *rq = (RqHello*)buf;
@@ -56,8 +56,8 @@ void handleClientRequest(int client, void *buf, int size) {
     }
     case RQ_FILL_RECTANGLE: {
       //printf("Received RQ_FILL_RECTANGLE from client %d!\n", client);
-      RqFillRectangle *rq = (RqFillRectangle*) buf;
-      screen->getWindow(rq->drawable)->fillRectangle(rq->x1, rq->y1, rq->x2, rq->y2);
+      RqFillRectangle *rq = (RqFillRectangle*)buf;
+      screen->getWindow(rq->drawable)->fillRectangle(rq->x, rq->y, rq->width, rq->height);
       break;
     }
     case RQ_SELECT_INPUT: {

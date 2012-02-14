@@ -10,6 +10,7 @@ struct PronRequest : public PronMessage {
   }
 };
 
+
 /**
  * Hello request.
  * Sent by a client as the first message of the handshake.
@@ -122,26 +123,27 @@ struct RqDrawLine : public PronRequest {
 
 /**
  * FillRectangle request.
- * Sent by a client to draw the rectangle (x,y) .
+ * Sent by a client to fill a rectangle to (x,y) width height sized.
  */
 struct RqFillRectangle : public PronRequest {
   /** Constructor. */
-  RqFillRectangle(int gc, int drawable, int x1, int y1, int x2, int y2)
+  RqFillRectangle(int gc, int drawable, int x, int y, int width, int height)
       : PronRequest(RQ_FILL_RECTANGLE) {
     this->gc = gc;
     this->drawable = drawable;
-    this->x1 = x1;
-    this->y1 = y1;
-    this->x2 = x2;
-    this->y2 = y2;
+    this->x = x;
+    this->y = y;
+    this->width = width;
+    this->height = height;
   }
-
+  
+  MessageType type; /**< message type, always first */
   int gc; /**< id of the graphics context to use */
   int drawable; /**< id of the drawable in which to draw */ 
-  int x1; /**< x-coordinate of the first point to join */
-  int y1; /**< y-coordinate of the first point to join */
-  int x2; /**< x-coordinate of the second point to join */
-  int y2; /**< y-coordinate of the second point to join */
+  int x; /**< x-coordinate of the point to join */
+  int y; /**< y-coordinate of the point to join */
+  int width; /**< width of the rectangle */
+  int height; /**< height of the rectangle */
 };
 
 
