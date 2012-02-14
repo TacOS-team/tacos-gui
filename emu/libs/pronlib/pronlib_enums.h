@@ -23,12 +23,16 @@ enum MessageType {
 	MESSAGE_TYPE
 };
 
+#ifdef DEBUG
+
 #undef ENUM_OR_STRING
 #define ENUM_OR_STRING( x ) #x
 
 const char * MessageTypeStrings[] = {
     MESSAGE_TYPE
 };
+
+#endif// DEBUG
 
 #undef ENUM_OR_STRING
 
