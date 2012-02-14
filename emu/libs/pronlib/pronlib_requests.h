@@ -3,13 +3,13 @@
 
 #include <pron_messages.h>
 
-
 struct PronRequest : public PronMessage {
   /** Constructor. */
   PronRequest(MessageType type)
       : PronMessage(type) {
   }
 };
+
 
 /**
  * Hello request.
@@ -25,6 +25,7 @@ struct RqHello : public PronRequest {
   int protoVersion; /**< protocol version used */
 };
 
+
 /**
  * CreateWindow request.
  * Sent by a client to create a new window.
@@ -32,7 +33,7 @@ struct RqHello : public PronRequest {
 struct RqCreateWindow : public PronRequest {
   /** Constructor. */
   RqCreateWindow(int id, int parent, int x, int y, int width, int height)
-       : PronRequest(RQ_CREATE_WINDOW) {
+      : PronRequest(RQ_CREATE_WINDOW) {
     this->id = id;
     this->parent = parent;
     this->x = x;
@@ -49,6 +50,7 @@ struct RqCreateWindow : public PronRequest {
   int height; /**< height of the window */
 };
 
+
 /**
  * ClearWindow request.
  * Sent by a client to clear the contents of a window.
@@ -56,12 +58,13 @@ struct RqCreateWindow : public PronRequest {
 struct RqClearWindow : public PronRequest {
   /** Constructor. */
   RqClearWindow(int window)
-       : PronRequest(RQ_CLEAR_WINDOW) {
+      : PronRequest(RQ_CLEAR_WINDOW) {
     this->window = window;
   }
 
   int window; /**< id of the window to clear */
 };
+
 
 /**
  * MapWindow request.
@@ -70,12 +73,13 @@ struct RqClearWindow : public PronRequest {
 struct RqMapWindow : public PronRequest {
   /** Constructor. */
   RqMapWindow(int window)
-       : PronRequest(RQ_MAP_WINDOW) {
+      : PronRequest(RQ_MAP_WINDOW) {
     this->window = window;
   }
 
   int window; /**< id of the window to map */
 };
+
 
 /**
  * CreateGC request.
@@ -84,12 +88,13 @@ struct RqMapWindow : public PronRequest {
 struct RqCreateGC : public PronRequest {
   /** Constructor. */
   RqCreateGC(int gc)
-       : PronRequest(RQ_CREATE_GC){
+      : PronRequest(RQ_CREATE_GC){
     this->id = id;
   }
 
   int id; /**< id of the graphics context to create */
 };
+
 
 /**
  * DrawLine request.
@@ -98,7 +103,7 @@ struct RqCreateGC : public PronRequest {
 struct RqDrawLine : public PronRequest {
   /** Constructor. */
   RqDrawLine(int gc, int drawable, int x1, int y1, int x2, int y2)
-       : PronRequest(RQ_DRAW_LINE) {
+      : PronRequest(RQ_DRAW_LINE) {
     this->gc = gc;
     this->drawable = drawable;
     this->x1 = x1;
@@ -115,13 +120,15 @@ struct RqDrawLine : public PronRequest {
   int y2; /**< y-coordinate of the second point to join */
 };
 
+
 /**
  * FillRectangle request.
  * Sent by a client to fill a rectangle to (x,y) width height sized.
  */
 struct RqFillRectangle : public PronRequest {
   /** Constructor. */
- RqFillRectangle(int gc, int drawable, int x, int y, int width, int height) : PronRequest(RQ_FILL_RECTANGLE) {
+  RqFillRectangle(int gc, int drawable, int x, int y, int width, int height)
+      : PronRequest(RQ_FILL_RECTANGLE) {
     this->gc = gc;
     this->drawable = drawable;
     this->x = x;
@@ -139,6 +146,7 @@ struct RqFillRectangle : public PronRequest {
   int height; /**< height of the rectangle */
 };
 
+
 /**
  * GetWindowAttributes request.
  * Sent by a client to get the attributes of a window
@@ -146,12 +154,28 @@ struct RqFillRectangle : public PronRequest {
 struct RqGetWindowAttributes : public PronRequest {
   /** Constructor. */
   RqGetWindowAttributes(unsigned int w)
-       : PronRequest(RQ_GET_WINDOW_ATTRIBUTES) {
+      : PronRequest(RQ_GET_WINDOW_ATTRIBUTES) {
     this->w = w;
   }
 
   unsigned int w; /**< id of Window */
 };
 
+
+/**
+ * SelectInput request.
+ * Sent by a client to subscribe to events.
+ */
+struct RqSelectInput : public PronRequest {
+  /** Constructor. */
+  RqSelectInput(unsigned int window, unsigned int eventMask)
+      : PronRequest(RQ_SELECT_INPUT) {
+    this->window = window;
+    this->eventMask = eventMask;
+  }
+
+  unsigned int window; /**< id of Window */
+  unsigned int eventMask; /**< event mask to set */
+};
 
 #endif // __PRONLIB_REQUESTS_H__
