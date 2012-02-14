@@ -9,8 +9,7 @@
 struct PronEvent : public PronMessage {
 	/** Constructor. */
 	PronEvent(MessageType type)
-	    : PronMessage(type) {
-	}
+	    : PronMessage(type) {}
 	
 };
 
@@ -21,14 +20,13 @@ struct PronEvent : public PronMessage {
  */
 struct EventWindowCreated : public PronEvent {
   /** Constructor. */
-  EventWindowCreated()
+  EventWindowCreated(unsigned int window, PronWindowAttributes attributes)
        : PronEvent(EVENT_WINDOW_CREATED) {
-  }
-  EventWindowCreated(PronWindowAttributes attributes)
-       : PronEvent(EVENT_WINDOW_CREATED) {
+     this->window = window;
      this->attributes = attributes;
   }
 
+  unsigned int window;
   PronWindowAttributes attributes;
 };
 

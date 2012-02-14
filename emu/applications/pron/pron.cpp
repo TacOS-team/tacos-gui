@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <sys/time.h>
+#include <clibtacos>
 
 #define MAX_CLIENTS 128
 #define MAX_MSG_SIZE 1024
@@ -67,12 +68,15 @@ void handleClientRequest(int client, void *buf, int size) {
       break;
     }
     case RQ_GET_WINDOW_ATTRIBUTES: {
-      RqGetWindowAttributes *rq = (RqGetWindowAttributes *) buf;	
+      RqGetWindowAttributes *rq = (RqGetWindowAttributes *) buf;
       RespWindowAttributes resp (screen->getWindow(rq->w)->getAttributes());
       tsock_write(clients[client].fd, &resp, sizeof(resp)); 
       break;
     }
   }
+#ifdef DEBUG
+debug("message reçu : %s\n", MessageTypeStrings[reqType]);
+#endif
 }
 
 int main() {
