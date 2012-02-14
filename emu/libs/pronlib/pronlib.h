@@ -132,4 +132,5 @@ void pronNextEvent(Display *d, PronEvent * e);
  * @param w The window whose attributes to get
  */
 void pronGetWindowAttributes(Display * d, Window w, PronWindowAttributes * attr);
+
 #endif
