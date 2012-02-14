@@ -116,7 +116,7 @@ void pronDisconnect(Display *d);
  * @param w The window whose events to subscribe
  * @param event_mask The event mask
  */
-void pronSelectInput(Display *d, Window w, uint32_t event_mask);
+void pronSelectInput(Display *d, Window w, uint32_t eventMask);
 
 /**
  * Wait a new event.
