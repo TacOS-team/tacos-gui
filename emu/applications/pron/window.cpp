@@ -48,8 +48,12 @@ void Window::drawLine(int x1, int y1, int x2, int y2) {
   this->screen->drawLine(this->x + x1, this->y + y1, this->x + x2, this->y + y2);
 }
 
-void Window::fillRectangle(int x1, int y1, int x2, int y2) {
-  this->screen->fillRectangle(this->x + x1, this->y + y1, this->x + x2, this->y + y2);
+void Window::drawRect(int x1, int y1, int w, int h) {
+  this->screen->drawRect(this->x + x1, this->y + y1, w, h);
+}
+
+void Window::fillRectangle(int x1, int y1, int w, int h) {
+  this->screen->fillRectangle(this->x + x1, this->y + y1, this->x + w, this->y + h);
 }
 
 void Window::clear() {

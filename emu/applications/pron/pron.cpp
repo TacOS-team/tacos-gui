@@ -80,9 +80,12 @@ void handleClientRequest(int client, void *buf, int size) {
     }
     case RQ_SET_WINDOW_ATTRIBUTES: {
       RqSetWindowAttributes *rq = (RqSetWindowAttributes *) buf;
-      printf("lol\n");
-      printf("%d %d %d %d\n", rq->newAttr.x, rq->newAttr.y, rq->newAttr.width, rq->newAttr.height);
       screen->getWindow(rq->w)->setAttributes(&(rq->newAttr), rq->mask);
+    }
+    case RQ_DRAW_RECT: {
+      RqDrawRect *rq = (RqDrawRect *) buf;
+      screen->getWindow(rq->drawable)->drawRect(rq->x, rq->y, rq->width, rq->height);
+      break;
     }
   }
 #ifdef DEBUG

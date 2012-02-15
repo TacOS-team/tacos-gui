@@ -74,6 +74,32 @@ void Screen::drawLine(int x1, int y1, int x2, int y2/*, color_t color*/) {
 }
 
 // TODO: couleurs
+void Screen::drawRect(int x, int y, int width, int height/*, color_t color*/) {
+  //test the points
+  if( x >= 0 && y >= 0 &&
+      x < this->width && x + width < this->width &&
+      y < this->height && y + height < this->height ) {
+    // XXX: the pixel which is drawn
+    color_t c;
+    COLOR(c, 24).r = 255;
+    COLOR(c, 24).g = 77;
+    COLOR(c, 24).b = 182;
+
+    int pix = 0;
+    for (pix = x; pix <= x + width; pix++) {
+      this->drawPoint(pix, y/*, color */);
+      this->drawPoint(pix, y + height/*, color */);
+    }
+    for (pix = y; pix <= y + height; pix++) {
+      this->drawPoint(x, pix/*, color */);
+      this->drawPoint(x + width, pix/*, color */);
+    }
+
+  }
+}
+
+
+// TODO: couleurs
 void Screen::fillRectangle(int x, int y, int width, int height/*, color_t color*/) {
   //test the points
   if( x >= 0 && y >= 0 &&

@@ -90,6 +90,8 @@ void pronMapWindow(Display *d, Window w);
  */
 int pronDrawLine(Display *d, Window w, GC gc, int x1, int y1, int x2, int y2);
 
+int pronDrawRect(Display *d, Window w, GC gc, int x, int y, int width, int height);
+
 /**
  * Sent by a client to fill a rectangle to (x,y) width height sized.
  * @todo Implement drawables instead of just windows

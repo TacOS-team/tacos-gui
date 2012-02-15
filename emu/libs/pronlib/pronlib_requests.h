@@ -6,8 +6,8 @@
 struct PronRequest : public PronMessage {
   /** Constructor. */
   PronRequest(MessageType type)
-      : PronMessage(type) {
-  }
+    : PronMessage(type) {
+    }
 };
 
 
@@ -18,10 +18,10 @@ struct PronRequest : public PronMessage {
 struct RqHello : public PronRequest {
   /** Constructor. */
   RqHello(int protoVersion)
-      : PronRequest(RQ_HELLO) {
-    this->protoVersion = protoVersion;
-  }
-  
+    : PronRequest(RQ_HELLO) {
+      this->protoVersion = protoVersion;
+    }
+
   int protoVersion; /**< protocol version used */
 };
 
@@ -33,14 +33,14 @@ struct RqHello : public PronRequest {
 struct RqCreateWindow : public PronRequest {
   /** Constructor. */
   RqCreateWindow(int id, int parent, int x, int y, int width, int height)
-      : PronRequest(RQ_CREATE_WINDOW) {
-    this->id = id;
-    this->parent = parent;
-    this->x = x;
-    this->y = y;
-    this->width = width;
-    this->height = height;
-  }
+    : PronRequest(RQ_CREATE_WINDOW) {
+      this->id = id;
+      this->parent = parent;
+      this->x = x;
+      this->y = y;
+      this->width = width;
+      this->height = height;
+    }
 
   int id; /**< id of the window to create */
   int parent; /**< id of the parent window */
@@ -58,9 +58,9 @@ struct RqCreateWindow : public PronRequest {
 struct RqClearWindow : public PronRequest {
   /** Constructor. */
   RqClearWindow(int window)
-      : PronRequest(RQ_CLEAR_WINDOW) {
-    this->window = window;
-  }
+    : PronRequest(RQ_CLEAR_WINDOW) {
+      this->window = window;
+    }
 
   int window; /**< id of the window to clear */
 };
@@ -73,9 +73,9 @@ struct RqClearWindow : public PronRequest {
 struct RqMapWindow : public PronRequest {
   /** Constructor. */
   RqMapWindow(int window)
-      : PronRequest(RQ_MAP_WINDOW) {
-    this->window = window;
-  }
+    : PronRequest(RQ_MAP_WINDOW) {
+      this->window = window;
+    }
 
   int window; /**< id of the window to map */
 };
@@ -88,9 +88,9 @@ struct RqMapWindow : public PronRequest {
 struct RqCreateGC : public PronRequest {
   /** Constructor. */
   RqCreateGC(int gc)
-      : PronRequest(RQ_CREATE_GC){
-    this->id = id;
-  }
+    : PronRequest(RQ_CREATE_GC){
+      this->id = id;
+    }
 
   int id; /**< id of the graphics context to create */
 };
@@ -103,14 +103,14 @@ struct RqCreateGC : public PronRequest {
 struct RqDrawLine : public PronRequest {
   /** Constructor. */
   RqDrawLine(int gc, int drawable, int x1, int y1, int x2, int y2)
-      : PronRequest(RQ_DRAW_LINE) {
-    this->gc = gc;
-    this->drawable = drawable;
-    this->x1 = x1;
-    this->y1 = y1;
-    this->x2 = x2;
-    this->y2 = y2;
-  }
+    : PronRequest(RQ_DRAW_LINE) {
+      this->gc = gc;
+      this->drawable = drawable;
+      this->x1 = x1;
+      this->y1 = y1;
+      this->x2 = x2;
+      this->y2 = y2;
+    }
 
   int gc; /**< id of the graphics context to use */
   int drawable; /**< id of the drawable in which to draw */ 
@@ -118,6 +118,31 @@ struct RqDrawLine : public PronRequest {
   int y1; /**< y-coordinate of the first point to join */
   int x2; /**< x-coordinate of the second point to join */
   int y2; /**< y-coordinate of the second point to join */
+};
+
+/**
+ * DrawRect request.
+ * Sent by a client to draw a rectangle to (x,y) width height sized.
+ */
+struct RqDrawRect : public PronRequest {
+  /** Constructor. */
+  RqDrawRect(int gc, int drawable, int x, int y, int width, int height)
+    : PronRequest(RQ_DRAW_RECT) {
+      this->gc = gc;
+      this->drawable = drawable;
+      this->x = x;
+      this->y = y;
+      this->width = width;
+      this->height = height;
+    }
+
+  MessageType type; /**< message type, always first */
+  int gc; /**< id of the graphics context to use */
+  int drawable; /**< id of the drawable in which to draw */ 
+  int x; /**< x-coordinate of the point to join */
+  int y; /**< y-coordinate of the point to join */
+  int width; /**< width of the rectangle */
+  int height; /**< height of the rectangle */
 };
 
 
@@ -128,15 +153,15 @@ struct RqDrawLine : public PronRequest {
 struct RqFillRectangle : public PronRequest {
   /** Constructor. */
   RqFillRectangle(int gc, int drawable, int x, int y, int width, int height)
-      : PronRequest(RQ_FILL_RECTANGLE) {
-    this->gc = gc;
-    this->drawable = drawable;
-    this->x = x;
-    this->y = y;
-    this->width = width;
-    this->height = height;
-  }
-  
+    : PronRequest(RQ_FILL_RECTANGLE) {
+      this->gc = gc;
+      this->drawable = drawable;
+      this->x = x;
+      this->y = y;
+      this->width = width;
+      this->height = height;
+    }
+
   MessageType type; /**< message type, always first */
   int gc; /**< id of the graphics context to use */
   int drawable; /**< id of the drawable in which to draw */ 
@@ -154,9 +179,9 @@ struct RqFillRectangle : public PronRequest {
 struct RqGetWindowAttributes : public PronRequest {
   /** Constructor. */
   RqGetWindowAttributes(unsigned int w)
-      : PronRequest(RQ_GET_WINDOW_ATTRIBUTES) {
-    this->w = w;
-  }
+    : PronRequest(RQ_GET_WINDOW_ATTRIBUTES) {
+      this->w = w;
+    }
 
   unsigned int w; /**< id of Window */
 };
@@ -168,11 +193,11 @@ struct RqGetWindowAttributes : public PronRequest {
 struct RqSetWindowAttributes : public PronRequest {
   /** Constructor. */
   RqSetWindowAttributes(unsigned int w , PronWindowAttributes newAttr,unsigned int mask)
-      : PronRequest(RQ_SET_WINDOW_ATTRIBUTES) {
-    this->w = w;
-    this->newAttr = newAttr;
-    this->mask = mask;
-  }
+    : PronRequest(RQ_SET_WINDOW_ATTRIBUTES) {
+      this->w = w;
+      this->newAttr = newAttr;
+      this->mask = mask;
+    }
 
   unsigned int w; /**< id of Window */
   PronWindowAttributes newAttr; /**< new attributes of the window */
@@ -187,10 +212,10 @@ struct RqSetWindowAttributes : public PronRequest {
 struct RqSelectInput : public PronRequest {
   /** Constructor. */
   RqSelectInput(unsigned int window, unsigned int eventMask)
-      : PronRequest(RQ_SELECT_INPUT) {
-    this->window = window;
-    this->eventMask = eventMask;
-  }
+    : PronRequest(RQ_SELECT_INPUT) {
+      this->window = window;
+      this->eventMask = eventMask;
+    }
 
   unsigned int window; /**< id of Window */
   unsigned int eventMask; /**< event mask to set */
