@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -72,7 +73,7 @@ int tsock_accept(int tsockServer) {
   socklen_t addrLenOSEF = sizeof(addrClientOSEF);
   int tsockCanal = 0; // socket du canal client <--> serveur
 
-  tsockCanal = accept(tsockServer, (struct sockaddr*) &addrClientOSEF, &addrLenOSEF);
+  tsockCanal = accept4(tsockServer, (struct sockaddr*) &addrClientOSEF, &addrLenOSEF, SOCK_NONBLOCK);
   if (tsockCanal == -1) {
     //perror("accept");
   }
