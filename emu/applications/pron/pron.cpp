@@ -33,6 +33,11 @@ void handleClientRequest(int client, void *buf, int size) {
       RqCreateWindow *rq = (RqCreateWindow*) buf;
       Window *w = new Window(screen, rq->id, screen->getWindow(rq->parent), rq->x, rq->y, rq->width, rq->height);
       screen->addWindow(w);
+      for (int client = 1; client <= nbClients; client++) {
+        EventWindowCreated eventCreated (w->id, w->getAttributes());
+        tsock_write(clients[client].fd, &eventCreated, sizeof(eventCreated));
+        printf("envoie evnt au client %d !\n", client);
+      }
       break;
     }
     case RQ_CLEAR_WINDOW: {

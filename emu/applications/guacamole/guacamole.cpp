@@ -24,9 +24,11 @@ int main() {
     pronNextEvent(display, e);
     switch (e->type) {
       case(EVENT_WINDOW_CREATED) : {
+        debug("EVENT_WINDOW_CREATED reçu\n");
         EventWindowCreated * eventWindowCreated = (EventWindowCreated *) e;
         eventWindowCreated->attributes.x = rand() % (rootWindowAttributes.width  - eventWindowCreated->attributes.width );
         eventWindowCreated->attributes.y = rand() % (rootWindowAttributes.height - eventWindowCreated->attributes.height);
+        pronSetWindowAttributes(display, eventWindowCreated->window, eventWindowCreated->attributes, WIN_ATTR_X | WIN_ATTR_Y);
         break;
       }
       default:
