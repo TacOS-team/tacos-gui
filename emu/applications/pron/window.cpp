@@ -1,6 +1,7 @@
 #include <window.h>
 #include <screen.h>
 #include <cstdlib>
+#include <cstdio>
 #include <string.h>
 #include <pronlib_enums.h>
 
@@ -48,12 +49,13 @@ void Window::drawLine(int x1, int y1, int x2, int y2) {
   this->screen->drawLine(this->x + x1, this->y + y1, this->x + x2, this->y + y2);
 }
 
-void Window::drawRect(int x1, int y1, int w, int h) {
-  this->screen->drawRect(this->x + x1, this->y + y1, w, h);
+void Window::drawRect(int x1, int y1, int width, int height) {
+  printf("window : %d %d\n", x1,y1);
+  this->screen->drawRect(this->x + x1, this->y + y1, width, height);
 }
 
-void Window::fillRectangle(int x1, int y1, int w, int h) {
-  this->screen->fillRectangle(this->x + x1, this->y + y1, this->x + w, this->y + h);
+void Window::fillRectangle(int x1, int y1, int width, int height) {
+  this->screen->fillRectangle(this->x + x1, this->y + y1, width, height);
 }
 
 void Window::clear() {

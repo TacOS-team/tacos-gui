@@ -85,6 +85,8 @@ void Screen::drawRect(int x, int y, int width, int height/*, color_t color*/) {
     COLOR(c, 24).g = 77;
     COLOR(c, 24).b = 182;
 
+    printf("olol %d %d\n",x, y);
+
     int pix = 0;
     for (pix = x; pix <= x + width; pix++) {
       this->drawPoint(pix, y/*, color */);

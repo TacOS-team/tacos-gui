@@ -90,6 +90,17 @@ void pronMapWindow(Display *d, Window w);
  */
 int pronDrawLine(Display *d, Window w, GC gc, int x1, int y1, int x2, int y2);
 
+/**
+ * Sent by a client to draw a rectangle to (x,y) width height sized.
+ * @todo Implement drawables instead of just windows
+ * @param d The connection to pron
+ * @param w The window in which to draw the line
+ * @param gc The graphics context to use
+ * @param x The x-coordinate of the point to join
+ * @param y The y-coordinate of the point to join
+ * @param width of the rectangle
+ * @param height of the rectangle
+ */
 int pronDrawRect(Display *d, Window w, GC gc, int x, int y, int width, int height);
 
 /**
