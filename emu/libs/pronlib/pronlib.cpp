@@ -78,6 +78,7 @@ void pronSetWindowAttributes(Display * d, Window w, PronWindowAttributes newAttr
   RqSetWindowAttributes rq(w,newAttr,mask);
   tsock_write(d->fd,&rq,sizeof(RqSetWindowAttributes));
 }
+
 void pronDisconnect(Display *d) {
   tsock_close(d->fd);
   delete d;	
@@ -89,8 +90,10 @@ void pronSelectInput(Display *d, Window w, uint32_t eventMask) {
   tsock_write(d->fd, &rq, sizeof(rq));
 }
 
-void pronNextEvent(Display *d, PronEvent * e) {
-
+void pronNextEvent(Display * d, PronEvent * e) {
+  while (tsock_read(d->fd, e, 1024) < 0) {
+    usleep(100000);
+  }
 }
 
 

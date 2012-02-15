@@ -120,7 +120,6 @@ void pronSelectInput(Display *d, Window w, uint32_t eventMask);
 
 /**
  * Wait a new event.
- * @todo Implement this
  * @param d The connection to pron
  * @param e Event returned
  */
@@ -130,6 +129,7 @@ void pronNextEvent(Display *d, PronEvent * e);
  * Get the attributes of a given window.
  * @param d The connection to pron
  * @param w The window whose attributes to get
+ * @param attr The attributes of the widow
  */
 void pronGetWindowAttributes(Display * d, Window w, PronWindowAttributes * attr);
 
