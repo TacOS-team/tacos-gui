@@ -69,6 +69,16 @@ int pronFillRectangle(Display *d, Window w, GC gc, int x, int y, int width, int 
   return (tsock_write(d->fd, &rq, sizeof(rq)) > 0);
 }
 
+int pronDrawCircle(Display *d, Window w, GC gc, int x, int y, int radius) {
+  RqDrawCircle rq (gc, w, x, y, radius);
+  return (tsock_write(d->fd,&rq,sizeof(rq)) > 0);
+}
+
+int pronFillCircle(Display *d, Window w, GC gc, int x, int y, int radius){
+  RqFillCircle rq (gc, w, x, y, radius);
+  return (tsock_write(d->fd,&rq,sizeof(rq)) > 0);
+}
+
 void pronGetWindowAttributes(Display * d, Window w, PronWindowAttributes * attr) {
   RqGetWindowAttributes rq(w);
   tsock_write(d->fd, &rq, sizeof(rq)) ;

@@ -26,6 +26,10 @@ public: // XXX: bourrin
 
 	void fillRectangle(int x, int y, int width, int height/*, color_t color*/);
 
+	void drawCircle (int x, int y, int r /*,color_t color */) ;
+
+	void fillCircle (int n_cx, int n_cy, int radius /*,color_t color */);
+
 	Window* getWindow(int id);
 
 	void addWindow(Window *w);

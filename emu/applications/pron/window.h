@@ -45,6 +45,10 @@ public: //XXX: bourrin
   void drawRect(int x1, int y1, int width, int height) ;
 	
   void fillRectangle(int x, int y, int width, int height);
+  
+  void drawCircle(int x, int y, int radius);
+
+  void fillCircle(int x, int y, int radius);
 
   void clear();
 

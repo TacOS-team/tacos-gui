@@ -57,6 +57,14 @@ void Window::fillRectangle(int x1, int y1, int width, int height) {
   this->screen->fillRectangle(this->x + x1, this->y + y1, width, height);
 }
 
+void Window::drawCircle(int x, int y, int radius) {
+  this->screen->drawCircle(this->x + x, this->y + y, radius); 
+}
+
+void Window::fillCircle(int x, int y, int radius) {
+  this->screen->fillCircle(this->x + x, this->y + y, radius); 
+}
+
 void Window::clear() {
   for (int h = 0; h < this->height; h++) {
     memset(this->screen->videoBuffer + 3 * ((this->y + h) * this->screen->width + this->x), (this->id >> 16) << 3, this->width * 3);

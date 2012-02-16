@@ -66,6 +66,17 @@ void handleClientRequest(int client, void *buf, int size) {
       screen->getWindow(rq->drawable)->fillRectangle(rq->x, rq->y, rq->width, rq->height);
       break;
     }
+    case RQ_DRAW_CIRCLE: {
+      RqDrawCircle *rq = (RqDrawCircle*) buf;
+      screen->getWindow(rq->drawable)->drawCircle(rq->x,rq->y,rq->radius);
+      break;
+    }
+    case RQ_FILL_CIRCLE: {
+      RqFillCircle *rq = (RqFillCircle*) buf;
+      screen->getWindow(rq->drawable)->fillCircle(rq->x,rq->y,rq->radius);
+      break;
+    }
+    
     case RQ_SELECT_INPUT: {
       //printf("Received RQ_SELECT_INPUT from client %d!\n", client);
       RqSelectInput *rq = (RqSelectInput*) buf;

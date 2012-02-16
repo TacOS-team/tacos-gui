@@ -171,6 +171,51 @@ struct RqFillRectangle : public PronRequest {
   int height; /**< height of the rectangle */
 };
 
+/**
+ * DrawCircle request.
+ * Sent by a client to draw a circle with given center (x,y) and radius
+ */
+struct RqDrawCircle : public PronRequest {
+  /** Constructor. */
+  RqDrawCircle(int gc, int drawable, int x, int y, int radius)
+    : PronRequest(RQ_DRAW_CIRCLE) {
+      this->gc = gc;
+      this->drawable = drawable;
+      this->x = x;
+      this->y = y;
+      this->radius = radius;
+    }
+
+  MessageType type; /**< message type, always first */
+  int gc; /**< id of the graphics context to use */
+  int drawable; /**< id of the drawable in which to draw */ 
+  int x; /**< x-coordinate of the point to join */
+  int y; /**< y-coordinate of the point to join */
+  int radius; /**< radius of the circle */
+};
+
+/**
+ * FillCircle request.
+ * Sent by a client to draw a filled circle with given center (x,y) and radius
+ */
+struct RqFillCircle : public PronRequest {
+  /** Constructor. */
+  RqFillCircle(int gc, int drawable, int x, int y, int radius)
+    : PronRequest(RQ_FILL_CIRCLE) {
+      this->gc = gc;
+      this->drawable = drawable;
+      this->x = x;
+      this->y = y;
+      this->radius = radius;
+    }
+
+  MessageType type; /**< message type, always first */
+  int gc; /**< id of the graphics context to use */
+  int drawable; /**< id of the drawable in which to draw */ 
+  int x; /**< x-coordinate of the point to join */
+  int y; /**< y-coordinate of the point to join */
+  int radius; /**< radius of the circle */
+};
 
 /**
  * GetWindowAttributes request.

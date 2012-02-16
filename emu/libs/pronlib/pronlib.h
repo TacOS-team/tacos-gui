@@ -117,6 +117,31 @@ int pronDrawRect(Display *d, Window w, GC gc, int x, int y, int width, int heigh
 int pronFillRectangle(Display *d, Window w, GC gc, int x, int y, int width, int height);
 
 /**
+ * Sent by a client to draw a circle with given center (x,y) and radius
+ * @todo Implement drawables instead of just windows
+ * @param d The connection to pron
+ * @param w The window in which to draw the line
+ * @param gc The graphics context to use
+ * @param x The x-coordinate of the point to join
+ * @param y The y-coordinate of the point to join
+ * @param radius of the circle
+ */
+int pronDrawCircle(Display *d, Window w, GC gc, int x, int y, int radius);
+
+/**
+ * Sent by a client to draw a filled circle with given center (x,y) and radius
+ * @todo Implement drawables instead of just windows
+ * @param d The connection to pron
+ * @param w The window in which to draw the line
+ * @param gc The graphics context to use
+ * @param x The x-coordinate of the point to join
+ * @param y The y-coordinate of the point to join
+ * @param radius of the circle
+ */
+int pronFillCircle(Display *d, Window w, GC gc, int x, int y, int radius);
+
+
+/**
  * Closes the connection to pron.
  * @param d The connection to pron
  */

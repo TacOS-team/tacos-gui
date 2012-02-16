@@ -7,6 +7,7 @@ extern "C" {
 }
 #include <string.h>
 #include <cstdio>
+#include <math.h>
 
 #define _COLOR(_p, _bpp) _p.bpp ## _bpp
 #define COLOR(_p, _bpp) _COLOR(_p, _bpp)
@@ -123,6 +124,62 @@ void Screen::fillRectangle(int x, int y, int width, int height/*, color_t color*
   }
 }
 
+// source : http://content.gpwiki.org/index.php/SDL:Tutorials:Drawing_and_Filling_Circles
+void Screen::drawCircle (int n_cx, int n_cy, int radius /*,color_t color */) {
+  double error = (double)-radius;
+  double x = (double)radius -0.5;
+  double y = (double)0.5;
+  double cx = n_cx - 0.5;
+  double cy = n_cy - 0.5;
+
+  while (x >= y) {
+    this->drawPoint((int)(cx + x), (int)(cy + y));
+    this->drawPoint((int)(cx + y), (int)(cy + x));
+
+    if (x != 0) {
+      this->drawPoint((int)(cx - x), (int)(cy + y));
+      this->drawPoint((int)(cx + y), (int)(cy - x));
+
+      if (y != 0) {
+	this->drawPoint((int)(cx + x), (int)(cy - y));
+	this->drawPoint((int)(cx - y), (int)(cy + x));
+      }
+
+      if (x != 0 && y != 0) {
+	this->drawPoint((int)(cx - x), (int)(cy - y));
+	this->drawPoint((int)(cx - y), (int)(cy - x));
+      }
+
+      error += y;
+      ++y;
+      error += y;
+
+      if (error >= 0) {
+	--x;
+	error -= x;
+	error -= x;
+      }
+    }
+  }
+}
+// source : http://content.gpwiki.org/index.php/SDL:Tutorials:Drawing_and_Filling_Circles
+void Screen::fillCircle (int cx, int cy, int radius /*,color_t color */) {
+
+  double r = (double)radius;
+
+  for (double dy = 1; dy <= r; dy += 1.0)
+  {
+    double dx = floor(sqrt((2.0 * r * dy) - (dy * dy)));
+    int x = cx - dx;
+
+    for (; x <= cx + dx; x++)
+    {
+      this->drawPoint(x, cy + r - dy);
+      this->drawPoint(x, cy - r + dy);
+    }
+  }
+}
+
 Window* Screen::getWindow(int id) {
   for (unsigned int i = 0; i < this->windows.size(); i++) {
     if (windows[i]->id == id) {
@@ -131,7 +188,7 @@ Window* Screen::getWindow(int id) {
   }
   return NULL;
 }
-     
+
 void Screen::addWindow(Window *w) {
   this->windows.push_back(w);
 }
