@@ -2,9 +2,6 @@
 #include <window.h>
 #include <sys/ioctl.h>
 #include <fcntl.h>
-extern "C" {
-#include <vesa_types.h>
-}
 #include <string.h>
 #include <cstdio>
 #include <math.h>
@@ -25,12 +22,21 @@ Screen::Screen(int width, int height, int bitsPerPixel) {
 }
 
 // TODO: couleurs
-void Screen::drawPoint(int x, int y/*, color_t c*/) {
-  // XXX: constantes en dur moches
+void Screen::drawPoint(int x, int y) {
+  
   color_t c;
+  
   COLOR(c, 24).r = 255;
   COLOR(c, 24).g = 77;
   COLOR(c, 24).b = 182;
+  
+  drawPoint(x, y, c);
+}
+
+// TODO: couleurs
+void Screen::drawPoint(int x, int y, color_t c) {
+  //printf("draw point (x, y) : (%d, %d) %d %d %d\n", x, y, COLOR(c, 24).r, COLOR(c, 24).g, COLOR(c, 24).b);
+  // XXX: constantes en dur moches
   if (x >= 0 && x < this->width && y >= 0 && y < this->height) {
     memcpy(this->videoBuffer + (y * this->width + x) * 3, &COLOR(c, 24), sizeof(COLOR(c, 24)));
   }
@@ -38,10 +44,91 @@ void Screen::drawPoint(int x, int y/*, color_t c*/) {
 
 // TODO: couleurs
 void Screen::drawLine(int x1, int y1, int x2, int y2/*, color_t color*/) {
+  /*      * /
+  float dx, dy, sdx, sdy, dxabs, dyabs, x, y, coordProv, delta;
+  int i, px, py;
+  
+  color_t c;
+  color_t cprov;
+  
+  COLOR(c, 24).r = 255;
+  COLOR(c, 24).g = 77;
+  COLOR(c, 24).b = 182;
+
+  dx = x2 - x1; // the horizontal distance of the line
+  dy = y2 - y1; // the vertical distance of the line
+  dxabs = (dx >= 0 ? dx : -dx);
+  dyabs = (dy >= 0 ? dy : -dy);
+  px = x1;
+  py = y1;
+
+  // Je l'ai fait que pour ces lignes pour tester
+  if (dxabs >= dyabs) { // the line is more horizontal than vertical
+    sdx = (dx >= 0 ? 1 : -1);
+    sdy = (dy >= 0 ? 1 : -1) * dyabs/dxabs;
+    for (i = 0; i < dxabs; i++) {
+      printf("dx : %f\n", dx);
+      printf("dy : %f\n", dy);
+      printf("i : %d\n", i);
+      coordProv = y1 + sdy * i;
+      printf("coordProv : %f\n", coordProv);
+      py = coordProv;
+      px += sdx;
+      delta = coordProv - py;
+      printf("py : %f\n", py);
+      printf("delta : %f\n", delta);
+      COLOR(cprov, 24).r = delta * COLOR(c, 24).r;
+      COLOR(cprov, 24).g = delta * COLOR(c, 24).g;
+      COLOR(cprov, 24).b = delta * COLOR(c, 24).b;
+      if (delta >= 0.5) {
+        this->drawPoint(px, py, cprov);
+        printf("avant : %d %d %d\n", COLOR(cprov, 24).r, COLOR(cprov, 24).g, COLOR(cprov, 24).b);
+        COLOR(cprov, 24).r = ( 1.0 - delta) * COLOR(c, 24).r;
+        COLOR(cprov, 24).g = ( 1.0 - delta) * COLOR(c, 24).g;
+        COLOR(cprov, 24).b = ( 1.0 - delta) * COLOR(c, 24).b;
+        printf("après : %d %d %d\n", COLOR(cprov, 24).r, COLOR(cprov, 24).g, COLOR(cprov, 24).b);
+        this->drawPoint(px, py+1, cprov);
+        if (delta >= 0.7) {
+          printf("3eme : %d %d %d\n", COLOR(cprov, 24).r, COLOR(cprov, 24).g, COLOR(cprov, 24).b);
+          this->drawPoint(px, py-1, cprov);
+        }
+      } else {
+        this->drawPoint(px, py+1, cprov);
+        COLOR(cprov, 24).r = ( 1.0 - delta) * COLOR(c, 24).r;
+        COLOR(cprov, 24).g = ( 1.0 - delta) * COLOR(c, 24).g;
+        COLOR(cprov, 24).b = ( 1.0 - delta) * COLOR(c, 24).b;
+        this->drawPoint(px, py, cprov);
+        if (delta <= 0.3) {
+          this->drawPoint(px, py-1, cprov);
+        }
+      }
+    }
+  } else { // the line is more vertical than horizontal
+    sdx = (dx >= 0 ? 1 : -1) * dxabs/dyabs;
+    sdy = (dy >= 0 ? 1 : -1);
+    for (i = 0; i < dyabs; i++) {
+      coordProv = x1 + sdx * i;
+      px = coordProv;
+      py += sdy;
+      delta = coordProv - px;
+      COLOR(cprov, 24).r = delta * COLOR(c, 24).r;
+      COLOR(cprov, 24).g = delta * COLOR(c, 24).g;
+      COLOR(cprov, 24).b = delta * COLOR(c, 24).b;
+      if (delta >= 0.5) {
+        this->drawPoint(px, py, cprov);
+        this->drawPoint(px+1, py, c);
+      } else {
+        this->drawPoint(px, py, c);
+        this->drawPoint(px+1, py, cprov);
+      }
+    }
+  }
+  /*    */
+  /*     */
   int i, dx, dy, sdx, sdy, dxabs, dyabs, x, y, px, py;
 
-  dx = x2 - x1; /* the horizontal distance of the line */
-  dy = y2 - y1; /* the vertical distance of the line */
+  dx = x2 - x1; 
+  dy = y2 - y1;
   dxabs = (dx >= 0 ? dx : -dx);
   dyabs = (dy >= 0 ? dy : -dy);
   sdx = (dx >= 0 ? 1 : -1);
@@ -51,7 +138,7 @@ void Screen::drawLine(int x1, int y1, int x2, int y2/*, color_t color*/) {
   px = x1;
   py = y1;
 
-  if (dxabs >= dyabs) { /* the line is more horizontal than vertical */
+  if (dxabs >= dyabs) {
     for (i = 0; i < dxabs; i++) {
       y += dyabs;
       if (y >= dxabs) {
@@ -59,9 +146,9 @@ void Screen::drawLine(int x1, int y1, int x2, int y2/*, color_t color*/) {
 	py += sdy;
       }
       px += sdx;
-      this->drawPoint(px, py/*, color*/);
+      this->drawPoint(px, py);
     }
-  } else { /* the line is more vertical than horizontal */
+  } else { 
     for (i = 0; i < dyabs; i++) {
       x += dxabs;
       if (x >= dyabs) {
@@ -69,9 +156,9 @@ void Screen::drawLine(int x1, int y1, int x2, int y2/*, color_t color*/) {
 	px += sdx;
       }
       py += sdy;
-      this->drawPoint(px, py/*, color*/);
+      this->drawPoint(px, py);
     }
-  }
+  }/*     */
 }
 
 // TODO: couleurs

@@ -3,6 +3,10 @@
 
 #include <vector>
 
+extern "C" {
+#include <vesa_types.h>
+}
+
 using namespace std;
 
 class Window;
@@ -19,7 +23,9 @@ public: // XXX: bourrin
 
 	Screen(int width, int height, int bitsPerPixel);
 
-	void drawPoint(int x, int y/*, color_t c*/);
+	void drawPoint(int x, int y);
+
+	void drawPoint(int x, int y, color_t c);
 	
 	void drawLine(int x1, int y1, int x2, int y2/*, color_t color*/);
 	void drawRect(int x, int y, int width, int height/*, color_t color*/) ;
