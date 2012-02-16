@@ -85,18 +85,15 @@ void Screen::drawRect(int x, int y, int width, int height/*, color_t color*/) {
     COLOR(c, 24).g = 77;
     COLOR(c, 24).b = 182;
 
-    printf("olol %d %d\n",x, y);
-
     int pix = 0;
     for (pix = x; pix <= x + width; pix++) {
-      this->drawPoint(pix, y/*, color */);
-      this->drawPoint(pix, y + height/*, color */);
+      memcpy(this->videoBuffer + (y * this->width + pix) * 3, &COLOR(c, 24), sizeof(COLOR(c, 24)));
+      memcpy(this->videoBuffer + ((y + height) * this->width + pix) * 3, &COLOR(c, 24), sizeof(COLOR(c, 24)));
     }
-    for (pix = y; pix <= y + height; pix++) {
-      this->drawPoint(x, pix/*, color */);
-      this->drawPoint(x + width, pix/*, color */);
+    for (pix = y + 1; pix < y + height; pix++) {
+      memcpy(this->videoBuffer + (pix * this->width + x) * 3, &COLOR(c, 24), sizeof(COLOR(c, 24)));
+      memcpy(this->videoBuffer + (pix * this->width + (x + width)) * 3, &COLOR(c, 24), sizeof(COLOR(c, 24)));
     }
-
   }
 }
 

@@ -50,7 +50,6 @@ void Window::drawLine(int x1, int y1, int x2, int y2) {
 }
 
 void Window::drawRect(int x1, int y1, int width, int height) {
-  printf("window : %d %d\n", x1,y1);
   this->screen->drawRect(this->x + x1, this->y + y1, width, height);
 }
 
