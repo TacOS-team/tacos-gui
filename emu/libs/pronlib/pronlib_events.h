@@ -30,6 +30,18 @@ struct EventWindowCreated : public PronEvent {
   PronWindowAttributes attributes;
 };
 
+/**
+ * EventPointerMoved
+ */
+struct EventPointerMoved : public PronEvent {
+  /** Constructor. */
+  EventPointerMoved(unsigned int window, PronWindowAttributes attributes)
+       : PronEvent(EVENT_POINTER_MOVED) {
+  }
+
+  int x, y;		/* pointer x, y coordinates in event window */
+  int x_root, y_root;	/* coordinates relative to root */
+};
 
 PronEvent * getPronEvent() {
   int size = sizeof(EventWindowCreated);

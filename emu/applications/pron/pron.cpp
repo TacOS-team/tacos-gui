@@ -75,8 +75,7 @@ void handleClientRequest(int client, void *buf, int size) {
       RqFillCircle *rq = (RqFillCircle*) buf;
       screen->getWindow(rq->drawable)->fillCircle(rq->x,rq->y,rq->radius);
       break;
-    }
-    
+    }    
     case RQ_SELECT_INPUT: {
       //printf("Received RQ_SELECT_INPUT from client %d!\n", client);
       RqSelectInput *rq = (RqSelectInput*) buf;
