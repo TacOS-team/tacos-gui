@@ -13,7 +13,6 @@ struct PronEvent : public PronMessage {
 	
 };
 
-
 /**
  * ClearWindow request.
  * Sent by a client to clear the contents of a window.
@@ -39,8 +38,8 @@ struct EventPointerMoved : public PronEvent {
        : PronEvent(EVENT_POINTER_MOVED) {
   }
 
-  int x, y;		/* pointer x, y coordinates in event window */
-  int x_root, y_root;	/* coordinates relative to root */
+  int x, y;
+  int x_root, y_root;
 };
 
 PronEvent * getPronEvent() {
@@ -48,7 +47,6 @@ PronEvent * getPronEvent() {
   
   return (PronEvent *) malloc(size);
 }
-
 
 #endif // __PRONLIB_EVENTS_H__
 

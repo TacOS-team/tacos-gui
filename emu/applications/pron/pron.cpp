@@ -143,6 +143,8 @@ int main() {
         handleClientRequest(client, buf, lRead);
       }
     }
+
+    //gestion des évènement souris
   }
 
   // Close the listening socket

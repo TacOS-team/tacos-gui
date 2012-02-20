@@ -12,35 +12,48 @@ using namespace std;
 class Window;
 
 class Screen {
+
+private:
+  int mouseX;
+  int mouseY;  
+
 public: // XXX: bourrin
-	int width, height;
-	int bitsPerPixel;
-	int bytesPerPixel;
-	int vesa_fd;
-	char *videoBuffer;
-	vector<Window*> windows; // XXX: ABR ? Rouge/noir ? B-Arbre ?
-	Window *root;
+  int width, height;
+  int bitsPerPixel;
+  int bytesPerPixel;
+  int vesa_fd;
+  char *videoBuffer;
+  vector<Window*> windows; // XXX: ABR ? Rouge/noir ? B-Arbre ?
+  Window *root;
 
-	Screen(int width, int height, int bitsPerPixel);
+  Screen(int width, int height, int bitsPerPixel);
 
-	void drawPoint(int x, int y);
+  void drawPoint(int x, int y);
 
-	void drawPoint(int x, int y, color_t c);
+  void drawPoint(int x, int y, color_t c);
 	
-	void drawLine(int x1, int y1, int x2, int y2/*, color_t color*/);
-	void drawRect(int x, int y, int width, int height/*, color_t color*/) ;
+  void drawLine(int x1, int y1, int x2, int y2/*, color_t color*/);
+  void drawRect(int x, int y, int width, int height/*, color_t color*/) ;
 
-	void fillRectangle(int x, int y, int width, int height/*, color_t color*/);
+  void fillRectangle(int x, int y, int width, int height/*, color_t color*/);
 
-	void drawCircle (int x, int y, int r /*,color_t color */) ;
+  void drawCircle (int x, int y, int r /*,color_t color */) ;
 
-	void fillCircle (int n_cx, int n_cy, int radius /*,color_t color */);
+  void fillCircle (int n_cx, int n_cy, int radius /*,color_t color */);
 
-	Window* getWindow(int id);
+  Window* getWindow(int id);
 
-	void addWindow(Window *w);
+  void addWindow(Window *w);
 
-	void flush();
+  void flush();
+
+  void setMouseX(int mouseX);
+
+  int getMouseX();
+
+  void setMouseY(int mouseY);
+
+  int getMouseY();
 };
 
 #endif

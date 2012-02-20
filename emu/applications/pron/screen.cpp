@@ -283,3 +283,19 @@ void Screen::addWindow(Window *w) {
 void Screen::flush() {
   ioctl(this->vesa_fd, FLUSH, 0);
 }
+
+int Screen::getMouseX(){
+  return this->mouseX;
+}
+
+void Screen::setMouseX(int mouseX){
+  this->mouseX = mouseX;
+}
+
+int Screen::getMouseY(){
+  return this->mouseY;
+}
+
+void Screen::setMouseY(int mouseY){
+  this->mouseY = mouseY;
+}
