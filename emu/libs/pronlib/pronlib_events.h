@@ -34,12 +34,18 @@ struct EventWindowCreated : public PronEvent {
  */
 struct EventPointerMoved : public PronEvent {
   /** Constructor. */
-  EventPointerMoved(unsigned int window, PronWindowAttributes attributes)
+ EventPointerMoved(unsigned int window, int x, int y, int xRoot, int yRoot)
        : PronEvent(EVENT_POINTER_MOVED) {
+    this->window = window;
+    this->x = x;
+    this->y = y;
+    this->xRoot = xRoot;
+    this->yRoot = yRoot;
   }
 
+  unsigned int window;
   int x, y;
-  int x_root, y_root;
+  int xRoot, yRoot;
 };
 
 PronEvent * getPronEvent() {

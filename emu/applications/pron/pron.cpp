@@ -5,6 +5,9 @@
 #include <signal.h>
 #include <sys/time.h>
 #include <clibtacos>
+#include <fcntl.h>
+#include <mouse_types.h>
+#include <string.h>
 
 #define MAX_CLIENTS 128
 #define MAX_MSG_SIZE 1024
@@ -103,6 +106,34 @@ debug("message reçu : %s\n", MessageTypeStrings[reqType]);
 #endif
 }
 
+//XXX: creer une méthode au bon endroit
+void handleMouseEvents(int mouseFd){
+  mousestate_t state;
+  memset(&state, 0, sizeof(mousestate_t));
+  // Gets the mouse state
+  read(mouseFd, (char *) &state, 0);
+  if(screen->getMouseX() != state.x || screen->getMouseY() != state.y){
+    screen->setMouseX(state.x);
+    screen->setMouseY(state.y);
+    // For debug purpose only
+    // printf("Mouse sate (%d, %d)\n", state.x, state.y);
+    // it's time to send mouse Event
+    // TODO : no broadcast ...
+    for (int client = 1; client <= nbClients; client++) {
+
+      // TODO : detect here real selected window ...
+      // computing coordinates
+      Window *root = screen->root;
+      int x = root->x - state.x;
+      int y = root->y - state.y;
+
+      EventPointerMoved pointerMoved (root->id, x, y, state.x, state.y);
+      tsock_write(clients[client].fd, &pointerMoved, sizeof(EventPointerMoved));
+      printf("envoie evnt au client %d !\n", client);
+    }
+  }
+}
+
 int main() {
   printf("Welcome to pr0n \\o/\n");
 
@@ -125,6 +156,9 @@ int main() {
   unlink("/tmp/pron.sock");
   int fd = tsock_listen("/tmp/pron.sock");
 
+  // Opens the mouse
+  int mouseFd = open("/dev/mouse", 0);
+
   // Main loop
   bool continuer = true;
   int newFd, lRead;
@@ -145,6 +179,7 @@ int main() {
     }
 
     //gestion des évènement souris
+    handleMouseEvents(mouseFd);
   }
 
   // Close the listening socket
