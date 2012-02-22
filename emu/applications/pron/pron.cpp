@@ -102,7 +102,7 @@ void handleClientRequest(int client, void *buf, int size) {
     }
   }
 #ifdef DEBUG
-debug("message reçu : %s\n", MessageTypeStrings[reqType]);
+  debug("message reçu : %s\n", MessageTypeStrings[reqType]);
 #endif
 }
 
@@ -117,19 +117,31 @@ void handleMouseEvents(int mouseFd){
     screen->setMouseY(state.y);
     // For debug purpose only
     // printf("Mouse sate (%d, %d)\n", state.x, state.y);
-    // it's time to send mouse Event
-    // TODO : no broadcast ...
-    for (int client = 1; client <= nbClients; client++) {
 
-      // TODO : detect here real selected window ...
-      // computing coordinates
-      Window *root = screen->root;
-      int x = root->x - state.x;
-      int y = root->y - state.y;
+    // TODO : detect the window which is focused
+    // TODO : detect here real selected window ...
+    // computing coordinates
+    // XXX : We get the first non root window
+    if(screen->windows.size() > 1){
+      Window *focused = screen->windows[1];
+      int x =  state.x - focused->x;
+      int y = state.y - focused->y;
+      
+      //printf("Position du pointeur %d %d, focused window %d %d, width height %d %d \n",x, y, focused->x, focused->y, focused->width, focused->height);
 
-      EventPointerMoved pointerMoved (root->id, x, y, state.x, state.y);
-      tsock_write(clients[client].fd, &pointerMoved, sizeof(EventPointerMoved));
-      printf("envoie evnt au client %d !\n", client);
+      // send th eevent if the the pointer is in the current focused
+      // window
+      if(x >= 0 && y >= 0 && x < focused->width && y < focused->height){
+
+	// it's time to send mouse Event
+	// TODO : no broadcast ...
+	for (int client = 1; client <= nbClients; client++) {
+	
+	  EventPointerMoved pointerMoved (focused->id, x, y, state.x, state.y);
+	  tsock_write(clients[client].fd, &pointerMoved, sizeof(EventPointerMoved));
+	  //printf("envoie evnt au client %d !\n", client);
+	}
+      }
     }
   }
 }
