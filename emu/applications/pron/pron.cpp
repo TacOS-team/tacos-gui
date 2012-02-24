@@ -126,20 +126,20 @@ void handleMouseEvents(int mouseFd){
       Window *focused = screen->windows[1];
       int x =  state.x - focused->x;
       int y = state.y - focused->y;
-      
-      //printf("Position du pointeur %d %d, focused window %d %d, width height %d %d \n",x, y, focused->x, focused->y, focused->width, focused->height);
 
       // send th eevent if the the pointer is in the current focused
       // window
       if(x >= 0 && y >= 0 && x < focused->width && y < focused->height){
 
+	printf("Position du pointeur %d %d, focused window %d %d, width height %d %d \n",x, y, focused->x, focused->y, focused->width, focused->height);
+	
 	// it's time to send mouse Event
 	// TODO : no broadcast ...
 	for (int client = 1; client <= nbClients; client++) {
 	
 	  EventPointerMoved pointerMoved (focused->id, x, y, state.x, state.y);
 	  tsock_write(clients[client].fd, &pointerMoved, sizeof(EventPointerMoved));
-	  //printf("envoie evnt au client %d !\n", client);
+	  printf("envoie evnt au client %d !\n", client);
 	}
       }
     }
