@@ -37,7 +37,7 @@ Uint32 libtacos_periodic_checks(Uint32 interval, void *param) {
 	if (i % 5 == 0) {
 		SDL_Event events[MAX_SDL_EVENTS];
 		int nb_pending_events = SDL_PeepEvents(events, MAX_SDL_EVENTS, SDL_PEEKEVENT, SDL_ALLEVENTS);
-		printf("[Leek monitor] %d pending event(s).\n", nb_pending_events);
+		//printf("[Leek monitor] %d pending event(s).\n", nb_pending_events);
 		if (nb_pending_events >= MAX_SDL_EVENTS - 1) {
 			printf("[Leek monitor] Event queue full - exiting.\n");
 			exit(1);
