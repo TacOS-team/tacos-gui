@@ -1,16 +1,13 @@
 #ifndef __PRONLIB_EVENTS_H__
 #define __PRONLIB_EVENTS_H__
 
-
 #include <pron_messages.h>
 #include <stdlib.h>
 
-
 struct PronEvent : public PronMessage {
-	/** Constructor. */
-	PronEvent(MessageType type)
-	    : PronMessage(type) {}
-	
+  /** Constructor. */
+  PronEvent(MessageType type)
+      : PronMessage(type) {}
 };
 
 /**
@@ -20,7 +17,7 @@ struct PronEvent : public PronMessage {
 struct EventWindowCreated : public PronEvent {
   /** Constructor. */
   EventWindowCreated(unsigned int window, PronWindowAttributes attributes)
-       : PronEvent(EVENT_WINDOW_CREATED) {
+       : PronEvent(EV_WINDOW_CREATED) {
      this->window = window;
      this->attributes = attributes;
   }
@@ -34,8 +31,8 @@ struct EventWindowCreated : public PronEvent {
  */
 struct EventPointerMoved : public PronEvent {
   /** Constructor. */
- EventPointerMoved(unsigned int window, int x, int y, int xRoot, int yRoot)
-       : PronEvent(EVENT_POINTER_MOVED) {
+  EventPointerMoved(unsigned int window, int x, int y, int xRoot, int yRoot)
+       : PronEvent(EV_POINTER_MOVED) {
     this->window = window;
     this->x = x;
     this->y = y;
@@ -55,4 +52,3 @@ PronEvent * getPronEvent() {
 }
 
 #endif // __PRONLIB_EVENTS_H__
-

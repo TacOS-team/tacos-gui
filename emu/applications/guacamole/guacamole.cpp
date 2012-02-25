@@ -18,12 +18,12 @@ int main() {
   debug("width : %d, height : %d\n", rootWindowAttributes.width, rootWindowAttributes.height);
   
   // Subscribe to window creation events
-  pronSelectInput(display, display->rootWindow, CREATE_NOTIFY);
+  pronSelectInput(display, display->rootWindow, PRON_EVENTMASK(EV_WINDOW_CREATED));
   PronEvent * e = getPronEvent();
   while(1) {
     pronNextEvent(display, e);
     switch (e->type) {
-      case(EVENT_WINDOW_CREATED) : {
+      case (EV_WINDOW_CREATED) : {
         debug("EVENT_WINDOW_CREATED reçu\n");
         EventWindowCreated * eventWindowCreated = (EventWindowCreated *) e;
         eventWindowCreated->attributes.x = rand() % (rootWindowAttributes.width  - eventWindowCreated->attributes.width );

@@ -14,6 +14,8 @@ Window::Window(Screen *screen, int id, Window *parent, int x, int y, int width, 
   this->y = y;
   this->width = width;
   this->height = height;
+  this->eventMask = 0;
+  this->dontPropagateMask = 0;
 
   // Père
   this->parent = parent;

@@ -20,99 +20,145 @@ static void alarm_handler(int signum) {
   screen->flush();
 }
 
+/**
+ * Delivers an event to a window.
+ *
+ * @param e The event to deliver
+ * @param size The size of the event
+ * @param w The window to deliver the event to
+ */
+void deliverEventToWindow(PronEvent *e, unsigned int size, Window *w) {
+  unsigned int eventMask = PRON_EVENTMASK(e->type);
+  
+  // Deliver to creator
+  if (w != screen->root && (w->eventMask & eventMask)) {
+    tsock_write(clients[w->getCreator()].fd, e, size);
+  }
+
+  // Deliver to other clients
+  for (unsigned int i = 0; i < w->otherClients.size(); i++) {
+    if (w->otherClients[i].mask & eventMask) {
+      tsock_write(clients[w->otherClients[i].id].fd, e, size);    
+    }
+  }
+}
+
+/**
+ * Delivers an event to a window and its immediate parent.
+ * Suitable for window events ().
+ * 
+ * @param e The event to deliver
+ * @param size The size of the event
+ * @param w The window to deliver the event to
+ */
+void deliverWindowEvent(PronEvent *e, unsigned int size, Window *w) {
+  deliverEventToWindow(e, size, w);
+  if (w->parent) {
+    deliverEventToWindow(e, size, w->parent);
+  }
+}
+
+/**
+ * Delivers a event that needs to propagate up the window tree.
+ * Suitable for device events ().
+
+ * @param e The event to deliver
+ * @param size The size of the event
+ * @param w The window to start the delivery with
+ */
+void deliverDeviceEvent(PronEvent *e, unsigned int size, Window *w) {
+  unsigned int eventMask = PRON_EVENTMASK(e->type);
+ 
+  while (1) {
+    deliverEventToWindow(e, size, w);
+
+    if (w == screen->root || (w->dontPropagateMask & eventMask)) {
+      break;
+    }
+
+    w = w->parent;
+  }
+}
+
 void handleClientRequest(int client, void *buf, int size) {
   int reqType = *((int*)buf);
   switch (reqType) { 
     case RQ_HELLO: {
-      //printf("Received RQ_HELLO from client %d!\n", client);
-      //RqHello *rq = (RqHello*)buf;
       // Identifiers: 16 upper bits for client id, 16 lower bits for resource id
       RespWelcome welcome(screen->root->id, client << 16, (client << 17) - 1);
       tsock_write(clients[client].fd, &welcome, sizeof(welcome));
       break;
     }
     case RQ_CREATE_WINDOW: {
-      //printf("Received RQ_CREATE_WINDOW from client %d!\n", client);
       RqCreateWindow *rq = (RqCreateWindow*) buf;
       Window *w = new Window(screen, rq->id, screen->getWindow(rq->parent), rq->x, rq->y, rq->width, rq->height);
       screen->addWindow(w);
-      for (int client = 1; client <= nbClients; client++) {
-        EventWindowCreated eventCreated (w->id, w->getAttributes());
-        tsock_write(clients[client].fd, &eventCreated, sizeof(eventCreated));
-        printf("envoie evnt au client %d !\n", client);
-      }
+      EventWindowCreated eventCreated(w->id, w->getAttributes());
+      deliverWindowEvent(&eventCreated, sizeof(eventCreated), w);
       break;
     }
     case RQ_CLEAR_WINDOW: {
-      //printf("Received RQ_CLEAR_WINDOW from client %d!\n", client);
       RqClearWindow *rq = (RqClearWindow*) buf;
       screen->getWindow(rq->window)->clear();
       break;
     }
     case RQ_MAP_WINDOW: {
-      //printf("Received RQ_MAP_WINDOW from client %d!\n", client);
       break;
     }
     case RQ_CREATE_GC: {
-      //printf("Received RQ_CREATE_GC from client %d!\n", client);
       break;
     }
     case RQ_DRAW_LINE: {
-      //printf("Received RQ_DRAW_LINE from client %d!\n", client);
       RqDrawLine *rq = (RqDrawLine*) buf;
       screen->getWindow(rq->drawable)->drawLine(rq->x1, rq->y1, rq->x2, rq->y2);
       break;
     }
     case RQ_FILL_RECTANGLE: {
-      //printf("Received RQ_FILL_RECTANGLE from client %d!\n", client);
-      RqFillRectangle *rq = (RqFillRectangle*)buf;
+      RqFillRectangle *rq = (RqFillRectangle*) buf;
       screen->getWindow(rq->drawable)->fillRectangle(rq->x, rq->y, rq->width, rq->height);
       break;
     }
     case RQ_DRAW_CIRCLE: {
       RqDrawCircle *rq = (RqDrawCircle*) buf;
-      screen->getWindow(rq->drawable)->drawCircle(rq->x,rq->y,rq->radius);
+      screen->getWindow(rq->drawable)->drawCircle(rq->x, rq->y, rq->radius);
       break;
     }
     case RQ_FILL_CIRCLE: {
       RqFillCircle *rq = (RqFillCircle*) buf;
-      screen->getWindow(rq->drawable)->fillCircle(rq->x,rq->y,rq->radius);
+      screen->getWindow(rq->drawable)->fillCircle(rq->x, rq->y, rq->radius);
       break;
     }    
     case RQ_SELECT_INPUT: {
-      //printf("Received RQ_SELECT_INPUT from client %d!\n", client);
       RqSelectInput *rq = (RqSelectInput*) buf;
       screen->getWindow(rq->window)->selectInput(client, rq->eventMask);
       break;
     }
     case RQ_GET_WINDOW_ATTRIBUTES: {
-      RqGetWindowAttributes *rq = (RqGetWindowAttributes *) buf;
+      RqGetWindowAttributes *rq = (RqGetWindowAttributes*) buf;
       RespWindowAttributes resp (screen->getWindow(rq->w)->getAttributes());
       tsock_write(clients[client].fd, &resp, sizeof(resp)); 
       break;
     }
     case RQ_SET_WINDOW_ATTRIBUTES: {
-      RqSetWindowAttributes *rq = (RqSetWindowAttributes *) buf;
+      RqSetWindowAttributes *rq = (RqSetWindowAttributes*) buf;
       screen->getWindow(rq->w)->setAttributes(&(rq->newAttr), rq->mask);
+      break;
     }
     case RQ_DRAW_RECT: {
-      RqDrawRect *rq = (RqDrawRect *) buf;
+      RqDrawRect *rq = (RqDrawRect*) buf;
       screen->getWindow(rq->drawable)->drawRect(rq->x, rq->y, rq->width, rq->height);
       break;
     }
   }
-#ifdef DEBUG
-  debug("message reçu : %s\n", MessageTypeStrings[reqType]);
-#endif
 }
 
 //XXX: creer une méthode au bon endroit
-void handleMouseEvents(int mouseFd){
+void handleMouseEvents(int mouseFd) {
   mousestate_t state;
   memset(&state, 0, sizeof(mousestate_t));
   // Gets the mouse state
   read(mouseFd, (char *) &state, 0);
-  if(screen->getMouseX() != state.x || screen->getMouseY() != state.y){
+  if (screen->getMouseX() != state.x || screen->getMouseY() != state.y) {
     screen->setMouseX(state.x);
     screen->setMouseY(state.y);
     // For debug purpose only
@@ -122,25 +168,20 @@ void handleMouseEvents(int mouseFd){
     // TODO : detect here real selected window ...
     // computing coordinates
     // XXX : We get the first non root window
-    if(screen->windows.size() > 1){
+    if (screen->windows.size() > 1) {
       Window *focused = screen->windows[1];
       int x =  state.x - focused->x;
       int y = state.y - focused->y;
 
-      // send th eevent if the the pointer is in the current focused
-      // window
-      if(x >= 0 && y >= 0 && x < focused->width && y < focused->height){
+      // send th event if the the pointer is in the current focused window
+      if (x >= 0 && y >= 0 && x < focused->width && y < focused->height) {
+        #ifdef DEBUG
+        printf("Position du pointeur %d %d, focused window %d %d, width height %d %d \n",x, y, focused->x, focused->y, focused->width, focused->height);
+        #endif
 
-	printf("Position du pointeur %d %d, focused window %d %d, width height %d %d \n",x, y, focused->x, focused->y, focused->width, focused->height);
-	
-	// it's time to send mouse Event
-	// TODO : no broadcast ...
-	for (int client = 1; client <= nbClients; client++) {
-	
-	  EventPointerMoved pointerMoved (focused->id, x, y, state.x, state.y);
-	  tsock_write(clients[client].fd, &pointerMoved, sizeof(EventPointerMoved));
-	  printf("envoie evnt au client %d !\n", client);
-	}
+        // it's time to send mouse Event
+        EventPointerMoved pointerMoved (focused->id, x, y, state.x, state.y);
+        deliverDeviceEvent(&pointerMoved, sizeof(pointerMoved), focused); 
       }
     }
   }

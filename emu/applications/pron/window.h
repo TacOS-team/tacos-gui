@@ -28,6 +28,7 @@ public: //XXX: bourrin
   int x, y;
   int width, height;
   int eventMask;
+  int dontPropagateMask;
   vector<OtherClient> otherClients;
 
   Window *parent;
@@ -43,7 +44,7 @@ public: //XXX: bourrin
   void drawLine(int x1, int y1, int x2, int y2);
 
   void drawRect(int x1, int y1, int width, int height) ;
-	
+  
   void fillRectangle(int x, int y, int width, int height);
   
   void drawCircle(int x, int y, int radius);
