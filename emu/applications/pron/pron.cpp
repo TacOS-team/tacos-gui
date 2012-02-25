@@ -2,8 +2,6 @@
 #include <pron.h>
 #include <tsock.h>
 #include <unistd.h>
-#include <signal.h>
-#include <sys/time.h>
 #include <clibtacos>
 #include <fcntl.h>
 #include <mouse_types.h>
@@ -15,10 +13,6 @@
 static Screen *screen;
 static Client clients[MAX_CLIENTS+1];
 static int nbClients = 0;
-
-static void alarm_handler(int signum) {
-  screen->flush();
-}
 
 /**
  * Delivers an event to a window.
@@ -196,15 +190,6 @@ int main() {
   screen->root = new Window(screen, 0, NULL, 0, 0, 800, 600);
   screen->addWindow(screen->root);
 
-  // Set up the flush timer
-  signal(SIGALRM, alarm_handler);
-  struct itimerval flushTimer;
-  flushTimer.it_interval.tv_usec = 40000;
-  flushTimer.it_interval.tv_sec = 0;
-  flushTimer.it_value.tv_usec = 40000;
-  flushTimer.it_value.tv_sec = 0;
-  setitimer(ITIMER_REAL, &flushTimer, 0);
-  
   // Listen for clients
   unlink("/tmp/pron.sock");
   int fd = tsock_listen("/tmp/pron.sock");

@@ -175,8 +175,6 @@ int getchar() {
 	return ret;
 }
 
-
-
 void debug(const char * format, ...) {
 #ifdef DEBUG
   va_list args;
