@@ -23,13 +23,12 @@ Screen::Screen(int width, int height, int bitsPerPixel) {
 
 // TODO: couleurs
 void Screen::drawPoint(int x, int y) {
-  
   color_t c;
-  
+
   COLOR(c, 24).r = 255;
   COLOR(c, 24).g = 77;
   COLOR(c, 24).b = 182;
-  
+
   drawPoint(x, y, c);
 }
 
@@ -44,13 +43,13 @@ void Screen::drawPoint(int x, int y, color_t c) {
 
 // TODO: couleurs
 void Screen::drawLine(int x1, int y1, int x2, int y2/*, color_t color*/) {
-  /*      * /
+  /*
   float dx, dy, sdx, sdy, dxabs, dyabs, x, y, coordProv, delta;
   int i, px, py;
-  
+
   color_t c;
   color_t cprov;
-  
+
   COLOR(c, 24).r = 255;
   COLOR(c, 24).g = 77;
   COLOR(c, 24).b = 182;
@@ -123,8 +122,9 @@ void Screen::drawLine(int x1, int y1, int x2, int y2/*, color_t color*/) {
       }
     }
   }
-  /*    */
-  /*     */
+  // */
+
+  //*
   int i, dx, dy, sdx, sdy, dxabs, dyabs, x, y, px, py;
 
   dx = x2 - x1; 
@@ -142,8 +142,8 @@ void Screen::drawLine(int x1, int y1, int x2, int y2/*, color_t color*/) {
     for (i = 0; i < dxabs; i++) {
       y += dyabs;
       if (y >= dxabs) {
-	y -= dxabs;
-	py += sdy;
+        y -= dxabs;
+        py += sdy;
       }
       px += sdx;
       this->drawPoint(px, py);
@@ -152,13 +152,14 @@ void Screen::drawLine(int x1, int y1, int x2, int y2/*, color_t color*/) {
     for (i = 0; i < dyabs; i++) {
       x += dxabs;
       if (x >= dyabs) {
-	x -= dyabs;
-	px += sdx;
+        x -= dyabs;
+        px += sdx;
       }
       py += sdy;
       this->drawPoint(px, py);
     }
-  }/*     */
+  }
+  // */
 }
 
 // TODO: couleurs
@@ -185,7 +186,6 @@ void Screen::drawRect(int x, int y, int width, int height/*, color_t color*/) {
   }
 }
 
-
 // TODO: couleurs
 void Screen::fillRectangle(int x, int y, int width, int height/*, color_t color*/) {
   //test the points
@@ -201,21 +201,21 @@ void Screen::fillRectangle(int x, int y, int width, int height/*, color_t color*
     int l;
     //current pixel
     int p;
-    for(l = 0 ; l < height ; l++){
+    for (l = 0; l < height; l++) {
       //draw the line 
-      for(p = 0 ; p < width ; p++){
-	//draw a pixel
-	memcpy(this->videoBuffer + ((l + y) * this->width + p + x) * sizeof(COLOR(c, 24)) , &COLOR(c,24), sizeof(COLOR(c, 24)));
+      for (p = 0; p < width; p++) {
+        //draw a pixel
+        memcpy(this->videoBuffer + ((l + y) * this->width + p + x) * sizeof(COLOR(c, 24)) , &COLOR(c, 24), sizeof(COLOR(c, 24)));
       }
     }
   }
 }
 
 // source : http://content.gpwiki.org/index.php/SDL:Tutorials:Drawing_and_Filling_Circles
-void Screen::drawCircle (int n_cx, int n_cy, int radius /*,color_t color */) {
-  double error = (double)-radius;
-  double x = (double)radius -0.5;
-  double y = (double)0.5;
+void Screen::drawCircle (int n_cx, int n_cy, int radius/*, color_t color*/) {
+  double error = (double) -radius;
+  double x = (double) radius - 0.5;
+  double y = (double) 0.5;
   double cx = n_cx - 0.5;
   double cy = n_cy - 0.5;
 
@@ -228,13 +228,13 @@ void Screen::drawCircle (int n_cx, int n_cy, int radius /*,color_t color */) {
       this->drawPoint((int)(cx + y), (int)(cy - x));
 
       if (y != 0) {
-	this->drawPoint((int)(cx + x), (int)(cy - y));
-	this->drawPoint((int)(cx - y), (int)(cy + x));
+        this->drawPoint((int)(cx + x), (int)(cy - y));
+        this->drawPoint((int)(cx - y), (int)(cy + x));
       }
 
       if (x != 0 && y != 0) {
-	this->drawPoint((int)(cx - x), (int)(cy - y));
-	this->drawPoint((int)(cx - y), (int)(cy - x));
+        this->drawPoint((int)(cx - x), (int)(cy - y));
+        this->drawPoint((int)(cx - y), (int)(cy - x));
       }
 
       error += y;
@@ -242,25 +242,23 @@ void Screen::drawCircle (int n_cx, int n_cy, int radius /*,color_t color */) {
       error += y;
 
       if (error >= 0) {
-	--x;
-	error -= x;
-	error -= x;
+        --x;
+        error -= x;
+        error -= x;
       }
     }
   }
 }
+
 // source : http://content.gpwiki.org/index.php/SDL:Tutorials:Drawing_and_Filling_Circles
-void Screen::fillCircle (int cx, int cy, int radius /*,color_t color */) {
+void Screen::fillCircle (int cx, int cy, int radius/*, color_t color*/) {
+  double r = (double) radius;
 
-  double r = (double)radius;
-
-  for (double dy = 1; dy <= r; dy += 1.0)
-  {
+  for (double dy = 1; dy <= r; dy += 1.0) {
     double dx = floor(sqrt((2.0 * r * dy) - (dy * dy)));
     int x = cx - dx;
 
-    for (; x <= cx + dx; x++)
-    {
+    for (; x <= cx + dx; x++) {
       this->drawPoint(x, cy + r - dy);
       this->drawPoint(x, cy - r + dy);
     }
@@ -284,18 +282,18 @@ void Screen::flush() {
   ioctl(this->vesa_fd, FLUSH, 0);
 }
 
-int Screen::getMouseX(){
+int Screen::getMouseX() {
   return this->mouseX;
 }
 
-void Screen::setMouseX(int mouseX){
+void Screen::setMouseX(int mouseX) {
   this->mouseX = mouseX;
 }
 
-int Screen::getMouseY(){
+int Screen::getMouseY() {
   return this->mouseY;
 }
 
-void Screen::setMouseY(int mouseY){
+void Screen::setMouseY(int mouseY) {
   this->mouseY = mouseY;
 }

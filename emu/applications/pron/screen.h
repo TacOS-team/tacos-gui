@@ -31,15 +31,15 @@ public: // XXX: bourrin
   void drawPoint(int x, int y);
 
   void drawPoint(int x, int y, color_t c);
-	
+  
   void drawLine(int x1, int y1, int x2, int y2/*, color_t color*/);
   void drawRect(int x, int y, int width, int height/*, color_t color*/) ;
 
   void fillRectangle(int x, int y, int width, int height/*, color_t color*/);
 
-  void drawCircle (int x, int y, int r /*,color_t color */) ;
+  void drawCircle (int x, int y, int r/*, color_t color*/) ;
 
-  void fillCircle (int n_cx, int n_cy, int radius /*,color_t color */);
+  void fillCircle (int n_cx, int n_cy, int radius/*, color_t color*/);
 
   Window* getWindow(int id);
 

@@ -67,7 +67,7 @@ void draw_cube(Display *d, Window w) {
 
 int main(int argc, char *argv[]) {
   int x, y;
-  PronWindowAttributes newAttr;
+  //PronWindowAttributes newAttr;
 
   if (argc > 2) {
     x = atoi(argv[1]);
@@ -85,12 +85,16 @@ int main(int argc, char *argv[]) {
   }
 
   Window w = pronCreateWindow(d, d->rootWindow, x, y, 320, 240);
-   /* newAttr.x = 400;
-    pronSetWindowAttributes(d, w, newAttr, WIN_ATTR_X);*/
+  /*
+  newAttr.x = 400;
+  pronSetWindowAttributes(d, w, newAttr, WIN_ATTR_X);
+  */
 
   while (1) {
-    /*newAttr.x = (newAttr.x + 1) % 500;
-    pronSetWindowAttributes(d, w, newAttr, WIN_ATTR_X);*/
+    /*
+    newAttr.x = (newAttr.x + 1) % 500;
+    pronSetWindowAttributes(d, w, newAttr, WIN_ATTR_X);
+    */
     pronClearWindow(d, w);  
     int i = 0;
     for (i = 0; i < 8; i++) {

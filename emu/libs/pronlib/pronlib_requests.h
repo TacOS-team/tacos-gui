@@ -10,7 +10,6 @@ struct PronRequest : public PronMessage {
     }
 };
 
-
 /**
  * Hello request.
  * Sent by a client as the first message of the handshake.
@@ -24,7 +23,6 @@ struct RqHello : public PronRequest {
 
   int protoVersion; /**< protocol version used */
 };
-
 
 /**
  * CreateWindow request.
@@ -50,7 +48,6 @@ struct RqCreateWindow : public PronRequest {
   int height; /**< height of the window */
 };
 
-
 /**
  * ClearWindow request.
  * Sent by a client to clear the contents of a window.
@@ -64,7 +61,6 @@ struct RqClearWindow : public PronRequest {
 
   int window; /**< id of the window to clear */
 };
-
 
 /**
  * MapWindow request.
@@ -80,7 +76,6 @@ struct RqMapWindow : public PronRequest {
   int window; /**< id of the window to map */
 };
 
-
 /**
  * CreateGC request.
  * Sent by a client to create a new graphics context.
@@ -94,7 +89,6 @@ struct RqCreateGC : public PronRequest {
 
   int id; /**< id of the graphics context to create */
 };
-
 
 /**
  * DrawLine request.

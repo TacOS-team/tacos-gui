@@ -4,7 +4,7 @@
 #include <pron_proto.h>
 
 struct Client {
-	int fd;
+  int fd;
 };
 
 #include <window.h>

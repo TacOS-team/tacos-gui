@@ -1,7 +1,6 @@
 #ifndef __PRONLIB_STRUCTS_H__
 #define __PRONLIB_STRUCTS_H__
 
-
 struct PronWindowAttributes {
   unsigned short x;
   unsigned short y;
@@ -10,4 +9,3 @@ struct PronWindowAttributes {
 };
 
 #endif // __PRONLIB_STRUCTS_H__
-
