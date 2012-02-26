@@ -1,20 +1,23 @@
 #ifndef _WINDOW_H_
 #define _WINDOW_H_
 
+#include <pronlib_enums.h>
 #include <pronlib_structs.h>
+#include <pronlib_events.h>
 #include <vector>
 
 using namespace std;
 
 class Screen;
+class Client;
 
 struct OtherClient {
-  OtherClient(int id, unsigned int mask) {
-    this->id = id;
+  OtherClient(Client *client, unsigned int mask) {
+    this->client = client;
     this->mask = mask;
   }
 
-  int id;
+  Client *client;
   unsigned int mask;
 };
 
@@ -23,6 +26,7 @@ public: //XXX: bourrin
   Screen *screen;
 
   int id;
+  Client *creator;
 
   // Window attributes
   int x, y;
@@ -35,9 +39,11 @@ public: //XXX: bourrin
   Window *prevSibling, *nextSibling;
   Window *firstChild, *lastChild;
 
-  Window(Screen *screen, int id, Window *parent, int x, int y, int width, int height);
+  Window(Screen *screen, int id, Client *creator, Window *parent, int x, int y, int width, int height);
 
-  short getCreator();
+  //short getCreator();
+
+  Client* getCreator();
 
   void drawPoint(int x, int y);
 
@@ -59,7 +65,33 @@ public: //XXX: bourrin
 
   void setAttributes(PronWindowAttributes *newAttributes, unsigned int mask);
 
-  void selectInput(int client, unsigned int mask);
+  void selectInput(Client *client, unsigned int mask);
+
+  /**
+   * Delivers an event to this window.
+   *
+   * @param e The event to deliver
+   * @param size The size of the event
+   */
+  void deliverEvent(PronEvent *e, unsigned int size);
+
+  /**
+   * Delivers an event to this window and its immediate parent.
+   * Suitable for window events ().
+   * 
+   * @param e The event to deliver
+   * @param size The size of the event
+   */
+  void deliverWindowEvent(PronEvent *e, unsigned int size);
+
+  /**
+   * Delivers a event that needs to propagate up the window tree.
+   * Suitable for device events ().
+
+   * @param e The event to deliver
+   * @param size The size of the event
+   */
+  void deliverDeviceEvent(PronEvent *e, unsigned int size);
 };
 
 #endif

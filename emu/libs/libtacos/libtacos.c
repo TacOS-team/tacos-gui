@@ -5,9 +5,9 @@
 #include <SDL/SDL.h>
 
 // Drivers
-#include <vesa.h>
-#include <vga.h>
-#include <mouse.h>
+#include <vesadrv.h>
+#include <vgadrv.h>
+#include <mousedrv.h>
 
 #define MAX_FD 128
 #define MAX_SDL_EVENTS 128

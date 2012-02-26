@@ -1,3 +1,4 @@
+#include <client.h>
 #include <window.h>
 #include <screen.h>
 #include <cstdlib>
@@ -5,10 +6,11 @@
 #include <string.h>
 #include <pronlib_enums.h>
 
-Window::Window(Screen *screen, int id, Window *parent, int x, int y, int width, int height) {
+Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, int y, int width, int height) {
   this->screen = screen;
 
   this->id = id;
+  this->creator = creator;
 
   this->x = x;
   this->y = y;
@@ -39,8 +41,12 @@ Window::Window(Screen *screen, int id, Window *parent, int x, int y, int width, 
   }
 }
 
-short Window::getCreator() {
+/*short Window::getCreator() {
   return this->id >> 16;  
+}*/
+
+Client* Window::getCreator() {
+  return this->creator;
 }
 
 void Window::drawPoint(int x, int y) {
@@ -102,13 +108,13 @@ void Window::setAttributes(PronWindowAttributes *newAttr, unsigned int mask) {
   }
 }
 
-void Window::selectInput(int client, unsigned int mask) {
+void Window::selectInput(Client *client, unsigned int mask) {
   if (client == this->getCreator()) {
     this->eventMask = mask;
   } else {
     unsigned int i;
     for (i = 0; i < this->otherClients.size(); i++) {
-      if (this->otherClients[i].id == client) {
+      if (this->otherClients[i].client == client) {
         this->otherClients[i].mask = mask;
         break;
       }
@@ -116,5 +122,38 @@ void Window::selectInput(int client, unsigned int mask) {
     if (i == this->otherClients.size()) { // Not found, add it
       this->otherClients.push_back(OtherClient(client, mask));
     }
+  }
+}
+
+void Window::deliverEvent(PronEvent *e, unsigned int size) {
+  unsigned int eventMask = PRON_EVENTMASK(e->type);
+  
+  // Deliver to creator
+  if (this != screen->root && (this->eventMask & eventMask)) {
+    this->getCreator()->send(e, size);
+  }
+
+  // Deliver to other clients
+  for (unsigned int i = 0; i < this->otherClients.size(); i++) {
+    if (this->otherClients[i].mask & eventMask) {
+      this->otherClients[i].client->send(e, size);
+    }
+  }
+}
+
+void Window::deliverWindowEvent(PronEvent *e, unsigned int size) {
+  this->deliverEvent(e, size);
+  if (this->parent) {
+    this->parent->deliverEvent(e, size);
+  }
+}
+
+void Window::deliverDeviceEvent(PronEvent *e, unsigned int size) {
+  unsigned int eventMask = PRON_EVENTMASK(e->type);
+ 
+  this->deliverEvent(e, size);
+
+  if (this->parent && !(this->dontPropagateMask & eventMask)) {
+    this->parent->deliverDeviceEvent(e, size);
   }
 }

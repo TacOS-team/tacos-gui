@@ -1,4 +1,4 @@
-OBJS = vga.o mouse.o vesa.o
+OBJS = vgadrv.o mousedrv.o vesadrv.o
 
 all: $(LIBTACOS)
 

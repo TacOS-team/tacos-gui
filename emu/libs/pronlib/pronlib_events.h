@@ -45,10 +45,6 @@ struct EventPointerMoved : public PronEvent {
   int xRoot, yRoot;
 };
 
-PronEvent * getPronEvent() {
-  int size = sizeof(EventWindowCreated);
-  
-  return (PronEvent *) malloc(size);
-}
+PronEvent* getPronEvent();
 
 #endif // __PRONLIB_EVENTS_H__

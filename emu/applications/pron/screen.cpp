@@ -21,6 +21,19 @@ Screen::Screen(int width, int height, int bitsPerPixel) {
   ioctl(this->vesa_fd, GETVIDEOADDR, &this->videoBuffer);
 }
 
+Screen* Screen::instance = NULL;
+
+Screen* Screen::getInstance(int width, int height, int bitsPerPixel) {
+  if (Screen::instance == NULL) {
+    Screen::instance = new Screen(width, height, bitsPerPixel);
+  }
+  return instance;
+}
+
+Screen* Screen::getInstance() {
+  return instance;
+}
+
 // TODO: couleurs
 void Screen::drawPoint(int x, int y) {
   color_t c;

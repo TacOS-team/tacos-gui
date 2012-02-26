@@ -1,4 +1,4 @@
-#include <vesa.h>
+#include <vesadrv.h>
 #include <SDL/SDL.h>
 
 extern SDL_Surface *screen;

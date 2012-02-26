@@ -1,4 +1,4 @@
-#include <vga.h>
+#include <vgadrv.h>
 #include <vga_modes.h>
 #include <SDL/SDL.h>
 

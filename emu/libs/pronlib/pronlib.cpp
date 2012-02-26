@@ -109,3 +109,9 @@ void pronNextEvent(Display * d, PronEvent * e) {
     usleep(100000);
   }
 }
+  
+PronEvent* getPronEvent() {
+  int size = sizeof(EventWindowCreated);
+  
+  return (PronEvent *) malloc(size);
+}

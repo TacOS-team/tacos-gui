@@ -14,6 +14,8 @@ class Window;
 class Screen {
 
 private:
+  Screen(int width, int height, int bitsPerPixel);
+  static Screen *instance;
   int mouseX;
   int mouseY;  
 
@@ -26,7 +28,8 @@ public: // XXX: bourrin
   vector<Window*> windows; // XXX: ABR ? Rouge/noir ? B-Arbre ?
   Window *root;
 
-  Screen(int width, int height, int bitsPerPixel);
+  static Screen* getInstance(int width, int height, int bitsPerPixel);
+  static Screen* getInstance();
 
   void drawPoint(int x, int y);
 

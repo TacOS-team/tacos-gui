@@ -1,4 +1,4 @@
-OBJS = vga.o vesa.o mouse.o
+OBJS = vgadrv.o vesadrv.o mousedrv.o
 
 all: $(addprefix $(BUILDDIROBJS)/, $(OBJS))
 

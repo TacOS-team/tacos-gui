@@ -3,11 +3,9 @@
 
 #include <pron_proto.h>
 
-struct Client {
-  int fd;
-};
-
-#include <window.h>
+#include <client.h>
+#include <mouse.h>
 #include <screen.h>
+#include <window.h>
 
 #endif
