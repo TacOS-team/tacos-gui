@@ -82,10 +82,6 @@ void Window::clear() {
   this->screen->gc.fg = oldFg;
 }
 
-void Window::flush() {
-  this->screen->flush();
-}
-
 PronWindowAttributes Window::getAttributes() {
   PronWindowAttributes attr ;
   attr.x = this->x;
