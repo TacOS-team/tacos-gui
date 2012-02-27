@@ -19,11 +19,12 @@ Display* pronConnect() {
   tsock_write(fd, &rq, sizeof(rq));
 
   printf("Reading welcome...\n");
-  int lRead;
+  //int lRead;
   char buf[MAX_MSG_SIZE];
-  while ((lRead = tsock_read(fd, buf, sizeof(buf))) < 0) {
+  /*while ((lRead = tsock_read(fd, buf, sizeof(buf))) < 0) {
     usleep(100000);
-  }
+  }*/
+  tsock_read(fd, buf, sizeof(buf));
 
   RespWelcome *resp = (RespWelcome*) buf;
   printf("Welcome from server [%x - %x, root = %d]\n", resp->startId, resp->endId, resp->rootWindow);
@@ -83,9 +84,10 @@ void pronGetWindowAttributes(Display * d, Window w, PronWindowAttributes * attr)
   RqGetWindowAttributes rq(w);
   tsock_write(d->fd, &rq, sizeof(rq)) ;
   void * buffer = malloc(sizeof(RespWindowAttributes));
-  while (tsock_read(d->fd, buffer, sizeof(RespWindowAttributes)) < 0) {
+  /*while (tsock_read(d->fd, buffer, sizeof(RespWindowAttributes)) < 0) {
     usleep(100000);
-  }
+  }*/
+  tsock_read(d->fd, buffer, sizeof(RespWindowAttributes));
   *attr = ((RespWindowAttributes*) buffer)->attributes;
 }
 
@@ -104,10 +106,11 @@ void pronSelectInput(Display *d, Window w, uint32_t eventMask) {
   tsock_write(d->fd, &rq, sizeof(rq));
 }
 
-void pronNextEvent(Display * d, PronEvent * e) {
-  while (tsock_read(d->fd, e, 1024) < 0) {
+int pronNextEvent(Display * d, PronEvent * e) {
+  /*while (tsock_read(d->fd, e, 1024) < 0) {
     usleep(100000);
-  }
+  }*/
+  return (tsock_read(d->fd, e, 1024) > 0);
 }
   
 PronEvent* getPronEvent() {

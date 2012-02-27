@@ -161,7 +161,7 @@ void pronSelectInput(Display *d, Window w, uint32_t eventMask);
  * @param d The connection to pron
  * @param e Event returned
  */
-void pronNextEvent(Display *d, PronEvent * e);
+int pronNextEvent(Display *d, PronEvent * e);
 
 /**
  * Get the attributes of a given window.
