@@ -1,4 +1,4 @@
-OBJS = pron.o screen.o mouse.o window.o client.o
+OBJS = pron.o screen.o mouse.o window.o client.o clip_zone.o clip_rect.o
 
 all: $(BUILDDIRAPPS)/pron
 

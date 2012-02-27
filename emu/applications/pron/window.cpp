@@ -74,9 +74,12 @@ void Window::fillCircle(int x, int y, int radius) {
 }
 
 void Window::clear() {
-  for (int h = 0; h < this->height; h++) {
-    memset(this->screen->videoBuffer + 3 * ((this->y + h) * this->screen->width + this->x), (this->id >> 16) << 3, this->width * 3);
-  }
+  color_t oldFg = this->screen->gc.fg;
+  COLOR(this->screen->gc.fg, 24).r = (this->id >> 16) << 3;
+  COLOR(this->screen->gc.fg, 24).g = (this->id >> 16) << 3;
+  COLOR(this->screen->gc.fg, 24).b = (this->id >> 16) << 3;
+  this->screen->fillRectangle(this->x, this->y, this->width, this->height);
+  this->screen->gc.fg = oldFg;
 }
 
 void Window::flush() {

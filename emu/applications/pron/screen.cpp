@@ -6,8 +6,7 @@
 #include <cstdio>
 #include <math.h>
 
-#define _COLOR(_p, _bpp) _p.bpp ## _bpp
-#define COLOR(_p, _bpp) _COLOR(_p, _bpp)
+Screen* Screen::instance = NULL;
 
 Screen::Screen(int width, int height, int bitsPerPixel) {
   this->width = width;
@@ -19,9 +18,16 @@ Screen::Screen(int width, int height, int bitsPerPixel) {
   struct vesa_setmode_req req = { this->width, this->height, this->bitsPerPixel };
   ioctl(this->vesa_fd, SETMODE, &req);
   ioctl(this->vesa_fd, GETVIDEOADDR, &this->videoBuffer);
-}
 
-Screen* Screen::instance = NULL;
+  this->root = NULL;
+  this->clipWin = NULL;
+  this->clipZone = NULL;
+
+  // Default foreground color
+  COLOR(this->gc.fg, 24).r = 255;
+  COLOR(this->gc.fg, 24).g = 77;
+  COLOR(this->gc.fg, 24).b = 182;
+}
 
 Screen* Screen::getInstance(int width, int height, int bitsPerPixel) {
   if (Screen::instance == NULL) {
@@ -34,28 +40,25 @@ Screen* Screen::getInstance() {
   return instance;
 }
 
-// TODO: couleurs
 void Screen::drawPoint(int x, int y) {
-  color_t c;
-
-  COLOR(c, 24).r = 255;
-  COLOR(c, 24).g = 77;
-  COLOR(c, 24).b = 182;
-
-  drawPoint(x, y, c);
-}
-
-// TODO: couleurs
-void Screen::drawPoint(int x, int y, color_t c) {
-  //printf("draw point (x, y) : (%d, %d) %d %d %d\n", x, y, COLOR(c, 24).r, COLOR(c, 24).g, COLOR(c, 24).b);
-  // XXX: constantes en dur moches
-  if (x >= 0 && x < this->width && y >= 0 && y < this->height) {
-    memcpy(this->videoBuffer + (y * this->width + x) * 3, &COLOR(c, 24), sizeof(COLOR(c, 24)));
+  if (x >= 0 && x < this->width && y >= 0 && y < this->height && this->clipZone->contains(x, y)) {
+    memcpy(this->videoBuffer + (y * this->width + x) * 3, &COLOR(this->gc.fg, 24), sizeof(COLOR(this->gc.fg, 24)));
   }
 }
 
-// TODO: couleurs
-void Screen::drawLine(int x1, int y1, int x2, int y2/*, color_t color*/) {
+void Screen::drawHorizLine(int x, int y, int width) {
+  for (int c = 0; c < width; c++) {
+    this->drawPoint(x + c, y);
+  }
+}
+
+void Screen::drawVertLine(int x, int y, int height) {
+  for (int l = 0; l < height; l++) {
+    this->drawPoint(x, y + l);
+  }
+}
+
+void Screen::drawLine(int x1, int y1, int x2, int y2) {
   /*
   float dx, dy, sdx, sdy, dxabs, dyabs, x, y, coordProv, delta;
   int i, px, py;
@@ -175,57 +178,21 @@ void Screen::drawLine(int x1, int y1, int x2, int y2/*, color_t color*/) {
   // */
 }
 
-// TODO: couleurs
-void Screen::drawRect(int x, int y, int width, int height/*, color_t color*/) {
-  //test the points
-  if( x >= 0 && y >= 0 &&
-      x < this->width && x + width < this->width &&
-      y < this->height && y + height < this->height ) {
-    // XXX: the pixel which is drawn
-    color_t c;
-    COLOR(c, 24).r = 255;
-    COLOR(c, 24).g = 77;
-    COLOR(c, 24).b = 182;
-
-    int pix = 0;
-    for (pix = x; pix <= x + width; pix++) {
-      memcpy(this->videoBuffer + (y * this->width + pix) * 3, &COLOR(c, 24), sizeof(COLOR(c, 24)));
-      memcpy(this->videoBuffer + ((y + height) * this->width + pix) * 3, &COLOR(c, 24), sizeof(COLOR(c, 24)));
-    }
-    for (pix = y + 1; pix < y + height; pix++) {
-      memcpy(this->videoBuffer + (pix * this->width + x) * 3, &COLOR(c, 24), sizeof(COLOR(c, 24)));
-      memcpy(this->videoBuffer + (pix * this->width + (x + width)) * 3, &COLOR(c, 24), sizeof(COLOR(c, 24)));
-    }
-  }
+void Screen::drawRect(int x, int y, int width, int height) {
+  drawHorizLine(x, y, width);
+  drawHorizLine(x, y + height - 1, width);
+  drawVertLine(x, y + 1, height - 2);
+  drawVertLine(x + width - 1, y + 1, height - 2);
 }
 
-// TODO: couleurs
-void Screen::fillRectangle(int x, int y, int width, int height/*, color_t color*/) {
-  //test the points
-  if( x >= 0 && y >= 0 &&
-      x < this->width && x + width < this->width &&
-      y < this->height && y + height < this->height ) {
-    // XXX: the pixel which is drawn
-    color_t c;
-    COLOR(c, 24).r = 255;
-    COLOR(c, 24).g = 77;
-    COLOR(c, 24).b = 182;
-    //current line
-    int l;
-    //current pixel
-    int p;
-    for (l = 0; l < height; l++) {
-      //draw the line 
-      for (p = 0; p < width; p++) {
-        //draw a pixel
-        memcpy(this->videoBuffer + ((l + y) * this->width + p + x) * sizeof(COLOR(c, 24)) , &COLOR(c, 24), sizeof(COLOR(c, 24)));
-      }
-    }
+void Screen::fillRectangle(int x, int y, int width, int height) {
+  for (int l = 0; l < height; l++) {
+    drawHorizLine(x, y + l, width);
   }
 }
 
 // source : http://content.gpwiki.org/index.php/SDL:Tutorials:Drawing_and_Filling_Circles
-void Screen::drawCircle (int n_cx, int n_cy, int radius/*, color_t color*/) {
+void Screen::drawCircle(int n_cx, int n_cy, int radius) {
   double error = (double) -radius;
   double x = (double) radius - 0.5;
   double y = (double) 0.5;
@@ -264,7 +231,7 @@ void Screen::drawCircle (int n_cx, int n_cy, int radius/*, color_t color*/) {
 }
 
 // source : http://content.gpwiki.org/index.php/SDL:Tutorials:Drawing_and_Filling_Circles
-void Screen::fillCircle (int cx, int cy, int radius/*, color_t color*/) {
+void Screen::fillCircle(int cx, int cy, int radius) {
   double r = (double) radius;
 
   for (double dy = 1; dy <= r; dy += 1.0) {
@@ -291,10 +258,6 @@ void Screen::addWindow(Window *w) {
   this->windows.push_back(w);
 }
 
-void Screen::flush() {
-  ioctl(this->vesa_fd, FLUSH, 0);
-}
-
 int Screen::getMouseX() {
   return this->mouseX;
 }
@@ -309,4 +272,14 @@ int Screen::getMouseY() {
 
 void Screen::setMouseY(int mouseY) {
   this->mouseY = mouseY;
+}
+
+void Screen::prepareDrawing(Window *w) {
+  if (w != this->clipWin) {
+    if (this->clipZone != NULL) {
+      delete this->clipZone;
+    }
+    this->clipZone = new ClipZone(w);
+    this->clipWin = w;
+  }
 }

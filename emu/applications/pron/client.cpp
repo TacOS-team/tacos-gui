@@ -35,37 +35,12 @@ void Client::handle() {
       w->deliverWindowEvent(&eventCreated, sizeof(eventCreated));
       break;
     }
-    case RQ_CLEAR_WINDOW: {
-      RqClearWindow *rq = (RqClearWindow*) Client::recvBuf;
-      screen->getWindow(rq->window)->clear();
-      break;
-    }
     case RQ_MAP_WINDOW: {
       break;
     }
     case RQ_CREATE_GC: {
       break;
     }
-    case RQ_DRAW_LINE: {
-      RqDrawLine *rq = (RqDrawLine*) Client::recvBuf;
-      screen->getWindow(rq->drawable)->drawLine(rq->x1, rq->y1, rq->x2, rq->y2);
-      break;
-    }
-    case RQ_FILL_RECTANGLE: {
-      RqFillRectangle *rq = (RqFillRectangle*) Client::recvBuf;
-      screen->getWindow(rq->drawable)->fillRectangle(rq->x, rq->y, rq->width, rq->height);
-      break;
-    }
-    case RQ_DRAW_CIRCLE: {
-      RqDrawCircle *rq = (RqDrawCircle*) Client::recvBuf;
-      screen->getWindow(rq->drawable)->drawCircle(rq->x, rq->y, rq->radius);
-      break;
-    }
-    case RQ_FILL_CIRCLE: {
-      RqFillCircle *rq = (RqFillCircle*) Client::recvBuf;
-      screen->getWindow(rq->drawable)->fillCircle(rq->x, rq->y, rq->radius);
-      break;
-    }    
     case RQ_SELECT_INPUT: {
       RqSelectInput *rq = (RqSelectInput*) Client::recvBuf;
       screen->getWindow(rq->window)->selectInput(this, rq->eventMask);
@@ -82,9 +57,46 @@ void Client::handle() {
       screen->getWindow(rq->w)->setAttributes(&(rq->newAttr), rq->mask);
       break;
     }
+    case RQ_CLEAR_WINDOW: {
+      RqClearWindow *rq = (RqClearWindow*) Client::recvBuf;
+      Window *w = screen->getWindow(rq->window);
+      screen->prepareDrawing(w);
+      w->clear();
+      break;
+    }
+    case RQ_DRAW_CIRCLE: {
+      RqDrawCircle *rq = (RqDrawCircle*) Client::recvBuf;
+      Window *w = screen->getWindow(rq->drawable);
+      screen->prepareDrawing(w);
+      w->drawCircle(rq->x, rq->y, rq->radius);
+      break;
+    }
+    case RQ_DRAW_LINE: {
+      RqDrawLine *rq = (RqDrawLine*) Client::recvBuf;
+      Window *w = screen->getWindow(rq->drawable);
+      screen->prepareDrawing(w);
+      w->drawLine(rq->x1, rq->y1, rq->x2, rq->y2);
+      break;
+    }
     case RQ_DRAW_RECT: {
       RqDrawRect *rq = (RqDrawRect*) Client::recvBuf;
-      screen->getWindow(rq->drawable)->drawRect(rq->x, rq->y, rq->width, rq->height);
+      Window *w = screen->getWindow(rq->drawable);
+      screen->prepareDrawing(w);
+      w->drawRect(rq->x, rq->y, rq->width, rq->height);
+      break;
+    }
+    case RQ_FILL_CIRCLE: {
+      RqFillCircle *rq = (RqFillCircle*) Client::recvBuf;
+      Window *w = screen->getWindow(rq->drawable);
+      screen->prepareDrawing(w);
+      w->fillCircle(rq->x, rq->y, rq->radius);
+      break;
+    }    
+    case RQ_FILL_RECTANGLE: {
+      RqFillRectangle *rq = (RqFillRectangle*) Client::recvBuf;
+      Window *w = screen->getWindow(rq->drawable);
+      screen->prepareDrawing(w);
+      w->fillRectangle(rq->x, rq->y, rq->width, rq->height);
       break;
     }
   }
