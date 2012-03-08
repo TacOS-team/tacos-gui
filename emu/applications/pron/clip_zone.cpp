@@ -42,9 +42,9 @@ ClipZone::ClipZone(Window *w) {
     while (parent != w->screen->root) {
       w = parent;
       parent = w->parent;
-      sibling = parent->firstChild;
-
-      for (; sibling != w; sibling = sibling->nextSibling) {
+      sibling = w->nextSibling;
+      
+      for (; sibling != NULL; sibling = sibling->nextSibling) {
         ClipRect obscurer(sibling);
         vector<ClipRect*> oldClipRects = this->clipRects;
         this->clipRects.clear();
