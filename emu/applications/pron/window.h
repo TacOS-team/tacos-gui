@@ -59,11 +59,17 @@ public: //XXX: bourrin
 
   void clear();
 
+  void clear(int x, int y, int width, int height);
+
   PronWindowAttributes getAttributes();
 
   void setAttributes(PronWindowAttributes *newAttributes, unsigned int mask);
 
   void selectInput(Client *client, unsigned int mask);
+
+  void raise();
+
+  void exposeArea(int x, int y, int width, int height);
 
   /**
    * Delivers an event to this window.
@@ -90,6 +96,11 @@ public: //XXX: bourrin
    * @param size The size of the event
    */
   void deliverDeviceEvent(PronEvent *e, unsigned int size);
+
+private:
+  void reduce(int &x, int &y, int &width, int &height);
+
+  bool overlaps(Window *w);
 };
 
 #endif

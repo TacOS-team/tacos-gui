@@ -41,6 +41,26 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
   }
 }
 
+void Window::reduce(int &x, int &y, int &width, int &height) {
+  if (x < 0) {
+    x = 0;
+    width += x;
+  }
+
+  if (y < 0) {
+    y = 0;
+    height += y;
+  }
+
+  if (x + width > this->width) {
+    width = this->width - x;
+  }
+
+  if (y + height > this->height) {
+    height = this->height - y;
+  }
+}
+
 /*short Window::getCreator() {
   return this->id >> 16;  
 }*/
@@ -73,13 +93,23 @@ void Window::fillCircle(int x, int y, int radius) {
   this->screen->fillCircle(this->x + x, this->y + y, radius); 
 }
 
-void Window::clear() {
+void Window::clear(int x, int y, int width, int height) {
+  this->reduce(x, y, width, height);
+  
   color_t oldFg = this->screen->gc.fg;
   COLOR(this->screen->gc.fg, 24).r = (this->id >> 16) << 3;
   COLOR(this->screen->gc.fg, 24).g = (this->id >> 16) << 3;
   COLOR(this->screen->gc.fg, 24).b = (this->id >> 16) << 3;
-  this->screen->fillRectangle(this->x, this->y, this->width, this->height);
+  this->screen->fillRectangle(this->x + x, this->y + y, width, height);
   this->screen->gc.fg = oldFg;
+
+  // Send exposure event
+  EventExpose expose(this->id, x, y, width, height);
+  this->deliverEvent(&expose, sizeof(expose));
+}
+
+void Window::clear() {
+  this->clear(0, 0, width, height);
 }
 
 PronWindowAttributes Window::getAttributes() {
@@ -154,5 +184,46 @@ void Window::deliverDeviceEvent(PronEvent *e, unsigned int size) {
 
   if (this->parent && !(this->dontPropagateMask & eventMask)) {
     this->parent->deliverDeviceEvent(e, size);
+  }
+}
+
+void Window::raise() {
+  if (this->parent->lastChild == this) {
+    return;
+  }
+
+  Window *sibling = this->nextSibling;
+  bool overlap = false;
+  for (; sibling != NULL; sibling = sibling->nextSibling) {
+    overlap = overlap || this->overlaps(sibling);
+  }
+
+  if (this->prevSibling == NULL) {
+    this->parent->firstChild = this->nextSibling;
+  } else {
+    this->prevSibling->nextSibling = this->nextSibling;  
+  }
+  if (this->nextSibling != NULL) {
+    this->nextSibling->prevSibling = this->prevSibling;
+  }
+  this->prevSibling = this->parent->lastChild;
+  this->nextSibling = NULL;
+  this->parent->lastChild->nextSibling = this;
+  this->parent->lastChild = this;
+
+  if (overlap) {
+    this->exposeArea(this->x, this->y, this->width, this->height);
+  }
+}
+
+bool Window::overlaps(Window *w) {
+  return !(w->x > this->x + this->width || w->y > this->y + this->height || w->x + w->width < this->x || w->y + w->height < this->y);
+}
+
+void Window::exposeArea(int x, int y, int width, int height) {
+  this->clear(x, y, width, height);
+
+  for (Window *child = this->firstChild; child != NULL; child = child->nextSibling) {
+    child->exposeArea(x - child->x, y - child->y, width, height);
   }
 }
