@@ -9,7 +9,7 @@ ssize_t mouse_read(void *buf) {
 	int mouse_x, mouse_y;
 	uint8_t buttons = SDL_GetMouseState(&mouse_x, &mouse_y);
 	mouse_state.x = mouse_x;
-	mouse_state.y = screen->h - 1 - mouse_y;
+	mouse_state.y = mouse_y;
 	mouse_state.b1 = buttons & SDL_BUTTON(1);
 	mouse_state.b2 = buttons & SDL_BUTTON(2);
 	mouse_state.b3 = buttons & SDL_BUTTON(3);

@@ -53,23 +53,17 @@ void Mouse::checkEvents() {
       mouseWin = currentWin;// We have found the nwe mouseWin
     }
 
-    // TODO : detect the window which is focused
-    // TODO : detect here real selected window ...
-    // computing coordinates
-    // XXX : We get the first non root window
-    if (screen->windows.size() > 1) {
-      Window *focused = screen->windows[1];
-      int x = state.x - focused->x;
-      int y = state.y - focused->y;
+    //computing relative coordinates 
+    int x = state.x - mouseWin->x;
+    int y = state.y - mouseWin->y;
+    // send th event if the the pointer is in the current mouseWin window
+    if (x >= 0 && y >= 0 && x < mouseWin->width && y < mouseWin->height) {
+      debug("Position du pointeur %d %d, mouseWin window %d %d, width height %d %d \n",x, y, mouseWin->x, mouseWin->y, mouseWin->width, mouseWin->height);
 
-      // send th event if the the pointer is in the current focused window
-      if (x >= 0 && y >= 0 && x < focused->width && y < focused->height) {
-        debug("Position du pointeur %d %d, focused window %d %d, width height %d %d \n",x, y, focused->x, focused->y, focused->width, focused->height);
-
-        // it's time to send mouse Event
-        EventPointerMoved pointerMoved(focused->id, x, y, state.x, state.y);
-        focused->deliverDeviceEvent(&pointerMoved, sizeof(pointerMoved));
-      }
+      // it's time to send mouse Event
+      EventPointerMoved pointerMoved(mouseWin->id, x, y, state.x, state.y);
+      mouseWin->deliverDeviceEvent(&pointerMoved, sizeof(pointerMoved));
     }
+
   }
 }
