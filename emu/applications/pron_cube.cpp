@@ -85,16 +85,16 @@ int main(int argc, char *argv[]) {
   }
 
   Window w = pronCreateWindow(d, d->rootWindow, x, y, 320, 240);
-  /*
-  newAttr.x = 400;
-  pronSetWindowAttributes(d, w, newAttr, WIN_ATTR_X);
-  */
+
+  PronWindowAttributes newAttr;
+  COLOR(newAttr.bgColor, 24).r = (w >> 16) << 3;
+  COLOR(newAttr.bgColor, 24).g = (w >> 16) << 3;
+  COLOR(newAttr.bgColor, 24).b = (w >> 16) << 3;
+  pronSetWindowAttributes(d, w, newAttr, WIN_ATTR_BG_COLOR);
+  
+
 
   while (1) {
-    /*
-    newAttr.x = (newAttr.x + 1) % 500;
-    pronSetWindowAttributes(d, w, newAttr, WIN_ATTR_X);
-    */
     pronClearWindow(d, w);  
     int i = 0;
     for (i = 0; i < 8; i++) {
