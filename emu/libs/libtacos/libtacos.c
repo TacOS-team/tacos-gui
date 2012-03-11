@@ -8,6 +8,7 @@
 #include <vesadrv.h>
 #include <vgadrv.h>
 #include <mousedrv.h>
+#include <kbddrv.h>
 
 #define MAX_FD 128
 #define MAX_SDL_EVENTS 128
@@ -24,6 +25,7 @@ enum tacos_descriptor_type {
 	VGA,
 	VESA,
 	MOUSE,
+	KEYBOARD,
 };
 
 enum tacos_descriptor_type tacos_descriptors[MAX_FD];
@@ -64,6 +66,7 @@ void __attribute__((constructor)) libtacos_init() {
 	SDL_EventState(0xFF, SDL_IGNORE); // Ignore all events
 	SDL_EventState(SDL_QUIT, SDL_ENABLE);
 	SDL_EventState(SDL_KEYDOWN, SDL_ENABLE);
+	SDL_EventState(SDL_KEYUP, SDL_ENABLE);
 	SDL_EnableUNICODE(SDL_ENABLE);
 	SDL_ShowCursor(SDL_DISABLE);
 	SDL_WM_SetCaption("TacOS Emulator", "TacOS Emulator");
@@ -93,6 +96,10 @@ int open(const char *pathname, int flags) {
 		// Mouse driver
 		fd = libc_open("/tmp", 0); // dummy fd
 		tacos_descriptors[fd] = MOUSE;
+	} else if (strcmp(pathname, "/dev/keyboard") == 0) {
+		// Keyboard driver
+		fd = libc_open("/tmp", 0); // dummy fd
+		tacos_descriptors[fd] = KEYBOARD;
 	} else {
 		// Native open
 		fd = libc_open(pathname, flags);
@@ -129,6 +136,9 @@ ssize_t read(int fd, void *buf, size_t count) {
 			ret = mouse_read(buf);
 			break;
 		}
+		case KEYBOARD: {
+			ret = kbd_read(buf);
+		}
 	}
 
 	return ret;
@@ -154,6 +164,10 @@ int ioctl(int fd, unsigned long request, void *data) {
 		}
 		case MOUSE: {
 			ret = mouse_ioctl(request, data);
+			break;
+		}
+		case KEYBOARD: {
+			ret = kbd_ioctl(request, data);
 			break;
 		}
 	}
