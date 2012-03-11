@@ -59,6 +59,8 @@ public: // XXX: bourrin
   int getMouseX();
   void setMouseY(int mouseY);
   int getMouseY();
+
+  void traceWindows();
 };
 
 #endif
