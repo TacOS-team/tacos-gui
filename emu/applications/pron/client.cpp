@@ -33,6 +33,7 @@ void Client::handle() {
       screen->addWindow(w);
       EventWindowCreated eventCreated(w->id, rq->parent, w->getAttributes());
       w->deliverWindowEvent(&eventCreated, sizeof(eventCreated));
+      screen->traceWindows();
       break;
     }
     case RQ_MAP_WINDOW: {
@@ -96,12 +97,20 @@ void Client::handle() {
       screen->prepareDrawing(w);
       w->fillCircle(rq->x, rq->y, rq->radius);
       break;
-    }    
+    }
     case RQ_FILL_RECTANGLE: {
       RqFillRectangle *rq = (RqFillRectangle*) Client::recvBuf;
       Window *w = screen->getWindow(rq->drawable);
       screen->prepareDrawing(w);
       w->fillRectangle(rq->x, rq->y, rq->width, rq->height);
+      break;
+    }
+    case RQ_REPARENT: {
+      RqReparent *rq = (RqReparent*) Client::recvBuf;
+      Window *w = screen->getWindow(rq->window);
+      w->reparent(screen->getWindow(rq->newParent));
+      screen->clipWin = NULL;
+      screen->traceWindows();
       break;
     }
   }
