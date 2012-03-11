@@ -97,6 +97,13 @@ public: //XXX: bourrin
    */
   void deliverDeviceEvent(PronEvent *e, unsigned int size);
 
+  /**
+   * Sets a new parent to the Window.
+   *
+   * @param w The new parent Window
+   */
+  void reparent(Window *w);
+
 private:
   void reduce(int &x, int &y, int &width, int &height);
 

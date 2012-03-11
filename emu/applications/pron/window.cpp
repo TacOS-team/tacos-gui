@@ -227,3 +227,29 @@ void Window::exposeArea(int x, int y, int width, int height) {
     child->exposeArea(x - child->x, y - child->y, width, height);
   }
 }
+
+void Window::reparent(Window *w) {
+  if (this->prevSibling != NULL) {
+    this->prevSibling->nextSibling = this->nextSibling;
+  } else {
+    this->parent->firstChild = this->nextSibling;
+  }
+  if (this->nextSibling != NULL) {
+    this->nextSibling->prevSibling = this->prevSibling;
+  } else {
+    this->parent->lastChild = this->prevSibling;
+  }
+
+  if (w->lastChild != NULL) {
+    w->lastChild->nextSibling = this;
+    this->prevSibling = w->lastChild;
+    w->lastChild = this;
+  } else {
+    w->firstChild = this;
+    w->lastChild = this;
+    this->prevSibling = NULL;
+  }
+  this->nextSibling = NULL;
+  
+  this->parent = w;
+}
