@@ -27,6 +27,27 @@ struct EventWindowCreated : public PronEvent {
 };
 
 /**
+ * EventExpose
+ */
+struct EventExpose : public PronEvent {
+  /** Constructor. */
+  EventExpose(unsigned int window, int x, int y, int width, int height)
+       : PronEvent(EV_EXPOSE) {
+     this->window = window;
+     this->x = x;
+     this->y = y;
+     this->width = width;
+     this->height = height;
+  }
+
+  unsigned int window;
+  int x;
+  int y;
+  int width;
+  int height;
+};
+
+/**
  * EventPointerMoved
  */
 struct EventPointerMoved : public PronEvent {

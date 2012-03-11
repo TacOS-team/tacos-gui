@@ -30,6 +30,7 @@ enum MessageType {
   /* Events */
   EV_WINDOW_CREATED           = (EV_PREFIX |  1),
   EV_POINTER_MOVED            = (EV_PREFIX |  2),
+  EV_EXPOSE                   = (EV_PREFIX |  3),
   /* Errors */
 };
 
