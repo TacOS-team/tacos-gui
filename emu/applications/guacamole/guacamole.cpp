@@ -3,6 +3,8 @@
 #include <clibtacos>
 #include <cstdio>
 #include <vector>
+#include <algorithm>
+
 
 #include <pronlib.h>
 
@@ -37,12 +39,20 @@ int main() {
       case EV_WINDOW_CREATED : {
         debug("EVENT_WINDOW_CREATED reçu\n");
         EventWindowCreated *windowCreated = (EventWindowCreated*) e;
-        windowCreated->attributes.x = rand() % (rootWindowAttributes.width  - windowCreated->attributes.width );
-        windowCreated->attributes.y = rand() % (rootWindowAttributes.height - windowCreated->attributes.height);
-        pronSetWindowAttributes(display, windowCreated->window, windowCreated->attributes, WIN_ATTR_X | WIN_ATTR_Y);
-        if (windowCreated->parent == 0) {
-          printf("top level window\n");
-          windows.push_back(windowCreated->window);
+        if (std::find(windows.begin(), windows.end(), windowCreated->window) == windows.end()) {
+          //windowCreated->attributes.x = rand() % (rootWindowAttributes.width  - windowCreated->attributes.width );
+          //windowCreated->attributes.y = rand() % (rootWindowAttributes.height - windowCreated->attributes.height);
+          //pronSetWindowAttributes(display, windowCreated->window, windowCreated->attributes, WIN_ATTR_X | WIN_ATTR_Y);
+          Window parentWindowId = pronCreateWindow(display, display->rootWindow,
+                            80, 80,
+                            windowCreated->attributes.width, windowCreated->attributes.height + 100);
+          pronClearWindow(display, parentWindowId);
+          pronReparentWindow(display, windowCreated->window, parentWindowId);
+          if (windowCreated->parent == 0) {
+            printf("top level window\n");
+            windows.push_back(windowCreated->window);
+            windows.push_back(parentWindowId);
+          }
         }
         break;
       }

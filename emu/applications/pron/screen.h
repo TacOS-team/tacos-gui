@@ -64,6 +64,8 @@ public: // XXX: bourrin
   void setMouseWin(Window *mouseWin);
   Window* getRoot();
   void setRoot(Window *root);
+
+  void traceWindows();
 };
 
 #endif

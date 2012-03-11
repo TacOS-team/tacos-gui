@@ -5,6 +5,9 @@
 #include <string.h>
 #include <cstdio>
 #include <math.h>
+#include <string>
+
+using namespace std;
 
 Screen* Screen::instance = NULL;
 
@@ -303,4 +306,22 @@ void Screen::prepareDrawing(Window *w) {
     this->clipZone = new ClipZone(w);
     this->clipWin = w;
   }
+}
+
+void traceWindowsRec(Window *w, string prefix) {
+  printf("%s%d (p: %d, fc: %d, lc: %d, ps: %d, ns: %d)\n",
+        prefix.c_str(),
+        w->id,
+        w->parent == NULL ? 0 : w->parent->id,
+        w->firstChild == NULL ? 0 : w->firstChild->id,
+        w->lastChild == NULL ? 0 : w->lastChild->id,
+        w->prevSibling == NULL ? 0 : w->prevSibling->id,
+        w->nextSibling == NULL ? 0 : w->nextSibling->id);
+  for (Window *currentChild = w->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
+    traceWindowsRec(currentChild, prefix + "--");
+  }
+}
+
+void Screen::traceWindows() {
+  traceWindowsRec(this->root, "");
 }

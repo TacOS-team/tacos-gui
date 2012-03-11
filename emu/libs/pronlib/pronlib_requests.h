@@ -274,4 +274,21 @@ struct RqSelectInput : public PronRequest {
   unsigned int eventMask; /**< event mask to set */
 };
 
+
+/**
+ * Reparent request.
+ * Sent by a client to set a new parent to a window.
+ */
+struct RqReparent : public PronRequest {
+  /** Constructor. */
+  RqReparent(unsigned int window, unsigned int newParent)
+    : PronRequest(RQ_REPARENT) {
+      this->window    = window;
+      this->newParent = newParent;
+    }
+
+  unsigned int window; /**< id of Window */
+  unsigned int newParent; /**< id of new parent Window */
+};
+
 #endif // __PRONLIB_REQUESTS_H__

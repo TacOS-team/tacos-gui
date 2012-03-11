@@ -185,6 +185,14 @@ void pronGetWindowAttributes(Display * d, Window w, PronWindowAttributes * attr)
  * @param newAttr The new attributes structure
  * @param mask The mask that indiquates the attributes to be set
  */
-void pronSetWindowAttributes(Display * d, Window w, PronWindowAttributes newAttr, unsigned int mask) ;  
+void pronSetWindowAttributes(Display * d, Window w, PronWindowAttributes newAttr, unsigned int mask); 
+
+/**
+ * Reparent a Window
+ * @param d The connection to pron
+ * @param w The window
+ * @param newParent The new parent window of w
+ */
+void pronReparentWindow(Display *d, unsigned int w, unsigned int newParent);  
 
 #endif
