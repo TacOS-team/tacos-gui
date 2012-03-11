@@ -44,7 +44,8 @@ enum WindowAttributeField {
   WIN_ATTR_X        = (1 << 0), 
   WIN_ATTR_Y        = (1 << 1), 
   WIN_ATTR_WIDTH    = (1 << 2), 
-  WIN_ATTR_HEIGHT   = (1 << 3)
+  WIN_ATTR_HEIGHT   = (1 << 3),
+  WIN_ATTR_BG_COLOR = (1 << 4),
 };
 
 

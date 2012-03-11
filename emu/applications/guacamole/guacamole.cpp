@@ -44,8 +44,13 @@ int main() {
           //windowCreated->attributes.y = rand() % (rootWindowAttributes.height - windowCreated->attributes.height);
           //pronSetWindowAttributes(display, windowCreated->window, windowCreated->attributes, WIN_ATTR_X | WIN_ATTR_Y);
           Window parentWindowId = pronCreateWindow(display, display->rootWindow,
-                            80, 80,
-                            windowCreated->attributes.width, windowCreated->attributes.height + 100);
+                            max(windowCreated->attributes.x - 15, 0), max(windowCreated->attributes.y - 15, 0),
+                            windowCreated->attributes.width + 30, windowCreated->attributes.height + 30);
+          PronWindowAttributes newAttr;
+          COLOR(newAttr.bgColor, 24).r = 255;
+          COLOR(newAttr.bgColor, 24).g = 0;
+          COLOR(newAttr.bgColor, 24).b = 0;
+          pronSetWindowAttributes(display, parentWindowId, newAttr, WIN_ATTR_BG_COLOR);
           pronClearWindow(display, parentWindowId);
           pronReparentWindow(display, windowCreated->window, parentWindowId);
           if (windowCreated->parent == 0) {

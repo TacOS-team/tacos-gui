@@ -31,6 +31,7 @@ public: //XXX: bourrin
   // Window attributes
   int x, y;
   int width, height;
+  color_t bgColor;
   int eventMask;
   int dontPropagateMask;
   vector<OtherClient> otherClients;

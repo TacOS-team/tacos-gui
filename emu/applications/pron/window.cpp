@@ -15,6 +15,9 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
   this->x = x;
   this->y = y;
   this->width = width;
+  COLOR(this->bgColor, 24).r = 0;
+  COLOR(this->bgColor, 24).g = 0;
+  COLOR(this->bgColor, 24).b = 0;
   this->height = height;
   this->eventMask = 0;
   this->dontPropagateMask = 0;
@@ -97,9 +100,9 @@ void Window::clear(int x, int y, int width, int height) {
   this->reduce(x, y, width, height);
   
   color_t oldFg = this->screen->gc.fg;
-  COLOR(this->screen->gc.fg, 24).r = (this->id >> 16) << 3;
-  COLOR(this->screen->gc.fg, 24).g = (this->id >> 16) << 3;
-  COLOR(this->screen->gc.fg, 24).b = (this->id >> 16) << 3;
+  COLOR(this->screen->gc.fg, 24).r = COLOR(this->bgColor, 24).r;
+  COLOR(this->screen->gc.fg, 24).g = COLOR(this->bgColor, 24).g;
+  COLOR(this->screen->gc.fg, 24).b = COLOR(this->bgColor, 24).b;
   this->screen->fillRectangle(this->x + x, this->y + y, width, height);
   this->screen->gc.fg = oldFg;
 
@@ -118,6 +121,7 @@ PronWindowAttributes Window::getAttributes() {
   attr.y = this->y;
   attr.width = this->width;
   attr.height = this->height;
+  attr.bgColor = this->bgColor;
 
   return attr;
 }
@@ -134,6 +138,9 @@ void Window::setAttributes(PronWindowAttributes *newAttr, unsigned int mask) {
   }
   if (mask & WIN_ATTR_HEIGHT) {
     this->height = newAttr->height;
+  }
+  if (mask & WIN_ATTR_BG_COLOR) {
+    this->bgColor = newAttr->bgColor;
   }
 }
 
