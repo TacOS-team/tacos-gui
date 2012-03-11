@@ -40,7 +40,7 @@ struct RqCreateWindow : public PronRequest {
       this->height = height;
     }
 
-  int id; /**< id of the window to create */
+  unsigned  int id; /**< id of the window to create */
   int parent; /**< id of the parent window */
   int x; /**< y-coordinate of the left-top corner of the window */
   int y; /**< y-coordinate of the left-top corner of the window */
@@ -59,7 +59,7 @@ struct RqClearWindow : public PronRequest {
       this->window = window;
     }
 
-  int window; /**< id of the window to clear */
+  unsigned int window; /**< id of the window to clear */
 };
 
 /**
@@ -73,7 +73,7 @@ struct RqMapWindow : public PronRequest {
       this->window = window;
     }
 
-  int window; /**< id of the window to map */
+  unsigned int window; /**< id of the window to map */
 };
 
 /**
@@ -87,7 +87,7 @@ struct RqRaiseWindow : public PronRequest {
       this->window = window;
     }
 
-  int window; /**< id of the window to raise */
+  unsigned int window; /**< id of the window to raise */
 };
 
 /**
@@ -101,7 +101,7 @@ struct RqCreateGC : public PronRequest {
       this->id = id;
     }
 
-  int id; /**< id of the graphics context to create */
+  unsigned int id; /**< id of the graphics context to create */
 };
 
 /**
@@ -120,8 +120,8 @@ struct RqDrawLine : public PronRequest {
       this->y2 = y2;
     }
 
-  int gc; /**< id of the graphics context to use */
-  int drawable; /**< id of the drawable in which to draw */ 
+  unsigned int gc; /**< id of the graphics context to use */
+  unsigned int drawable; /**< id of the drawable in which to draw */ 
   int x1; /**< x-coordinate of the first point to join */
   int y1; /**< y-coordinate of the first point to join */
   int x2; /**< x-coordinate of the second point to join */
@@ -145,8 +145,8 @@ struct RqDrawRect : public PronRequest {
     }
 
   MessageType type; /**< message type, always first */
-  int gc; /**< id of the graphics context to use */
-  int drawable; /**< id of the drawable in which to draw */ 
+  unsigned int gc; /**< id of the graphics context to use */
+  unsigned int drawable; /**< id of the drawable in which to draw */ 
   int x; /**< x-coordinate of the point to join */
   int y; /**< y-coordinate of the point to join */
   int width; /**< width of the rectangle */
@@ -171,8 +171,8 @@ struct RqFillRectangle : public PronRequest {
     }
 
   MessageType type; /**< message type, always first */
-  int gc; /**< id of the graphics context to use */
-  int drawable; /**< id of the drawable in which to draw */ 
+  unsigned int gc; /**< id of the graphics context to use */
+  unsigned int drawable; /**< id of the drawable in which to draw */ 
   int x; /**< x-coordinate of the point to join */
   int y; /**< y-coordinate of the point to join */
   int width; /**< width of the rectangle */
@@ -195,8 +195,8 @@ struct RqDrawCircle : public PronRequest {
     }
 
   MessageType type; /**< message type, always first */
-  int gc; /**< id of the graphics context to use */
-  int drawable; /**< id of the drawable in which to draw */ 
+  unsigned int gc; /**< id of the graphics context to use */
+  unsigned int drawable; /**< id of the drawable in which to draw */ 
   int x; /**< x-coordinate of the point to join */
   int y; /**< y-coordinate of the point to join */
   int radius; /**< radius of the circle */
@@ -218,8 +218,8 @@ struct RqFillCircle : public PronRequest {
     }
 
   MessageType type; /**< message type, always first */
-  int gc; /**< id of the graphics context to use */
-  int drawable; /**< id of the drawable in which to draw */ 
+  unsigned int gc; /**< id of the graphics context to use */
+  unsigned int drawable; /**< id of the drawable in which to draw */ 
   int x; /**< x-coordinate of the point to join */
   int y; /**< y-coordinate of the point to join */
   int radius; /**< radius of the circle */
