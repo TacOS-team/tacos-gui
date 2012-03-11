@@ -16,13 +16,15 @@ struct PronEvent : public PronMessage {
  */
 struct EventWindowCreated : public PronEvent {
   /** Constructor. */
-  EventWindowCreated(unsigned int window, PronWindowAttributes attributes)
+  EventWindowCreated(unsigned int window, unsigned int parent, PronWindowAttributes attributes)
        : PronEvent(EV_WINDOW_CREATED) {
      this->window = window;
+     this->parent = parent;
      this->attributes = attributes;
   }
 
   unsigned int window;
+  unsigned int parent;
   PronWindowAttributes attributes;
 };
 
