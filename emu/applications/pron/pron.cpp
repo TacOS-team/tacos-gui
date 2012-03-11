@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <clibtacos>
+#include <keyboard.h>
 #include <mouse.h>
 #include <pron.h>
 #include <tsock.h>
@@ -10,6 +11,7 @@ using namespace std;
 
 static Screen *screen;
 static Mouse *mouse;
+static Keyboard *keyboard;
 static vector<Client*> clients;
 int clientsFd, newClientFd;
 
@@ -27,8 +29,9 @@ void PronInit() {
   // Initialize screen
   screen = Screen::getInstance(800, 600, 24);
   
-  // Initialize mouse
+  // Initialize devices
   mouse = new Mouse();
+  keyboard = new Keyboard();
   
   // Create root window
   screen->root = new Window(screen, 0, NULL, NULL, 0, 0, 800, 600);
@@ -50,6 +53,7 @@ void PronAcceptClient() {
 void PronSelect() {
   // Read from devices
   mouse->checkEvents();
+  keyboard->checkEvents();
 
   // Try to accept new client
   PronAcceptClient();

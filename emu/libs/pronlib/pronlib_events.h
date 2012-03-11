@@ -66,6 +66,52 @@ struct EventPointerMoved : public PronEvent {
   int xRoot, yRoot;
 };
 
+/**
+ * EventKey
+ */
+struct EventKey : public PronEvent {
+  /** Constructor. */
+  EventKey(MessageType type, unsigned int window, unsigned int subwindow,
+        int x, int y, int xRoot, int yRoot, unsigned int keysym, unsigned int modifiers)
+        : PronEvent(type) {
+    this->window = window;
+    this->subwindow = subwindow;
+    this->x = x;
+    this->y = y;
+    this->xRoot = xRoot;
+    this->yRoot = yRoot;
+    this->keysym = keysym;
+    this->modifiers = modifiers;
+  }
+
+  unsigned int window;
+  unsigned int subwindow;
+  int x, y;
+  int xRoot, yRoot;
+  unsigned int keysym;
+  unsigned int modifiers;
+};
+
+/**
+ * EventKeyPressed
+ */
+struct EventKeyPressed : public EventKey {
+  /** Constructor. */
+  EventKeyPressed(unsigned int window, unsigned int subwindow, int x, int y,
+        int xRoot, int yRoot, unsigned int keysym, unsigned int modifiers)
+        : EventKey(EV_KEY_PRESSED, window, subwindow, x, y, xRoot, yRoot, keysym, modifiers) {}
+};
+
+/**
+ * EventKeyReleased
+ */
+struct EventKeyReleased : public EventKey {
+  /** Constructor. */
+  EventKeyReleased(unsigned int window, unsigned int subwindow, int x, int y,
+        int xRoot, int yRoot, unsigned int keysym, unsigned int modifiers)
+        : EventKey(EV_KEY_RELEASED, window, subwindow, x, y, xRoot, yRoot, keysym, modifiers) {}
+};
+
 PronEvent* getPronEvent();
 
 #endif // __PRONLIB_EVENTS_H__
