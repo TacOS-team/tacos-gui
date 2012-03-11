@@ -55,6 +55,11 @@ void pronMapWindow(Display *d, Window w) {
 
 }
 
+void pronRaiseWindow(Display *d, Window w) {
+  RqRaiseWindow rq(w);
+  tsock_write(d->fd, &rq, sizeof(rq));
+}
+
 int pronDrawLine(Display *d, Window w, GC gc, int x1, int y1, int x2, int y2) {
   RqDrawLine rq(gc, w, x1, y1, x2, y2);
   return (tsock_write(d->fd, &rq, sizeof(rq)) > 0);

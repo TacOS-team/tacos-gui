@@ -23,6 +23,7 @@ enum MessageType {
   RQ_GET_WINDOW_ATTRIBUTES    = (RQ_PREFIX | 11),
   RQ_SET_WINDOW_ATTRIBUTES    = (RQ_PREFIX | 12),
   RQ_SELECT_INPUT             = (RQ_PREFIX | 13),
+  RQ_RAISE_WINDOW             = (RQ_PREFIX | 14),
   /* Responses */
   RS_WELCOME                  = (RS_PREFIX |  1),
   RS_WINDOW_ATTRIBUTES        = (RS_PREFIX |  2),

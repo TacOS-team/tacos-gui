@@ -77,6 +77,20 @@ struct RqMapWindow : public PronRequest {
 };
 
 /**
+ * RaiseWindow request.
+ * Sent by a client to raise a window on the screen.
+ */
+struct RqRaiseWindow : public PronRequest {
+  /** Constructor. */
+  RqRaiseWindow(int window)
+    : PronRequest(RQ_RAISE_WINDOW) {
+      this->window = window;
+    }
+
+  int window; /**< id of the window to raise */
+};
+
+/**
  * CreateGC request.
  * Sent by a client to create a new graphics context.
  */

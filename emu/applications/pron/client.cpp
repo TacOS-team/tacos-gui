@@ -38,6 +38,11 @@ void Client::handle() {
     case RQ_MAP_WINDOW: {
       break;
     }
+    case RQ_RAISE_WINDOW: {
+      RqRaiseWindow *rq = (RqRaiseWindow*) Client::recvBuf;
+      screen->getWindow(rq->window)->raise();
+      break;
+    }
     case RQ_CREATE_GC: {
       break;
     }

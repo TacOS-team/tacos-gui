@@ -78,6 +78,13 @@ GC pronCreateGC(Display *d);
 void pronMapWindow(Display *d, Window w);
 
 /**
+ * Raises a window (moves it on top of the screen).
+ * @param d The connection to pron
+ * @param w The window to raise
+ */
+void pronRaiseWindow(Display *d, Window w);
+
+/**
  * Draws a line between (x1, y1) and (x2, y2).
  * @todo Implement drawables instead of just windows
  * @param d The connection to pron
