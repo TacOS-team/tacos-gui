@@ -27,6 +27,11 @@ Screen::Screen(int width, int height, int bitsPerPixel) {
   COLOR(this->gc.fg, 24).r = 255;
   COLOR(this->gc.fg, 24).g = 77;
   COLOR(this->gc.fg, 24).b = 182;
+
+  this->mouseX = 0;
+  this->mouseY = 0;
+
+  this->mouseWin = NULL;
 }
 
 Screen* Screen::getInstance(int width, int height, int bitsPerPixel) {
@@ -272,6 +277,22 @@ int Screen::getMouseY() {
 
 void Screen::setMouseY(int mouseY) {
   this->mouseY = mouseY;
+}
+
+Window* Screen::getMouseWin(){
+  return this->mouseWin;
+}
+
+void Screen::setMouseWin(Window *mouseWin){
+  this->mouseWin = mouseWin;
+}
+
+Window* Screen::getRoot(){
+  return this->root;
+}
+
+void Screen::setRoot(Window *root){
+  this->root = root;
 }
 
 void Screen::prepareDrawing(Window *w) {

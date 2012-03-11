@@ -97,6 +97,24 @@ public: //XXX: bourrin
    */
   void deliverDeviceEvent(PronEvent *e, unsigned int size);
 
+  /**
+   * Returns true when window contains A(x,y) 
+   */
+  bool contains(int x, int y);
+
+  /**
+   * Getters and setters
+   */
+
+  int getX();
+  void setX(int x);
+  int getY();
+  void setY(int y);
+  int getWidth();
+  void setWidth(int width);
+  int getHeight();
+  void setHeight(int height);
+
 private:
   void reduce(int &x, int &y, int &width, int &height);
 

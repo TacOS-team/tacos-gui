@@ -19,9 +19,39 @@ void Mouse::checkEvents() {
 
   Screen *screen = Screen::getInstance();
 
+  // Has pointer moved since the previous select ?
   if (screen->getMouseX() != state.x || screen->getMouseY() != state.y) {
+    // Set the new coordinates in the screen
     screen->setMouseX(state.x);
     screen->setMouseY(state.y);
+
+    Window *mouseWin = screen->getMouseWin();
+    // Get the mouseWin and test if pointer is still inside 
+    // IMPORTANT : maybe introducing a bug when a new window is opening above mouseWin containing the pointer...
+    // A Solution is to remove mouseWin when opening a new window
+    if(mouseWin == NULL || ! mouseWin->contains(state.x, state.y)){// We have to recompute the mouseWin
+      // We have to explorate window tree from the root to his children
+      // and check if the pointer is inside them : We can stop when we have found one window
+      // because it is necessarily the one which is drawn
+      Window *currentWin = screen->getRoot();
+      // We stop when currentWin has no children 
+      while(currentWin->lastChild != NULL){
+        // we have to run throug the childs from the right to the left
+        // and take the first (the one with the bigger Z)
+        Window *currentChild = currentWin->lastChild;
+        while(currentChild != NULL){
+          if(currentChild->contains(state.x, state.y)){
+            currentWin = currentChild;
+            break;// We have found the first containing child we have to stop
+          }
+          currentChild = currentChild->prevSibling;
+        }
+        if(currentChild == NULL){
+          break;// We have no child which contains the pointer we can stop
+        }
+      }
+      mouseWin = currentWin;// We have found the nwe mouseWin
+    }
 
     // TODO : detect the window which is focused
     // TODO : detect here real selected window ...

@@ -227,3 +227,42 @@ void Window::exposeArea(int x, int y, int width, int height) {
     child->exposeArea(x - child->x, y - child->y, width, height);
   }
 }
+
+bool Window::contains(int x, int y){
+  return this->getX() <= x &&
+  this->getY() <= y &&
+  this->getX() + this->getWidth() > x &&
+  this->getY() + this->getHeight() > y;
+}
+
+int Window::getX(){
+  return this->y;
+}
+
+void Window::setX(int x){
+  this->x = x;
+}
+
+int Window::getY(){
+  return this->y;
+}
+
+void Window::setY(int y){
+  this->y = y;
+}
+
+int Window::getWidth(){
+  return this->width;
+}
+
+void Window::setWidth(int width){
+  this->width = width;
+}
+
+int Window::getHeight(){
+  return this->height;
+}
+
+void Window::setHeight(int height){
+  this->height = height;
+}

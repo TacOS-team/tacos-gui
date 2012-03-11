@@ -23,6 +23,7 @@ private:
   static Screen *instance;
   int mouseX;
   int mouseY;
+  Window * mouseWin; // First window containing the mouse pointer
 
   void drawHorizLine(int x, int y, int width);
   void drawVertLine(int x, int y, int height);
@@ -59,6 +60,10 @@ public: // XXX: bourrin
   int getMouseX();
   void setMouseY(int mouseY);
   int getMouseY();
+  Window* getMouseWin();
+  void setMouseWin(Window *mouseWin);
+  Window* getRoot();
+  void setRoot(Window *root);
 };
 
 #endif
