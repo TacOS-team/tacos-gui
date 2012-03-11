@@ -123,3 +123,9 @@ PronEvent* getPronEvent() {
   
   return (PronEvent *) malloc(size);
 }
+
+void pronReparentWindow(Display *d, unsigned int w, unsigned int newParent) {
+  RqReparent rq(w, newParent);
+  tsock_write(d->fd, &rq, sizeof(rq));
+
+}
