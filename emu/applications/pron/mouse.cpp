@@ -61,7 +61,7 @@ void Mouse::checkEvents() {
       Window *focused = screen->windows[1];
       int x = state.x - focused->x;
       int y = state.y - focused->y;
-
+      debug("state[%d;%d]\n",state.x, state.y);
       // send th event if the the pointer is in the current focused window
       if (x >= 0 && y >= 0 && x < focused->width && y < focused->height) {
         debug("Position du pointeur %d %d, focused window %d %d, width height %d %d \n",x, y, focused->x, focused->y, focused->width, focused->height);
