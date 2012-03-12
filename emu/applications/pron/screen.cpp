@@ -253,7 +253,7 @@ void Screen::fillCircle(int cx, int cy, int radius) {
   }
 }
 
-Window* Screen::getWindow(int id) {
+Window* Screen::getWindow(unsigned int id) {
   for (unsigned int i = 0; i < this->windows.size(); i++) {
     if (windows[i]->id == id) {
       return windows[i];

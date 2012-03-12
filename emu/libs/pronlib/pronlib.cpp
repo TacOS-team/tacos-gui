@@ -96,7 +96,7 @@ void pronGetWindowAttributes(Display * d, Window w, PronWindowAttributes * attr)
   *attr = ((RespWindowAttributes*) buffer)->attributes;
 }
 
-void pronSetWindowAttributes(Display * d, Window w, PronWindowAttributes newAttr, unsigned int mask) {  
+void pronSetWindowAttributes(Display * d, Window w, const PronWindowAttributes & newAttr, unsigned int mask) {  
   RqSetWindowAttributes rq(w,newAttr,mask);
   tsock_write(d->fd,&rq,sizeof(RqSetWindowAttributes));
 }
@@ -124,7 +124,7 @@ PronEvent* getPronEvent() {
   return (PronEvent *) malloc(size);
 }
 
-void pronReparentWindow(Display *d, unsigned int w, unsigned int newParent) {
+void pronReparentWindow(Display *d, Window w, Window newParent) {
   RqReparent rq(w, newParent);
   tsock_write(d->fd, &rq, sizeof(rq));
 
