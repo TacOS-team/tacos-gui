@@ -37,6 +37,13 @@ void Client::handle() {
       break;
     }
     case RQ_MAP_WINDOW: {
+      RqMapWindow *rq = (RqMapWindow*) Client::recvBuf;
+      screen->getWindow(rq->window)->map();
+      break;
+    }
+    case RQ_UNMAP_WINDOW: {
+      RqUnmapWindow *rq = (RqUnmapWindow*) Client::recvBuf;
+      screen->getWindow(rq->window)->unmap();
       break;
     }
     case RQ_RAISE_WINDOW: {

@@ -52,7 +52,13 @@ GC pronCreateGC(Display *d) {
 }
 
 void pronMapWindow(Display *d, Window w) {
+  RqMapWindow rq(w);
+  tsock_write(d->fd, &rq, sizeof(rq));
+}
 
+void pronUnmapWindow(Display *d, Window w) {
+  RqUnmapWindow rq(w);
+  tsock_write(d->fd, &rq, sizeof(rq));
 }
 
 void pronRaiseWindow(Display *d, Window w) {
@@ -127,5 +133,4 @@ PronEvent* getPronEvent() {
 void pronReparentWindow(Display *d, unsigned int w, unsigned int newParent) {
   RqReparent rq(w, newParent);
   tsock_write(d->fd, &rq, sizeof(rq));
-
 }

@@ -77,6 +77,20 @@ struct RqMapWindow : public PronRequest {
 };
 
 /**
+ * UnmapWindow request.
+ * Sent by a client to hide a window.
+ */
+struct RqUnmapWindow : public PronRequest {
+  /** Constructor. */
+  RqUnmapWindow(int window)
+    : PronRequest(RQ_UNMAP_WINDOW) {
+      this->window = window;
+    }
+
+  int window; /**< id of the window to unmap */
+};
+
+/**
  * RaiseWindow request.
  * Sent by a client to raise a window on the screen.
  */
