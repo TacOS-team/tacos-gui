@@ -77,6 +77,7 @@ void Mouse::updateMouseWin(){
 void Mouse::drawPointer(){
   Screen *screen = Screen::getInstance();
   // Delete the obsolete clipZone
+  screen->clipWin = NULL;
   delete screen->clipZone;
   screen->clipZone = NULL;
   screen->drawLine(screen->getMouseX(),screen->getMouseY(), screen->getMouseX(), screen->getMouseY() + 6);
