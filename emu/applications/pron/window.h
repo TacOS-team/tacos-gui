@@ -25,7 +25,7 @@ class Window {
 public: //XXX: bourrin
   Screen *screen;
 
-  int id;
+  unsigned int id;
   Client *creator;
 
   // Window attributes

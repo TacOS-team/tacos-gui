@@ -8,6 +8,10 @@ public:
   Mouse();
 
   void checkEvents();
+  /**
+   * Mise à jour de la mouseWin
+   */
+  void updateMouseWin();
 };
 
 #endif
