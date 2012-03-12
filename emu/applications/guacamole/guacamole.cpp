@@ -40,22 +40,27 @@ int main() {
         debug("EVENT_WINDOW_CREATED reçu\n");
         EventWindowCreated *windowCreated = (EventWindowCreated*) e;
         if (std::find(windows.begin(), windows.end(), windowCreated->window) == windows.end()) {
-          //windowCreated->attributes.x = rand() % (rootWindowAttributes.width  - windowCreated->attributes.width );
-          //windowCreated->attributes.y = rand() % (rootWindowAttributes.height - windowCreated->attributes.height);
-          //pronSetWindowAttributes(display, windowCreated->window, windowCreated->attributes, WIN_ATTR_X | WIN_ATTR_Y);
-          Window parentWindowId = pronCreateWindow(display, display->rootWindow,
-                            max(windowCreated->attributes.x - 15, 0), max(windowCreated->attributes.y - 15, 0),
-                            windowCreated->attributes.width + 30, windowCreated->attributes.height + 30);
-          PronWindowAttributes newAttr;
-          COLOR(newAttr.bgColor, 24).r = 255;
-          COLOR(newAttr.bgColor, 24).g = 0;
-          COLOR(newAttr.bgColor, 24).b = 0;
-          pronSetWindowAttributes(display, parentWindowId, newAttr, WIN_ATTR_BG_COLOR);
-          pronClearWindow(display, parentWindowId);
-          pronReparentWindow(display, windowCreated->window, parentWindowId);
           if (windowCreated->parent == 0) {
             printf("top level window\n");
-            windows.push_back(windowCreated->window);
+            /*
+            windowCreated->attributes.x = rand() % (rootWindowAttributes.width  - windowCreated->attributes.width );
+            windowCreated->attributes.y = rand() % (rootWindowAttributes.height - windowCreated->attributes.height);
+            pronSetWindowAttributes(display, windowCreated->window, windowCreated->attributes, WIN_ATTR_X | WIN_ATTR_Y);
+            */
+            Window parentWindowId = pronCreateWindow(display, display->rootWindow,
+                windowCreated->attributes.x - 15, windowCreated->attributes.y - 15,
+                windowCreated->attributes.width + 30, windowCreated->attributes.height + 30);
+
+            PronWindowAttributes newAttr;
+            COLOR(newAttr.bgColor, 24).r = 255;
+            COLOR(newAttr.bgColor, 24).g = 0;
+            COLOR(newAttr.bgColor, 24).b = 0;
+            pronSetWindowAttributes(display, parentWindowId, newAttr, WIN_ATTR_BG_COLOR);
+            
+            pronMapWindow(display, parentWindowId);
+            
+            pronReparentWindow(display, windowCreated->window, parentWindowId);
+            
             windows.push_back(parentWindowId);
           }
         }

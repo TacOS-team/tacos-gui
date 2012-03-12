@@ -91,8 +91,8 @@ int main(int argc, char *argv[]) {
   COLOR(newAttr.bgColor, 24).g = (w >> 16) << 3;
   COLOR(newAttr.bgColor, 24).b = (w >> 16) << 3;
   pronSetWindowAttributes(d, w, newAttr, WIN_ATTR_BG_COLOR);
-  
 
+  pronMapWindow(d, w);
 
   while (1) {
     pronClearWindow(d, w);  
