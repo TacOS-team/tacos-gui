@@ -53,7 +53,7 @@ public: // XXX: bourrin
   void fillCircle(int n_cx, int n_cy, int radius);
   void fillRectangle(int x, int y, int width, int height);
 
-  Window* getWindow(int id);
+  Window* getWindow(unsigned int id);
   void addWindow(Window *w);
 
   void setMouseX(int mouseX);

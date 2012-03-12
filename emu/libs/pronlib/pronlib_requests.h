@@ -30,7 +30,7 @@ struct RqHello : public PronRequest {
  */
 struct RqCreateWindow : public PronRequest {
   /** Constructor. */
-  RqCreateWindow(int id, int parent, int x, int y, int width, int height)
+  RqCreateWindow(unsigned int id, unsigned int parent, int x, int y, int width, int height)
     : PronRequest(RQ_CREATE_WINDOW) {
       this->id = id;
       this->parent = parent;
@@ -54,7 +54,7 @@ struct RqCreateWindow : public PronRequest {
  */
 struct RqClearWindow : public PronRequest {
   /** Constructor. */
-  RqClearWindow(int window)
+  RqClearWindow(unsigned int window)
     : PronRequest(RQ_CLEAR_WINDOW) {
       this->window = window;
     }
@@ -68,7 +68,7 @@ struct RqClearWindow : public PronRequest {
  */
 struct RqMapWindow : public PronRequest {
   /** Constructor. */
-  RqMapWindow(int window)
+  RqMapWindow(unsigned int window)
     : PronRequest(RQ_MAP_WINDOW) {
       this->window = window;
     }
@@ -82,7 +82,7 @@ struct RqMapWindow : public PronRequest {
  */
 struct RqRaiseWindow : public PronRequest {
   /** Constructor. */
-  RqRaiseWindow(int window)
+  RqRaiseWindow(unsigned int window)
     : PronRequest(RQ_RAISE_WINDOW) {
       this->window = window;
     }
@@ -96,7 +96,7 @@ struct RqRaiseWindow : public PronRequest {
  */
 struct RqCreateGC : public PronRequest {
   /** Constructor. */
-  RqCreateGC(int gc)
+  RqCreateGC(unsigned int gc)
     : PronRequest(RQ_CREATE_GC){
       this->id = id;
     }
@@ -110,7 +110,7 @@ struct RqCreateGC : public PronRequest {
  */
 struct RqDrawLine : public PronRequest {
   /** Constructor. */
-  RqDrawLine(int gc, int drawable, int x1, int y1, int x2, int y2)
+  RqDrawLine(unsigned int gc, unsigned int drawable, int x1, int y1, int x2, int y2)
     : PronRequest(RQ_DRAW_LINE) {
       this->gc = gc;
       this->drawable = drawable;
@@ -134,7 +134,7 @@ struct RqDrawLine : public PronRequest {
  */
 struct RqDrawRect : public PronRequest {
   /** Constructor. */
-  RqDrawRect(int gc, int drawable, int x, int y, int width, int height)
+  RqDrawRect(unsigned int gc, unsigned int drawable, int x, int y, int width, int height)
     : PronRequest(RQ_DRAW_RECT) {
       this->gc = gc;
       this->drawable = drawable;
@@ -160,7 +160,7 @@ struct RqDrawRect : public PronRequest {
  */
 struct RqFillRectangle : public PronRequest {
   /** Constructor. */
-  RqFillRectangle(int gc, int drawable, int x, int y, int width, int height)
+  RqFillRectangle(unsigned int gc, unsigned int drawable, int x, int y, int width, int height)
     : PronRequest(RQ_FILL_RECTANGLE) {
       this->gc = gc;
       this->drawable = drawable;
@@ -185,7 +185,7 @@ struct RqFillRectangle : public PronRequest {
  */
 struct RqDrawCircle : public PronRequest {
   /** Constructor. */
-  RqDrawCircle(int gc, int drawable, int x, int y, int radius)
+  RqDrawCircle(unsigned int gc, unsigned int drawable, int x, int y, int radius)
     : PronRequest(RQ_DRAW_CIRCLE) {
       this->gc = gc;
       this->drawable = drawable;
@@ -208,7 +208,7 @@ struct RqDrawCircle : public PronRequest {
  */
 struct RqFillCircle : public PronRequest {
   /** Constructor. */
-  RqFillCircle(int gc, int drawable, int x, int y, int radius)
+  RqFillCircle(unsigned int gc, unsigned int drawable, int x, int y, int radius)
     : PronRequest(RQ_FILL_CIRCLE) {
       this->gc = gc;
       this->drawable = drawable;

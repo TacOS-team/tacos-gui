@@ -16,7 +16,7 @@ struct PronEvent : public PronMessage {
  */
 struct EventWindowCreated : public PronEvent {
   /** Constructor. */
-  EventWindowCreated(unsigned int window, unsigned int parent, PronWindowAttributes attributes)
+  EventWindowCreated(unsigned int window, unsigned int parent, const PronWindowAttributes & attributes)
        : PronEvent(EV_WINDOW_CREATED) {
      this->window = window;
      this->parent = parent;
