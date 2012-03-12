@@ -35,12 +35,17 @@ public: //XXX: bourrin
   int eventMask;
   int dontPropagateMask;
   vector<OtherClient> otherClients;
+  bool mapped;
 
   Window *parent;
   Window *prevSibling, *nextSibling;
   Window *firstChild, *lastChild;
 
   Window(Screen *screen, int id, Client *creator, Window *parent, int x, int y, int width, int height);
+
+  void map();
+
+  void unmap();
 
   //short getCreator();
 

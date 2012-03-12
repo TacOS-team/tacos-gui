@@ -21,6 +21,7 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
   this->height = height;
   this->eventMask = 0;
   this->dontPropagateMask = 0;
+  this->mapped = false;
 
   // Père
   this->parent = parent;
@@ -42,6 +43,48 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
       this->parent->lastChild = this;
     }
   }
+}
+
+void Window::unmap() {
+  // Can't unmap root window
+  if (this->parent == NULL) {
+    return;
+  }
+
+  // Unmap all children
+  for (Window *child = this->firstChild; child != NULL; child = child->nextSibling) {
+    child->unmap();
+  }
+
+  if (this->parent->mapped) {
+    // Clear the area of the parent window occupied by this window and send exposure event
+    this->parent->clear(this->x, this->y, this->width, this->height);
+
+    // Redraw covered lower siblings
+    for (Window *sib = this->prevSibling; sib != NULL; sib = sib->prevSibling) {
+      if (this->overlaps(sib)) {
+        sib->clear(this->x, this->y, this->width, this->height);
+      }
+    }
+  }
+
+  // TODO: check if we were clipwin/mousewin/focuswin
+
+  this->mapped = false;
+}
+
+void Window::map() {
+  this->mapped = true;
+
+  // Clear the window and send exposure event
+  this->clear();
+
+  // Map all children
+  for (Window *child = this->firstChild; child != NULL; child = child->nextSibling) {
+    child->map();
+  }
+
+  // TODO: update clipwin/mousewin/focuswin
 }
 
 void Window::reduce(int &x, int &y, int &width, int &height) {
@@ -103,6 +146,7 @@ void Window::clear(int x, int y, int width, int height) {
   COLOR(this->screen->gc.fg, 24).r = COLOR(this->bgColor, 24).r;
   COLOR(this->screen->gc.fg, 24).g = COLOR(this->bgColor, 24).g;
   COLOR(this->screen->gc.fg, 24).b = COLOR(this->bgColor, 24).b;
+  this->screen->setClipWindow(this);
   this->screen->fillRectangle(this->x + x, this->y + y, width, height);
   this->screen->gc.fg = oldFg;
 

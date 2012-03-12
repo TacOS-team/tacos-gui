@@ -298,14 +298,26 @@ void Screen::setRoot(Window *root){
   this->root = root;
 }
 
-void Screen::prepareDrawing(Window *w) {
+void Screen::setClipWindow(Window *w) {
   if (w != this->clipWin) {
+    // Update clipzone
     if (this->clipZone != NULL) {
       delete this->clipZone;
     }
     this->clipZone = new ClipZone(w);
     this->clipWin = w;
   }
+}
+
+bool Screen::prepareDrawing(Window *w) {
+  if (!w->mapped) {
+    // Can't draw in unmapped window
+    return false;
+  }
+
+  this->setClipWindow(w);
+
+  return true;
 }
 
 void traceWindowsRec(Window *w, string prefix) {
