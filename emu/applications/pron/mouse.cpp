@@ -56,14 +56,13 @@ void Mouse::checkEvents() {
     //computing relative coordinates 
     int x = state.x - mouseWin->x;
     int y = state.y - mouseWin->y;
-    // send th event if the the pointer is in the current mouseWin window
-    if (x >= 0 && y >= 0 && x < mouseWin->width && y < mouseWin->height) {
-      debug("Position du pointeur %d %d, mouseWin window %d %d, width height %d %d \n",x, y, mouseWin->x, mouseWin->y, mouseWin->width, mouseWin->height);
+    
+    // send the event to the current mouseWin
+    debug("Position du pointeur %d %d, mouseWin window %d %d, width height %d %d \n",x, y, mouseWin->x, mouseWin->y, mouseWin->width, mouseWin->height);
 
-      // it's time to send mouse Event
-      EventPointerMoved pointerMoved(mouseWin->id, x, y, state.x, state.y);
-      mouseWin->deliverDeviceEvent(&pointerMoved, sizeof(pointerMoved));
-    }
+    // it's time to send mouse Event
+    EventPointerMoved pointerMoved(mouseWin->id, x, y, state.x, state.y);
+    mouseWin->deliverDeviceEvent(&pointerMoved, sizeof(pointerMoved));
 
   }
 }
