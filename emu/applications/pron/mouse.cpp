@@ -25,33 +25,9 @@ void Mouse::checkEvents() {
     screen->setMouseX(state.x);
     screen->setMouseY(state.y);
 
-    Window *mouseWin = screen->getMouseWin();
-
     // We have to recompute the mouseWin
-    // We have to explorate window tree from the root to his children
-    // and check if the pointer is inside them : We can stop when we have found one window
-    // because it is necessarily the one which is drawn
-    Window *currentWin = screen->getRoot();
-    // We stop when currentWin has no children 
-    while(currentWin->lastChild != NULL){
-      // we have to run throug the childs from the right to the left
-      // and take the first (the one with the bigger Z)
-      Window *currentChild = currentWin->lastChild;
-      while(currentChild != NULL){
-        if(currentChild->contains(state.x, state.y)){
-          currentWin = currentChild;
-          break;// We have found the first containing child we have to stop
-        }
-        currentChild = currentChild->prevSibling;
-      }
-      if(currentChild == NULL){
-        break;// We have no child which contains the pointer we can stop
-      }
-    }
-    mouseWin = currentWin;// We have found the nwe mouseWin
-  
-    // MouseWin is computed we can store it in the screen to increse performances
-    screen->setMouseWin(mouseWin);
+    this->updateMouseWin();
+    Window *mouseWin = screen->getMouseWin();
 
     //computing relative coordinates 
     int x = state.x - mouseWin->x;
@@ -63,6 +39,34 @@ void Mouse::checkEvents() {
     // it's time to send mouse Event
     EventPointerMoved pointerMoved(mouseWin->id, x, y, state.x, state.y);
     mouseWin->deliverDeviceEvent(&pointerMoved, sizeof(pointerMoved));
-
   }
+}
+
+void Mouse::updateMouseWin(){
+  Screen *screen = Screen::getInstance();
+  int mouseX = screen->getMouseX();
+  int mouseY = screen->getMouseY();
+  // We have to explorate window tree from the root to his children
+  // and check if the pointer is inside them : We can stop when we have found one window
+  // because it is necessarily the one which is drawn
+  Window *currentWin = screen->getRoot();
+  // We stop when currentWin has no children 
+  while(currentWin->lastChild != NULL){
+    // we have to run throug the childs from the right to the left
+    // and take the first (the one with the bigger Z)
+    Window *currentChild = currentWin->lastChild;
+    while(currentChild != NULL){
+      if(currentChild->contains(mouseX, mouseY)){
+        currentWin = currentChild;
+        break;// We have found the first containing child we have to stop
+      } 
+      currentChild = currentChild->prevSibling;
+    }
+    if(currentChild == NULL){
+      break;// We have no child which contains the pointer we can stop
+    }
+  }
+
+  // MouseWin is computed we can store it in the screen to increzse performances
+  screen->setMouseWin(currentWin);
 }
