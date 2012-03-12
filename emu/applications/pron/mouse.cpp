@@ -40,13 +40,16 @@ void Mouse::checkEvents() {
     EventPointerMoved pointerMoved(mouseWin->id, x, y, state.x, state.y);
     mouseWin->deliverDeviceEvent(&pointerMoved, sizeof(pointerMoved));
   }
+
+  // Draws the mouse pointer
+  this->drawPointer();
 }
 
 void Mouse::updateMouseWin(){
   Screen *screen = Screen::getInstance();
   int mouseX = screen->getMouseX();
   int mouseY = screen->getMouseY();
-  // We have to explorate window tree from the root to his children
+  // We have to explorate window tree from the  screen to his children
   // and check if the pointer is inside them : We can stop when we have found one window
   // because it is necessarily the one which is drawn
   Window *currentWin = screen->getRoot();
@@ -69,4 +72,13 @@ void Mouse::updateMouseWin(){
 
   // MouseWin is computed we can store it in the screen to increzse performances
   screen->setMouseWin(currentWin);
+}
+
+void Mouse::drawPointer(){
+  Screen *screen = Screen::getInstance();
+  // Delete the obsolete clipZone
+  delete screen->clipZone;
+  screen->clipZone = NULL;
+  screen->drawLine(screen->getMouseX(),screen->getMouseY(), screen->getMouseX(), screen->getMouseY() + 6);
+  screen->drawLine(screen->getMouseX(),screen->getMouseY(), screen->getMouseX() + 6, screen->getMouseY());
 }

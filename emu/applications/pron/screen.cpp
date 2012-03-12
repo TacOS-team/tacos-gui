@@ -49,7 +49,7 @@ Screen* Screen::getInstance() {
 }
 
 void Screen::drawPoint(int x, int y) {
-  if (x >= 0 && x < this->width && y >= 0 && y < this->height && this->clipZone->contains(x, y)) {
+  if (x >= 0 && x < this->width && y >= 0 && y < this->height &&  (this->clipZone == NULL || this->clipZone->contains(x, y))) {
     memcpy(this->videoBuffer + (y * this->width + x) * 3, &COLOR(this->gc.fg, 24), sizeof(COLOR(this->gc.fg, 24)));
   }
 }

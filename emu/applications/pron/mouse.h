@@ -9,9 +9,13 @@ public:
 
   void checkEvents();
   /**
-   * Mise à jour de la mouseWin
+   * Update mouseWin
    */
   void updateMouseWin();
+  /**
+   * Draws mouse pointer
+   */
+  void drawPointer();
 };
 
 #endif

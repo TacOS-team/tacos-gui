@@ -51,10 +51,6 @@ void PronAcceptClient() {
 }
 
 void PronSelect() {
-  // Read from devices
-  mouse->checkEvents();
-  keyboard->checkEvents();
-
   // Try to accept new client
   PronAcceptClient();
   
@@ -62,6 +58,10 @@ void PronSelect() {
   for (unsigned int client = 0; client < clients.size(); client++) {
     clients[client]->handle();
   }
+  
+  // Read from devices
+  mouse->checkEvents();
+  keyboard->checkEvents();
 }
 
 int main() {
