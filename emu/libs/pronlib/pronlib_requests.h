@@ -245,7 +245,7 @@ struct RqGetWindowAttributes : public PronRequest {
  */
 struct RqSetWindowAttributes : public PronRequest {
   /** Constructor. */
-  RqSetWindowAttributes(unsigned int w , PronWindowAttributes newAttr,unsigned int mask)
+  RqSetWindowAttributes(unsigned int w , const PronWindowAttributes & newAttr,unsigned int mask)
     : PronRequest(RQ_SET_WINDOW_ATTRIBUTES) {
       this->w = w;
       this->newAttr = newAttr;

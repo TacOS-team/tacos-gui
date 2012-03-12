@@ -96,7 +96,7 @@ void pronGetWindowAttributes(Display * d, Window w, PronWindowAttributes * attr)
   *attr = ((RespWindowAttributes*) buffer)->attributes;
 }
 
-void pronSetWindowAttributes(Display * d, Window w, PronWindowAttributes newAttr, unsigned int mask) {  
+void pronSetWindowAttributes(Display * d, Window w, const PronWindowAttributes & newAttr, unsigned int mask) {  
   RqSetWindowAttributes rq(w,newAttr,mask);
   tsock_write(d->fd,&rq,sizeof(RqSetWindowAttributes));
 }

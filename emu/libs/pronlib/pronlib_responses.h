@@ -33,7 +33,7 @@ struct RespWelcome : public PronResponse {
  */
 struct RespWindowAttributes : public PronResponse {
   /** Constructor. */
-  RespWindowAttributes(PronWindowAttributes attributes)
+  RespWindowAttributes(const PronWindowAttributes & attributes)
       : PronResponse(RS_WINDOW_ATTRIBUTES){
     this->attributes = attributes;
   }
