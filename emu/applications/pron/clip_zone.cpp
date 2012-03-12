@@ -45,13 +45,15 @@ ClipZone::ClipZone(Window *w) {
       sibling = w->nextSibling;
       
       for (; sibling != NULL; sibling = sibling->nextSibling) {
-        ClipRect obscurer(sibling);
-        vector<ClipRect*> oldClipRects = this->clipRects;
-        this->clipRects.clear();
-        for (unsigned int i = 0; i < oldClipRects.size(); i++) {
-          vector<ClipRect*> splittedRect = oldClipRects[i]->split(&obscurer);
-          this->clipRects.insert(this->clipRects.begin(), splittedRect.begin(), splittedRect.end());
-          delete oldClipRects[i];
+        if (sibling->mapped) {
+          ClipRect obscurer(sibling);
+          vector<ClipRect*> oldClipRects = this->clipRects;
+          this->clipRects.clear();
+          for (unsigned int i = 0; i < oldClipRects.size(); i++) {
+            vector<ClipRect*> splittedRect = oldClipRects[i]->split(&obscurer);
+            this->clipRects.insert(this->clipRects.begin(), splittedRect.begin(), splittedRect.end());
+            delete oldClipRects[i];
+          }
         }
       }
     }
