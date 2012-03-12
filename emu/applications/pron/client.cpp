@@ -73,43 +73,49 @@ void Client::handle() {
     case RQ_CLEAR_WINDOW: {
       RqClearWindow *rq = (RqClearWindow*) Client::recvBuf;
       Window *w = screen->getWindow(rq->window);
-      screen->prepareDrawing(w);
-      w->clear();
+      if (screen->prepareDrawing(w)) {
+        w->clear();
+      }
       break;
     }
     case RQ_DRAW_CIRCLE: {
       RqDrawCircle *rq = (RqDrawCircle*) Client::recvBuf;
       Window *w = screen->getWindow(rq->drawable);
-      screen->prepareDrawing(w);
-      w->drawCircle(rq->x, rq->y, rq->radius);
+      if (screen->prepareDrawing(w)) {
+        w->drawCircle(rq->x, rq->y, rq->radius);
+      }
       break;
     }
     case RQ_DRAW_LINE: {
       RqDrawLine *rq = (RqDrawLine*) Client::recvBuf;
       Window *w = screen->getWindow(rq->drawable);
-      screen->prepareDrawing(w);
-      w->drawLine(rq->x1, rq->y1, rq->x2, rq->y2);
+      if (screen->prepareDrawing(w)) {
+        w->drawLine(rq->x1, rq->y1, rq->x2, rq->y2);
+      }
       break;
     }
     case RQ_DRAW_RECT: {
       RqDrawRect *rq = (RqDrawRect*) Client::recvBuf;
       Window *w = screen->getWindow(rq->drawable);
-      screen->prepareDrawing(w);
-      w->drawRect(rq->x, rq->y, rq->width, rq->height);
+      if (screen->prepareDrawing(w)) {
+        w->drawRect(rq->x, rq->y, rq->width, rq->height);
+      }
       break;
     }
     case RQ_FILL_CIRCLE: {
       RqFillCircle *rq = (RqFillCircle*) Client::recvBuf;
       Window *w = screen->getWindow(rq->drawable);
-      screen->prepareDrawing(w);
-      w->fillCircle(rq->x, rq->y, rq->radius);
+      if (screen->prepareDrawing(w)) {
+        w->fillCircle(rq->x, rq->y, rq->radius);
+      }
       break;
     }
     case RQ_FILL_RECTANGLE: {
       RqFillRectangle *rq = (RqFillRectangle*) Client::recvBuf;
       Window *w = screen->getWindow(rq->drawable);
-      screen->prepareDrawing(w);
-      w->fillRectangle(rq->x, rq->y, rq->width, rq->height);
+      if (screen->prepareDrawing(w)) {
+        w->fillRectangle(rq->x, rq->y, rq->width, rq->height);
+      }
       break;
     }
     case RQ_REPARENT: {
