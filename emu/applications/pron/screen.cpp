@@ -162,6 +162,8 @@ void Screen::drawLine(int x1, int y1, int x2, int y2) {
   px = x1;
   py = y1;
 
+  this->drawPoint(px, py);
+
   if (dxabs >= dyabs) {
     for (i = 0; i < dxabs; i++) {
       y += dyabs;
