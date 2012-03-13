@@ -6,7 +6,7 @@
 \paragraph{}
 Tacos est un système d'exploitation écrit dans le langage C. Il vient donc avec des librairies écrites dans ce même langage, il est donc naturel à ce que nous choisissions ce même langage ou un proche voisin pour développer son interface graphique.
 \paragraph{}
-Pour des raisons de conception et d'architecture logicielle, nous avons choisi le langage C++ pour écrire notre interface graphique. La librairie \textit{pron} implémentant notre protocole \textbf{client/serveur} est quand à elle écrite en C. 
+Pour des raisons de conception et d'architecture logicielle, nous avons choisi le langage C++ pour écrire notre interface graphique. . 
 \paragraph{}
 Le système d'exploitation ne dispose pas de compilateur mais utilise la même architecture matérielle que nos postes de développment. Ainsi nous pourrons compiler notre interface graphique avec le compilateur C/C++ installé sur nos machines.
 \subsection{Contraintes temporelles}
@@ -26,7 +26,9 @@ Toutes les taches effectuées dans ce projet peuvent être évaluées d'un point
   \hline
   Ext & Portage des fonctionnalités de l'émulateur sur TacOS & Bloquant & \color{orange} \begin{picture}(10, 10) \put(0, 0){\circle*{10}} \end{picture} & Création d'une librairie partagée libTacOS surchargeant certaines fonctions de la libC. Utilisation du \textit{device file system} afin d'accéder aux périphériques \textbf{souris} et \textbf{clavier}. Portage de la librairie partagée et des drivers manquant sur TacOS le jour de la transition \\
   \hline
-  Ext & Portage du système de fenêtrage sur TacOS & Bloquant & \color{red} \begin{picture}(10, 10) \put(0, 0){\circle*{10}} \end{picture} & Travail à faire \\
+  Ext & Portage du système de fenêtrage sur TacOS & Bloquant & \color{red} \begin{picture}(10, 10) \put(0, 0){\circle*{10}} \end{picture} & Travail à faire \\  
+  \hline
+  Int & Apprentissage des systèmes de fenêtrages, gestionnaires de fenêtres et librairies de widget existantes & Bloquant & \color{orange} \begin{picture}(10, 10) \put(0, 0){\circle*{10}} \end{picture} & Au cas par cas, nous étudions les solutions existantes afin de retrouver des bonnes pratiques ou afin d'éviter les erreurs de conception connues \\
   \hline
 \end{tabular}
 \paragraph{Légende} 
