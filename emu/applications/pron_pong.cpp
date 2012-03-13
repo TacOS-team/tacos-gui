@@ -81,19 +81,22 @@ int main() {
 
   Window w = pronCreateWindow(d, d->rootWindow, 0, 0, WIDTH, HEIGHT);
 
-  //Creating graphical context
+  // Creating graphical context
   GC gc = pronCreateGC(d);
+
+  // We've to map the window
+  pronMapWindow(d, w);
 
   while (1) {
     // read mouse position
-    //TODO: ask to pronlib event the mouse position
+    // TODO: ask to pronlib event the mouse position
     
     pronClearWindow(d, w);	
-    //TODO: draw ball and racket
+    // TODO: draw ball and racket
     moveBall(&ballX,&ballY,&velX,&velY,racketY);
-    //draw the ball
+    // draw the ball
     pronFillRectangle(d, w, gc, ballX, ballY, BALL_SIZE, BALL_SIZE);
-    //drax the racket
+    // drax the racket
     pronFillRectangle(d, w, gc, 0, racketY, RACKET_WIDTH, RACKET_HEIGHT);
     usleep(10000);
 
