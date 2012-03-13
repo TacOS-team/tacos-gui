@@ -23,32 +23,69 @@ void Mouse::checkEvents() {
   memset(&state, 0, sizeof(mousestate_t));
   read(this->fd, &state, 0);
 
+  // Handle motion mouse events
+  this->handleMotion(&state);
+
+  // Handle button mouse events
+  this->handleButton(&state);
+
+  // Draws the mouse pointer
+  this->drawPointer();
+}
+
+void Mouse::handleMotion(mousestate_t *state) {
   Screen *screen = Screen::getInstance();
 
   // Has pointer moved since the previous select ?
-  if (screen->getMouseX() != state.x || screen->getMouseY() != state.y) {
+  if (screen->getMouseX() != state->x || screen->getMouseY() != state->y) {
     // Set the new coordinates in the screen
-    screen->setMouseX(state.x);
-    screen->setMouseY(state.y);
+    screen->setMouseX(state->x);
+    screen->setMouseY(state->y);
 
     // We have to recompute the mouseWin
     this->updateMouseWin();
     Window *mouseWin = screen->getMouseWin();
 
     //computing relative coordinates 
-    int x = state.x - mouseWin->x;
-    int y = state.y - mouseWin->y;
+    int x = state->x - mouseWin->x;
+    int y = state->y - mouseWin->y;
     
     // send the event to the current mouseWin
     //debug("Position du pointeur %d %d, mouseWin window %d %d, width height %d %d \n",x, y, mouseWin->x, mouseWin->y, mouseWin->width, mouseWin->height);
 
     // it's time to send mouse Event
-    EventPointerMoved pointerMoved(mouseWin->id, x, y, state.x, state.y);
+    EventPointerMoved pointerMoved(mouseWin->id, x, y, state->x, state->y);
     mouseWin->deliverDeviceEvent(&pointerMoved, sizeof(pointerMoved));
   }
+}
 
-  // Draws the mouse pointer
-  this->drawPointer();
+void Mouse::handleButton(mousestate_t *state) {
+  Screen *screen = Screen::getInstance();
+
+  // We have to compare the state of each buttons and if one button has changed, send the event
+  if (screen->getMouseB1() != state->b1 ||
+      screen->getMouseB2() != state->b2 ||
+      screen->getMouseB3() != state->b3 ||
+      screen->getMouseB4() != state->b4 ||
+      screen->getMouseB5() != state->b5 ||
+      screen->getMouseB6() != state->b6 ) {
+
+    //debug("Mouse button state %d %d %d %d %d %d \n", state->b1, state->b2, state->b3, state->b4, state->b5, state->b6);
+
+    screen->setMouseB1(state->b1);
+    screen->setMouseB2(state->b2);
+    screen->setMouseB3(state->b3);
+    screen->setMouseB4(state->b4);
+    screen->setMouseB5(state->b5);
+    screen->setMouseB6(state->b6);
+
+    // We get the window which consairns the event
+    Window *mouseWin = screen->getMouseWin();
+
+    // delivers the event
+    EventMouseButton mouseButton(mouseWin->id, state->b1, state->b2, state->b3, state->b4, state->b5, state->b6);
+    mouseWin->deliverDeviceEvent(&mouseButton, sizeof(mouseButton));
+  }
 }
 
 void Mouse::updateMouseWin() {

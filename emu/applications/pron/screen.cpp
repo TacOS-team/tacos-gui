@@ -33,6 +33,12 @@ Screen::Screen(int width, int height, int bitsPerPixel) {
 
   this->mouseX = 0;
   this->mouseY = 0;
+  this->mouseB1 = false;
+  this->mouseB2 = false;
+  this->mouseB3 = false;
+  this->mouseB4 = false;
+  this->mouseB5 = false;
+  this->mouseB6 = false;
 
   this->mouseWin = NULL;
 }
@@ -282,6 +288,54 @@ int Screen::getMouseY() {
 
 void Screen::setMouseY(int mouseY) {
   this->mouseY = mouseY;
+}
+
+void Screen::setMouseB1(bool mouseB1) {
+  this->mouseB1 = mouseB1;
+}
+
+bool Screen::getMouseB1() {
+  return this->mouseB1;
+}
+
+void Screen::setMouseB2(bool mouseB2) {
+  this->mouseB2 = mouseB2;
+}
+
+bool Screen::getMouseB2() {
+  return this->mouseB2;
+}
+
+void Screen::setMouseB3(bool mouseB3) {
+  this->mouseB3 = mouseB3;
+}
+
+bool Screen::getMouseB3() {
+  return this->mouseB3;
+}
+
+void Screen::setMouseB4(bool mouseB4) {
+  this->mouseB4 = mouseB4;
+}
+
+bool Screen::getMouseB4() {
+  return this->mouseB4;
+}
+
+void Screen::setMouseB5(bool mouseB5) {
+  this->mouseB5 = mouseB5;
+}
+
+bool Screen::getMouseB5() {
+  return this->mouseB5;
+}
+
+void Screen::setMouseB6(bool mouseB6) {
+  this->mouseB6 = mouseB6;
+}
+
+bool Screen::getMouseB6() {
+  return this->mouseB6;
 }
 
 Window* Screen::getMouseWin() {

@@ -35,6 +35,7 @@ enum MessageType {
   EV_EXPOSE                   = (EV_PREFIX |  3),
   EV_KEY_PRESSED              = (EV_PREFIX |  4),
   EV_KEY_RELEASED             = (EV_PREFIX |  5),
+  EV_MOUSE_BUTTON             = (EV_PREFIX |  6),
   /* Errors */
 };
 
