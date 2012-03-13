@@ -69,6 +69,25 @@ struct EventPointerMoved : public PronEvent {
 };
 
 /**
+ * EventMouseButton
+ */
+struct EventMouseButton : public PronEvent {
+  /** Constructor. */
+  EventMouseButton(unsigned int window, bool b1, bool b2, bool b3, bool b4, bool b5, bool b6)
+       : PronEvent(EV_MOUSE_BUTTON) {
+    this->window = window;
+  }
+
+  unsigned int window;
+  bool b1;
+  bool b2;
+  bool b3;
+  bool b4;
+  bool b5;
+  bool b6;
+};
+
+/**
  * EventKey
  */
 struct EventKey : public PronEvent {

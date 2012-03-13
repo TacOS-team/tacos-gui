@@ -1,5 +1,6 @@
 #ifndef __MOUSE_H__
 #define __MOUSE_H__
+#include <mouse_types.h>
 
 #define PRON_MOUSE_POINTER_WIDTH 6
 #define PRON_MOUSE_POINTER_HEIGHT 6
@@ -29,6 +30,14 @@ public:
    * Draws mouse pointer
    */
   void drawPointer();
+  /**
+   * Handle mouse motion events
+   */
+  void handleMotion(mousestate_t *state);
+  /**
+   * Handle button motion events
+   */
+  void handleButton(mousestate_t *state);
   /**
    * Getters and setters
    */
