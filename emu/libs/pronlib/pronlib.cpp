@@ -125,9 +125,10 @@ int pronNextEvent(Display * d, PronEvent * e) {
 }
   
 PronEvent* getPronEvent() {
-  int size = sizeof(EventWindowCreated);
+  //int size = sizeof(EventWindowCreated);
+  int size = 1000; // BANDE DE NOOBS
   
-  return (PronEvent *) malloc(size);
+  return (PronEvent*) malloc(size);
 }
 
 void pronReparentWindow(Display *d, Window w, Window newParent) {
