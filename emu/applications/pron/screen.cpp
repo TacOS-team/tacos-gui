@@ -282,19 +282,19 @@ void Screen::setMouseY(int mouseY) {
   this->mouseY = mouseY;
 }
 
-Window* Screen::getMouseWin(){
+Window* Screen::getMouseWin() {
   return this->mouseWin;
 }
 
-void Screen::setMouseWin(Window *mouseWin){
+void Screen::setMouseWin(Window *mouseWin) {
   this->mouseWin = mouseWin;
 }
 
-Window* Screen::getRoot(){
+Window* Screen::getRoot() {
   return this->root;
 }
 
-void Screen::setRoot(Window *root){
+void Screen::setRoot(Window *root) {
   this->root = root;
 }
 
