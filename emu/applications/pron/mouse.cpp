@@ -12,8 +12,8 @@ Mouse::Mouse() {
   this->pointerBackupX = 0;
   this->pointerBackupY = 0;
   Screen *screen = Screen::getInstance();
-  this->pointerBackup = (char *)malloc(PRON_MOUSE_POINTER_WIDTH + 1 * PRON_MOUSE_POINTER_HEIGHT + 1 * screen->bytesPerPixel);
-  memset(this->pointerBackup, 0, PRON_MOUSE_POINTER_WIDTH + 1 * PRON_MOUSE_POINTER_HEIGHT + 1 * screen->bytesPerPixel);
+  this->pointerBackup = (char *)malloc(PRON_MOUSE_POINTER_WIDTH * PRON_MOUSE_POINTER_HEIGHT * screen->bytesPerPixel);
+  memset(this->pointerBackup, 0, PRON_MOUSE_POINTER_WIDTH * PRON_MOUSE_POINTER_HEIGHT * screen->bytesPerPixel);
   this->pointerBackuped = false;
 }
 
@@ -84,8 +84,8 @@ void Mouse::drawPointer(){
   Screen *screen = Screen::getInstance();
   // Restore the previous pointer background
   if(this->pointerBackuped){
-    for(int pBackY = 0 ; pBackY < PRON_MOUSE_POINTER_HEIGHT + 1 ; pBackY++){
-      for(int pBackX = 0 ; pBackX < PRON_MOUSE_POINTER_WIDTH + 1 ; pBackX++){
+    for(int pBackY = 0 ; pBackY < PRON_MOUSE_POINTER_HEIGHT ; pBackY++){
+      for(int pBackX = 0 ; pBackX < PRON_MOUSE_POINTER_WIDTH ; pBackX++){
         // The pixel to restore is in  ((pointerBackupX plus old Y position in the screen) times screenWidth plus old X position in the screen ) time bytesPerPixel
         int screenPos = ((pBackY + this->pointerBackupY) * screen->width + pBackX + this->pointerBackupX) * screen->bytesPerPixel;
         int pointerBackupPos = (pBackY * screen->width + pBackX) * screen->bytesPerPixel;
@@ -101,8 +101,8 @@ void Mouse::drawPointer(){
   this->pointerBackupX = screen->getMouseX();
   this->pointerBackupY = screen->getMouseY();
 
-  for(int pBackY = 0 ; pBackY < PRON_MOUSE_POINTER_HEIGHT + 1 ; pBackY++){
-    for(int pBackX = 0 ; pBackX < PRON_MOUSE_POINTER_WIDTH + 1 ; pBackX++){
+  for(int pBackY = 0 ; pBackY < PRON_MOUSE_POINTER_HEIGHT ; pBackY++){
+    for(int pBackX = 0 ; pBackX < PRON_MOUSE_POINTER_WIDTH ; pBackX++){
       // The pixel to restore is in  ((pointerBackupX plus old Y position in the screen) times screenWidth plus old X position in the screen ) time bytesPerPixel
       int screenPos = ((pBackY + screen->getMouseY()) * screen->width + pBackX + screen->getMouseX()) * screen->bytesPerPixel;
       int pointerBackupPos = (pBackY * screen->width + pBackX) * screen->bytesPerPixel;
@@ -118,8 +118,8 @@ void Mouse::drawPointer(){
   delete screen->clipZone;
   screen->clipZone = NULL;
   // We can draw the new pointer
-  screen->drawLine(screen->getMouseX(),screen->getMouseY(), screen->getMouseX(), screen->getMouseY() + PRON_MOUSE_POINTER_HEIGHT);
-  screen->drawLine(screen->getMouseX(),screen->getMouseY(), screen->getMouseX() + PRON_MOUSE_POINTER_WIDTH, screen->getMouseY());
+  screen->drawLine(screen->getMouseX(),screen->getMouseY(), screen->getMouseX(), screen->getMouseY() + PRON_MOUSE_POINTER_HEIGHT - 1);//XXX : -1 : bug de drawline
+  screen->drawLine(screen->getMouseX(),screen->getMouseY(), screen->getMouseX() + PRON_MOUSE_POINTER_WIDTH - 1, screen->getMouseY());//XXX : -1 : bug de drawline
 }
 
 int Mouse::getPointerBackupX(){
