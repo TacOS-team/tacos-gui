@@ -263,7 +263,7 @@ void Window::raise() {
   this->parent->lastChild = this;
 
   if (overlap) {
-    this->exposeArea(this->x, this->y, this->width, this->height);
+    this->exposeArea(0, 0, this->width, this->height);
   }
 }
 
