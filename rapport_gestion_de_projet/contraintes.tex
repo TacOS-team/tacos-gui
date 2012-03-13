@@ -1,3 +1,7 @@
+\definecolor{red}{rgb}{1., 0., 0.}
+\definecolor{green}{rgb}{0., 1., 0.}
+\definecolor{orange}{rgb}{1., 0.39, 0.}
+
 \subsection{Contraintes technologiques}
 \paragraph{}
 Tacos est un système d'exploitation écrit dans le langage C. Il vient donc avec des librairies écrites dans ce même langage, il est donc naturel à ce que nous choisissions ce même langage ou un proche voisin pour développer son interface graphique.
@@ -12,4 +16,22 @@ De plus les vacances scolaires et les examens peuvent accentuer le manque de dis
 \paragraph{}
 Nous disposons d'à peu près deux heures de projet tutoré par semaine. Ce temps est normalement consacré à la réalisation. Nous travaillons de plus chez nous le soir quand la charge de travail nous le permet.
 \subsection{Gestion des risques}
+Toutes les taches effectuées dans ce projet peuvent être évaluées d'un point de leur difficulté des risques risques encourus.
 \subsubsection{Tableau de gestion des risques}
+\begin{tabular}{|p{1cm}|p{4cm}|p{1.5cm}|c|p{4cm}|}
+  \hline
+  Type & Description & Gravité & Statut & Solution \\
+  \hline
+  Ext & Dépendance du projet père Tacos & Bloquant & \color{green} \begin{picture}(10, 10) \put(0, 0){\circle*{10}} \end{picture} & Création d'un émulateur TacOS pour un environnement Linux \\
+  \hline
+  Ext & Portage des fonctionnalités de l'émulateur sur TacOS & Bloquant & \color{orange} \begin{picture}(10, 10) \put(0, 0){\circle*{10}} \end{picture} & Création d'une librairie partagée libTacOS surchargeant certaines fonctions de la libC. Utilisation du \textit{device file system} afin d'accéder aux périphériques \textbf{souris} et \textbf{clavier}. Portage de la librairie partagée et des drivers manquant sur TacOS le jour de la transition \\
+  \hline
+  Ext & Portage du système de fenêtrage sur TacOS & Bloquant & \color{red} \begin{picture}(10, 10) \put(0, 0){\circle*{10}} \end{picture} & Travail à faire \\
+  \hline
+\end{tabular}
+\paragraph{Légende} 
+\begin{description}
+\item[Ext] Externe
+\item[Int] Interne
+\end{description}
+%revues
