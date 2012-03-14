@@ -347,6 +347,8 @@ struct RqMoveWindow : public PronRequest {
   RqMoveWindow(unsigned int window, int x, int y)
       : PronRequest(RQ_MOVE_WINDOW) {
     this->window    = window;
+    this->x = x;
+    this->y = y;
   }
 
   unsigned int window; /**< id of Window */
