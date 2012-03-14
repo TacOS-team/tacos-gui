@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <SDL/SDL.h>
+#include <SDL/SDL_mutex.h>
 
 // Drivers
 #include <vesadrv.h>
@@ -14,6 +15,7 @@
 #define MAX_SDL_EVENTS 128
 
 SDL_Surface *screen;
+SDL_mutex* mutex;
 
 int (*libc_open)(const char *pathname, int flags);
 int (*libc_close)(int fd);
@@ -32,9 +34,12 @@ enum tacos_descriptor_type tacos_descriptors[MAX_FD];
 
 Uint32 libtacos_periodic_checks(Uint32 interval, void *param) {
 	static int i = 0;
+
+	SDL_mutexP(mutex);
 	if (SDL_QuitRequested()) {
 		exit(0);
 	}
+	SDL_mutexV(mutex);
 
 	if (i % 5 == 0) {
 		SDL_Event events[MAX_SDL_EVENTS];
@@ -58,6 +63,10 @@ void __attribute__((constructor)) libtacos_init() {
 	libc_read = dlsym(RTLD_NEXT, "read");
 	libc_ioctl = dlsym(RTLD_NEXT, "ioctl");
 
+	mutex = SDL_CreateMutex();
+
+	SDL_mutexP(mutex);
+
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
 		fprintf(stderr, "Vous n'avez pas compris les concepts : %s\n", SDL_GetError());
 		exit(1);
@@ -70,6 +79,8 @@ void __attribute__((constructor)) libtacos_init() {
 	SDL_EnableUNICODE(SDL_ENABLE);
 	SDL_ShowCursor(SDL_DISABLE);
 	SDL_WM_SetCaption("TacOS Emulator", "TacOS Emulator");
+
+	SDL_mutexV(mutex);
 
 	SDL_AddTimer(1000, libtacos_periodic_checks, NULL); 
 }
@@ -177,7 +188,9 @@ int ioctl(int fd, unsigned long request, void *data) {
 
 int getchar() {
 	int ret;
+	SDL_mutexP(mutex);
 	SDL_PumpEvents();
+	SDL_mutexV(mutex);
 	SDL_Event event;
 	if (SDL_PeepEvents(&event, 1, SDL_GETEVENT, SDL_KEYDOWNMASK)) {
 		//printf("%d %d\n", event.key.keysym.scancode, event.key.keysym.unicode);

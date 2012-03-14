@@ -1,9 +1,14 @@
 #include <kbddrv.h>
+#include <SDL/SDL_mutex.h>
+
+extern SDL_mutex *mutex;
 
 ssize_t kbd_read(void *buf) {
 	int ret;
 
+	SDL_mutexP(mutex);
 	SDL_PumpEvents();
+	SDL_mutexV(mutex);
 	SDL_Event event;
 	if (SDL_PeepEvents(&event, 1, SDL_GETEVENT, SDL_KEYDOWNMASK | SDL_KEYUPMASK)) {
 		kbdstate_t kbd_state;

@@ -1,11 +1,15 @@
 #include <mousedrv.h>
+#include <SDL/SDL_mutex.h>
 
 extern SDL_Surface *screen;
+extern SDL_mutex *mutex;
 
 ssize_t mouse_read(void *buf) {
 	mousestate_t mouse_state;
 
+	SDL_mutexP(mutex);
 	SDL_PumpEvents();
+	SDL_mutexV(mutex);
 	int mouse_x, mouse_y;
 	uint8_t buttons = SDL_GetMouseState(&mouse_x, &mouse_y);
 	mouse_state.x = mouse_x;
