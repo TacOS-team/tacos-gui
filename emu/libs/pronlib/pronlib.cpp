@@ -145,3 +145,8 @@ void pronDestroyWindow(Display *d, unsigned int w) {
   RqDestroyWindow rq(w);
   tsock_write(d->fd, &rq, sizeof(rq));
 } 
+
+void pronMoveWindow(Display *d, unsigned int w, int x, int y) {
+  RqMoveWindow rq(w, x, y);
+  tsock_write(d->fd, &rq, sizeof(rq));
+}

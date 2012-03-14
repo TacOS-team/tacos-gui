@@ -331,11 +331,27 @@ struct RqReparent : public PronRequest {
 struct RqDestroyWindow : public PronRequest {
   /** Constructor. */
   RqDestroyWindow(unsigned int window)
-    : PronRequest(RQ_DESTROY_WINDOW) {
-      this->window    = window;
-    }
+      : PronRequest(RQ_DESTROY_WINDOW) {
+    this->window    = window;
+  }
 
   unsigned int window; /**< id of Window */
+};
+
+/**
+ * Move a Window of x pixels on x and y pixels on y
+ * Sent by a client to move a window
+ */
+struct RqMoveWindow : public PronRequest {
+  /** Constructor. */
+  RqMoveWindow(unsigned int window, int x, int y)
+      : PronRequest(RQ_MOVE_WINDOW) {
+    this->window    = window;
+  }
+
+  unsigned int window; /**< id of Window */
+  int x;
+  int y;
 };
 
 #endif // __PRONLIB_REQUESTS_H__

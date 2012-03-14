@@ -211,6 +211,15 @@ void pronReparentWindow(Display *d, unsigned int w, unsigned int newParent);
  * @param d The connection to pron
  * @param w The window
  */
-void pronDestroyWindow(Display *d, unsigned int w);  
+void pronDestroyWindow(Display *d, unsigned int w);   
+
+/**
+ * Move a Window of x pixels on x and y pixels on y
+ * @param d The connection to pron
+ * @param w The window
+ * @param x The relative move on x
+ * @param y The relative move on y
+ */
+void pronMoveWindow(Display *d, unsigned int w, int x, int y);  
 
 #endif
