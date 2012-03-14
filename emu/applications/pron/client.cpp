@@ -143,6 +143,22 @@ void Client::handle() {
       w->destroy();  
       break;
     }
+    case RQ_MOVE_WINDOW: {
+      RqMoveWindow *rq = (RqMoveWindow*) Client::recvBuf;
+      Window *w = screen->getWindow(rq->window);
+      // TODO Gestion propre des filles
+      w->unmap();
+      w->x += rq->x;
+      w->y += rq->y;
+      printf("pere %d\n", w->id);
+      for (Window *currentChild = w->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
+        printf("boucle %d\n", currentChild->id);
+        currentChild->x += rq->x;
+        currentChild->y += rq->y;
+      }
+      w->map();
+      break;
+    }
   }
 }
 
