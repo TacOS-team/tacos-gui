@@ -94,8 +94,7 @@ int main(int argc, char *argv[]) {
 
   pronMapWindow(d, w);
 
-  int i = 0;
-  while (i++ < 50) {
+  while (1) {
     pronClearWindow(d, w);  
     int i = 0;
     for (i = 0; i < 8; i++) {
