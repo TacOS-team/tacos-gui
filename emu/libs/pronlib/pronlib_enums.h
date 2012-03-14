@@ -26,6 +26,7 @@ enum MessageType {
   RQ_RAISE_WINDOW             = (RQ_PREFIX | 14),
   RQ_REPARENT                 = (RQ_PREFIX | 15),
   RQ_UNMAP_WINDOW             = (RQ_PREFIX | 16),
+  RQ_DRAW_POINT               = (RQ_PREFIX | 17),
   /* Responses */
   RS_WELCOME                  = (RS_PREFIX |  1),
   RS_WINDOW_ATTRIBUTES        = (RS_PREFIX |  2),

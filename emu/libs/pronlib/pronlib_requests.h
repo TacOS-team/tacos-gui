@@ -119,6 +119,26 @@ struct RqCreateGC : public PronRequest {
 };
 
 /**
+ * DrawPoint request.
+ * Sent by a client to draw a point.
+ */
+struct RqDrawPoint : public PronRequest {
+  /** Constructor. */
+  RqDrawPoint(unsigned int gc, unsigned int drawable, int x, int y)
+    : PronRequest(RQ_DRAW_POINT) {
+      this->gc = gc;
+      this->drawable = drawable;
+      this->x = x;
+      this->y = y;
+    }
+
+  unsigned int gc; /**< id of the graphics context to use */
+  unsigned int drawable; /**< id of the drawable in which to draw */ 
+  int x; /**< x-coordinate of the point */
+  int y; /**< y-coordinate of the point */
+};
+
+/**
  * DrawLine request.
  * Sent by a client to draw a line between two points.
  */
@@ -166,7 +186,6 @@ struct RqDrawRect : public PronRequest {
   int width; /**< width of the rectangle */
   int height; /**< height of the rectangle */
 };
-
 
 /**
  * FillRectangle request.

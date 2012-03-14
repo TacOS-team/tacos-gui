@@ -85,6 +85,17 @@ void pronMapWindow(Display *d, Window w);
 void pronRaiseWindow(Display *d, Window w);
 
 /**
+ * Draws a point at (x, y).
+ * @todo Implement drawables instead of just windows
+ * @param d The connection to pron
+ * @param w The window in which to draw the line
+ * @param gc The graphics context to use
+ * @param x The x-coordinate of the point
+ * @param y The y-coordinate of the point
+ */
+int pronDrawPoint(Display *d, Window w, GC gc, int x, int y);
+
+/**
  * Draws a line between (x1, y1) and (x2, y2).
  * @todo Implement drawables instead of just windows
  * @param d The connection to pron

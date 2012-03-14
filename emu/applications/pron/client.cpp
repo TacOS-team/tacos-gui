@@ -78,6 +78,14 @@ void Client::handle() {
       }
       break;
     }
+    case RQ_DRAW_POINT: {
+      RqDrawPoint *rq = (RqDrawPoint*) Client::recvBuf;
+      Window *w = screen->getWindow(rq->drawable);
+      if (screen->prepareDrawing(w)) {
+        w->drawPoint(rq->x, rq->y);
+      }
+      break;
+    }
     case RQ_DRAW_CIRCLE: {
       RqDrawCircle *rq = (RqDrawCircle*) Client::recvBuf;
       Window *w = screen->getWindow(rq->drawable);

@@ -66,6 +66,11 @@ void pronRaiseWindow(Display *d, Window w) {
   tsock_write(d->fd, &rq, sizeof(rq));
 }
 
+int pronDrawPoint(Display *d, Window w, GC gc, int x, int y) {
+  RqDrawPoint rq(gc, w, x, y);
+  return (tsock_write(d->fd, &rq, sizeof(rq)) > 0);
+}
+
 int pronDrawLine(Display *d, Window w, GC gc, int x1, int y1, int x2, int y2) {
   RqDrawLine rq(gc, w, x1, y1, x2, y2);
   return (tsock_write(d->fd, &rq, sizeof(rq)) > 0);
