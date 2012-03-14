@@ -69,6 +69,7 @@ int main() {
                 windowCreated->attributes.x - 15, windowCreated->attributes.y - 15,
                 windowCreated->attributes.width + 30, windowCreated->attributes.height + 30);
 
+            // Fond rouge à la fenêtre de déco provisoire
             PronWindowAttributes newAttr;
             COLOR(newAttr.bgColor, 24).r = 255;
             COLOR(newAttr.bgColor, 24).g = 0;
@@ -76,6 +77,10 @@ int main() {
             pronSetWindowAttributes(display, parentWindowId, newAttr, WIN_ATTR_BG_COLOR);
             
             pronMapWindow(display, parentWindowId);
+
+            // Abonnement aux évènements souris de la fenêtre de décoration
+            pronSelectInput(display, parentWindowId,
+                  PRON_EVENTMASK(EV_MOUSE_BUTTON) | PRON_EVENTMASK(EV_POINTER_MOVED));
             
             pronReparentWindow(display, windowCreated->window, parentWindowId);
             
@@ -104,12 +109,12 @@ int main() {
         break;
       }
       case EV_DESTROY_WINDOW : {
-        EventDestroyWindow * destroyWindowEvent = (EventDestroyWindow*) e;
+        EventDestroyWindow *destroyWindowEvent = (EventDestroyWindow*) e;
         printf("DestroyWindow event received for %d\n", destroyWindowEvent->window);
 
         // Sending destroy request for the parent window
         printf("état de la liste des windows\n");
-        for (unsigned int index = 0; index < windows.size(); index++) {
+        for (unsigned int index = 0; index < windows.size(); ++index) {
           if (windows[index].w == destroyWindowEvent->window) {
             printf("send destroy request for parent (id %d\n)", windows[index].parent);
             pronDestroyWindow(display,windows[index].parent);
@@ -118,6 +123,10 @@ int main() {
           }
         }
         break;
+      }
+      case EV_MOUSE_BUTTON : {
+        EventMouseButton *mouseButtonEvent = (EventMouseButton*) e;
+        pronMoveWindow(display, mouseButtonEvent->window, 20, 20);
       }
       default:
       break;
