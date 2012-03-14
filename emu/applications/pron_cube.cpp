@@ -94,7 +94,8 @@ int main(int argc, char *argv[]) {
 
   pronMapWindow(d, w);
 
-  while (1) {
+  int i = 0;
+  while (i++ < 50) {
     pronClearWindow(d, w);  
     int i = 0;
     for (i = 0; i < 8; i++) {
@@ -103,6 +104,8 @@ int main(int argc, char *argv[]) {
     draw_cube(d, w);
     usleep(20000);
   }
+
+  pronDestroyWindow(d,w);
 
   pronDisconnect(d);
 

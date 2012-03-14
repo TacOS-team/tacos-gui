@@ -10,6 +10,11 @@
 
 using namespace std;
 
+struct windowInfo {
+  Window w;
+  Window parent;
+};
+
 int main() {
   srand(time(NULL));
   
@@ -26,7 +31,9 @@ int main() {
   pronSelectInput(display, display->rootWindow, PRON_EVENTMASK(EV_WINDOW_CREATED) | PRON_EVENTMASK(EV_KEY_PRESSED) | PRON_EVENTMASK(EV_KEY_RELEASED));
   PronEvent *e = getPronEvent();
 
-  vector<Window> windows;
+  vector<struct windowInfo> windows;
+  
+
   int w_idx = 0;
 
   while (1) {
@@ -39,7 +46,15 @@ int main() {
       case EV_WINDOW_CREATED : {
         debug("EVENT_WINDOW_CREATED reçu\n");
         EventWindowCreated *windowCreated = (EventWindowCreated*) e;
-        if (std::find(windows.begin(), windows.end(), windowCreated->window) == windows.end()) {
+        bool winAlreadyExists = false;
+
+        for (unsigned int i = 0; i< windows.size();i++) {
+          if (windows[i].w == windowCreated->window || windows[i].parent == windowCreated->window) {
+            winAlreadyExists = true;
+            break;
+          }
+        }
+        if (!winAlreadyExists) {
           if (windowCreated->parent == 0) {
             printf("top level window\n");
             /*
@@ -61,7 +76,10 @@ int main() {
             
             pronReparentWindow(display, windowCreated->window, parentWindowId);
             
-            windows.push_back(parentWindowId);
+            struct windowInfo winInfo = {windowCreated->window, parentWindowId};
+            windows.push_back(winInfo);
+
+            pronSelectInput(display, windowCreated->window, PRON_EVENTMASK(EV_DESTROY_WINDOW));
           }
         }
         break;
@@ -71,8 +89,8 @@ int main() {
         printf("Key pressed : %d\n", keyPressed->keysym);
         if (keyPressed->keysym == PRONK_TAB && !windows.empty()) {
           w_idx = (w_idx + 1) % windows.size();
-          printf("raise window %d\n", windows[w_idx]);
-          pronRaiseWindow(display, windows[w_idx]);
+          printf("raise window %d\n", windows[w_idx].w);
+          pronRaiseWindow(display, windows[w_idx].w);
         }
         break;
       }
@@ -81,8 +99,28 @@ int main() {
         printf("Key released : %d\n", keyReleased->keysym);
         break;
       }
-      default:
+      case EV_DESTROY_WINDOW : {
+        EventDestroyWindow * destroyWindowEvent = (EventDestroyWindow*) e;
+        printf("DestroyWindow received for %d\n", destroyWindowEvent->window);
+
+        // Sending destroy request for the parent window
+        printf("état de la liste des windows\n");
+        for (unsigned int index = 0; index < windows.size(); index++) {
+          printf("(%d %d)",windows[index].w, windows[index].parent);
+          printf("\n");
+        }
+        for (unsigned int index = 0; index < windows.size(); index++) {
+          if (windows[index].w == destroyWindowEvent->window) {
+            printf("send destroy request for id %d\n", windows[index].parent);
+            pronDestroyWindow(display,windows[index].parent);
+            windows.erase(windows.begin() + index);
+            break;
+          }
+        }
         break;
+      }
+      default:
+      break;
     }
   }
 }

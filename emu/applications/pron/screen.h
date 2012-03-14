@@ -86,6 +86,7 @@ public: // XXX: bourrin
   void setRoot(Window *root);
 
   void traceWindows();
+
 };
 
 #endif

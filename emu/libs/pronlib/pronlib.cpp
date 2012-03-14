@@ -140,3 +140,8 @@ void pronReparentWindow(Display *d, Window w, Window newParent) {
   RqReparent rq(w, newParent);
   tsock_write(d->fd, &rq, sizeof(rq));
 }
+
+void pronDestroyWindow(Display *d, unsigned int w) {
+  RqDestroyWindow rq(w);
+  tsock_write(d->fd, &rq, sizeof(rq));
+} 

@@ -27,6 +27,7 @@ enum MessageType {
   RQ_REPARENT                 = (RQ_PREFIX | 15),
   RQ_UNMAP_WINDOW             = (RQ_PREFIX | 16),
   RQ_DRAW_POINT               = (RQ_PREFIX | 17),
+  RQ_DESTROY_WINDOW           = (RQ_PREFIX | 18),
   /* Responses */
   RS_WELCOME                  = (RS_PREFIX |  1),
   RS_WINDOW_ATTRIBUTES        = (RS_PREFIX |  2),
@@ -37,6 +38,8 @@ enum MessageType {
   EV_KEY_PRESSED              = (EV_PREFIX |  4),
   EV_KEY_RELEASED             = (EV_PREFIX |  5),
   EV_MOUSE_BUTTON             = (EV_PREFIX |  6),
+  EV_DESTROY_WINDOW           = (EV_PREFIX |  7),
+
   /* Errors */
 };
 

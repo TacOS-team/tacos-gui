@@ -7,55 +7,55 @@
 struct PronEvent : public PronMessage {
   /** Constructor. */
   PronEvent(MessageType type)
-      : PronMessage(type) {}
+  : PronMessage(type) {}
 };
 
 /**
  * ClearWindow request.
  * Sent by a client to clear the contents of a window.
  */
-struct EventWindowCreated : public PronEvent {
+ struct EventWindowCreated : public PronEvent {
   /** Constructor. */
   EventWindowCreated(unsigned int window, unsigned int parent, const PronWindowAttributes & attributes)
-       : PronEvent(EV_WINDOW_CREATED) {
-     this->window = window;
-     this->parent = parent;
-     this->attributes = attributes;
-  }
+  : PronEvent(EV_WINDOW_CREATED) {
+   this->window = window;
+   this->parent = parent;
+   this->attributes = attributes;
+ }
 
-  unsigned int window;
-  unsigned int parent;
-  PronWindowAttributes attributes;
+ unsigned int window;
+ unsigned int parent;
+ PronWindowAttributes attributes;
 };
 
 /**
  * EventExpose
  */
-struct EventExpose : public PronEvent {
+ struct EventExpose : public PronEvent {
   /** Constructor. */
   EventExpose(unsigned int window, int x, int y, int width, int height)
-       : PronEvent(EV_EXPOSE) {
-     this->window = window;
-     this->x = x;
-     this->y = y;
-     this->width = width;
-     this->height = height;
-  }
+  : PronEvent(EV_EXPOSE) {
+   this->window = window;
+   this->x = x;
+   this->y = y;
+   this->width = width;
+   this->height = height;
+ }
 
-  unsigned int window;
-  int x;
-  int y;
-  int width;
-  int height;
+ unsigned int window;
+ int x;
+ int y;
+ int width;
+ int height;
 };
 
 /**
  * EventPointerMoved
  */
-struct EventPointerMoved : public PronEvent {
+ struct EventPointerMoved : public PronEvent {
   /** Constructor. */
   EventPointerMoved(unsigned int window, int x, int y, int xRoot, int yRoot)
-       : PronEvent(EV_POINTER_MOVED) {
+  : PronEvent(EV_POINTER_MOVED) {
     this->window = window;
     this->x = x;
     this->y = y;
@@ -91,11 +91,11 @@ struct EventMouseButton : public PronEvent {
 /**
  * EventKey
  */
-struct EventKey : public PronEvent {
+ struct EventKey : public PronEvent {
   /** Constructor. */
   EventKey(MessageType type, unsigned int window, unsigned int subwindow,
-        int x, int y, int xRoot, int yRoot, unsigned int keysym, unsigned int modifiers)
-        : PronEvent(type) {
+    int x, int y, int xRoot, int yRoot, unsigned int keysym, unsigned int modifiers)
+  : PronEvent(type) {
     this->window = window;
     this->subwindow = subwindow;
     this->x = x;
@@ -117,23 +117,33 @@ struct EventKey : public PronEvent {
 /**
  * EventKeyPressed
  */
-struct EventKeyPressed : public EventKey {
+ struct EventKeyPressed : public EventKey {
   /** Constructor. */
   EventKeyPressed(unsigned int window, unsigned int subwindow, int x, int y,
-        int xRoot, int yRoot, unsigned int keysym, unsigned int modifiers)
-        : EventKey(EV_KEY_PRESSED, window, subwindow, x, y, xRoot, yRoot, keysym, modifiers) {}
+    int xRoot, int yRoot, unsigned int keysym, unsigned int modifiers)
+  : EventKey(EV_KEY_PRESSED, window, subwindow, x, y, xRoot, yRoot, keysym, modifiers) {}
 };
 
 /**
  * EventKeyReleased
  */
-struct EventKeyReleased : public EventKey {
+ struct EventKeyReleased : public EventKey {
   /** Constructor. */
   EventKeyReleased(unsigned int window, unsigned int subwindow, int x, int y,
-        int xRoot, int yRoot, unsigned int keysym, unsigned int modifiers)
-        : EventKey(EV_KEY_RELEASED, window, subwindow, x, y, xRoot, yRoot, keysym, modifiers) {}
+    int xRoot, int yRoot, unsigned int keysym, unsigned int modifiers)
+  : EventKey(EV_KEY_RELEASED, window, subwindow, x, y, xRoot, yRoot, keysym, modifiers) {}
 };
 
+/**
+ * EventDestroyWindow
+ */
+ struct EventDestroyWindow : public PronEvent {
+  /** Constructor. */
+  EventDestroyWindow(unsigned int window) : PronEvent(EV_DESTROY_WINDOW) {
+    this->window = window;
+  }
+  unsigned int window;
+};
 PronEvent* getPronEvent();
 
 #endif // __PRONLIB_EVENTS_H__

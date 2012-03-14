@@ -206,4 +206,11 @@ void pronSetWindowAttributes(Display * d, Window w, const PronWindowAttributes &
  */
 void pronReparentWindow(Display *d, unsigned int w, unsigned int newParent);  
 
+/**
+ * Destroy a Window
+ * @param d The connection to pron
+ * @param w The window
+ */
+void pronDestroyWindow(Display *d, unsigned int w);  
+
 #endif

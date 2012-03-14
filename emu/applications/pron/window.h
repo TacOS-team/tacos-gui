@@ -43,6 +43,8 @@ public: //XXX: bourrin
 
   Window(Screen *screen, int id, Client *creator, Window *parent, int x, int y, int width, int height);
 
+  ~Window();
+
   void map();
 
   void unmap();
@@ -76,6 +78,8 @@ public: //XXX: bourrin
   void raise();
 
   void exposeArea(int x, int y, int width, int height);
+
+  void destroy();
 
   /**
    * Delivers an event to this window.

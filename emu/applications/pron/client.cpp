@@ -3,6 +3,7 @@
 #include <screen.h>
 #include <tsock.h>
 #include <window.h>
+#include <cstdio>
 
 int Client::recvLen;
 char Client::recvBuf[MAX_MSG_SIZE];
@@ -132,6 +133,15 @@ void Client::handle() {
       w->reparent(screen->getWindow(rq->newParent));
       screen->clipWin = NULL;
       screen->traceWindows();
+      break;
+    }
+    case RQ_DESTROY_WINDOW: {
+      RqDestroyWindow *rq = (RqDestroyWindow*) Client::recvBuf;
+      printf("detroyWindow request received for %d\n", rq->window);
+      Window *w = screen->getWindow(rq->window);
+      EventDestroyWindow eventDestroyWindow(w->id);
+      w->deliverWindowEvent(&eventDestroyWindow, sizeof(eventDestroyWindow));
+      w->destroy();  
       break;
     }
   }

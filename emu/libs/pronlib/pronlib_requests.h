@@ -324,4 +324,18 @@ struct RqReparent : public PronRequest {
   unsigned int newParent; /**< id of new parent Window */
 };
 
+/**
+ * Destroy a window
+ * Sent by a client to close a window
+ */
+struct RqDestroyWindow : public PronRequest {
+  /** Constructor. */
+  RqDestroyWindow(unsigned int window)
+    : PronRequest(RQ_DESTROY_WINDOW) {
+      this->window    = window;
+    }
+
+  unsigned int window; /**< id of Window */
+};
+
 #endif // __PRONLIB_REQUESTS_H__
