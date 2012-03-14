@@ -45,7 +45,7 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
   }
 }
 
-// Destructor  
+// Destructor : delete all of the childs
 Window::~Window() {
   for (Window * fils = this->firstChild; fils != NULL; fils = fils->nextSibling) {
     delete fils;

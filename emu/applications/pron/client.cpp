@@ -137,7 +137,6 @@ void Client::handle() {
     }
     case RQ_DESTROY_WINDOW: {
       RqDestroyWindow *rq = (RqDestroyWindow*) Client::recvBuf;
-      printf("detroyWindow request received for %d\n", rq->window);
       Window *w = screen->getWindow(rq->window);
       EventDestroyWindow eventDestroyWindow(w->id);
       w->deliverWindowEvent(&eventDestroyWindow, sizeof(eventDestroyWindow));

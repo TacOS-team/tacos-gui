@@ -10,6 +10,8 @@
 
 using namespace std;
 
+// used for keeping trace of the windows that we reparented
+// parent is the parent window id of w
 struct windowInfo {
   Window w;
   Window parent;
@@ -48,6 +50,7 @@ int main() {
         EventWindowCreated *windowCreated = (EventWindowCreated*) e;
         bool winAlreadyExists = false;
 
+        // we don't want to add a window that is already known
         for (unsigned int i = 0; i< windows.size();i++) {
           if (windows[i].w == windowCreated->window || windows[i].parent == windowCreated->window) {
             winAlreadyExists = true;
@@ -76,9 +79,10 @@ int main() {
             
             pronReparentWindow(display, windowCreated->window, parentWindowId);
             
+
             struct windowInfo winInfo = {windowCreated->window, parentWindowId};
             windows.push_back(winInfo);
-
+            // registering for any EV_DESTROY_WINDOW event
             pronSelectInput(display, windowCreated->window, PRON_EVENTMASK(EV_DESTROY_WINDOW));
           }
         }
@@ -89,8 +93,8 @@ int main() {
         printf("Key pressed : %d\n", keyPressed->keysym);
         if (keyPressed->keysym == PRONK_TAB && !windows.empty()) {
           w_idx = (w_idx + 1) % windows.size();
-          printf("raise window %d\n", windows[w_idx].w);
-          pronRaiseWindow(display, windows[w_idx].w);
+          printf("raise window %d\n", windows[w_idx].parent);
+          pronRaiseWindow(display, windows[w_idx].parent);
         }
         break;
       }
@@ -101,17 +105,13 @@ int main() {
       }
       case EV_DESTROY_WINDOW : {
         EventDestroyWindow * destroyWindowEvent = (EventDestroyWindow*) e;
-        printf("DestroyWindow received for %d\n", destroyWindowEvent->window);
+        printf("DestroyWindow event received for %d\n", destroyWindowEvent->window);
 
         // Sending destroy request for the parent window
         printf("état de la liste des windows\n");
         for (unsigned int index = 0; index < windows.size(); index++) {
-          printf("(%d %d)",windows[index].w, windows[index].parent);
-          printf("\n");
-        }
-        for (unsigned int index = 0; index < windows.size(); index++) {
           if (windows[index].w == destroyWindowEvent->window) {
-            printf("send destroy request for id %d\n", windows[index].parent);
+            printf("send destroy request for parent (id %d\n)", windows[index].parent);
             pronDestroyWindow(display,windows[index].parent);
             windows.erase(windows.begin() + index);
             break;
