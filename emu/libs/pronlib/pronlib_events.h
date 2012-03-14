@@ -76,15 +76,16 @@ struct EventMouseButton : public PronEvent {
   EventMouseButton(unsigned int window, bool b1, bool b2, bool b3, bool b4, bool b5, bool b6)
        : PronEvent(EV_MOUSE_BUTTON) {
     this->window = window;
+    this->b1 = b1;
+    this->b2 = b2;
+    this->b3 = b3;
+    this->b4 = b4;
+    this->b5 = b5;
+    this->b6 = b6;
   }
 
   unsigned int window;
-  bool b1;
-  bool b2;
-  bool b3;
-  bool b4;
-  bool b5;
-  bool b6;
+  bool b1, b2, b3, b4, b5, b6;
 };
 
 /**
