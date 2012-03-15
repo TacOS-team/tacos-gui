@@ -1,14 +1,8 @@
-INCLUDES=-I. -I./include/ -I../include/
-CFLAGS=-Wall -g
+OBJS = vgadrv.o vesadrv.o mousedrv.o kbddrv.o
 
-SRCS=*.c
+all: $(addprefix $(BUILDDIROBJS)/, $(OBJS))
 
-all: vga.o vesa.o mouse.o
-
-%.o: %.c
+$(BUILDDIROBJS)/%.o: %.c
 	$(CC) -o $@ -c $< $(CFLAGS) $(INCLUDES) -fPIC
-
-clean:
-	rm -f *.o
 
 .PHONY: clean

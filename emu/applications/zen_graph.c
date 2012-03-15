@@ -217,7 +217,7 @@ void zen(char* buffer, char color, int x,int y) {
 int main()
 {
 	int vga_fd = open("/dev/vga", O_RDONLY);
-	ioctl(vga_fd, SETMODE, (void*)vga_mode_320x200x256);
+	ioctl(vga_fd, SETVGAMODE, (void*)vga_mode_320x200x256);
 	init();
 
 	draw_line(LARGEUR/2 - 20, 100, LARGEUR/2 + 20, 100, 15, buffer);	
@@ -235,7 +235,7 @@ int main()
 		put_pixel(1, LARGEUR/2+ rand()%10 - 5, 1, buffer);
 		
 		update();
-		ioctl(vga_fd, FLUSH, buffer);
+		ioctl(vga_fd, FLUSHVGA, buffer);
 	}
 
 	close(vga_fd);

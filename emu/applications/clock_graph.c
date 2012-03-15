@@ -54,7 +54,7 @@ static float aiguille_h[][2] = { {0, (HEIGHT/25.)}, {-(HEIGHT/25.), -0}, {(HEIGH
 static float aiguille_m[][2] = { {0, (HEIGHT/20.)}, {-(HEIGHT/40.), 0}, {(HEIGHT/40.), 0}, {0, -(HEIGHT/2.5)} };
 static float aiguille_s[][2] = { {0, 0}, {0, -(HEIGHT/2.5)} };
 
-float cos(float angle) {
+float my_cos(float angle) {
 	float angle_radians = angle*(2*PI)/360;
 	float result;
 	
@@ -63,7 +63,7 @@ float cos(float angle) {
 	return result;
 }
 
-float sin(float angle) {
+float my_sin(float angle) {
 	float angle_radians = angle*(2*PI)/360;
 	float result;
 	
@@ -129,8 +129,8 @@ void draw_translated_line(int x1, int y1, int x2, int y2, color_t color) {
 void rotate_point(float point[2], float theta) {
 	float new_point[2];
 
-	new_point[0] = cos(theta)*point[0] - sin(theta)*point[1];
-	new_point[1] = sin(theta)*point[0] + cos(theta)*point[1];
+	new_point[0] = my_cos(theta)*point[0] - my_sin(theta)*point[1];
+	new_point[1] = my_sin(theta)*point[0] + my_cos(theta)*point[1];
 
 	point[0] = new_point[0];
 	point[1] = new_point[1];

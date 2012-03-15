@@ -1,3 +1,4 @@
+#include <vgadrv.h>
 #include <vga_modes.h>
 #include <SDL/SDL.h>
 
@@ -26,13 +27,13 @@ int vga_ioctl(unsigned long request, void *data) {
 	int ret;
 
 	switch (request) {
-		case SETMODE: {
+		case SETVGAMODE: {
 			enum vga_mode mode = (enum vga_mode)data;
 			vga_set_mode(mode);
 			ret = 0;
 			break;
 		}
-		case FLUSH: {
+		case FLUSHVGA: {
 			char *user_buffer = (char*)data;
 			vga_write_buf(user_buffer);
 			ret = 0;

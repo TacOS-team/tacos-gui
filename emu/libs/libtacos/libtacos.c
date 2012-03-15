@@ -1,9 +1,14 @@
 #define _GNU_SOURCE
 #include <dlfcn.h>
-#include <signal.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <SDL/SDL.h>
+
+// Drivers
+#include <vesadrv.h>
+#include <vgadrv.h>
+#include <mousedrv.h>
+#include <kbddrv.h>
 
 #define MAX_FD 128
 #define MAX_SDL_EVENTS 128
@@ -20,11 +25,12 @@ enum tacos_descriptor_type {
 	VGA,
 	VESA,
 	MOUSE,
+	KEYBOARD,
 };
 
 enum tacos_descriptor_type tacos_descriptors[MAX_FD];
 
-void alarm_handler(int signum) {
+Uint32 libtacos_periodic_checks(Uint32 interval, void *param) {
 	static int i = 0;
 	if (SDL_QuitRequested()) {
 		exit(0);
@@ -33,7 +39,7 @@ void alarm_handler(int signum) {
 	if (i % 5 == 0) {
 		SDL_Event events[MAX_SDL_EVENTS];
 		int nb_pending_events = SDL_PeepEvents(events, MAX_SDL_EVENTS, SDL_PEEKEVENT, SDL_ALLEVENTS);
-		printf("[Leek monitor] %d pending event(s).\n", nb_pending_events);
+		//printf("[Leek monitor] %d pending event(s).\n", nb_pending_events);
 		if (nb_pending_events >= MAX_SDL_EVENTS - 1) {
 			printf("[Leek monitor] Event queue full - exiting.\n");
 			exit(1);
@@ -42,7 +48,7 @@ void alarm_handler(int signum) {
 
 	i = (i + 1) % 5;
 
-	alarm(1);
+	return interval;
 }
 
 void __attribute__((constructor)) libtacos_init() {
@@ -52,7 +58,7 @@ void __attribute__((constructor)) libtacos_init() {
 	libc_read = dlsym(RTLD_NEXT, "read");
 	libc_ioctl = dlsym(RTLD_NEXT, "ioctl");
 
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
 		fprintf(stderr, "Vous n'avez pas compris les concepts : %s\n", SDL_GetError());
 		exit(1);
 	}
@@ -60,12 +66,12 @@ void __attribute__((constructor)) libtacos_init() {
 	SDL_EventState(0xFF, SDL_IGNORE); // Ignore all events
 	SDL_EventState(SDL_QUIT, SDL_ENABLE);
 	SDL_EventState(SDL_KEYDOWN, SDL_ENABLE);
+	SDL_EventState(SDL_KEYUP, SDL_ENABLE);
 	SDL_EnableUNICODE(SDL_ENABLE);
 	SDL_ShowCursor(SDL_DISABLE);
 	SDL_WM_SetCaption("TacOS Emulator", "TacOS Emulator");
 
-	signal(SIGALRM, alarm_handler);
-	alarm(1);
+	SDL_AddTimer(1000, libtacos_periodic_checks, NULL); 
 }
 
 void __attribute__((destructor)) libtacos_destroy() {
@@ -90,6 +96,10 @@ int open(const char *pathname, int flags) {
 		// Mouse driver
 		fd = libc_open("/tmp", 0); // dummy fd
 		tacos_descriptors[fd] = MOUSE;
+	} else if (strcmp(pathname, "/dev/keyboard") == 0) {
+		// Keyboard driver
+		fd = libc_open("/tmp", 0); // dummy fd
+		tacos_descriptors[fd] = KEYBOARD;
 	} else {
 		// Native open
 		fd = libc_open(pathname, flags);
@@ -126,6 +136,9 @@ ssize_t read(int fd, void *buf, size_t count) {
 			ret = mouse_read(buf);
 			break;
 		}
+		case KEYBOARD: {
+			ret = kbd_read(buf);
+		}
 	}
 
 	return ret;
@@ -153,6 +166,10 @@ int ioctl(int fd, unsigned long request, void *data) {
 			ret = mouse_ioctl(request, data);
 			break;
 		}
+		case KEYBOARD: {
+			ret = kbd_ioctl(request, data);
+			break;
+		}
 	}
 
 	return ret;
@@ -170,4 +187,13 @@ int getchar() {
 	}
 	//printf("getchar %d\n", ret);
 	return ret;
+}
+
+void debug(const char * format, ...) {
+#ifdef DEBUG
+  va_list args;
+  va_start (args, format);
+  vprintf (format, args);
+  va_end (args);
+#endif // DEBUG
 }

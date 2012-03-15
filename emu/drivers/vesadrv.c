@@ -1,7 +1,12 @@
-#include <vesa_types.h>
+#include <vesadrv.h>
 #include <SDL/SDL.h>
 
 extern SDL_Surface *screen;
+
+Uint32 libtacos_refresh_screen(Uint32 interval, void *param) {
+  vesa_flush();
+  return interval;
+}
 
 void vesa_set_mode(struct vesa_setmode_req* mode) {
 	int width = mode->width;
@@ -15,11 +20,13 @@ void vesa_set_mode(struct vesa_setmode_req* mode) {
 		fprintf(stderr, "Impossible de passer en %d*%d*%d : %s\n", width, height, bpp, SDL_GetError());
 		exit(1);
 	}
+  
+  SDL_AddTimer(40, libtacos_refresh_screen, NULL);
 }
 
 void vesa_flush() {
 	SDL_UpdateRect(screen, 0, 0, screen->w, screen->h);
-	memset(screen->pixels, 0, screen->w * screen->h * screen->format->BytesPerPixel);
+	//memset(screen->pixels, 0, screen->w * screen->h * screen->format->BytesPerPixel);
 }
 
 int vesa_ioctl(unsigned long request, void *data) {

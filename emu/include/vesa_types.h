@@ -29,6 +29,9 @@
 #ifndef _VESA_TYPES_H_
 #define _VESA_TYPES_H_
 
+#define _COLOR(_p, _bpp) _p.bpp ## _bpp
+#define COLOR(_p, _bpp) _COLOR(_p, _bpp)
+
 enum vesa_req_codes { SETMODE, GETVIDEOADDR, FLUSH };
 
 struct vesa_setmode_req {
