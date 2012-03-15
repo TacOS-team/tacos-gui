@@ -38,6 +38,12 @@ int main() {
 
   int w_idx = 0;
 
+  // TODO
+  // Très moche mais très provisoirement ça marche :D
+  bool mouseLeftButtonPressed = false;
+  int mouseLastXPosition = 0;
+  int mouseLastYPosition = 0;
+
   while (1) {
     if (!pronNextEvent(display, e)) {
       fprintf(stderr, "pron has closed the connection.\n");
@@ -126,10 +132,22 @@ int main() {
       }
       case EV_MOUSE_BUTTON : {
         EventMouseButton *mouseButtonEvent = (EventMouseButton*) e;
-        pronMoveWindow(display, mouseButtonEvent->window, 20, 20);
+        mouseLeftButtonPressed = mouseButtonEvent->b1;
+        break;
+      }
+      case EV_POINTER_MOVED : {
+        EventPointerMoved *mousePointerEvent = (EventPointerMoved*) e;
+        if (mouseLeftButtonPressed) {
+          pronMoveWindow(display, mousePointerEvent->window,
+            mousePointerEvent->xRoot - mouseLastXPosition,
+            mousePointerEvent->yRoot - mouseLastYPosition);
+        }
+        mouseLastXPosition = mousePointerEvent->xRoot;
+        mouseLastYPosition = mousePointerEvent->yRoot;
+        break;
       }
       default:
-      break;
+        break;
     }
   }
 }

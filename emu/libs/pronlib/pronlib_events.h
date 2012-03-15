@@ -85,7 +85,12 @@ struct EventMouseButton : public PronEvent {
   }
 
   unsigned int window;
-  bool b1, b2, b3, b4, b5, b6;
+  bool b1;// left button
+  bool b2;
+  bool b3;
+  bool b4;
+  bool b5;
+  bool b6;
 };
 
 /**
