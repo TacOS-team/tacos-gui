@@ -154,6 +154,19 @@ void Window::reduce(int &x, int &y, int &width, int &height) {
     COLOR(this->screen->gc.fg, 24).b = COLOR(this->bgColor, 24).b;
     this->screen->setClipWindow(this);
     this->screen->fillRectangle(this->x + x, this->y + y, width, height);
+    // If it is the root window, we print a grind (provisoire !!!!!! TODO)
+    if (this->id == 0) {
+      COLOR(this->screen->gc.fg, 24).r = 255;
+      COLOR(this->screen->gc.fg, 24).g = 0;
+      COLOR(this->screen->gc.fg, 24).b = 0;
+      int pas = 50;
+      for (int i = pas; i < this->width; i += pas) {
+        this->screen->drawLine(i, 0, i, this->height);
+      }
+      for (int i = pas; i < this->height; i += pas) {
+        this->screen->drawLine(0, i, this->width, i);
+      }
+    }
     this->screen->gc.fg = oldFg;
 
   // Send exposure event
