@@ -24,22 +24,21 @@ int main() {
   
   debug("Root window width : %d, height : %d\n", rootWindowAttributes.width, rootWindowAttributes.height);
   
-  // Subscribe to window creation events
-  pronSelectInput(display, display->rootWindow,
-    PRON_EVENTMASK(EV_WINDOW_CREATED) | PRON_EVENTMASK(EV_KEY_PRESSED)
-    | PRON_EVENTMASK(EV_KEY_RELEASED) | PRON_EVENTMASK(EV_POINTER_MOVED) );
+  // Subscribe to root window events
+  int currentRootEventMask =  PRON_EVENTMASK(EV_WINDOW_CREATED)
+                            | PRON_EVENTMASK(EV_KEY_PRESSED)
+                            | PRON_EVENTMASK(EV_KEY_RELEASED);
+  pronSelectInput(display, display->rootWindow, currentRootEventMask);
   PronEvent *e = getPronEvent();
 
   GWindowsManager windowsManager;
   
 
-  //int w_idx = 0;
-
   // TODO
   // Très moche mais très provisoirement ça marche :D
   unsigned int windowIdLeftButtonPressed = 0;
-  int mouseLastXPosition = 0;
-  int mouseLastYPosition = 0;
+  int mouseLastXPosition = -1;
+  int mouseLastYPosition = -1;
 
   while (1) {
     if (!pronNextEvent(display, e)) {
@@ -60,11 +59,6 @@ int main() {
         if (!winAlreadyExists) {
           if (windowCreated->parent == 0) {
             printf("top level window\n");
-            /*
-            windowCreated->attributes.x = rand() % (rootWindowAttributes.width  - windowCreated->attributes.width );
-            windowCreated->attributes.y = rand() % (rootWindowAttributes.height - windowCreated->attributes.height);
-            pronSetWindowAttributes(display, windowCreated->window, windowCreated->attributes, WIN_ATTR_X | WIN_ATTR_Y);
-            */
             Window parentWindowId = pronCreateWindow(display, display->rootWindow,
                 windowCreated->attributes.x - 15, windowCreated->attributes.y - 15,
                 windowCreated->attributes.width + 30, windowCreated->attributes.height + 30);
@@ -96,12 +90,6 @@ int main() {
       case EV_KEY_PRESSED : {
         EventKeyPressed *keyPressed = (EventKeyPressed*) e;
         printf("Key pressed : %d\n", keyPressed->keysym);
-        // TODO a recoder avec le windowsManager
-        /*if (keyPressed->keysym == PRONK_TAB && !windowsManager.empty()) {
-          w_idx = (w_idx + 1) % windows.size();
-          printf("raise window %d\n", windows[w_idx].parent);
-          pronRaiseWindow(display, windows[w_idx].parent);
-        }*/
         break;
       }
       case EV_KEY_RELEASED : {
@@ -121,20 +109,30 @@ int main() {
       case EV_MOUSE_BUTTON : {
         EventMouseButton *mouseButtonEvent = (EventMouseButton*) e;
         if (mouseButtonEvent->b1) {
-          // Si on a bien sélectionné la décoration
+          // If the window is the decoration window
           GWindow *gwin = windowsManager.getGWindow(mouseButtonEvent->window);
           if (mouseButtonEvent->window == gwin->parent) {
             windowIdLeftButtonPressed = mouseButtonEvent->window;
           }
+          // Puts the window on foreground
           pronRaiseWindow(display, gwin->parent);
+          // Subscribe to pointer moved and mouse button of the root window
+          //   to avoid problems if it moves too fast
+          currentRootEventMask |= PRON_EVENTMASK(EV_POINTER_MOVED) | PRON_EVENTMASK(EV_MOUSE_BUTTON);
+          // Ask to reset the last mouse position
+          mouseLastXPosition = -1;
         } else {
           windowIdLeftButtonPressed = 0;
+          // Unsubscribe of events of the root window to avoid useless events
+          currentRootEventMask &= ~PRON_EVENTMASK(EV_MOUSE_BUTTON);
+          currentRootEventMask &= ~PRON_EVENTMASK(EV_POINTER_MOVED);
         }
+        pronSelectInput(display, display->rootWindow, currentRootEventMask);
         break;
       }
       case EV_POINTER_MOVED : {
         EventPointerMoved *mousePointerEvent = (EventPointerMoved*) e;
-        if (windowIdLeftButtonPressed) {
+        if (windowIdLeftButtonPressed && mouseLastXPosition != -1) {
           pronMoveWindow(display, windowIdLeftButtonPressed,
             mousePointerEvent->xRoot - mouseLastXPosition,
             mousePointerEvent->yRoot - mouseLastYPosition);
