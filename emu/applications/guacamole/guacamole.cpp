@@ -87,7 +87,8 @@ int main() {
             GWindow *gw = new GWindow(windowCreated->window, parentWindowId);
             windowsManager.addGWindow(gw);
             // registering for any EV_DESTROY_WINDOW event
-            pronSelectInput(display, windowCreated->window, PRON_EVENTMASK(EV_DESTROY_WINDOW));
+            pronSelectInput(display, windowCreated->window,
+                PRON_EVENTMASK(EV_DESTROY_WINDOW) || PRON_EVENTMASK(EV_MOUSE_BUTTON));
           }
         }
         break;
