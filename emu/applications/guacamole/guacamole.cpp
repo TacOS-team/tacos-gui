@@ -19,10 +19,11 @@ int main() {
   Display *display = pronConnect();
   
   // Get the root window informations
-  PronWindowAttributes rootWindowAttributes;
-  pronGetWindowAttributes(display, display->rootWindow, &rootWindowAttributes);
+  GWindowsManager windowsManager(display->rootWindow);
+  pronGetWindowAttributes(display, display->rootWindow, &windowsManager.getRootWindowAttributes());
   
-  debug("Root window width : %d, height : %d\n", rootWindowAttributes.width, rootWindowAttributes.height);
+  debug("Root window width : %d, height : %d\n", windowsManager.getRootWindowAttributes().width,
+          windowsManager.getRootWindowAttributes().height);
   
   // Subscribe to root window events
   int currentRootEventMask =  PRON_EVENTMASK(EV_WINDOW_CREATED)
@@ -30,8 +31,6 @@ int main() {
                             | PRON_EVENTMASK(EV_KEY_RELEASED);
   pronSelectInput(display, display->rootWindow, currentRootEventMask);
   PronEvent *e = getPronEvent();
-
-  GWindowsManager windowsManager;
   
 
   // TODO
@@ -62,13 +61,6 @@ int main() {
             Window parentWindowId = pronCreateWindow(display, display->rootWindow,
                 windowCreated->attributes.x - 15, windowCreated->attributes.y - 15,
                 windowCreated->attributes.width + 30, windowCreated->attributes.height + 30);
-
-            // Fond rouge à la fenêtre de déco provisoire
-            PronWindowAttributes newAttr;
-            COLOR(newAttr.bgColor, 24).r = 255;
-            COLOR(newAttr.bgColor, 24).g = 0;
-            COLOR(newAttr.bgColor, 24).b = 0;
-            pronSetWindowAttributes(display, parentWindowId, newAttr, WIN_ATTR_BG_COLOR);
             
             pronMapWindow(display, parentWindowId);
 
@@ -79,10 +71,26 @@ int main() {
             pronReparentWindow(display, windowCreated->window, parentWindowId);
             
             GWindow *gw = new GWindow(windowCreated->window, parentWindowId);
-            windowsManager.addGWindow(gw);
+            gw->attributes = windowCreated->attributes;
             // registering for any EV_DESTROY_WINDOW event
             pronSelectInput(display, windowCreated->window,
                 PRON_EVENTMASK(EV_DESTROY_WINDOW) || PRON_EVENTMASK(EV_MOUSE_BUTTON));
+            printf("avant get %d %d\n", gw->parentAttributes.width, gw->parentAttributes.height);
+            pronGetWindowAttributes(display, parentWindowId, &(gw->parentAttributes));
+            printf("apres get %d %d\n", gw->parentAttributes.width, gw->parentAttributes.height);
+
+            // Fond rouge à la fenêtre de déco provisoire
+            COLOR(gw->parentAttributes.bgColor, 24).r = 255;
+            COLOR(gw->parentAttributes.bgColor, 24).g = 0;
+            COLOR(gw->parentAttributes.bgColor, 24).b = 0;
+            pronSetWindowAttributes(display, parentWindowId, gw->parentAttributes, WIN_ATTR_BG_COLOR);
+
+            windowsManager.initWindowPosition(gw);
+
+            printf("nouvelle position %d %d\n", gw->parentAttributes.x, gw->parentAttributes.y);
+            pronMoveWindow(display, gw->parent, gw->parentAttributes.x, gw->parentAttributes.y);
+
+            windowsManager.addGWindow(gw);
           }
         }
         break;

@@ -299,8 +299,6 @@ void Window::exposeArea(int x, int y, int width, int height) {
 }
 
 bool Window::contains(int x, int y){
-  printf("contains %d, %d (id, x, y, width, height) : %d, %d, %d, %d, %d\n",
-    x, y, this->id, this->getX(), this->getY(), this->getWidth(), this->getHeight());
   return this->getX() <= x &&
   this->getY() <= y &&
   this->getX() + this->getWidth() > x &&

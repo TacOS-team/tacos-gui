@@ -99,12 +99,14 @@ int pronFillCircle(Display *d, Window w, GC gc, int x, int y, int radius){
 void pronGetWindowAttributes(Display * d, Window w, PronWindowAttributes * attr) {
   RqGetWindowAttributes rq(w);
   tsock_write(d->fd, &rq, sizeof(rq)) ;
-  void * buffer = malloc(sizeof(RespWindowAttributes));
+  RespWindowAttributes res(*attr);
   /*while (tsock_read(d->fd, buffer, sizeof(RespWindowAttributes)) < 0) {
     usleep(100000);
   }*/
-  tsock_read(d->fd, buffer, sizeof(RespWindowAttributes));
-  *attr = ((RespWindowAttributes*) buffer)->attributes;
+  tsock_read(d->fd, &res, sizeof(RespWindowAttributes));
+  printf("res : (x, y, width, height) : %d, %d, %d, %d\n", res.attributes.x, res.attributes.y,
+    res.attributes.width, res.attributes.height);
+  *attr = res.attributes;
 }
 
 void pronSetWindowAttributes(Display * d, Window w, const PronWindowAttributes & newAttr, unsigned int mask) {  

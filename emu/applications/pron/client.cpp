@@ -62,6 +62,9 @@ void Client::handle() {
     }
     case RQ_GET_WINDOW_ATTRIBUTES: {
       RqGetWindowAttributes *rq = (RqGetWindowAttributes*) Client::recvBuf;
+      printf("get win (id, x, y, width, height) : %d, %d, %d, %d, %d\n",
+        rq->w, screen->getWindow(rq->w)->getAttributes().x, screen->getWindow(rq->w)->getAttributes().y,
+        screen->getWindow(rq->w)->getAttributes().width, screen->getWindow(rq->w)->getAttributes().height);
       RespWindowAttributes resp (screen->getWindow(rq->w)->getAttributes());
       this->send(&resp, sizeof(resp)); 
       break;

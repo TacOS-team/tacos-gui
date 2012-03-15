@@ -9,14 +9,13 @@ using namespace std;
 struct GWindow {
   Window window;
   Window parent;
-  int x;
-  int y;
-  unsigned int width;
-  unsigned int height;
+  PronWindowAttributes attributes;
+  PronWindowAttributes parentAttributes;
 
   GWindow (Window w, Window parent);
 
   bool hasDecoration();
+  bool overlaps(GWindow *gw);
 };
 
 #endif// _GWINDOW_H_
