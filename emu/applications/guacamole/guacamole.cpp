@@ -7,15 +7,10 @@
 
 
 #include <pronlib.h>
+#include <gwindows_manager.h>
 
 using namespace std;
 
-// used for keeping trace of the windows that we reparented
-// parent is the parent window id of w
-struct windowInfo {
-  Window w;
-  Window parent;
-};
 
 int main() {
   srand(time(NULL));
@@ -35,10 +30,10 @@ int main() {
     | PRON_EVENTMASK(EV_KEY_RELEASED) | PRON_EVENTMASK(EV_POINTER_MOVED) );
   PronEvent *e = getPronEvent();
 
-  vector<struct windowInfo> windows;
+  GWindowsManager windowsManager;
   
 
-  int w_idx = 0;
+  //int w_idx = 0;
 
   // TODO
   // Très moche mais très provisoirement ça marche :D
@@ -59,11 +54,8 @@ int main() {
         bool winAlreadyExists = false;
 
         // we don't want to add a window that is already known
-        for (unsigned int i = 0; i< windows.size();i++) {
-          if (windows[i].w == windowCreated->window || windows[i].parent == windowCreated->window) {
-            winAlreadyExists = true;
-            break;
-          }
+        if (windowsManager.getGWindow(windowCreated->window) != NULL) {
+          winAlreadyExists = true;
         }
         if (!winAlreadyExists) {
           if (windowCreated->parent == 0) {
@@ -92,9 +84,8 @@ int main() {
             
             pronReparentWindow(display, windowCreated->window, parentWindowId);
             
-
-            struct windowInfo winInfo = {windowCreated->window, parentWindowId};
-            windows.push_back(winInfo);
+            GWindow *gw = new GWindow(windowCreated->window, parentWindowId);
+            windowsManager.addGWindow(gw);
             // registering for any EV_DESTROY_WINDOW event
             pronSelectInput(display, windowCreated->window, PRON_EVENTMASK(EV_DESTROY_WINDOW));
           }
@@ -104,11 +95,12 @@ int main() {
       case EV_KEY_PRESSED : {
         EventKeyPressed *keyPressed = (EventKeyPressed*) e;
         printf("Key pressed : %d\n", keyPressed->keysym);
-        if (keyPressed->keysym == PRONK_TAB && !windows.empty()) {
+        // TODO a recoder avec le windowsManager
+        /*if (keyPressed->keysym == PRONK_TAB && !windowsManager.empty()) {
           w_idx = (w_idx + 1) % windows.size();
           printf("raise window %d\n", windows[w_idx].parent);
           pronRaiseWindow(display, windows[w_idx].parent);
-        }
+        }*/
         break;
       }
       case EV_KEY_RELEASED : {
@@ -122,20 +114,18 @@ int main() {
 
         // Sending destroy request for the parent window
         printf("état de la liste des windows\n");
-        for (unsigned int index = 0; index < windows.size(); ++index) {
-          if (windows[index].w == destroyWindowEvent->window) {
-            printf("send destroy request for parent (id %d\n)", windows[index].parent);
-            pronDestroyWindow(display,windows[index].parent);
-            windows.erase(windows.begin() + index);
-            break;
-          }
-        }
+        windowsManager.destroy(destroyWindowEvent->window);
         break;
       }
       case EV_MOUSE_BUTTON : {
         EventMouseButton *mouseButtonEvent = (EventMouseButton*) e;
         if (mouseButtonEvent->b1) {
-          windowIdLeftButtonPressed = mouseButtonEvent->window;
+          // Si on a bien sélectionné la décoration
+          GWindow *gwin = windowsManager.getGWindow(mouseButtonEvent->window);
+          if (mouseButtonEvent->window == gwin->parent) {
+            windowIdLeftButtonPressed = mouseButtonEvent->window;
+          }
+          pronRaiseWindow(display, gwin->parent);
         } else {
           windowIdLeftButtonPressed = 0;
         }
