@@ -30,7 +30,9 @@ int main() {
   debug("Root window width : %d, height : %d\n", rootWindowAttributes.width, rootWindowAttributes.height);
   
   // Subscribe to window creation events
-  pronSelectInput(display, display->rootWindow, PRON_EVENTMASK(EV_WINDOW_CREATED) | PRON_EVENTMASK(EV_KEY_PRESSED) | PRON_EVENTMASK(EV_KEY_RELEASED));
+  pronSelectInput(display, display->rootWindow,
+    PRON_EVENTMASK(EV_WINDOW_CREATED) | PRON_EVENTMASK(EV_KEY_PRESSED)
+    | PRON_EVENTMASK(EV_KEY_RELEASED) | PRON_EVENTMASK(EV_POINTER_MOVED) );
   PronEvent *e = getPronEvent();
 
   vector<struct windowInfo> windows;
@@ -40,7 +42,7 @@ int main() {
 
   // TODO
   // Très moche mais très provisoirement ça marche :D
-  bool mouseLeftButtonPressed = false;
+  unsigned int windowIdLeftButtonPressed = 0;
   int mouseLastXPosition = 0;
   int mouseLastYPosition = 0;
 
@@ -86,7 +88,7 @@ int main() {
 
             // Abonnement aux évènements souris de la fenêtre de décoration
             pronSelectInput(display, parentWindowId,
-                  PRON_EVENTMASK(EV_MOUSE_BUTTON) | PRON_EVENTMASK(EV_POINTER_MOVED));
+                  PRON_EVENTMASK(EV_MOUSE_BUTTON));
             
             pronReparentWindow(display, windowCreated->window, parentWindowId);
             
@@ -132,13 +134,17 @@ int main() {
       }
       case EV_MOUSE_BUTTON : {
         EventMouseButton *mouseButtonEvent = (EventMouseButton*) e;
-        mouseLeftButtonPressed = mouseButtonEvent->b1;
+        if (mouseButtonEvent->b1) {
+          windowIdLeftButtonPressed = mouseButtonEvent->window;
+        } else {
+          windowIdLeftButtonPressed = 0;
+        }
         break;
       }
       case EV_POINTER_MOVED : {
         EventPointerMoved *mousePointerEvent = (EventPointerMoved*) e;
-        if (mouseLeftButtonPressed) {
-          pronMoveWindow(display, mousePointerEvent->window,
+        if (windowIdLeftButtonPressed) {
+          pronMoveWindow(display, windowIdLeftButtonPressed,
             mousePointerEvent->xRoot - mouseLastXPosition,
             mousePointerEvent->yRoot - mouseLastYPosition);
         }
