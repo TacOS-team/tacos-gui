@@ -51,6 +51,7 @@ Window::~Window() {
     delete child;
   }
 }
+
 void Window::unmap() {
   // Can't unmap root window
   if (this->parent == NULL) {
@@ -113,111 +114,107 @@ void Window::reduce(int &x, int &y, int &width, int &height) {
   }
 }
 
-/*short Window::getCreator() {
-  return this->id >> 16;  
-}*/
+Client* Window::getCreator() {
+  return this->creator;
+}
 
-  Client* Window::getCreator() {
-    return this->creator;
+void Window::drawPoint(int x, int y) {
+  this->screen->drawPoint(this->x + x, this->y + y);
+}
+
+void Window::drawLine(int x1, int y1, int x2, int y2) {
+  this->screen->drawLine(this->x + x1, this->y + y1, this->x + x2, this->y + y2);
+}
+
+void Window::drawRect(int x1, int y1, int width, int height) {
+  this->screen->drawRect(this->x + x1, this->y + y1, width, height);
+}
+
+void Window::fillRectangle(int x1, int y1, int width, int height) {
+  this->screen->fillRectangle(this->x + x1, this->y + y1, width, height);
+}
+
+void Window::drawCircle(int x, int y, int radius) {
+  this->screen->drawCircle(this->x + x, this->y + y, radius); 
+}
+
+void Window::fillCircle(int x, int y, int radius) {
+  this->screen->fillCircle(this->x + x, this->y + y, radius); 
+}
+
+void Window::clear(int x, int y, int width, int height) {
+  this->reduce(x, y, width, height);
+
+  color_t oldFg = this->screen->gc.fg;
+  COLOR(this->screen->gc.fg, 24).r = COLOR(this->bgColor, 24).r;
+  COLOR(this->screen->gc.fg, 24).g = COLOR(this->bgColor, 24).g;
+  COLOR(this->screen->gc.fg, 24).b = COLOR(this->bgColor, 24).b;
+  this->screen->setClipWindow(this);
+  this->screen->fillRectangle(this->x + x, this->y + y, width, height);
+  // If it is the root window, we print a grid (provisoire !!!!!! TODO)
+  if (this->id == 0) {
+    COLOR(this->screen->gc.fg, 24).r = 255;
+    COLOR(this->screen->gc.fg, 24).g = 0;
+    COLOR(this->screen->gc.fg, 24).b = 0;
+    int step = 50;
+    for (int i = step; i < this->width; i += step) {
+      this->screen->drawLine(i, 0, i, this->height);
+    }
+    for (int i = step; i < this->height; i += step) {
+      this->screen->drawLine(0, i, this->width, i);
+    }
   }
+  this->screen->gc.fg = oldFg;
 
-  void Window::drawPoint(int x, int y) {
-    this->screen->drawPoint(this->x + x, this->y + y);
+// Send exposure event
+  EventExpose expose(this->id, x, y, width, height);
+  this->deliverEvent(&expose, sizeof(expose));
+}
+
+void Window::clear() {
+  this->clear(0, 0, width, height);
+}
+
+PronWindowAttributes Window::getAttributes() {
+  PronWindowAttributes attr ;
+  attr.x = this->x;
+  attr.y = this->y;
+  attr.width = this->width;
+  attr.height = this->height;
+  attr.bgColor = this->bgColor;
+
+  return attr;
+}
+
+void Window::setAttributes(PronWindowAttributes *newAttr, unsigned int mask) {
+  if (mask & WIN_ATTR_X) {
+    this->x = newAttr->x;
   }
-
-  void Window::drawLine(int x1, int y1, int x2, int y2) {
-    this->screen->drawLine(this->x + x1, this->y + y1, this->x + x2, this->y + y2);
+  if (mask & WIN_ATTR_Y) {
+    this->y = newAttr->y;
   }
-
-  void Window::drawRect(int x1, int y1, int width, int height) {
-    this->screen->drawRect(this->x + x1, this->y + y1, width, height);
+  if (mask & WIN_ATTR_WIDTH) {
+    this->width = newAttr->width;
   }
-
-  void Window::fillRectangle(int x1, int y1, int width, int height) {
-    this->screen->fillRectangle(this->x + x1, this->y + y1, width, height);
+  if (mask & WIN_ATTR_HEIGHT) {
+    this->height = newAttr->height;
   }
-
-  void Window::drawCircle(int x, int y, int radius) {
-    this->screen->drawCircle(this->x + x, this->y + y, radius); 
+  if (mask & WIN_ATTR_BG_COLOR) {
+    this->bgColor = newAttr->bgColor;
   }
+}
 
-  void Window::fillCircle(int x, int y, int radius) {
-    this->screen->fillCircle(this->x + x, this->y + y, radius); 
-  }
-
-  void Window::clear(int x, int y, int width, int height) {
-    this->reduce(x, y, width, height);
-
-    color_t oldFg = this->screen->gc.fg;
-    COLOR(this->screen->gc.fg, 24).r = COLOR(this->bgColor, 24).r;
-    COLOR(this->screen->gc.fg, 24).g = COLOR(this->bgColor, 24).g;
-    COLOR(this->screen->gc.fg, 24).b = COLOR(this->bgColor, 24).b;
-    this->screen->setClipWindow(this);
-    this->screen->fillRectangle(this->x + x, this->y + y, width, height);
-    // If it is the root window, we print a grid (provisoire !!!!!! TODO)
-    if (this->id == 0) {
-      COLOR(this->screen->gc.fg, 24).r = 255;
-      COLOR(this->screen->gc.fg, 24).g = 0;
-      COLOR(this->screen->gc.fg, 24).b = 0;
-      int step = 50;
-      for (int i = step; i < this->width; i += step) {
-        this->screen->drawLine(i, 0, i, this->height);
+void Window::selectInput(Client *client, unsigned int mask) {
+  if (client == this->getCreator()) {
+    this->eventMask = mask;
+  } else {
+    unsigned int i;
+    for (i = 0; i < this->otherClients.size(); i++) {
+      if (this->otherClients[i].client == client) {
+        this->otherClients[i].mask = mask;
+        break;
       }
-      for (int i = step; i < this->height; i += step) {
-        this->screen->drawLine(0, i, this->width, i);
-      }
     }
-    this->screen->gc.fg = oldFg;
-
-  // Send exposure event
-    EventExpose expose(this->id, x, y, width, height);
-    this->deliverEvent(&expose, sizeof(expose));
-  }
-
-  void Window::clear() {
-    this->clear(0, 0, width, height);
-  }
-
-  PronWindowAttributes Window::getAttributes() {
-    PronWindowAttributes attr ;
-    attr.x = this->x;
-    attr.y = this->y;
-    attr.width = this->width;
-    attr.height = this->height;
-    attr.bgColor = this->bgColor;
-
-    return attr;
-  }
-
-  void Window::setAttributes(PronWindowAttributes *newAttr, unsigned int mask) {
-    if (mask & WIN_ATTR_X) {
-      this->x = newAttr->x;
-    }
-    if (mask & WIN_ATTR_Y) {
-      this->y = newAttr->y;
-    }
-    if (mask & WIN_ATTR_WIDTH) {
-      this->width = newAttr->width;
-    }
-    if (mask & WIN_ATTR_HEIGHT) {
-      this->height = newAttr->height;
-    }
-    if (mask & WIN_ATTR_BG_COLOR) {
-      this->bgColor = newAttr->bgColor;
-    }
-  }
-
-  void Window::selectInput(Client *client, unsigned int mask) {
-    if (client == this->getCreator()) {
-      this->eventMask = mask;
-    } else {
-      unsigned int i;
-      for (i = 0; i < this->otherClients.size(); i++) {
-        if (this->otherClients[i].client == client) {
-          this->otherClients[i].mask = mask;
-          break;
-        }
-      }
     if (i == this->otherClients.size()) { // Not found, add it
       this->otherClients.push_back(OtherClient(client, mask));
     }
