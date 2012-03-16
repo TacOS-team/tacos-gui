@@ -69,8 +69,8 @@ int main() {
   
   int ballX = WIDTH/2 - BALL_SIZE / 2;
   int ballY = HEIGHT/2 - BALL_SIZE /2;
-  int velX = 10;
-  int velY = 10;
+  int velX = 5;
+  int velY = 5;
   int racketY = 0;
 
   Display *d = pronConnect();
@@ -87,11 +87,32 @@ int main() {
   // We've to map the window
   pronMapWindow(d, w);
 
+  // S'abonne aux évènements
+  pronSelectInput(d, w, PRON_EVENTMASK(EV_POINTER_MOVED) | PRON_EVENTMASK(EV_MOUSE_BUTTON));
+
+  // On cree un énènement
+  PronEvent *e = getPronEvent();
+
   while (1) {
-    // read mouse position
-    // TODO: ask to pronlib event the mouse position
-    
-    pronClearWindow(d, w);	
+
+    //On récupère un évènement
+    if (!pronNextEvent(d, e)) {
+      fprintf(stderr, "pron has closed the connection.\n");
+      exit(1);
+    }
+
+    switch (e->type) {
+    case EV_POINTER_MOVED: {
+      EventPointerMoved *pointerMoved = (EventPointerMoved*) e;
+      // Récupération de la coordonnée Y de la souris pour la raquette
+      racketY = pointerMoved->y;
+      break;
+    }
+    default:
+      break;
+    }
+
+    pronClearWindow(d, w);  
     // TODO: draw ball and racket
     moveBall(&ballX,&ballY,&velX,&velY,racketY);
     // draw the ball

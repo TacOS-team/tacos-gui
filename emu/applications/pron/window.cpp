@@ -154,16 +154,16 @@ void Window::reduce(int &x, int &y, int &width, int &height) {
     COLOR(this->screen->gc.fg, 24).b = COLOR(this->bgColor, 24).b;
     this->screen->setClipWindow(this);
     this->screen->fillRectangle(this->x + x, this->y + y, width, height);
-    // If it is the root window, we print a grind (provisoire !!!!!! TODO)
+    // If it is the root window, we print a grid (provisoire !!!!!! TODO)
     if (this->id == 0) {
       COLOR(this->screen->gc.fg, 24).r = 255;
       COLOR(this->screen->gc.fg, 24).g = 0;
       COLOR(this->screen->gc.fg, 24).b = 0;
-      int pas = 50;
-      for (int i = pas; i < this->width; i += pas) {
+      int step = 50;
+      for (int i = step; i < this->width; i += step) {
         this->screen->drawLine(i, 0, i, this->height);
       }
-      for (int i = pas; i < this->height; i += pas) {
+      for (int i = step; i < this->height; i += step) {
         this->screen->drawLine(0, i, this->width, i);
       }
     }

@@ -95,6 +95,7 @@ int main(int argc, char **argv){
   // On se connecte a PRON
   Display* d = pronConnect();
   if ( d==NULL ) {
+    fprintf(stderr, "Unable to connect to pron.\n");
     return 1;
   }
   // On cree la fenêtre
@@ -114,8 +115,6 @@ int main(int argc, char **argv){
       exit(1);
     }
 
-    printf("Type e %d\n", (e->type & ~(11 << 14)) );
-
     switch (e->type) {
     case EV_POINTER_MOVED: {
       EventPointerMoved *pointerMoved = (EventPointerMoved*) e;
@@ -126,8 +125,7 @@ int main(int argc, char **argv){
     case EV_MOUSE_BUTTON : {
       EventMouseButton *mouseButton = (EventMouseButton*) e;
       buttonPressed = mouseButton->b1;
-      printf("Bouton %d %d %d %d %d %d\n", mouseButton->b1, mouseButton->b2, mouseButton->b3, mouseButton->b4, mouseButton->b5, mouseButton->b6);
-      break;
+       break;
     }
     default:
       break;
