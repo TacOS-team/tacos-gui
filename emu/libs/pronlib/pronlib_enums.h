@@ -337,8 +337,17 @@ enum PronMod {
 };
 
 #define KMOD_CTRL   (KMOD_LCTRL | KMOD_RCTRL)
-#define KMOD_SHIFT  (KMOD_LSHIFT  |KMOD_RSHIFT)
+#define KMOD_SHIFT  (KMOD_LSHIFT  | KMOD_RSHIFT)
 #define KMOD_ALT    (KMOD_LALT | KMOD_RALT)
 #define KMOD_META   (KMOD_LMETA | KMOD_RMETA)
+
+/**
+ * Image pixmap types
+ */
+enum PixmapType{
+  XYBitmap = 0x0000, 
+  XYPixmap = 0x0001, 
+  ZPixmap  = 0X0002
+};
 
 #endif // __PRONLIB_ENUMS_H__
