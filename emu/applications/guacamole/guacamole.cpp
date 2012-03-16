@@ -133,7 +133,6 @@ int main() {
           // If the window is the decoration window
           GWindow *gwin = windowsManager.getGWindow(mouseButtonEvent->window);
           if (mouseButtonEvent->window == gwin->closeButton) {
-            printf("calling pronDestroyWindow for %d (clic on %d) \n",gwin->parent, gwin->closeButton);
             pronDestroyWindow(display,gwin->parent);
           } else {
             if (mouseButtonEvent->window == gwin->parent) {
