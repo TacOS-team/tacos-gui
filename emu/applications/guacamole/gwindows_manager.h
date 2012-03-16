@@ -24,7 +24,7 @@ class GWindowsManager {
   GWindow* getGWindow(Window w);
   PronWindowAttributes & getRootWindowAttributes();
 
-  void destroy(Window w);
+  void destroy(Window w,Display *display);
 
   void initWindowPosition(GWindow *gw);
 
