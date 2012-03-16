@@ -30,7 +30,7 @@ void PronInit() {
   screen = Screen::getInstance(800, 600, 24);
   
   // Initialize devices
-  mouse = new Mouse();
+  mouse = Mouse::getInstance();
   keyboard = new Keyboard();
   
   // Create root window

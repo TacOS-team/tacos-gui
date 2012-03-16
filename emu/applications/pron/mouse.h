@@ -7,6 +7,9 @@
 
 class Mouse {
 private:
+  
+  static Mouse *instance;
+
   // Pointer backup position
   int pointerBackupX;
   int pointerBackupY;
@@ -15,11 +18,12 @@ private:
   char *pointerBackup;
   // True if we have to restore pointer background
   bool pointerBackupRestore;
+  
+  // Passage a un constructeur privé
+  Mouse();
 
 public:
   int fd;
-
-  Mouse();
 
   void checkEvents();
   /**
@@ -50,6 +54,8 @@ public:
   int getPointerBackupHeight();
   void setPointerBackupHeight(int pointerBackupHeight);
   char* getPointerBackup();
+
+  static Mouse* getInstance();
 };
 
 #endif

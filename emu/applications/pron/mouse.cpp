@@ -7,6 +7,8 @@
 #include <unistd.h>
 #include <window.h>
 
+Mouse* Mouse::instance = NULL;
+
 Mouse::Mouse() {
   this->fd = open("/dev/mouse", 0);
   this->pointerBackupX = 0;
@@ -178,4 +180,11 @@ void Mouse::setPointerBackupY(int pointerBackupY){
 
 char* Mouse::getPointerBackup(){
   return this->pointerBackup;
+}
+
+Mouse* Mouse::getInstance(){
+  if (Mouse::instance == NULL) {
+    Mouse::instance = new Mouse();
+  }
+  return Mouse::instance;
 }
