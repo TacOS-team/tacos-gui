@@ -8,8 +8,20 @@
 #include <pron_proto.h>
 #include <pronlib_types.h>
 #include <stdint.h>
+#include <queue>
+#include <utility>
+#include <tsock.h>
+#include <string.h>
+#include <cstdio>
 
-/** Describes a connection to pron. */
+using namespace std;
+
+#define MAX_MSG_SIZE 1024 /**< max size of a message (1Kio) */
+
+/**
+ * Describes a connection to pron.
+ * TODO: move to a real class and propose an object-oriented API.
+ */
 struct Display {
   /** Constructor. */
   Display(int fd, RespWelcome *welcome) {
@@ -29,11 +41,78 @@ struct Display {
     return this->curId++;
   }
 
+  int read(PronMessage *msg, size_t len) {
+    int sizeRead = tsock_read(this->fd, msg, MAX_MSG_SIZE);
+
+    if (sizeRead < 0) {
+      // TODO: handle read error?
+      perror("Failed to read from server");
+    } else if (sizeRead == 0) {
+      // TODO: handle server disconnection
+      fprintf(stderr, "Server has closed the connection\n");
+    } else if ((msg->type & ER_PREFIX) == ER_PREFIX) {
+      // TODO: trigger error handler
+      fprintf(stderr, "Received error message from server: %x\n", msg->type);
+    }
+
+    return sizeRead;
+  }
+
+  int read(MessageType type, void *buffer, size_t len) {
+    PronMessage *msgRead;
+    int sizeRead;
+    bool stop = false;
+
+    while (!stop) {
+      msgRead = (PronMessage*) malloc(MAX_MSG_SIZE);
+      sizeRead = this->read(msgRead, MAX_MSG_SIZE);
+
+      if (sizeRead > 0) {
+        if (msgRead->type == type) {
+          memcpy(buffer, msgRead, len);
+          free(msgRead);
+          stop = true;
+        } else if ((msgRead->type & EV_PREFIX) == EV_PREFIX) {
+          printf("Queuing event...\n");
+          this->queuedEvents.push(pair<int, PronEvent*>(sizeRead, (PronEvent*) msgRead));
+        } else {
+          fprintf(stderr, "Wrong message type (expected %x, got %x)\n", type, msgRead->type);
+          free(msgRead);
+          stop = true;
+        }
+      }  
+    }
+
+    return sizeRead;
+  }
+
+  bool getNextEvent(PronEvent *e) {
+    bool ok = false;
+
+    if (!this->queuedEvents.empty()) {
+      memcpy(e, this->queuedEvents.front().second, this->queuedEvents.front().first);
+      free(this->queuedEvents.front().second);
+      this->queuedEvents.pop();
+      ok = true;
+    } else {
+      if (this->read(e, MAX_MSG_SIZE) > 0) {
+        if ((e->type & EV_PREFIX) == EV_PREFIX) {
+          ok = true;
+        } else {
+          fprintf(stderr, "Wrong message type (expected event, got %x)\n", e->type);
+        }
+      }
+    }
+
+    return ok;
+  }
+
   int fd; /**< file descriptor used for the connection to pron */
   Window rootWindow; /**< id of the root window */
   int startId; /**< first usable resource id */
   int endId; /**< last usable resource id */
   int curId; /**< current resource id */
+  queue< pair<int, PronEvent*> > queuedEvents; /**< events read from the server and queued */
 };
 
 /**

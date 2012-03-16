@@ -1,11 +1,11 @@
 #ifndef __PRONLIB_ENUMS_H__
 #define __PRONLIB_ENUMS_H__
 
-#define RQ_PREFIX (0 << 14)
-#define RS_PREFIX (1 << 14)
-#define EV_PREFIX (2 << 14)
-#define ER_PREFIX (3 << 14)
-#define CATEGORY_MASK (3 << 14)
+#define RQ_PREFIX (0 << 16)
+#define RS_PREFIX (1 << 16)
+#define EV_PREFIX (2 << 16)
+#define ER_PREFIX (3 << 16)
+#define CATEGORY_MASK (3 << 16)
 
 /** Pron message types. */
 enum MessageType {

@@ -4,10 +4,7 @@
  */
 #include <cstdio>
 #include <pronlib.h>
-#include <tsock.h>
 #include <unistd.h>
-
-#define MAX_MSG_SIZE 1024 /**< max size of a message (1Kio) */
 
 Display* pronConnect() {
   int fd = tsock_connect("/tmp/pron.sock");
@@ -96,14 +93,11 @@ int pronFillCircle(Display *d, Window w, GC gc, int x, int y, int radius){
   return (tsock_write(d->fd,&rq,sizeof(rq)) > 0);
 }
 
-void pronGetWindowAttributes(Display * d, Window w, PronWindowAttributes * attr) {
+void pronGetWindowAttributes(Display *d, Window w, PronWindowAttributes *attr) {
   RqGetWindowAttributes rq(w);
   tsock_write(d->fd, &rq, sizeof(rq)) ;
   RespWindowAttributes res(*attr);
-  /*while (tsock_read(d->fd, buffer, sizeof(RespWindowAttributes)) < 0) {
-    usleep(100000);
-  }*/
-  tsock_read(d->fd, &res, sizeof(RespWindowAttributes));
+  d->read(RS_WINDOW_ATTRIBUTES, &res, sizeof(RespWindowAttributes));
   printf("res : (x, y, width, height) : %d, %d, %d, %d\n", res.attributes.x, res.attributes.y,
     res.attributes.width, res.attributes.height);
   *attr = res.attributes;
@@ -129,18 +123,12 @@ void pronDontPropagateEvent(Display *d, Window w ,uint32_t eventMask) {
   tsock_write(d->fd, &rq, sizeof(rq));
 }
 
-int pronNextEvent(Display * d, PronEvent * e) {
-  /*while (tsock_read(d->fd, e, 1024) < 0) {
-    usleep(100000);
-  }*/
-  return (tsock_read(d->fd, e, 1024) > 0);
+int pronNextEvent(Display *d, PronEvent *e) {
+  return d->getNextEvent(e);
 }
   
 PronEvent* getPronEvent() {
-  //int size = sizeof(EventWindowCreated);
-  int size = 1000; // BANDE DE NOOBS
-  
-  return (PronEvent*) malloc(size);
+  return (PronEvent*) malloc(MAX_MSG_SIZE);
 }
 
 void pronReparentWindow(Display *d, Window w, Window newParent) {
