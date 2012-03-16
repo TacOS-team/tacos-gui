@@ -113,8 +113,7 @@ int main() {
         printf("DestroyWindow event received for %d\n", destroyWindowEvent->window);
 
         // Sending destroy request for the parent window
-        printf("état de la liste des windows\n");
-        windowsManager.destroy(destroyWindowEvent->window);
+        windowsManager.destroy(destroyWindowEvent->window,display);
         break;
       }
       case EV_MOUSE_BUTTON : {
