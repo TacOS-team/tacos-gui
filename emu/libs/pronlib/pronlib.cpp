@@ -124,6 +124,11 @@ void pronSelectInput(Display *d, Window w, uint32_t eventMask) {
   tsock_write(d->fd, &rq, sizeof(rq));
 }
 
+void pronDontPropagateEvent(Display *d, Window w ,uint32_t eventMask) {
+  RqDontPropagate rq(w, eventMask);
+  tsock_write(d->fd, &rq, sizeof(rq));
+}
+
 int pronNextEvent(Display * d, PronEvent * e) {
   /*while (tsock_read(d->fd, e, 1024) < 0) {
     usleep(100000);

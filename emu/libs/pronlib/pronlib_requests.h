@@ -307,6 +307,22 @@ struct RqSelectInput : public PronRequest {
   unsigned int eventMask; /**< event mask to set */
 };
 
+/**
+ * Don't propagate request.
+ * Sent by a client to tell pron not to propagate the event to the parent window.
+ */
+struct RqDontPropagate : public PronRequest {
+  /** Constructor. */
+  RqDontPropagate(unsigned int window, unsigned int eventMask)
+    : PronRequest(RQ_DONT_PROPAGATE) {
+      this->window = window;
+      this->eventMask = eventMask;
+    }
+
+  unsigned int window; /**< id of Window */
+  unsigned int eventMask; /**< event mask to set */
+};
+
 
 /**
  * Reparent request.

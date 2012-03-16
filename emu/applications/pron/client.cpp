@@ -60,6 +60,11 @@ void Client::handle() {
       screen->getWindow(rq->window)->selectInput(this, rq->eventMask);
       break;
     }
+    case RQ_DONT_PROPAGATE: {
+      RqDontPropagate *rq = (RqDontPropagate*) Client::recvBuf;
+      screen->getWindow(rq->window)->dontPropagateMask = rq->eventMask;
+      break;
+    }
     case RQ_GET_WINDOW_ATTRIBUTES: {
       RqGetWindowAttributes *rq = (RqGetWindowAttributes*) Client::recvBuf;
       printf("get win (id, x, y, width, height) : %d, %d, %d, %d, %d\n",

@@ -175,6 +175,14 @@ void pronDisconnect(Display *d);
 void pronSelectInput(Display *d, Window w, uint32_t eventMask);
 
 /**
+ * Tells pron not to propagate the events associated with the specified event mask.
+ * @param d The connection to pron
+ * @param w The window whose events not to propagate
+ * @param event_mask The event mask
+ */
+void pronDontPropagateEvent(Display *d, Window w, uint32_t eventMask);
+
+/**
  * Wait a new event.
  * @param d The connection to pron
  * @param e Event returned

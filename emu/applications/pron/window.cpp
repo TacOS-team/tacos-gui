@@ -47,9 +47,10 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
 
 // Destructor : delete all of the childs
 Window::~Window() {
-  for (Window * fils = this->firstChild; fils != NULL; fils = fils->nextSibling) {
-    delete fils;
+  for (Window * child = this->firstChild; child != NULL; child = child->nextSibling) {
+    delete child;
   }
+  printf("destructor done\n");
 }
 void Window::unmap() {
   // Can't unmap root window
@@ -366,6 +367,7 @@ void Window::reparent(Window *w) {
 void Window::destroy() {
   printf("window::destroy(%d)\n",this->id);
   this->unmap();
+  printf("unmap done\n");
   // We remove the window from the tree 
   if (this->prevSibling != NULL) {
     this->prevSibling->nextSibling = this->nextSibling;
@@ -377,5 +379,7 @@ void Window::destroy() {
   } else {
     this->parent->lastChild = this->prevSibling;
   }
+  printf("delete...\n");
   delete this;
+  printf("delete done\n");
 }

@@ -23,12 +23,12 @@ int main() {
   pronGetWindowAttributes(display, display->rootWindow, &windowsManager.getRootWindowAttributes());
   
   debug("Root window width : %d, height : %d\n", windowsManager.getRootWindowAttributes().width,
-          windowsManager.getRootWindowAttributes().height);
+    windowsManager.getRootWindowAttributes().height);
   
   // Subscribe to root window events
   int currentRootEventMask =  PRON_EVENTMASK(EV_WINDOW_CREATED)
-                            | PRON_EVENTMASK(EV_KEY_PRESSED)
-                            | PRON_EVENTMASK(EV_KEY_RELEASED);
+  | PRON_EVENTMASK(EV_KEY_PRESSED)
+  | PRON_EVENTMASK(EV_KEY_RELEASED);
   pronSelectInput(display, display->rootWindow, currentRootEventMask);
   PronEvent *e = getPronEvent();
   
@@ -59,14 +59,14 @@ int main() {
           if (windowCreated->parent == 0) {
             printf("top level window\n");
             Window parentWindowId = pronCreateWindow(display, display->rootWindow,
-                windowCreated->attributes.x - 15, windowCreated->attributes.y - 15,
-                windowCreated->attributes.width + 30, windowCreated->attributes.height + 30);
+              windowCreated->attributes.x - 15, windowCreated->attributes.y - 15,
+              windowCreated->attributes.width + 30, windowCreated->attributes.height + 30);
             
             pronMapWindow(display, parentWindowId);
 
             // Abonnement aux évènements souris de la fenêtre de décoration
             pronSelectInput(display, parentWindowId,
-                  PRON_EVENTMASK(EV_MOUSE_BUTTON));
+              PRON_EVENTMASK(EV_MOUSE_BUTTON));
             
             pronReparentWindow(display, windowCreated->window, parentWindowId);
             
@@ -74,7 +74,7 @@ int main() {
             gw->attributes = windowCreated->attributes;
             // registering for any EV_DESTROY_WINDOW event
             pronSelectInput(display, windowCreated->window,
-                PRON_EVENTMASK(EV_DESTROY_WINDOW) || PRON_EVENTMASK(EV_MOUSE_BUTTON));
+              PRON_EVENTMASK(EV_DESTROY_WINDOW) || PRON_EVENTMASK(EV_MOUSE_BUTTON));
             /*printf("avant get %d %d\n", gw->parentAttributes.width, gw->parentAttributes.height);
             pronGetWindowAttributes(display, parentWindowId, &(gw->parentAttributes));
             printf("apres get %d %d\n", gw->parentAttributes.width, gw->parentAttributes.height);*/
@@ -88,8 +88,19 @@ int main() {
             COLOR(gw->parentAttributes.bgColor, 24).b = 0;
             pronSetWindowAttributes(display, parentWindowId, gw->parentAttributes, WIN_ATTR_BG_COLOR);
 
-            windowsManager.initWindowPosition(gw);
+            // Adding the close button
+            gw->closeButton = pronCreateWindow(display, parentWindowId,
+              windowCreated->attributes.x + windowCreated->attributes.width, windowCreated->attributes.y - 15,
+              15, 15);
+            PronWindowAttributes closeButtonAttributes;
+            COLOR(closeButtonAttributes.bgColor, 24).r = 0;
+            COLOR(closeButtonAttributes.bgColor, 24).g = 255;
+            COLOR(closeButtonAttributes.bgColor, 24).b = 0;
+            pronSetWindowAttributes(display, gw->closeButton, closeButtonAttributes, WIN_ATTR_BG_COLOR);
+            pronSelectInput(display, gw->closeButton, PRON_EVENTMASK(EV_MOUSE_BUTTON));     
+            pronDontPropagateEvent(display,gw->closeButton,PRON_EVENTMASK(EV_MOUSE_BUTTON));
 
+            windowsManager.initWindowPosition(gw);
             printf("nouvelle position %d %d\n", gw->parentAttributes.x, gw->parentAttributes.y);
             pronMoveWindow(display, gw->parent, gw->parentAttributes.x, gw->parentAttributes.y);
 
@@ -121,16 +132,21 @@ int main() {
         if (mouseButtonEvent->b1) {
           // If the window is the decoration window
           GWindow *gwin = windowsManager.getGWindow(mouseButtonEvent->window);
-          if (mouseButtonEvent->window == gwin->parent) {
-            windowIdLeftButtonPressed = mouseButtonEvent->window;
+          if (mouseButtonEvent->window == gwin->closeButton) {
+            printf("calling pronDestroyWindow for %d (clic on %d) \n",gwin->parent, gwin->closeButton);
+            pronDestroyWindow(display,gwin->parent);
+          } else {
+            if (mouseButtonEvent->window == gwin->parent) {
+              windowIdLeftButtonPressed = mouseButtonEvent->window;
+            }
+            // Puts the window on foreground
+            pronRaiseWindow(display, gwin->parent);
+            // Subscribe to pointer moved and mouse button of the root window
+            //   to avoid problems if it moves too fast
+            currentRootEventMask |= PRON_EVENTMASK(EV_POINTER_MOVED) | PRON_EVENTMASK(EV_MOUSE_BUTTON);
+            // Ask to reset the last mouse position
+            mouseLastXPosition = -1;
           }
-          // Puts the window on foreground
-          pronRaiseWindow(display, gwin->parent);
-          // Subscribe to pointer moved and mouse button of the root window
-          //   to avoid problems if it moves too fast
-          currentRootEventMask |= PRON_EVENTMASK(EV_POINTER_MOVED) | PRON_EVENTMASK(EV_MOUSE_BUTTON);
-          // Ask to reset the last mouse position
-          mouseLastXPosition = -1;
         } else {
           windowIdLeftButtonPressed = 0;
           // Unsubscribe of events of the root window to avoid useless events
@@ -152,7 +168,7 @@ int main() {
         break;
       }
       default:
-        break;
+      break;
     }
   }
 }

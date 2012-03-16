@@ -9,6 +9,7 @@ using namespace std;
 struct GWindow {
   Window window;
   Window parent;
+  Window closeButton;
   PronWindowAttributes attributes;
   PronWindowAttributes parentAttributes;
 

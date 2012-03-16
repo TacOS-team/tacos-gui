@@ -29,6 +29,7 @@ enum MessageType {
   RQ_DRAW_POINT               = (RQ_PREFIX | 17),
   RQ_DESTROY_WINDOW           = (RQ_PREFIX | 18),
   RQ_MOVE_WINDOW              = (RQ_PREFIX | 19),
+  RQ_DONT_PROPAGATE           = (RQ_PREFIX | 20),
   /* Responses */
   RS_WELCOME                  = (RS_PREFIX |  1),
   RS_WINDOW_ATTRIBUTES        = (RS_PREFIX |  2),
