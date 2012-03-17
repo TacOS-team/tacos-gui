@@ -17,6 +17,15 @@ Mouse::Mouse() {
   this->pointerBackup = (char *)malloc(PRON_MOUSE_POINTER_WIDTH * PRON_MOUSE_POINTER_HEIGHT * screen->bytesPerPixel);
   memset(this->pointerBackup, 0, PRON_MOUSE_POINTER_WIDTH * PRON_MOUSE_POINTER_HEIGHT * screen->bytesPerPixel);
   this->pointerBackuped = false;
+
+  this->mouseX = 0;
+  this->mouseY = 0;
+  this->mouseB1 = false;
+  this->mouseB2 = false;
+  this->mouseB3 = false;
+  this->mouseB4 = false;
+  this->mouseB5 = false;
+  this->mouseB6 = false;
 }
 
 void Mouse::checkEvents() {
@@ -39,10 +48,10 @@ void Mouse::handleMotion(mousestate_t *state) {
   Screen *screen = Screen::getInstance();
 
   // Has pointer moved since the previous select ?
-  if (screen->getMouseX() != state->x || screen->getMouseY() != state->y) {
+  if (this->mouseX != state->x || this->mouseY != state->y) {
     // Set the new coordinates in the screen
-    screen->setMouseX(state->x);
-    screen->setMouseY(state->y);
+    this->mouseX = state->x;
+    this->mouseY = state->y;
 
     // We have to recompute the mouseWin
     this->updateMouseWin();
@@ -62,24 +71,24 @@ void Mouse::handleMotion(mousestate_t *state) {
 }
 
 void Mouse::handleButton(mousestate_t *state) {
-  Screen *screen = Screen::getInstance();
 
   // We have to compare the state of each buttons and if one button has changed, send the event
-  if (screen->getMouseB1() != state->b1 ||
-      screen->getMouseB2() != state->b2 ||
-      screen->getMouseB3() != state->b3 ||
-      screen->getMouseB4() != state->b4 ||
-      screen->getMouseB5() != state->b5 ||
-      screen->getMouseB6() != state->b6 ) {
+  if (this->mouseB1 != state->b1 ||
+      this->mouseB2 != state->b2 ||
+      this->mouseB3 != state->b3 ||
+      this->mouseB4 != state->b4 ||
+      this->mouseB5 != state->b5 ||
+      this->mouseB6 != state->b6 ) {
 
+    Screen *screen = Screen::getInstance();
     //debug("Mouse button state %d %d %d %d %d %d \n", state->b1, state->b2, state->b3, state->b4, state->b5, state->b6);
 
-    screen->setMouseB1(state->b1);
-    screen->setMouseB2(state->b2);
-    screen->setMouseB3(state->b3);
-    screen->setMouseB4(state->b4);
-    screen->setMouseB5(state->b5);
-    screen->setMouseB6(state->b6);
+    this->mouseB1 = state->b1;
+    this->mouseB2 = state->b2;
+    this->mouseB3 = state->b3;
+    this->mouseB4 = state->b4;
+    this->mouseB5 = state->b5;
+    this->mouseB6 = state->b6;
 
     // We get the window which consairns the event
     Window *mouseWin = screen->getMouseWin();
@@ -92,8 +101,6 @@ void Mouse::handleButton(mousestate_t *state) {
 
 void Mouse::updateMouseWin() {
   Screen *screen = Screen::getInstance();
-  int mouseX = screen->getMouseX();
-  int mouseY = screen->getMouseY();
   // We have to explorate window tree from the  screen to his children
   // and check if the pointer is inside them : We can stop when we have found one window
   // because it is necessarily the one which is drawn
@@ -104,7 +111,7 @@ void Mouse::updateMouseWin() {
     // and take the first (the one with the bigger Z)
     Window *currentChild = currentWin->lastChild;
     while (currentChild != NULL) {
-      if (currentChild->mapped && currentChild->contains(mouseX, mouseY)) {
+      if (currentChild->mapped && currentChild->contains(this->mouseX, this->mouseY)) {
         currentWin = currentChild;
         break;// We have found the first containing child we have to stop
       } 
@@ -137,13 +144,13 @@ void Mouse::drawPointer() {
   }
 
   // Save the new pointer background
-  this->pointerBackupX = screen->getMouseX();
-  this->pointerBackupY = screen->getMouseY();
+  this->pointerBackupX = this->mouseX;
+  this->pointerBackupY = this->mouseY;
 
   for (int pBackY = 0; pBackY < PRON_MOUSE_POINTER_HEIGHT; pBackY++) {
     for (int pBackX = 0; pBackX < PRON_MOUSE_POINTER_WIDTH; pBackX++) {
       // The pixel to restore is in  ((pointerBackupX plus old Y position in the screen) times screenWidth plus old X position in the screen ) time bytesPerPixel
-      int screenPos = ((pBackY + screen->getMouseY()) * screen->width + pBackX + screen->getMouseX()) * screen->bytesPerPixel;
+      int screenPos = ((pBackY + this->mouseY) * screen->width + pBackX + this->mouseX) * screen->bytesPerPixel;
       int pointerBackupPos = (pBackY * PRON_MOUSE_POINTER_WIDTH + pBackX) * screen->bytesPerPixel;
       //debug("screen [%d] pointerBackup[%d]\n", screenPos, pointerBackupPos);
       char * destination = this->pointerBackup + pointerBackupPos;
@@ -158,8 +165,8 @@ void Mouse::drawPointer() {
   delete screen->clipZone;
   screen->clipZone = NULL;
   // We can draw the new pointer
-  screen->drawLine(screen->getMouseX(),screen->getMouseY(), screen->getMouseX(), screen->getMouseY() + PRON_MOUSE_POINTER_HEIGHT - 1);
-  screen->drawLine(screen->getMouseX(),screen->getMouseY(), screen->getMouseX() + PRON_MOUSE_POINTER_WIDTH - 1, screen->getMouseY());
+  screen->drawLine(this->mouseX,this->mouseY, this->mouseX, this->mouseY + PRON_MOUSE_POINTER_HEIGHT - 1);
+  screen->drawLine(this->mouseX,this->mouseY, this->mouseX + PRON_MOUSE_POINTER_WIDTH - 1, this->mouseY);
 }
 
 int Mouse::getPointerBackupX(){
@@ -187,4 +194,68 @@ Mouse* Mouse::getInstance(){
     Mouse::instance = new Mouse();
   }
   return Mouse::instance;
+}
+
+int Mouse::getMouseX() {
+  return this->mouseX;
+}
+
+void Mouse::setMouseX(int mouseX) {
+  this->mouseX = this->mouseX;
+}
+
+int Mouse::getMouseY() {
+  return this->mouseY;
+}
+
+void Mouse::setMouseY(int mouseY) {
+  this->mouseY = this->mouseY;
+}
+
+void Mouse::setMouseB1(bool mouseB1) {
+  this->mouseB1 = mouseB1;
+}
+
+bool Mouse::getMouseB1() {
+  return this->mouseB1;
+}
+
+void Mouse::setMouseB2(bool mouseB2) {
+  this->mouseB2 = mouseB2;
+}
+
+bool Mouse::getMouseB2() {
+  return this->mouseB2;
+}
+
+void Mouse::setMouseB3(bool mouseB3) {
+  this->mouseB3 = mouseB3;
+}
+
+bool Mouse::getMouseB3() {
+  return this->mouseB3;
+}
+
+void Mouse::setMouseB4(bool mouseB4) {
+  this->mouseB4 = mouseB4;
+}
+
+bool Mouse::getMouseB4() {
+  return this->mouseB4;
+}
+
+void Mouse::setMouseB5(bool mouseB5) {
+  this->mouseB5 = mouseB5;
+}
+
+bool Mouse::getMouseB5() {
+  return this->mouseB5;
+}
+
+void Mouse::setMouseB6(bool mouseB6) {
+  this->mouseB6 = mouseB6;
+}
+
+bool Mouse::getMouseB6() {
+  return this->mouseB6;
 }

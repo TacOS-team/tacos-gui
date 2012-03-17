@@ -21,14 +21,6 @@ class Screen {
 private:
   Screen(int width, int height, int bitsPerPixel);
   static Screen *instance;
-  int mouseX; // Mouse state
-  int mouseY;
-  bool mouseB1;
-  bool mouseB2;
-  bool mouseB3;
-  bool mouseB4;
-  bool mouseB5;
-  bool mouseB6;
   Window * mouseWin; // First window containing the mouse pointer
 
   void drawHorizLine(int x, int y, int width);
@@ -62,23 +54,6 @@ public: // XXX: bourrin
 
   Window* getWindow(unsigned int id);
   void addWindow(Window *w);
-
-  void setMouseX(int mouseX);
-  int getMouseX();
-  void setMouseY(int mouseY);
-  int getMouseY();
-  void setMouseB1(bool mouseB1);
-  bool getMouseB1();
-  void setMouseB2(bool mouseB2);
-  bool getMouseB2();
-  void setMouseB3(bool mouseB3);
-  bool getMouseB3();
-  void setMouseB4(bool mouseB4);
-  bool getMouseB4();
-  void setMouseB5(bool mouseB5);
-  bool getMouseB5();
-  void setMouseB6(bool mouseB6);
-  bool getMouseB6();
 
   Window* getMouseWin();
   void setMouseWin(Window *mouseWin);
