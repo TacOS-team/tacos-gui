@@ -22,6 +22,15 @@ private:
   // Passage a un constructeur privé
   Mouse();
 
+  int mouseX; // Mouse state
+  int mouseY;
+  bool mouseB1;
+  bool mouseB2;
+  bool mouseB3;
+  bool mouseB4;
+  bool mouseB5;
+  bool mouseB6;
+
 public:
   int fd;
 
@@ -31,7 +40,11 @@ public:
    */
   void updateMouseWin();
   /**
-   * Draws mouse pointer
+   * Restore the mouse pointer
+   */
+  void restorePointerBackground();
+  /**
+   * Backup and draw mouse pointer
    */
   void drawPointer();
   /**
@@ -53,7 +66,23 @@ public:
   void setPointerBackupWidth(int pointerBackupWidth);
   int getPointerBackupHeight();
   void setPointerBackupHeight(int pointerBackupHeight);
-  char* getPointerBackup();
+  char* getPointerBackup();  
+  void setMouseX(int mouseX);
+  int getMouseX();
+  void setMouseY(int mouseY);
+  int getMouseY();
+  void setMouseB1(bool mouseB1);
+  bool getMouseB1();
+  void setMouseB2(bool mouseB2);
+  bool getMouseB2();
+  void setMouseB3(bool mouseB3);
+  bool getMouseB3();
+  void setMouseB4(bool mouseB4);
+  bool getMouseB4();
+  void setMouseB5(bool mouseB5);
+  bool getMouseB5();
+  void setMouseB6(bool mouseB6);
+  bool getMouseB6();
 
   static Mouse* getInstance();
 };

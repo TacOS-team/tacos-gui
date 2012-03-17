@@ -23,14 +23,9 @@ PronWindowAttributes & GWindowsManager::getRootWindowAttributes() {
   return this->rootWindowAttributes;
 }
 
-void GWindowsManager::destroy(Window w, Display *display) {
+void GWindowsManager::destroy(Window w) {
   for (size_t i = 0; i < this->windowsList.size(); ++i) {
     if (this->windowsList[i]->window == w || this->windowsList[i]->parent == w) {
-      // If the window is only the client window (and not the guacamole parent window) 
-      // we want to destroy the parent window as well
-      if (this->windowsList[i]->window == w) {
-        pronDestroyWindow(display,this->windowsList[i]->parent);
-      }
       delete this->windowsList[i];
       this->windowsList[i] = this->windowsList[this->windowsList.size()-1];
       this->windowsList.pop_back();
@@ -53,7 +48,6 @@ void GWindowsManager::initWindowPosition(GWindow *gw) {
   gw->parentAttributes.x = 0;
   gw->parentAttributes.y = 0;
   if (!this->overlaps(gw)) {
-    printf("fock\n");
     return;
   }
   for (size_t i = 0; i < this->windowsList.size(); ++i) {
@@ -84,7 +78,6 @@ void GWindowsManager::initWindowPosition(GWindow *gw) {
         }
       }
     }
-    // TODO to be continued....
   }
   gw->parentAttributes.x = 0;
   gw->parentAttributes.y = 0;

@@ -75,9 +75,7 @@ int main() {
             // registering for any EV_DESTROY_WINDOW event
             pronSelectInput(display, windowCreated->window,
               PRON_EVENTMASK(EV_DESTROY_WINDOW) || PRON_EVENTMASK(EV_MOUSE_BUTTON));
-            printf("avant get %d %d\n", gw->parentAttributes.width, gw->parentAttributes.height);
             pronGetWindowAttributes(display, parentWindowId, &(gw->parentAttributes));
-            printf("apres get %d %d\n", gw->parentAttributes.width, gw->parentAttributes.height);
 
             // Fond rouge à la fenêtre de déco provisoire
             COLOR(gw->parentAttributes.bgColor, 24).r = 255;
@@ -121,7 +119,13 @@ int main() {
         printf("DestroyWindow event received for %d\n", destroyWindowEvent->window);
 
         // Sending destroy request for the parent window
-        windowsManager.destroy(destroyWindowEvent->window,display);
+        GWindow *pgwin = windowsManager.getGWindow(destroyWindowEvent->window);
+        if (pgwin) {
+          if (pgwin->parent != destroyWindowEvent->window) {
+            pronDestroyWindow(display,pgwin->parent);
+          }
+          windowsManager.destroy(destroyWindowEvent->window);
+        }
         break;
       }
       case EV_MOUSE_BUTTON : {
@@ -131,6 +135,7 @@ int main() {
           GWindow *gwin = windowsManager.getGWindow(mouseButtonEvent->window);
           if (mouseButtonEvent->window == gwin->closeButton) {
             pronDestroyWindow(display,gwin->parent);
+            windowsManager.destroy(gwin->parent);
           } else {
             if (mouseButtonEvent->window == gwin->parent) {
               windowIdLeftButtonPressed = mouseButtonEvent->window;
@@ -155,9 +160,14 @@ int main() {
       case EV_POINTER_MOVED : {
         EventPointerMoved *mousePointerEvent = (EventPointerMoved*) e;
         if (windowIdLeftButtonPressed && mouseLastXPosition != -1) {
-          pronMoveWindow(display, windowIdLeftButtonPressed,
-            mousePointerEvent->xRoot - mouseLastXPosition,
-            mousePointerEvent->yRoot - mouseLastYPosition);
+          int xMove = mousePointerEvent->xRoot - mouseLastXPosition;
+          int yMove = mousePointerEvent->yRoot - mouseLastYPosition;
+          pronMoveWindow(display, windowIdLeftButtonPressed, xMove, yMove);
+          GWindow *pGWindow = windowsManager.getGWindow(windowIdLeftButtonPressed);
+          pGWindow->parentAttributes.x += xMove;
+          pGWindow->parentAttributes.y += yMove;
+          pGWindow->attributes.x       += xMove;
+          pGWindow->attributes.y       += yMove;
         }
         mouseLastXPosition = mousePointerEvent->xRoot;
         mouseLastYPosition = mousePointerEvent->yRoot;
