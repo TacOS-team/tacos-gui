@@ -201,8 +201,25 @@ void Client::handle() {
       RqDestroyWindow *rq = (RqDestroyWindow*) Client::recvBuf;
       Window *w = screen->getWindow(rq->window);
       if (w != NULL) {
-        EventDestroyWindow eventDestroyWindow(w->id);
-        w->deliverWindowEvent(&eventDestroyWindow, sizeof(eventDestroyWindow));
+        Window *currentWindow = w;
+        while (currentWindow != NULL && currentWindow != w->parent) {
+          EventDestroyWindow eventDestroyWindow(currentWindow->id);
+          currentWindow->deliverWindowEvent(&eventDestroyWindow, sizeof(eventDestroyWindow));
+          if (currentWindow->firstChild != NULL) {
+            currentWindow = currentWindow->firstChild;
+          } else if (currentWindow->nextSibling != NULL) {
+            currentWindow = currentWindow->nextSibling;
+          } else {
+            while (currentWindow->parent != NULL
+                    && currentWindow->parent->nextSibling == NULL
+                    && currentWindow != w->parent) {
+              currentWindow = currentWindow->parent;
+            }
+            if (currentWindow->parent != NULL) {
+              currentWindow = currentWindow->parent->nextSibling;
+            }
+          }
+        }
         w->destroy();  
       }
       break;
