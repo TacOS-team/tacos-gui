@@ -21,6 +21,7 @@ void Client::handle() {
   int reqType = *((int*) Client::recvBuf);
   Screen *screen = Screen::getInstance();
 
+  // TODO: refactor when we have exceptions? :)
   switch (reqType) { 
     case RQ_HELLO: {
       // Identifiers: 16 upper bits for client id, 16 lower bits for resource id
@@ -34,22 +35,31 @@ void Client::handle() {
       screen->addWindow(w);
       EventWindowCreated eventCreated(w->id, rq->parent, w->getAttributes());
       w->deliverWindowEvent(&eventCreated, sizeof(eventCreated));
-      screen->traceWindows();
+      //screen->traceWindows();
       break;
     }
     case RQ_MAP_WINDOW: {
       RqMapWindow *rq = (RqMapWindow*) Client::recvBuf;
-      screen->getWindow(rq->window)->map();
+      Window *w = screen->getWindow(rq->window);
+      if (w != NULL) {
+        w->map();
+      }
       break;
     }
     case RQ_UNMAP_WINDOW: {
       RqUnmapWindow *rq = (RqUnmapWindow*) Client::recvBuf;
-      screen->getWindow(rq->window)->unmap();
+      Window *w = screen->getWindow(rq->window);
+      if (w != NULL) {
+        w->unmap();
+      }
       break;
     }
     case RQ_RAISE_WINDOW: {
       RqRaiseWindow *rq = (RqRaiseWindow*) Client::recvBuf;
-      screen->getWindow(rq->window)->raise();
+      Window *w = screen->getWindow(rq->window);
+      if (w != NULL) {
+        w->raise();
+      }
       break;
     }
     case RQ_CREATE_GC: {
@@ -57,32 +67,41 @@ void Client::handle() {
     }
     case RQ_SELECT_INPUT: {
       RqSelectInput *rq = (RqSelectInput*) Client::recvBuf;
-      screen->getWindow(rq->window)->selectInput(this, rq->eventMask);
+      Window *w = screen->getWindow(rq->window);
+      if (w != NULL) {
+        w->selectInput(this, rq->eventMask);
+      }
       break;
     }
     case RQ_DONT_PROPAGATE: {
       RqDontPropagate *rq = (RqDontPropagate*) Client::recvBuf;
-      screen->getWindow(rq->window)->dontPropagateMask = rq->eventMask;
+      Window *w = screen->getWindow(rq->window);
+      if (w != NULL) {
+        w->dontPropagateMask = rq->eventMask;  
+      }
       break;
     }
     case RQ_GET_WINDOW_ATTRIBUTES: {
       RqGetWindowAttributes *rq = (RqGetWindowAttributes*) Client::recvBuf;
-      printf("get win (id, x, y, width, height) : %d, %d, %d, %d, %d\n",
-        rq->w, screen->getWindow(rq->w)->getAttributes().x, screen->getWindow(rq->w)->getAttributes().y,
-        screen->getWindow(rq->w)->getAttributes().width, screen->getWindow(rq->w)->getAttributes().height);
-      RespWindowAttributes resp (screen->getWindow(rq->w)->getAttributes());
-      this->send(&resp, sizeof(resp)); 
+      Window *w = screen->getWindow(rq->window);
+      if (w != NULL) {
+        RespWindowAttributes resp (w->getAttributes());
+        this->send(&resp, sizeof(resp));
+      }
       break;
     }
     case RQ_SET_WINDOW_ATTRIBUTES: {
       RqSetWindowAttributes *rq = (RqSetWindowAttributes*) Client::recvBuf;
-      screen->getWindow(rq->w)->setAttributes(&(rq->newAttr), rq->mask);
+      Window *w = screen->getWindow(rq->window);
+      if (w != NULL) {
+        w->setAttributes(&(rq->newAttr), rq->mask);
+      }
       break;
     }
     case RQ_CLEAR_WINDOW: {
       RqClearWindow *rq = (RqClearWindow*) Client::recvBuf;
       Window *w = screen->getWindow(rq->window);
-      if (screen->prepareDrawing(w)) {
+      if (w != NULL && screen->prepareDrawing(w)) {
         w->clear();
       }
       break;
@@ -90,7 +109,7 @@ void Client::handle() {
     case RQ_DRAW_POINT: {
       RqDrawPoint *rq = (RqDrawPoint*) Client::recvBuf;
       Window *w = screen->getWindow(rq->drawable);
-      if (screen->prepareDrawing(w)) {
+      if (w != NULL && screen->prepareDrawing(w)) {
         w->drawPoint(rq->x, rq->y);
       }
       break;
@@ -98,7 +117,7 @@ void Client::handle() {
     case RQ_DRAW_CIRCLE: {
       RqDrawCircle *rq = (RqDrawCircle*) Client::recvBuf;
       Window *w = screen->getWindow(rq->drawable);
-      if (screen->prepareDrawing(w)) {
+      if (w != NULL && screen->prepareDrawing(w)) {
         w->drawCircle(rq->x, rq->y, rq->radius);
       }
       break;
@@ -106,7 +125,7 @@ void Client::handle() {
     case RQ_DRAW_LINE: {
       RqDrawLine *rq = (RqDrawLine*) Client::recvBuf;
       Window *w = screen->getWindow(rq->drawable);
-      if (screen->prepareDrawing(w)) {
+      if (w != NULL && screen->prepareDrawing(w)) {
         w->drawLine(rq->x1, rq->y1, rq->x2, rq->y2);
       }
       break;
@@ -114,7 +133,7 @@ void Client::handle() {
     case RQ_DRAW_RECT: {
       RqDrawRect *rq = (RqDrawRect*) Client::recvBuf;
       Window *w = screen->getWindow(rq->drawable);
-      if (screen->prepareDrawing(w)) {
+      if (w != NULL && screen->prepareDrawing(w)) {
         w->drawRect(rq->x, rq->y, rq->width, rq->height);
       }
       break;
@@ -122,7 +141,7 @@ void Client::handle() {
     case RQ_FILL_CIRCLE: {
       RqFillCircle *rq = (RqFillCircle*) Client::recvBuf;
       Window *w = screen->getWindow(rq->drawable);
-      if (screen->prepareDrawing(w)) {
+      if (w != NULL && screen->prepareDrawing(w)) {
         w->fillCircle(rq->x, rq->y, rq->radius);
       }
       break;
@@ -130,7 +149,7 @@ void Client::handle() {
     case RQ_FILL_RECTANGLE: {
       RqFillRectangle *rq = (RqFillRectangle*) Client::recvBuf;
       Window *w = screen->getWindow(rq->drawable);
-      if (screen->prepareDrawing(w)) {
+      if (w != NULL && screen->prepareDrawing(w)) {
         w->fillRectangle(rq->x, rq->y, rq->width, rq->height);
       }
       break;
@@ -138,31 +157,38 @@ void Client::handle() {
     case RQ_REPARENT: {
       RqReparent *rq = (RqReparent*) Client::recvBuf;
       Window *w = screen->getWindow(rq->window);
-      w->reparent(screen->getWindow(rq->newParent));
-      screen->clipWin = NULL;
-      screen->traceWindows();
+      if (w != NULL) {
+        w->reparent(screen->getWindow(rq->newParent));
+        screen->clipWin = NULL;
+        //screen->traceWindows();
+      }
       break;
     }
     case RQ_DESTROY_WINDOW: {
       RqDestroyWindow *rq = (RqDestroyWindow*) Client::recvBuf;
       Window *w = screen->getWindow(rq->window);
-      EventDestroyWindow eventDestroyWindow(w->id);
-      w->deliverWindowEvent(&eventDestroyWindow, sizeof(eventDestroyWindow));
-      w->destroy();  
+      if (w != NULL) {
+        EventDestroyWindow eventDestroyWindow(w->id);
+        w->deliverWindowEvent(&eventDestroyWindow, sizeof(eventDestroyWindow));
+        w->destroy();  
+      }
       break;
     }
     case RQ_MOVE_WINDOW: {
       RqMoveWindow *rq = (RqMoveWindow*) Client::recvBuf;
       Window *w = screen->getWindow(rq->window);
-      // TODO Gestion sous-filles + clean
-      w->unmap();
-      w->x += rq->x;
-      w->y += rq->y;
-      for (Window *currentChild = w->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
-        currentChild->x += rq->x;
-        currentChild->y += rq->y;
+      if (w != NULL) {
+        // TODO Gestion sous-filles + clean
+        // TODO Create method Window::move
+        w->unmap();
+        w->x += rq->x;
+        w->y += rq->y;
+        for (Window *currentChild = w->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
+          currentChild->x += rq->x;
+          currentChild->y += rq->y;
+        }
+        w->map();
       }
-      w->map();
       break;
     }
   }

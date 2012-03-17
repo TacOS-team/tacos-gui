@@ -104,7 +104,7 @@ void Mouse::updateMouseWin() {
     // and take the first (the one with the bigger Z)
     Window *currentChild = currentWin->lastChild;
     while (currentChild != NULL) {
-      if (currentChild->contains(mouseX, mouseY)) {
+      if (currentChild->mapped && currentChild->contains(mouseX, mouseY)) {
         currentWin = currentChild;
         break;// We have found the first containing child we have to stop
       } 

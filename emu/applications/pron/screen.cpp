@@ -366,7 +366,7 @@ void Screen::setClipWindow(Window *w) {
 }
 
 bool Screen::prepareDrawing(Window *w) {
-  if (w == NULL || !w->mapped) { // TODO : avoid that w is NULL at the beginning...
+  if (!w->mapped) {
     // Can't draw in unmapped window
     return false;
   }

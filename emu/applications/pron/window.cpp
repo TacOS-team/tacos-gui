@@ -5,6 +5,8 @@
 #include <cstdio>
 #include <string.h>
 #include <pronlib_enums.h>
+#include <algorithm>
+#include <mouse.h>
 
 Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, int y, int width, int height) {
   this->screen = screen;
@@ -47,7 +49,10 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
 
 // Destructor : delete all of the childs
 Window::~Window() {
-  for (Window * child = this->firstChild; child != NULL; child = child->nextSibling) {
+  this->screen->windows.erase(std::find(this->screen->windows.begin(), this->screen->windows.end(), this));
+
+  for (Window *child = this->firstChild, *nextChild; child != NULL; child = nextChild) {
+    nextChild = child->nextSibling;
     delete child;
   }
 }
@@ -75,9 +80,16 @@ void Window::unmap() {
     }
   }
 
-  // TODO: check if we were clipwin/mousewin/focuswin
-
   this->mapped = false;
+
+  // TODO: check if we were clipwin/mousewin/focuswin
+  if (this->screen->clipWin == this) {
+    this->screen->clipWin = NULL;
+  }
+
+  if (this->screen->getMouseWin() == this) {
+    Mouse::getInstance()->updateMouseWin();
+  }
 }
 
 void Window::map() {
