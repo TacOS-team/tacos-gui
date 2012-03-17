@@ -75,9 +75,7 @@ int main() {
             // registering for any EV_DESTROY_WINDOW event
             pronSelectInput(display, windowCreated->window,
               PRON_EVENTMASK(EV_DESTROY_WINDOW) || PRON_EVENTMASK(EV_MOUSE_BUTTON));
-            printf("avant get %d %d\n", gw->parentAttributes.width, gw->parentAttributes.height);
             pronGetWindowAttributes(display, parentWindowId, &(gw->parentAttributes));
-            printf("apres get %d %d\n", gw->parentAttributes.width, gw->parentAttributes.height);
 
             // Fond rouge à la fenêtre de déco provisoire
             COLOR(gw->parentAttributes.bgColor, 24).r = 255;

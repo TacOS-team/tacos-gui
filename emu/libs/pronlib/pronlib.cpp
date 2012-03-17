@@ -98,8 +98,6 @@ void pronGetWindowAttributes(Display *d, Window w, PronWindowAttributes *attr) {
   tsock_write(d->fd, &rq, sizeof(rq)) ;
   RespWindowAttributes res(*attr);
   d->read(RS_WINDOW_ATTRIBUTES, &res, sizeof(RespWindowAttributes));
-  printf("res : (x, y, width, height) : %d, %d, %d, %d\n", res.attributes.x, res.attributes.y,
-    res.attributes.width, res.attributes.height);
   *attr = res.attributes;
 }
 

@@ -48,7 +48,6 @@ void GWindowsManager::initWindowPosition(GWindow *gw) {
   gw->parentAttributes.x = 0;
   gw->parentAttributes.y = 0;
   if (!this->overlaps(gw)) {
-    printf("fock\n");
     return;
   }
   for (size_t i = 0; i < this->windowsList.size(); ++i) {
@@ -79,7 +78,6 @@ void GWindowsManager::initWindowPosition(GWindow *gw) {
         }
       }
     }
-    // TODO to be continued....
   }
   gw->parentAttributes.x = 0;
   gw->parentAttributes.y = 0;
