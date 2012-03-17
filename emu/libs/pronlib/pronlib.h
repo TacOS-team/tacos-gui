@@ -275,7 +275,7 @@ struct Display {
 
     if (sizeRead < 0) {
       // TODO: handle read error?
-      perror("Failed to read from server");
+      //perror("Failed to read from server");
     } else if (sizeRead == 0) {
       // TODO: handle server disconnection
       fprintf(stderr, "Server has closed the connection\n");
