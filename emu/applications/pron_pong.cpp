@@ -81,8 +81,8 @@ int main() {
 
   Window w = pronCreateWindow(d, d->rootWindow, 0, 0, WIDTH, HEIGHT);
 
-  // Creating graphical context
-  GC gc = pronCreateGC(d);
+  // On récupère le contexte graphique par défaut
+  GC gc = d->defaultGC;
 
   // We've to map the window
   pronMapWindow(d, w);

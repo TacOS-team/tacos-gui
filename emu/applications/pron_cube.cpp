@@ -54,11 +54,11 @@ void draw_cube(Display *d, Window w) {
   int ligne;
 
   for (ligne = 0; ligne < 12; ligne++) {
-    if (!pronDrawLine(d, w, 0, 
-	  (int)(cube[lignes[ligne][0]][0]*50+150),
-	  (int)(cube[lignes[ligne][0]][1]*50+100),
-	  (int)(cube[lignes[ligne][1]][0]*50+150),
-	  (int)(cube[lignes[ligne][1]][1]*50+100))) {
+    if (!pronDrawLine(d, w, d->defaultGC,
+	     (int)(cube[lignes[ligne][0]][0]*50+150),
+	     (int)(cube[lignes[ligne][0]][1]*50+100),
+	     (int)(cube[lignes[ligne][1]][0]*50+150),
+	     (int)(cube[lignes[ligne][1]][1]*50+100))) {
       fprintf(stderr, "pron has closed the connection.\n");
       exit(1);
     }
@@ -67,7 +67,6 @@ void draw_cube(Display *d, Window w) {
 
 int main(int argc, char *argv[]) {
   int x, y;
-  //PronWindowAttributes newAttr;
 
   if (argc > 2) {
     x = atoi(argv[1]);
