@@ -6,8 +6,12 @@
 
 struct PronEvent : public PronMessage {
   /** Constructor. */
-  PronEvent(MessageType type)
-  : PronMessage(type) {}
+  PronEvent(MessageType type, unsigned int window)
+  : PronMessage(type) {
+    this->window = window;
+  }
+
+  unsigned int window;
 };
 
 /**
@@ -17,13 +21,11 @@ struct PronEvent : public PronMessage {
  struct EventWindowCreated : public PronEvent {
   /** Constructor. */
   EventWindowCreated(unsigned int window, unsigned int parent, const PronWindowAttributes & attributes)
-  : PronEvent(EV_WINDOW_CREATED) {
-   this->window = window;
+  : PronEvent(EV_WINDOW_CREATED, window) {
    this->parent = parent;
    this->attributes = attributes;
  }
 
- unsigned int window;
  unsigned int parent;
  PronWindowAttributes attributes;
 };
@@ -34,15 +36,13 @@ struct PronEvent : public PronMessage {
  struct EventExpose : public PronEvent {
   /** Constructor. */
   EventExpose(unsigned int window, int x, int y, int width, int height)
-  : PronEvent(EV_EXPOSE) {
-   this->window = window;
+  : PronEvent(EV_EXPOSE, window) {
    this->x = x;
    this->y = y;
    this->width = width;
    this->height = height;
  }
 
- unsigned int window;
  int x;
  int y;
  int width;
@@ -55,15 +55,13 @@ struct PronEvent : public PronMessage {
  struct EventPointerMoved : public PronEvent {
   /** Constructor. */
   EventPointerMoved(unsigned int window, int x, int y, int xRoot, int yRoot)
-  : PronEvent(EV_POINTER_MOVED) {
-    this->window = window;
+  : PronEvent(EV_POINTER_MOVED, window) {
     this->x = x;
     this->y = y;
     this->xRoot = xRoot;
     this->yRoot = yRoot;
   }
 
-  unsigned int window;
   int x, y;
   int xRoot, yRoot;
 };
@@ -74,8 +72,7 @@ struct PronEvent : public PronMessage {
 struct EventMouseButton : public PronEvent {
   /** Constructor. */
   EventMouseButton(unsigned int window, bool b1, bool b2, bool b3, bool b4, bool b5, bool b6)
-       : PronEvent(EV_MOUSE_BUTTON) {
-    this->window = window;
+       : PronEvent(EV_MOUSE_BUTTON, window) {
     this->b1 = b1;
     this->b2 = b2;
     this->b3 = b3;
@@ -84,7 +81,6 @@ struct EventMouseButton : public PronEvent {
     this->b6 = b6;
   }
 
-  unsigned int window;
   bool b1;// left button
   bool b2;
   bool b3;
@@ -100,8 +96,7 @@ struct EventMouseButton : public PronEvent {
   /** Constructor. */
   EventKey(MessageType type, unsigned int window, unsigned int subwindow,
     int x, int y, int xRoot, int yRoot, unsigned int keysym, unsigned int modifiers)
-  : PronEvent(type) {
-    this->window = window;
+  : PronEvent(type, window) {
     this->subwindow = subwindow;
     this->x = x;
     this->y = y;
@@ -111,7 +106,6 @@ struct EventMouseButton : public PronEvent {
     this->modifiers = modifiers;
   }
 
-  unsigned int window;
   unsigned int subwindow;
   int x, y;
   int xRoot, yRoot;
@@ -144,10 +138,7 @@ struct EventMouseButton : public PronEvent {
  */
  struct EventDestroyWindow : public PronEvent {
   /** Constructor. */
-  EventDestroyWindow(unsigned int window) : PronEvent(EV_DESTROY_WINDOW) {
-    this->window = window;
-  }
-  unsigned int window;
+  EventDestroyWindow(unsigned int window) : PronEvent(EV_DESTROY_WINDOW, window) {}
 };
 PronEvent* getPronEvent();
 
