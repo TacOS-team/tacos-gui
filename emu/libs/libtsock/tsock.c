@@ -108,3 +108,13 @@ void tsock_close(int tsock) {
     perror("close");
   }
 }
+
+int tsock_set_nonblocking(int tsock) {
+  int flags = fcntl(tsock, F_GETFL, 0);
+  return fcntl(tsock, F_SETFL, flags | O_NONBLOCK);
+}
+
+int tsock_set_blocking(int tsock) {
+  int flags = fcntl(tsock, F_GETFL, 0);
+  return fcntl(tsock, F_SETFL, flags & ~O_NONBLOCK);
+}

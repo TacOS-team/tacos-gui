@@ -196,7 +196,7 @@ void pronDontPropagateEvent(Display *d, Window w, uint32_t eventMask);
  * @param d The connection to pron
  * @param e Event returned
  */
-int pronNextEvent(Display *d, PronEvent * e);
+int pronNextEvent(Display *d, PronEvent *e, bool nonBlocking = false);
 
 /**
  * Get the attributes of a given window.

@@ -142,8 +142,18 @@ void pronDontPropagateEvent(Display *d, Window w ,uint32_t eventMask) {
   tsock_write(d->fd, &rq, sizeof(rq));
 }
 
-int pronNextEvent(Display *d, PronEvent *e) {
-  return d->getNextEvent(e);
+int pronNextEvent(Display *d, PronEvent *e, bool nonBlocking) {
+  if (nonBlocking) {
+    tsock_set_nonblocking(d->fd);
+  }
+
+  int ret = d->getNextEvent(e);
+
+  if (nonBlocking) {
+    tsock_set_blocking(d->fd);
+  }
+
+  return ret;
 }
   
 PronEvent* getPronEvent() {
