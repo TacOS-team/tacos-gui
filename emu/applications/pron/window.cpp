@@ -260,6 +260,9 @@ void Window::deliverWindowEvent(PronEvent *e, unsigned int size) {
 void Window::deliverDeviceEvent(PronEvent *e, unsigned int size) {
   unsigned int eventMask = PRON_EVENTMASK(e->type);
 
+  // Set the event window
+  e->window = this->id;
+
   this->deliverEvent(e, size);
 
   if (this->parent && !(this->dontPropagateMask & eventMask)) {
