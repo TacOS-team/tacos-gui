@@ -43,9 +43,30 @@ void pronClearWindow(Display *d, Window w) {
   tsock_write(d->fd, &rq, sizeof(rq));
 }
 
-GC pronCreateGC(Display *d) {
-  GC gc = 0;
+GC pronCreateGC(Display *d, const PronGCValues &values, unsigned int mask) {
+  GC gc = d->newResourceId();
+  RqCreateGC rq(gc, values, mask);
+  tsock_write(d->fd, &rq, sizeof(rq));
+  
   return gc;
+}
+
+void pronGetGCValues(Display *d, GC gc, PronGCValues *values) {
+  RqGetGCValues rq(gc);
+  tsock_write(d->fd, &rq, sizeof(rq));
+  RespGCValues res(*values);
+  d->read(RS_GC_VALUES, &res, sizeof(res));
+  *values = res.values;
+}
+
+void pronChangeGC(Display *d, GC gc, const PronGCValues &values, unsigned int mask) {
+  RqChangeGC rq(gc, values, mask);
+  tsock_write(d->fd, &rq, sizeof(rq));
+}
+
+void pronFreeGC(Display *d, GC gc) {
+  RqFreeGC rq(gc);
+  tsock_write(d->fd, &rq, sizeof(rq));
 }
 
 void pronMapWindow(Display *d, Window w) {

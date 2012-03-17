@@ -30,9 +30,13 @@ enum MessageType {
   RQ_DESTROY_WINDOW           = (RQ_PREFIX | 18),
   RQ_MOVE_WINDOW              = (RQ_PREFIX | 19),
   RQ_DONT_PROPAGATE           = (RQ_PREFIX | 20),
+  RQ_GET_GC_VALUES            = (RQ_PREFIX | 21),
+  RQ_CHANGE_GC                = (RQ_PREFIX | 22),
+  RQ_FREE_GC                  = (RQ_PREFIX | 23),
   /* Responses */
   RS_WELCOME                  = (RS_PREFIX |  1),
   RS_WINDOW_ATTRIBUTES        = (RS_PREFIX |  2),
+  RS_GC_VALUES                = (RS_PREFIX |  3),
   /* Events */
   EV_WINDOW_CREATED           = (EV_PREFIX |  1),
   EV_POINTER_MOVED            = (EV_PREFIX |  2),
@@ -54,6 +58,12 @@ enum WindowAttributeField {
   WIN_ATTR_WIDTH    = (1 << 2), 
   WIN_ATTR_HEIGHT   = (1 << 3),
   WIN_ATTR_BG_COLOR = (1 << 4),
+};
+
+/** Pron GC values fields for mask on get/set values */
+enum GCValueField {
+  GC_VAL_FG        = (1 << 0), 
+  GC_VAL_BG        = (1 << 1),
 };
 
 
