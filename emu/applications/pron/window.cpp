@@ -17,6 +17,7 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
   this->x = x;
   this->y = y;
   this->width = width;
+  memset(&this->bgColor, 0, sizeof(this->bgColor));
   COLOR(this->bgColor, 24).r = 0;
   COLOR(this->bgColor, 24).g = 0;
   COLOR(this->bgColor, 24).b = 0;
