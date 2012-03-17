@@ -40,7 +40,11 @@ public:
    */
   void updateMouseWin();
   /**
-   * Draws mouse pointer
+   * Restore the mouse pointer
+   */
+  void restorePointerBackground();
+  /**
+   * Backup and draw mouse pointer
    */
   void drawPointer();
   /**

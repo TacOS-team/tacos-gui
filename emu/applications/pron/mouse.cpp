@@ -39,9 +39,6 @@ void Mouse::checkEvents() {
 
   // Handle button mouse events
   this->handleButton(&state);
-
-  // Draws the mouse pointer
-  this->drawPointer();
 }
 
 void Mouse::handleMotion(mousestate_t *state) {
@@ -126,8 +123,9 @@ void Mouse::updateMouseWin() {
   screen->setMouseWin(currentWin);
 }
 
-void Mouse::drawPointer() {
+void Mouse::restorePointerBackground() {
   Screen *screen = Screen::getInstance();
+
   // Restore the previous pointer background
   if (this->pointerBackuped) {
     for (int pBackY = 0; pBackY < PRON_MOUSE_POINTER_HEIGHT; pBackY++) {
@@ -142,6 +140,10 @@ void Mouse::drawPointer() {
       }
     }
   }
+}
+
+void Mouse::drawPointer() {
+  Screen *screen = Screen::getInstance();
 
   // Save the new pointer background
   this->pointerBackupX = this->mouseX;
