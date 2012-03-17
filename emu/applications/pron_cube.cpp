@@ -97,6 +97,7 @@ int main(int argc, char *argv[]) {
   updateZoom(initialWidth, initialHeight);
 
   Window w = pronCreateWindow(d, d->rootWindow, x, y, initialWidth, initialHeight);
+  pronSelectInput(d, w, PRON_EVENTMASK(EV_DESTROY_WINDOW));
 
   PronWindowAttributes newAttr;
   COLOR(newAttr.bgColor, 24).r = (w >> 16) << 3;
@@ -106,7 +107,21 @@ int main(int argc, char *argv[]) {
 
   pronMapWindow(d, w);
 
+  PronEvent * event= getPronEvent();
+
   while (1) {
+    if (pronNextEvent(d, event, true)) {
+      switch (event->type) {
+        case EV_DESTROY_WINDOW : {
+          //EventDestroyWindow *destroyWindowEvent = (EventDestroyWindow*) event;
+          printf("DestroyWindow event received\n");
+          return 0;
+          break;
+        }
+        default:
+        break;
+      }
+    }
     pronClearWindow(d, w);  
     int i = 0;
     for (i = 0; i < 8; i++) {
