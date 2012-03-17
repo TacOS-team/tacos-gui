@@ -155,9 +155,14 @@ int main() {
       case EV_POINTER_MOVED : {
         EventPointerMoved *mousePointerEvent = (EventPointerMoved*) e;
         if (windowIdLeftButtonPressed && mouseLastXPosition != -1) {
-          pronMoveWindow(display, windowIdLeftButtonPressed,
-            mousePointerEvent->xRoot - mouseLastXPosition,
-            mousePointerEvent->yRoot - mouseLastYPosition);
+          int xMove = mousePointerEvent->xRoot - mouseLastXPosition;
+          int yMove = mousePointerEvent->yRoot - mouseLastYPosition;
+          pronMoveWindow(display, windowIdLeftButtonPressed, xMove, yMove);
+          GWindow *pGWindow = windowsManager.getGWindow(windowIdLeftButtonPressed);
+          pGWindow->parentAttributes.x += xMove;
+          pGWindow->parentAttributes.y += yMove;
+          pGWindow->attributes.x       += xMove;
+          pGWindow->attributes.y       += yMove;
         }
         mouseLastXPosition = mousePointerEvent->xRoot;
         mouseLastYPosition = mousePointerEvent->yRoot;
