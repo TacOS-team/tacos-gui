@@ -157,17 +157,17 @@ void Window::fillCircle(int x, int y, int radius) {
 void Window::clear(int x, int y, int width, int height) {
   this->reduce(x, y, width, height);
 
-  color_t oldFg = this->screen->gc.fg;
-  COLOR(this->screen->gc.fg, 24).r = COLOR(this->bgColor, 24).r;
-  COLOR(this->screen->gc.fg, 24).g = COLOR(this->bgColor, 24).g;
-  COLOR(this->screen->gc.fg, 24).b = COLOR(this->bgColor, 24).b;
+  color_t oldFg = this->screen->gc->fg;
+  COLOR(this->screen->gc->fg, 24).r = COLOR(this->bgColor, 24).r;
+  COLOR(this->screen->gc->fg, 24).g = COLOR(this->bgColor, 24).g;
+  COLOR(this->screen->gc->fg, 24).b = COLOR(this->bgColor, 24).b;
   this->screen->setClipWindow(this);
   this->screen->fillRectangle(this->x + x, this->y + y, width, height);
   // If it is the root window, we print a grid (provisoire !!!!!! TODO)
   if (this->id == 0) {
-    COLOR(this->screen->gc.fg, 24).r = 255;
-    COLOR(this->screen->gc.fg, 24).g = 0;
-    COLOR(this->screen->gc.fg, 24).b = 0;
+    COLOR(this->screen->gc->fg, 24).r = 255;
+    COLOR(this->screen->gc->fg, 24).g = 0;
+    COLOR(this->screen->gc->fg, 24).b = 0;
     int step = 50;
     for (int i = step; i < this->width; i += step) {
       this->screen->drawLine(i, 0, i, this->height);
@@ -176,7 +176,7 @@ void Window::clear(int x, int y, int width, int height) {
       this->screen->drawLine(0, i, this->width, i);
     }
   }
-  this->screen->gc.fg = oldFg;
+  this->screen->gc->fg = oldFg;
 
   // Send exposure event
   EventExpose expose(this->id, x, y, width, height);

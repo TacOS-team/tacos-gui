@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <clip_zone.h>
+#include <gc.h>
 
 extern "C" {
 #include <vesa_types.h>
@@ -11,10 +12,6 @@ extern "C" {
 using namespace std;
 
 class Window;
-
-struct GC {
-  color_t fg;
-};
 
 class Screen {
 
@@ -44,13 +41,14 @@ public: // XXX: bourrin
   Window *root;
   Window *clipWin;
   ClipZone *clipZone;
-  GC gc;
+  GC defaultGC;
+  GC *gc;
 
   static Screen* getInstance(int width, int height, int bitsPerPixel);
   static Screen* getInstance();
   
   void setClipWindow(Window *w);
-  bool prepareDrawing(Window *w);
+  bool prepareDrawing(Window *w, GC *gc = NULL);
 
   void drawPoint(int x, int y);
   void drawLine(int x1, int y1, int x2, int y2);
