@@ -264,12 +264,12 @@ struct RqFillCircle : public PronRequest {
  */
 struct RqGetWindowAttributes : public PronRequest {
   /** Constructor. */
-  RqGetWindowAttributes(unsigned int w)
+  RqGetWindowAttributes(unsigned int window)
     : PronRequest(RQ_GET_WINDOW_ATTRIBUTES) {
-      this->w = w;
+      this->window = window;
     }
 
-  unsigned int w; /**< id of Window */
+  unsigned int window; /**< id of Window */
 };
 
 /**
@@ -278,14 +278,14 @@ struct RqGetWindowAttributes : public PronRequest {
  */
 struct RqSetWindowAttributes : public PronRequest {
   /** Constructor. */
-  RqSetWindowAttributes(unsigned int w , const PronWindowAttributes & newAttr,unsigned int mask)
+  RqSetWindowAttributes(unsigned int window, const PronWindowAttributes &newAttr, unsigned int mask)
     : PronRequest(RQ_SET_WINDOW_ATTRIBUTES) {
-      this->w = w;
+      this->window = window;
       this->newAttr = newAttr;
       this->mask = mask;
     }
 
-  unsigned int w; /**< id of Window */
+  unsigned int window; /**< id of Window */
   PronWindowAttributes newAttr; /**< new attributes of the window */
   unsigned int mask; /**< indiquates which attributes have to be set */
 };

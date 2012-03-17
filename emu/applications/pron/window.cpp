@@ -166,7 +166,7 @@ void Window::clear(int x, int y, int width, int height) {
   }
   this->screen->gc.fg = oldFg;
 
-// Send exposure event
+  // Send exposure event
   EventExpose expose(this->id, x, y, width, height);
   this->deliverEvent(&expose, sizeof(expose));
 }
