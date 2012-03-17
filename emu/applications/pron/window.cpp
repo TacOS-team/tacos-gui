@@ -188,7 +188,7 @@ void Window::clear() {
 }
 
 PronWindowAttributes Window::getAttributes() {
-  PronWindowAttributes attr ;
+  PronWindowAttributes attr;
   attr.x = this->x;
   attr.y = this->y;
   attr.width = this->width;
@@ -307,18 +307,18 @@ void Window::exposeArea(int x, int y, int width, int height) {
   }
 }
 
-bool Window::contains(int x, int y){
+bool Window::contains(int x, int y) {
   return this->getX() <= x &&
-  this->getY() <= y &&
-  this->getX() + this->getWidth() > x &&
-  this->getY() + this->getHeight() > y;
+      this->getY() <= y &&
+      this->getX() + this->getWidth() > x &&
+      this->getY() + this->getHeight() > y;
 }
 
-int Window::getX(){
+int Window::getX() {
   return this->x;
 }
 
-void Window::setX(int x){
+void Window::setX(int x) {
   this->x = x;
 }
 
@@ -326,23 +326,23 @@ int Window::getY(){
   return this->y;
 }
 
-void Window::setY(int y){
+void Window::setY(int y) {
   this->y = y;
 }
 
-int Window::getWidth(){
+int Window::getWidth() {
   return this->width;
 }
 
-void Window::setWidth(int width){
+void Window::setWidth(int width) {
   this->width = width;
 }
 
-int Window::getHeight(){
+int Window::getHeight() {
   return this->height;
 }
 
-void Window::setHeight(int height){
+void Window::setHeight(int height) {
   this->height = height;
 }
 
@@ -373,7 +373,7 @@ void Window::reparent(Window *w) {
 }
 
 void Window::destroy() {
-  printf("window::destroy(%d)\n",this->id);
+  printf("window::destroy(%d)\n", this->id);
   this->unmap();
   // We remove the window from the tree 
   if (this->prevSibling != NULL) {
