@@ -121,8 +121,13 @@ int main() {
         printf("DestroyWindow event received for %d\n", destroyWindowEvent->window);
 
         // Sending destroy request for the parent window
-        pronDestroyWindow(display,windowsManager.getGWindow(destroyWindowEvent->window)->parent);
-        windowsManager.destroy(destroyWindowEvent->window);
+        GWindow *pgwin = windowsManager.getGWindow(destroyWindowEvent->window);
+        if (pgwin) {
+          if (pgwin->parent != destroyWindowEvent->window) {
+            pronDestroyWindow(display,pgwin->parent);
+          }
+          windowsManager.destroy(destroyWindowEvent->window);
+        }
         break;
       }
       case EV_MOUSE_BUTTON : {
