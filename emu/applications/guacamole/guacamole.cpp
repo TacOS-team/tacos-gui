@@ -42,6 +42,9 @@ int main() {
 
   int buttonSize = 15;
 
+  // Variable provisoire pour ralentir le flux dévènements souris et être un peu plus fluide.
+  int eventCalmeur = 0;
+
   while (1) {
     if (!pronNextEvent(display, e)) {
       fprintf(stderr, "pron has closed the connection.\n");
@@ -190,22 +193,31 @@ int main() {
             pGWindow->parentAttributes.y += yMove;
             pGWindow->attributes.x       += xMove;
             pGWindow->attributes.y       += yMove;
+            mouseLastXPosition = mousePointerEvent->xRoot;
+            mouseLastYPosition = mousePointerEvent->yRoot;
           } else if (windowIdResizeButtonPressed) {
-            GWindow *pGWindow = windowsManager.getGWindow(windowIdResizeButtonPressed);
-            pGWindow->parentAttributes.width  += xMove;
-            pGWindow->parentAttributes.height += yMove;
-            pGWindow->attributes.width        += xMove;
-            pGWindow->attributes.height       += yMove;
-            pronResizeWindow(display, pGWindow->parent, pGWindow->parentAttributes.width,
-              pGWindow->parentAttributes.height);
-            pronResizeWindow(display, pGWindow->window, pGWindow->attributes.width,
-              pGWindow->attributes.height);
-            pronMoveWindow(display, pGWindow->resizeButton, xMove, yMove);
-            pronMoveWindow(display, pGWindow->closeButton, xMove, 0);
+            eventCalmeur = (eventCalmeur+1)%4;
+            printf("%d\n", eventCalmeur);
+            if (eventCalmeur == 0) {
+              GWindow *pGWindow = windowsManager.getGWindow(windowIdResizeButtonPressed);
+              pGWindow->parentAttributes.width  += xMove;
+              pGWindow->parentAttributes.height += yMove;
+              pGWindow->attributes.width        += xMove;
+              pGWindow->attributes.height       += yMove;
+              pronResizeWindow(display, pGWindow->parent, pGWindow->parentAttributes.width,
+                pGWindow->parentAttributes.height);
+              pronResizeWindow(display, pGWindow->window, pGWindow->attributes.width,
+                pGWindow->attributes.height);
+              pronMoveWindow(display, pGWindow->resizeButton, xMove, yMove);
+              pronMoveWindow(display, pGWindow->closeButton, xMove, 0);
+              mouseLastXPosition = mousePointerEvent->xRoot;
+              mouseLastYPosition = mousePointerEvent->yRoot;
+            }
           }
+        } else {
+          mouseLastXPosition = mousePointerEvent->xRoot;
+          mouseLastYPosition = mousePointerEvent->yRoot;
         }
-        mouseLastXPosition = mousePointerEvent->xRoot;
-        mouseLastYPosition = mousePointerEvent->yRoot;
         break;
       }
       default:
