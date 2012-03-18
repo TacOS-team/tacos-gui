@@ -17,10 +17,10 @@ GWindow::GWindow (Window w, const PronWindowAttributes & attributes, bool decora
 
     // Abonnement aux évènements souris de la fenêtre de décoration
     pronSelectInput(display, this->parent,
-      PRON_EVENTMASK(EV_MOUSE_BUTTON));
+      PRON_EVENTMASK(EV_MOUSE_BUTTON) | PRON_EVENTMASK(EV_EXPOSE));
     
     pronReparentWindow(display, this->window, this->parent);
-    pronDontPropagateEvent(display,this->window,PRON_EVENTMASK(EV_MOUSE_BUTTON));
+    pronDontPropagateEvent(display,this->window,PRON_EVENTMASK(EV_MOUSE_BUTTON) | PRON_EVENTMASK(EV_EXPOSE));
     
     this->attributes = attributes;
     // registering for any EV_DESTROY_WINDOW event
@@ -34,7 +34,7 @@ GWindow::GWindow (Window w, const PronWindowAttributes & attributes, bool decora
     COLOR(this->parentAttributes.bgColor, 24).b = 0;
     pronSetWindowAttributes(display, this->parent, this->parentAttributes, WIN_ATTR_BG_COLOR);
     pronDontPropagateEvent(display,this->parent,
-      PRON_EVENTMASK(EV_MOUSE_BUTTON) | PRON_EVENTMASK(EV_EXPOSE));
+      PRON_EVENTMASK(EV_MOUSE_BUTTON));
 
     // Adding the close button
     /*this->closeButton = pronCreateWindow(display, this->parent,
@@ -111,6 +111,7 @@ bool GWindow::overlaps(GWindow *gw) {
 
 
 void GWindow::decorate() {
+  // A décommenter quand on aura moins de expose event
   //pronClearWindow(display, this->parent);
   pronFillRectangle(display, this->parent, this->closeButtonGC, this->parentAttributes.width - 15,0,15,15);
   pronFillRectangle(display, this->parent, this->resizeButtonGC, this->parentAttributes.width - 15,
