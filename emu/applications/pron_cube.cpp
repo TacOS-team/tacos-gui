@@ -97,7 +97,7 @@ int main(int argc, char *argv[]) {
   updateZoom(initialWidth, initialHeight);
 
   Window w = pronCreateWindow(d, d->rootWindow, x, y, initialWidth, initialHeight);
-  pronSelectInput(d, w, PRON_EVENTMASK(EV_DESTROY_WINDOW));
+  pronSelectInput(d, w, PRON_EVENTMASK(EV_DESTROY_WINDOW) | PRON_EVENTMASK(EV_RESIZE_WINDOW));
 
   PronWindowAttributes newAttr;
   COLOR(newAttr.bgColor, 24).r = (w >> 16) << 3;
@@ -116,6 +116,12 @@ int main(int argc, char *argv[]) {
           //EventDestroyWindow *destroyWindowEvent = (EventDestroyWindow*) event;
           printf("DestroyWindow event received\n");
           return 0;
+          break;
+        }
+        case EV_RESIZE_WINDOW : {
+          EventResizeWindow *resizeWindowEvent = (EventResizeWindow*) event;
+          printf("Resize event received\n");
+          updateZoom(resizeWindowEvent->width, resizeWindowEvent->height);
           break;
         }
         default:
