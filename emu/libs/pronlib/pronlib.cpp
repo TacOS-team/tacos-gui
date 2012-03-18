@@ -143,3 +143,42 @@ void pronMoveWindow(Display *d, unsigned int w, int x, int y) {
   RqMoveWindow rq(w, x, y);
   tsock_write(d->fd, &rq, sizeof(rq));
 }
+
+void pronPutImage(Display *d, Window w, GC gc, PronImage *image, 
+    int srcX, int srcY, int destX, int destY, int width, int height) {
+  // We have to check if the rectangle the client wants to send enters 
+  // in the source image
+  if((srcX + width > image->width) || (srcY + height > image->height)) {
+    fprintf(stderr, "Subimage is too large\n");
+    return;
+  }
+  // Compute the size of the needed send buffer
+  int bufferSize = sizeof(RqPutImage) + width * height * image->depth;
+  // Test if we can send the image 
+  if(! (bufferSize <= MAX_MSG_SIZE)) {
+    fprintf(stderr, "Message is to small\n");
+    return;
+  }
+  // We allocate the image request buffer
+  char *buf = (char *)malloc(bufferSize);
+  // Creation of the request object
+  RqPutImage rq(w, width, height, destX, destY, image->depth, image->format);
+  // Copy of the request object in the send buffer
+  memcpy(buf, &rq, sizeof(rq));
+  // Now we have to copy the subimage we have to send
+  for(int y = 0; y < height; y++){
+    for(int x = 0; x < width; x++){
+      // Buffer destination
+      void * dest = buf + sizeof(rq) + (x + y * width) * image->depth ;
+      // Image source
+      void * src = image->data + (srcY * image->width + srcX + x + y * width) * image->depth;
+      // Copy the pixel dude
+      memcpy(dest, src, image->depth);
+    }
+  }
+  // We can send the buffer
+  tsock_write(d->fd, buf, bufferSize);
+  // free the buffer
+  free(buf);
+  // That's all folks
+}

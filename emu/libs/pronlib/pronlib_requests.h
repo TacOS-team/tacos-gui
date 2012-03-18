@@ -372,4 +372,29 @@ struct RqMoveWindow : public PronRequest {
   int y;
 };
 
+/**
+ * Puts an image into a window or a pixmap
+ */
+struct RqPutImage : public PronRequest {
+  /** Constructor. */
+  RqPutImage(unsigned int window, int width, int height, int x, int y, int depth, int format)
+      : PronRequest(RQ_PUT_IMAGE) {
+    this->window = window;
+    this->width = width;  
+    this->height = height;
+    this->x = x;
+    this->y = y;
+    this->depth = depth;
+    this->format = format;
+  }
+
+  unsigned int window; /**< id of Window */
+  int width;
+  int height;
+  int x;
+  int y;
+  int depth;
+  int format;
+};
+
 #endif // __PRONLIB_REQUESTS_H__

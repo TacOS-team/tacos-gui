@@ -93,6 +93,11 @@ int main() {
   // On cree un énènement
   PronEvent *e = getPronEvent();
 
+  //On cree une fake image
+  int x = 1, y = 1, width = 6, height = 6, depth = 24;
+  char * image_data = (char *)malloc(width * width * depth);
+  PronImage image(width, height, ZPixmap, image_data, depth);
+
   while (1) {
 
     //On récupère un évènement
@@ -121,6 +126,8 @@ int main() {
     pronFillRectangle(d, w, gc, 0, racketY, RACKET_WIDTH, RACKET_HEIGHT);
     usleep(10000);
 
+    //on envoie une sous image de l'image dans la fenetre
+    pronPutImage(d, w, gc, &image, x, y, 0, 0, width - 1, height - 1);
   }
 
   pronDisconnect(d);

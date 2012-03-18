@@ -191,6 +191,10 @@ void Client::handle() {
       }
       break;
     }
+    case RQ_PUT_IMAGE: {
+      printf("RQ_PUT_IMAGE\n");
+      break;
+    }
   }
 }
 

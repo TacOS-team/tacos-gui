@@ -2,6 +2,7 @@
 #define __PRONLIB_STRUCTS_H__
 
 #include <vesa_types.h>
+#include <cstdlib>
 
 /**
  * Structure for pron window attributes
@@ -15,8 +16,21 @@ struct PronWindowAttributes {
 };
 /**
  * Structure for pron Image
+ * This structure is free data pointer
  */
 struct PronImage {
+  PronImage(int width, int height, int format, char *data, int depth){
+    this->width = width;
+    this->height = height;
+    this->format = format;
+    this->data = data;
+    this->depth = depth;
+  }
+
+  ~PronImage(){
+    free(this->data);
+  }
+
   int width, height;// Size of the image
   int format;// XYBitmap, XYPixmap, ZPixmap
   char *data;// Pointer to image data
