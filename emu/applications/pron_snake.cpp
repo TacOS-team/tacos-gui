@@ -31,6 +31,7 @@
 #include <unistd.h>
 #include <pronlib.h>
 #include <time.h>
+#include <errno.h>
 
 #define LARGEUR 320
 #define HAUTEUR 200
@@ -43,6 +44,8 @@
 Display *d;
 Window w;
 GC backgroundGC, bleuGC, roseGC;
+
+PronEvent *e;
 
 static int dir = 2, dir_ = 2;
 static int score = 0;
@@ -160,16 +163,42 @@ int avance_snake() {
   }
 
   drawPoint(snake.coords[i].c, snake.coords[i].l, bleuGC);
+
   return 0;
 }
 
-void update_game(int signum) {
-  if (avance_snake() == -1) {
-    printf("NOOB !\n");
-    exit(1);
+void thread_input() {
+  if (!pronNextEvent(d, e, true)) {
+    if (errno != EAGAIN && errno != EWOULDBLOCK) {
+      perror("pron has closed the connection");
+      exit(1);
+    } else {
+      return;
+    }
   }
 
-  alarm(1);
+  switch (e->type) {
+    case EV_KEY_PRESSED : {
+      EventKeyPressed *keyPressed = (EventKeyPressed*) e;
+      switch (keyPressed->keysym) {
+        case PRONK_z:
+          haut();
+          break;
+        case PRONK_s:
+          bas();
+          break;
+        case PRONK_d:
+          droite();
+          break;
+        case PRONK_q:
+          gauche();
+          break;
+      }
+      break;
+    }
+    default:
+      break;
+  }
 }
 
 void game(int x, int y) {
@@ -210,46 +239,14 @@ void game(int x, int y) {
 
   init_snake();
 
-  signal(SIGALRM, update_game);
-  alarm(1);
-
   // Subscribe to window creation events
   pronSelectInput(d, d->rootWindow, PRON_EVENTMASK(EV_KEY_PRESSED));
-  PronEvent *e = getPronEvent();
 
-  while (1) {
-    if (!pronNextEvent(d, e)) {
-      fprintf(stderr, "pron has closed the connection.\n");
-      exit(1);
-    }
+  e = getPronEvent();
 
-    switch (e->type) {
-      case EV_KEY_PRESSED : {
-        EventKeyPressed *keyPressed = (EventKeyPressed*) e;
-        switch (keyPressed->keysym) {
-          case PRONK_z:
-          printf("Haut !\n");
-          haut();
-          break;
-          case PRONK_s:
-          printf("Bas !\n");
-          bas();
-          break;
-          case PRONK_d:
-          printf("Droite !\n");
-          droite();
-          break;
-          case PRONK_q:
-          printf("Gauche !\n");
-          gauche();
-          break;
-        }
-        update_game(0);
-        break;
-      }
-      default:
-      break;
-    }
+  while (avance_snake() != -1) {
+    usleep(100000);
+    thread_input();
   }
 
   pronDisconnect(d);
