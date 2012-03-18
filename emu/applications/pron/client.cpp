@@ -241,6 +241,17 @@ void Client::handle() {
       }
       break;
     }
+    case RQ_RESIZE_WINDOW: {
+      RqResizeWindow *rq = (RqResizeWindow*) Client::recvBuf;
+      Window *w = screen->getWindow(rq->window);
+      if (w != NULL) {
+        w->unmap();
+        w->width  = rq->width;
+        w->height = rq->height;
+        w->map();
+      }
+      break;
+    }
   }
 }
 
