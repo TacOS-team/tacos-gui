@@ -9,15 +9,21 @@ using namespace std;
 struct GWindow {
   Window window;
   Window parent;
-  Window closeButton;
-  Window resizeButton;
+  GC closeButtonGC;
+  GC resizeButtonGC;
   PronWindowAttributes attributes;
   PronWindowAttributes parentAttributes;
+  Display *display;
 
-  GWindow (Window w, Window parent);
+  GWindow (Window w, const PronWindowAttributes & attributes, bool decorate, Display *display);
 
   bool hasDecoration();
   bool overlaps(GWindow *gw);
+
+  void decorate();
+
+  bool isCloseButton (int x, int y);
+  bool isResizeButton(int x, int y);
 };
 
 #endif// _GWINDOW_H_

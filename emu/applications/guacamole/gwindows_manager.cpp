@@ -12,9 +12,7 @@ void GWindowsManager::addGWindow(GWindow *w) {
 GWindow* GWindowsManager::getGWindow(Window w) {
   for (size_t i = 0; i < this->windowsList.size(); ++i) {
     if (this->windowsList[i]->window            == w
-          || this->windowsList[i]->parent       == w
-          || this->windowsList[i]->closeButton  == w
-          || this->windowsList[i]->resizeButton == w) {
+          || this->windowsList[i]->parent       == w) {
       return this->windowsList[i];
     }
   }
