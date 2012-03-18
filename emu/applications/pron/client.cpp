@@ -31,6 +31,8 @@ void Client::handle() {
     }
     case RQ_GOODBYE: {
       printf("RQ_GOODBYE from fd %d\n", this->fd);
+      tsock_close(this->fd);
+      this->fd = -1; // so that pron knows he can delete the client
       break;
     }
     case RQ_CREATE_WINDOW: {
