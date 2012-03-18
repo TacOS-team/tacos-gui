@@ -244,6 +244,8 @@ void Client::handle() {
     case RQ_RESIZE_WINDOW: {
       RqResizeWindow *rq = (RqResizeWindow*) Client::recvBuf;
       Window *w = screen->getWindow(rq->window);
+      EventResizeWindow eventResizeWindow(rq->width, rq->height);
+      w->deliverWindowEvent(&eventResizeWindow, sizeof(eventResizeWindow));
       if (w != NULL) {
         w->unmap();
         w->width  = rq->width;
