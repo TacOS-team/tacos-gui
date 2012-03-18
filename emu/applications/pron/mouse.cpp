@@ -91,7 +91,9 @@ void Mouse::handleButton(mousestate_t *state) {
     Window *mouseWin = screen->getMouseWin();
 
     // delivers the event
-    EventMouseButton mouseButton(mouseWin->id, state->b1, state->b2, state->b3, state->b4, state->b5, state->b6);
+    EventMouseButton mouseButton(mouseWin->id, state->b1, state->b2,
+                                 state->b3, state->b4, state->b5, state->b6,
+                                 state->x, state->y);
     mouseWin->deliverDeviceEvent(&mouseButton, sizeof(mouseButton));
   }
 }

@@ -25,6 +25,16 @@ struct RqHello : public PronRequest {
 };
 
 /**
+ * Goodbye request.
+ * Sent by a client to disconnect from pron
+ */
+struct RqGoodbye : public PronRequest {
+  /** Constructor. */
+  RqGoodbye()
+    : PronRequest(RQ_GOODBYE) {}
+};
+
+/**
  * CreateWindow request.
  * Sent by a client to create a new window.
  */
@@ -110,12 +120,62 @@ struct RqRaiseWindow : public PronRequest {
  */
 struct RqCreateGC : public PronRequest {
   /** Constructor. */
-  RqCreateGC(unsigned int gc)
-    : PronRequest(RQ_CREATE_GC){
-      this->id = id;
-    }
+  RqCreateGC(unsigned int id, const PronGCValues &values, unsigned int mask)
+      : PronRequest(RQ_CREATE_GC) {
+    this->id = id;
+    this->values = values;
+    this->mask = mask;
+  }
 
   unsigned int id; /**< id of the graphics context to create */
+  PronGCValues values; /**< GC values specified in mask */
+  unsigned int mask; /**< specifies which values have to be set */
+};
+
+/**
+ * GetGCValues request.
+ * Sent by a client to get the values of the specified graphics context.
+ */
+struct RqGetGCValues : public PronRequest {
+  /** Constructor. */
+  RqGetGCValues(unsigned int gc)
+      : PronRequest(RQ_GET_GC_VALUES) {
+    this->gc = gc;
+  }
+
+  unsigned int gc; /**< id of the graphics context */
+};
+
+/**
+ * ChangeGC request.
+ * Sent by a client to change the values of a specified graphics context.
+ */
+struct RqChangeGC : public PronRequest {
+  /** Constructor. */
+  RqChangeGC(unsigned int gc, const PronGCValues &values, unsigned int mask)
+      : PronRequest(RQ_CHANGE_GC) {
+    this->gc = gc;
+    this->values = values;
+    this->mask = mask;
+  }
+
+  unsigned int gc; /**< id of the graphics context to change */
+  PronGCValues values; /**< GC values specified in mask */
+  unsigned int mask; /**< specifies which values have to be set */
+};
+
+/**
+ * FreeGC request.
+ * Sent by a client to destroy a graphics context.
+ */
+struct RqFreeGC : public PronRequest {
+  /** Constructor. */
+  RqFreeGC(unsigned int gc)
+      : PronRequest(RQ_FREE_GC) {
+    this->gc = gc;
+  }
+
+  unsigned int gc; /**< id of the graphics context to destroy */
 };
 
 /**
@@ -395,6 +455,24 @@ struct RqPutImage : public PronRequest {
   int y;
   int depth;
   int format;
+};
+
+/**
+ * Resize a Window
+ * Sent by a client to resize a window
+ */
+struct RqResizeWindow : public PronRequest {
+  /** Constructor. */
+  RqResizeWindow(unsigned int window, int width, int height)
+      : PronRequest(RQ_RESIZE_WINDOW) {
+    this->window = window;
+    this->width  = width;
+    this->height = height;
+  }
+
+  unsigned int window; /**< id of Window */
+  int width;
+  int height;
 };
 
 #endif // __PRONLIB_REQUESTS_H__

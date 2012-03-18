@@ -19,6 +19,10 @@ ssize_t tsock_write(int tsock, void *buffer, size_t len);
 
 void tsock_close(int tsock);
 
+int tsock_set_nonblocking(int tsock);
+
+int tsock_set_blocking(int tsock);
+
 #ifdef __cplusplus
 }
 #endif

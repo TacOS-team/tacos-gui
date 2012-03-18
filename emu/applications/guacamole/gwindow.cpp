@@ -3,8 +3,10 @@
 
 
 GWindow::GWindow (Window w, Window parent) {
-  this->window = w;
-  this->parent = parent;
+  this->window       = w;
+  this->parent       = parent;
+  this->closeButton  = 0;
+  this->resizeButton = 0;
 }
 
 bool GWindow::hasDecoration() {

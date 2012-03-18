@@ -35,9 +35,15 @@ int main() {
 
   // TODO
   // Très moche mais très provisoirement ça marche :D
-  unsigned int windowIdLeftButtonPressed = 0;
+  unsigned int windowIdLeftButtonPressed   = 0;
+  unsigned int windowIdResizeButtonPressed = 0;
   int mouseLastXPosition = -1;
   int mouseLastYPosition = -1;
+
+  int buttonSize = 15;
+
+  // Variable provisoire pour ralentir le flux dévènements souris et être un peu plus fluide.
+  int eventCalmeur = 0;
 
   while (1) {
     if (!pronNextEvent(display, e)) {
@@ -59,8 +65,8 @@ int main() {
           if (windowCreated->parent == 0) {
             printf("top level window\n");
             Window parentWindowId = pronCreateWindow(display, display->rootWindow,
-              windowCreated->attributes.x - 15, windowCreated->attributes.y - 15,
-              windowCreated->attributes.width + 30, windowCreated->attributes.height + 30);
+              windowCreated->attributes.x - buttonSize, windowCreated->attributes.y - buttonSize,
+              windowCreated->attributes.width + 2*buttonSize, windowCreated->attributes.height + 2*buttonSize);
             
             pronMapWindow(display, parentWindowId);
 
@@ -69,12 +75,13 @@ int main() {
               PRON_EVENTMASK(EV_MOUSE_BUTTON));
             
             pronReparentWindow(display, windowCreated->window, parentWindowId);
+            pronDontPropagateEvent(display,windowCreated->window,PRON_EVENTMASK(EV_MOUSE_BUTTON));
             
             GWindow *gw = new GWindow(windowCreated->window, parentWindowId);
             gw->attributes = windowCreated->attributes;
             // registering for any EV_DESTROY_WINDOW event
             pronSelectInput(display, windowCreated->window,
-              PRON_EVENTMASK(EV_DESTROY_WINDOW) || PRON_EVENTMASK(EV_MOUSE_BUTTON));
+              PRON_EVENTMASK(EV_DESTROY_WINDOW) | PRON_EVENTMASK(EV_MOUSE_BUTTON));
             pronGetWindowAttributes(display, parentWindowId, &(gw->parentAttributes));
 
             // Fond rouge à la fenêtre de déco provisoire
@@ -82,18 +89,32 @@ int main() {
             COLOR(gw->parentAttributes.bgColor, 24).g = 0;
             COLOR(gw->parentAttributes.bgColor, 24).b = 0;
             pronSetWindowAttributes(display, parentWindowId, gw->parentAttributes, WIN_ATTR_BG_COLOR);
+            pronDontPropagateEvent(display,parentWindowId,PRON_EVENTMASK(EV_MOUSE_BUTTON));
 
             // Adding the close button
             gw->closeButton = pronCreateWindow(display, parentWindowId,
-              windowCreated->attributes.x + windowCreated->attributes.width, windowCreated->attributes.y - 15,
-              15, 15);
+              windowCreated->attributes.x + windowCreated->attributes.width, windowCreated->attributes.y - buttonSize,
+              buttonSize, buttonSize);
             PronWindowAttributes closeButtonAttributes;
             COLOR(closeButtonAttributes.bgColor, 24).r = 0;
             COLOR(closeButtonAttributes.bgColor, 24).g = 255;
             COLOR(closeButtonAttributes.bgColor, 24).b = 0;
             pronSetWindowAttributes(display, gw->closeButton, closeButtonAttributes, WIN_ATTR_BG_COLOR);
-            pronSelectInput(display, gw->closeButton, PRON_EVENTMASK(EV_MOUSE_BUTTON));     
+            pronSelectInput(display, gw->closeButton, PRON_EVENTMASK(EV_MOUSE_BUTTON));
             pronDontPropagateEvent(display,gw->closeButton,PRON_EVENTMASK(EV_MOUSE_BUTTON));
+
+            // Adding the resize button
+            gw->resizeButton = pronCreateWindow(display, parentWindowId,
+              windowCreated->attributes.x + windowCreated->attributes.width,
+              windowCreated->attributes.y + windowCreated->attributes.height,
+              buttonSize, buttonSize);
+            PronWindowAttributes resizeButtonAttributes;
+            COLOR(closeButtonAttributes.bgColor, 24).r = 0;
+            COLOR(closeButtonAttributes.bgColor, 24).g = 0;
+            COLOR(closeButtonAttributes.bgColor, 24).b = 255;
+            pronSetWindowAttributes(display, gw->resizeButton, resizeButtonAttributes, WIN_ATTR_BG_COLOR);
+            pronSelectInput(display, gw->resizeButton, PRON_EVENTMASK(EV_MOUSE_BUTTON));
+            pronDontPropagateEvent(display,gw->resizeButton,PRON_EVENTMASK(EV_MOUSE_BUTTON));
 
             windowsManager.initWindowPosition(gw);
             printf("nouvelle position %d %d\n", gw->parentAttributes.x, gw->parentAttributes.y);
@@ -130,6 +151,7 @@ int main() {
       }
       case EV_MOUSE_BUTTON : {
         EventMouseButton *mouseButtonEvent = (EventMouseButton*) e;
+        printf("mouse button event. ID : %d\n", mouseButtonEvent->window);
         if (mouseButtonEvent->b1) {
           // If the window is the decoration window
           GWindow *gwin = windowsManager.getGWindow(mouseButtonEvent->window);
@@ -137,7 +159,10 @@ int main() {
             pronDestroyWindow(display,gwin->parent);
             windowsManager.destroy(gwin->parent);
           } else {
-            if (mouseButtonEvent->window == gwin->parent) {
+            if (mouseButtonEvent->window == gwin->resizeButton) {
+              windowIdResizeButtonPressed = mouseButtonEvent->window;
+            }
+            else if (mouseButtonEvent->window == gwin->parent) {
               windowIdLeftButtonPressed = mouseButtonEvent->window;
             }
             // Puts the window on foreground
@@ -149,7 +174,8 @@ int main() {
             mouseLastXPosition = -1;
           }
         } else {
-          windowIdLeftButtonPressed = 0;
+          windowIdLeftButtonPressed   = 0;
+          windowIdResizeButtonPressed = 0;
           // Unsubscribe of events of the root window to avoid useless events
           currentRootEventMask &= ~PRON_EVENTMASK(EV_MOUSE_BUTTON);
           currentRootEventMask &= ~PRON_EVENTMASK(EV_POINTER_MOVED);
@@ -159,18 +185,40 @@ int main() {
       }
       case EV_POINTER_MOVED : {
         EventPointerMoved *mousePointerEvent = (EventPointerMoved*) e;
-        if (windowIdLeftButtonPressed && mouseLastXPosition != -1) {
+        if (mouseLastXPosition != -1) {
           int xMove = mousePointerEvent->xRoot - mouseLastXPosition;
           int yMove = mousePointerEvent->yRoot - mouseLastYPosition;
-          pronMoveWindow(display, windowIdLeftButtonPressed, xMove, yMove);
-          GWindow *pGWindow = windowsManager.getGWindow(windowIdLeftButtonPressed);
-          pGWindow->parentAttributes.x += xMove;
-          pGWindow->parentAttributes.y += yMove;
-          pGWindow->attributes.x       += xMove;
-          pGWindow->attributes.y       += yMove;
+          if (windowIdLeftButtonPressed) {
+            pronMoveWindow(display, windowIdLeftButtonPressed, xMove, yMove);
+            GWindow *pGWindow = windowsManager.getGWindow(windowIdLeftButtonPressed);
+            pGWindow->parentAttributes.x += xMove;
+            pGWindow->parentAttributes.y += yMove;
+            pGWindow->attributes.x       += xMove;
+            pGWindow->attributes.y       += yMove;
+            mouseLastXPosition = mousePointerEvent->xRoot;
+            mouseLastYPosition = mousePointerEvent->yRoot;
+          } else if (windowIdResizeButtonPressed) {
+            eventCalmeur = (eventCalmeur+1)%2;
+            if (eventCalmeur == 0) {
+              GWindow *pGWindow = windowsManager.getGWindow(windowIdResizeButtonPressed);
+              pGWindow->parentAttributes.width  += xMove;
+              pGWindow->parentAttributes.height += yMove;
+              pGWindow->attributes.width        += xMove;
+              pGWindow->attributes.height       += yMove;
+              pronResizeWindow(display, pGWindow->parent, pGWindow->parentAttributes.width,
+                pGWindow->parentAttributes.height);
+              pronResizeWindow(display, pGWindow->window, pGWindow->attributes.width,
+                pGWindow->attributes.height);
+              pronMoveWindow(display, pGWindow->resizeButton, xMove, yMove);
+              pronMoveWindow(display, pGWindow->closeButton, xMove, 0);
+              mouseLastXPosition = mousePointerEvent->xRoot;
+              mouseLastYPosition = mousePointerEvent->yRoot;
+            }
+          }
+        } else {
+          mouseLastXPosition = mousePointerEvent->xRoot;
+          mouseLastYPosition = mousePointerEvent->yRoot;
         }
-        mouseLastXPosition = mousePointerEvent->xRoot;
-        mouseLastYPosition = mousePointerEvent->yRoot;
         break;
       }
       default:

@@ -30,6 +30,15 @@ Display* pronConnect() {
   return d; 
 }
 
+void pronDisconnect(Display *d) {
+  RqGoodbye rq;
+  tsock_write(d->fd,&rq, sizeof(rq));
+  //tsock_close(d->fd);
+  //delete d; 
+}
+
+
+
 Window pronCreateWindow(Display *d, Window parent, int x, int y, int width, int height) {
   Window w = d->newResourceId();
   RqCreateWindow rq(w, parent, x, y, width, height);
@@ -43,9 +52,30 @@ void pronClearWindow(Display *d, Window w) {
   tsock_write(d->fd, &rq, sizeof(rq));
 }
 
-GC pronCreateGC(Display *d) {
-  GC gc = 0;
+GC pronCreateGC(Display *d, const PronGCValues &values, unsigned int mask) {
+  GC gc = d->newResourceId();
+  RqCreateGC rq(gc, values, mask);
+  tsock_write(d->fd, &rq, sizeof(rq));
+  
   return gc;
+}
+
+void pronGetGCValues(Display *d, GC gc, PronGCValues *values) {
+  RqGetGCValues rq(gc);
+  tsock_write(d->fd, &rq, sizeof(rq));
+  RespGCValues res(*values);
+  d->read(RS_GC_VALUES, &res, sizeof(res));
+  *values = res.values;
+}
+
+void pronChangeGC(Display *d, GC gc, const PronGCValues &values, unsigned int mask) {
+  RqChangeGC rq(gc, values, mask);
+  tsock_write(d->fd, &rq, sizeof(rq));
+}
+
+void pronFreeGC(Display *d, GC gc) {
+  RqFreeGC rq(gc);
+  tsock_write(d->fd, &rq, sizeof(rq));
 }
 
 void pronMapWindow(Display *d, Window w) {
@@ -106,11 +136,6 @@ void pronSetWindowAttributes(Display * d, Window w, const PronWindowAttributes &
   tsock_write(d->fd,&rq,sizeof(RqSetWindowAttributes));
 }
 
-void pronDisconnect(Display *d) {
-  tsock_close(d->fd);
-  delete d; 
-}
-
 void pronSelectInput(Display *d, Window w, uint32_t eventMask) {
   RqSelectInput rq(w, eventMask);
   tsock_write(d->fd, &rq, sizeof(rq));
@@ -121,8 +146,18 @@ void pronDontPropagateEvent(Display *d, Window w ,uint32_t eventMask) {
   tsock_write(d->fd, &rq, sizeof(rq));
 }
 
-int pronNextEvent(Display *d, PronEvent *e) {
-  return d->getNextEvent(e);
+int pronNextEvent(Display *d, PronEvent *e, bool nonBlocking) {
+  if (nonBlocking) {
+    tsock_set_nonblocking(d->fd);
+  }
+
+  int ret = d->getNextEvent(e);
+
+  if (nonBlocking) {
+    tsock_set_blocking(d->fd);
+  }
+
+  return ret;
 }
   
 PronEvent* getPronEvent() {
@@ -181,4 +216,9 @@ void pronPutImage(Display *d, Window w, GC gc, PronImage *image,
   // free the buffer
   free(buf);
   // That's all folks
+}
+
+void pronResizeWindow(Display *d, unsigned int w, int width, int height) {
+  RqResizeWindow rq(w, width, height);
+  tsock_write(d->fd, &rq, sizeof(rq));
 }

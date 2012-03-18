@@ -26,10 +26,7 @@ Screen::Screen(int width, int height, int bitsPerPixel) {
   this->clipWin = NULL;
   this->clipZone = NULL;
 
-  // Default foreground color
-  COLOR(this->gc.fg, 24).r = 255;
-  COLOR(this->gc.fg, 24).g = 77;
-  COLOR(this->gc.fg, 24).b = 182;
+  this->gc = &this->defaultGC;
 
   this->mouseWin = NULL;
 }
@@ -45,9 +42,15 @@ Screen* Screen::getInstance() {
   return instance;
 }
 
-void Screen::drawPoint(int x, int y) {
-  if (x >= 0 && x < this->width && y >= 0 && y < this->height &&  (this->clipZone == NULL || this->clipZone->contains(x, y))) {
-    memcpy(this->videoBuffer + (y * this->width + x) * 3, &COLOR(this->gc.fg, 24), sizeof(COLOR(this->gc.fg, 24)));
+
+bool Screen::isValid(int x, int y) {
+  return (x >= 0 && x < this->width && y >= 0 && y < this->height
+            &&  (this->clipZone == NULL || this->clipZone->contains(x, y)));
+}
+
+inline void Screen::drawPoint(int x, int y, bool check) {
+  if (this->isValid(x,y)) {
+    memcpy(this->videoBuffer + (y * this->width + x) * 3, &COLOR(this->gc->fg, 24), sizeof(COLOR(this->gc->fg, 24)));
   }
 }
 
@@ -292,13 +295,17 @@ void Screen::setClipWindow(Window *w) {
   }
 }
 
-bool Screen::prepareDrawing(Window *w) {
+bool Screen::prepareDrawing(Window *w, GC *gc) {
   if (!w->mapped) {
     // Can't draw in unmapped window
     return false;
   }
 
   this->setClipWindow(w);
+
+  if (gc != NULL) {
+    this->gc = gc;
+  }
 
   return true;
 }

@@ -100,8 +100,8 @@ int main(int argc, char **argv){
   }
   // On cree la fenêtre
   Window w = pronCreateWindow(d, d->rootWindow, 0, 0, LARGEUR, HAUTEUR);
-  // On cree un contexte graphique
-  GC gc = pronCreateGC(d);
+  // On récupère le contexte graphique par défaut
+  GC gc = d->defaultGC;
   // On mappe la fenêtre
   pronMapWindow(d, w);
   // S'abonne aux évènements

@@ -41,4 +41,18 @@ struct RespWindowAttributes : public PronResponse {
   PronWindowAttributes attributes; /**< Attributes of the window */
 };
 
+/**
+ * GCValues response.
+ * Sent by the server in response to a GetGCValues request.
+ */
+struct RespGCValues : public PronResponse {
+  /** Constructor. */
+  RespGCValues(const PronGCValues &values)
+      : PronResponse(RS_GC_VALUES){
+    this->values = values;
+  }
+  
+  PronGCValues values; /**< values of the graphics context */
+};
+
 #endif // __PRONLIB_RESPONSES_H__

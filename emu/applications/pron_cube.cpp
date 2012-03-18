@@ -31,6 +31,16 @@ int lignes[][2] = {
   {3, 7}
 };
 
+unsigned short int cubeWidth;
+unsigned short int xCubeShift;
+unsigned short int yCubeShift;
+
+void updateZoom(unsigned short int width, unsigned short int height) {
+  cubeWidth = ((width < height) ? width : height)/4;
+  xCubeShift = 2*cubeWidth + (width  - cubeWidth*4)/2;
+  yCubeShift = 2*cubeWidth + (height - cubeWidth*4)/2;
+}
+
 void rotate_point(float point[3]) {
   float temp[3];
   // theta = 4°
@@ -54,11 +64,11 @@ void draw_cube(Display *d, Window w) {
   int ligne;
 
   for (ligne = 0; ligne < 12; ligne++) {
-    if (!pronDrawLine(d, w, 0, 
-	  (int)(cube[lignes[ligne][0]][0]*50+150),
-	  (int)(cube[lignes[ligne][0]][1]*50+100),
-	  (int)(cube[lignes[ligne][1]][0]*50+150),
-	  (int)(cube[lignes[ligne][1]][1]*50+100))) {
+    if (!pronDrawLine(d, w, d->defaultGC,
+	     (int)(cube[lignes[ligne][0]][0]*cubeWidth+xCubeShift),
+	     (int)(cube[lignes[ligne][0]][1]*cubeWidth+yCubeShift),
+	     (int)(cube[lignes[ligne][1]][0]*cubeWidth+xCubeShift),
+	     (int)(cube[lignes[ligne][1]][1]*cubeWidth+yCubeShift))) {
       fprintf(stderr, "pron has closed the connection.\n");
       exit(1);
     }
@@ -67,7 +77,8 @@ void draw_cube(Display *d, Window w) {
 
 int main(int argc, char *argv[]) {
   int x, y;
-  //PronWindowAttributes newAttr;
+  unsigned short int initialWidth  = 200;
+  unsigned short int initialHeight = 200;
 
   if (argc > 2) {
     x = atoi(argv[1]);
@@ -83,8 +94,10 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "Unable to connect to pron.\n");
     exit(1);
   }
+  updateZoom(initialWidth, initialHeight);
 
-  Window w = pronCreateWindow(d, d->rootWindow, x, y, 320, 240);
+  Window w = pronCreateWindow(d, d->rootWindow, x, y, initialWidth, initialHeight);
+  pronSelectInput(d, w, PRON_EVENTMASK(EV_DESTROY_WINDOW) | PRON_EVENTMASK(EV_RESIZE_WINDOW));
 
   PronWindowAttributes newAttr;
   COLOR(newAttr.bgColor, 24).r = (w >> 16) << 3;
@@ -94,7 +107,30 @@ int main(int argc, char *argv[]) {
 
   pronMapWindow(d, w);
 
+  PronEvent * event= getPronEvent();
+
   while (1) {
+    if (pronNextEvent(d, event, true)) {
+      switch (event->type) {
+        case EV_DESTROY_WINDOW : {
+          EventDestroyWindow *destroyWindowEvent = (EventDestroyWindow*) event;
+          printf("DestroyWindow event received for %d\n", destroyWindowEvent->window);
+          if (destroyWindowEvent->window == w) {
+            pronDisconnect(d);
+          }
+          return 0;
+          break;
+        }
+        case EV_RESIZE_WINDOW : {
+          EventResizeWindow *resizeWindowEvent = (EventResizeWindow*) event;
+          printf("Resize event received\n");
+          updateZoom(resizeWindowEvent->width, resizeWindowEvent->height);
+          break;
+        }
+        default:
+        break;
+      }
+    }
     pronClearWindow(d, w);  
     int i = 0;
     for (i = 0; i < 8; i++) {

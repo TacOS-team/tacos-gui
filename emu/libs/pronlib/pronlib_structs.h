@@ -14,6 +14,15 @@ struct PronWindowAttributes {
   unsigned short height;
   color_t        bgColor;
 };
+
+/**
+ * Structure for pron graphics contexts values
+ */
+struct PronGCValues {
+  color_t fg;
+  color_t bg;
+};
+
 /**
  * Structure for pron Image
  * This structure is free data pointer

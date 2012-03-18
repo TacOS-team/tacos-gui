@@ -17,6 +17,7 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
   this->x = x;
   this->y = y;
   this->width = width;
+  memset(&this->bgColor, 0, sizeof(this->bgColor));
   COLOR(this->bgColor, 24).r = 0;
   COLOR(this->bgColor, 24).g = 0;
   COLOR(this->bgColor, 24).b = 0;
@@ -157,17 +158,17 @@ void Window::fillCircle(int x, int y, int radius) {
 void Window::clear(int x, int y, int width, int height) {
   this->reduce(x, y, width, height);
 
-  color_t oldFg = this->screen->gc.fg;
-  COLOR(this->screen->gc.fg, 24).r = COLOR(this->bgColor, 24).r;
-  COLOR(this->screen->gc.fg, 24).g = COLOR(this->bgColor, 24).g;
-  COLOR(this->screen->gc.fg, 24).b = COLOR(this->bgColor, 24).b;
+  color_t oldFg = this->screen->gc->fg;
+  COLOR(this->screen->gc->fg, 24).r = COLOR(this->bgColor, 24).r;
+  COLOR(this->screen->gc->fg, 24).g = COLOR(this->bgColor, 24).g;
+  COLOR(this->screen->gc->fg, 24).b = COLOR(this->bgColor, 24).b;
   this->screen->setClipWindow(this);
   this->screen->fillRectangle(this->x + x, this->y + y, width, height);
   // If it is the root window, we print a grid (provisoire !!!!!! TODO)
   if (this->id == 0) {
-    COLOR(this->screen->gc.fg, 24).r = 255;
-    COLOR(this->screen->gc.fg, 24).g = 0;
-    COLOR(this->screen->gc.fg, 24).b = 0;
+    COLOR(this->screen->gc->fg, 24).r = 255;
+    COLOR(this->screen->gc->fg, 24).g = 0;
+    COLOR(this->screen->gc->fg, 24).b = 0;
     int step = 50;
     for (int i = step; i < this->width; i += step) {
       this->screen->drawLine(i, 0, i, this->height);
@@ -176,7 +177,7 @@ void Window::clear(int x, int y, int width, int height) {
       this->screen->drawLine(0, i, this->width, i);
     }
   }
-  this->screen->gc.fg = oldFg;
+  this->screen->gc->fg = oldFg;
 
   // Send exposure event
   EventExpose expose(this->id, x, y, width, height);
@@ -188,7 +189,7 @@ void Window::clear() {
 }
 
 PronWindowAttributes Window::getAttributes() {
-  PronWindowAttributes attr ;
+  PronWindowAttributes attr;
   attr.x = this->x;
   attr.y = this->y;
   attr.width = this->width;
@@ -259,6 +260,9 @@ void Window::deliverWindowEvent(PronEvent *e, unsigned int size) {
 void Window::deliverDeviceEvent(PronEvent *e, unsigned int size) {
   unsigned int eventMask = PRON_EVENTMASK(e->type);
 
+  // Set the event window
+  e->window = this->id;
+
   this->deliverEvent(e, size);
 
   if (this->parent && !(this->dontPropagateMask & eventMask)) {
@@ -307,18 +311,18 @@ void Window::exposeArea(int x, int y, int width, int height) {
   }
 }
 
-bool Window::contains(int x, int y){
+bool Window::contains(int x, int y) {
   return this->getX() <= x &&
-  this->getY() <= y &&
-  this->getX() + this->getWidth() > x &&
-  this->getY() + this->getHeight() > y;
+      this->getY() <= y &&
+      this->getX() + this->getWidth() > x &&
+      this->getY() + this->getHeight() > y;
 }
 
-int Window::getX(){
+int Window::getX() {
   return this->x;
 }
 
-void Window::setX(int x){
+void Window::setX(int x) {
   this->x = x;
 }
 
@@ -326,23 +330,23 @@ int Window::getY(){
   return this->y;
 }
 
-void Window::setY(int y){
+void Window::setY(int y) {
   this->y = y;
 }
 
-int Window::getWidth(){
+int Window::getWidth() {
   return this->width;
 }
 
-void Window::setWidth(int width){
+void Window::setWidth(int width) {
   this->width = width;
 }
 
-int Window::getHeight(){
+int Window::getHeight() {
   return this->height;
 }
 
-void Window::setHeight(int height){
+void Window::setHeight(int height) {
   this->height = height;
 }
 
@@ -373,7 +377,7 @@ void Window::reparent(Window *w) {
 }
 
 void Window::destroy() {
-  printf("window::destroy(%d)\n",this->id);
+  printf("window::destroy(%d)\n", this->id);
   this->unmap();
   // We remove the window from the tree 
   if (this->prevSibling != NULL) {
