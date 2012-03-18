@@ -81,7 +81,7 @@ int main() {
             gw->attributes = windowCreated->attributes;
             // registering for any EV_DESTROY_WINDOW event
             pronSelectInput(display, windowCreated->window,
-              PRON_EVENTMASK(EV_DESTROY_WINDOW) || PRON_EVENTMASK(EV_MOUSE_BUTTON));
+              PRON_EVENTMASK(EV_DESTROY_WINDOW) | PRON_EVENTMASK(EV_MOUSE_BUTTON));
             pronGetWindowAttributes(display, parentWindowId, &(gw->parentAttributes));
 
             // Fond rouge à la fenêtre de déco provisoire
@@ -89,6 +89,7 @@ int main() {
             COLOR(gw->parentAttributes.bgColor, 24).g = 0;
             COLOR(gw->parentAttributes.bgColor, 24).b = 0;
             pronSetWindowAttributes(display, parentWindowId, gw->parentAttributes, WIN_ATTR_BG_COLOR);
+            pronDontPropagateEvent(display,parentWindowId,PRON_EVENTMASK(EV_MOUSE_BUTTON));
 
             // Adding the close button
             gw->closeButton = pronCreateWindow(display, parentWindowId,
@@ -99,7 +100,7 @@ int main() {
             COLOR(closeButtonAttributes.bgColor, 24).g = 255;
             COLOR(closeButtonAttributes.bgColor, 24).b = 0;
             pronSetWindowAttributes(display, gw->closeButton, closeButtonAttributes, WIN_ATTR_BG_COLOR);
-            pronSelectInput(display, gw->closeButton, PRON_EVENTMASK(EV_MOUSE_BUTTON));     
+            pronSelectInput(display, gw->closeButton, PRON_EVENTMASK(EV_MOUSE_BUTTON));
             pronDontPropagateEvent(display,gw->closeButton,PRON_EVENTMASK(EV_MOUSE_BUTTON));
 
             // Adding the resize button
@@ -150,6 +151,7 @@ int main() {
       }
       case EV_MOUSE_BUTTON : {
         EventMouseButton *mouseButtonEvent = (EventMouseButton*) e;
+        printf("mouse button event. ID : %d\n", mouseButtonEvent->window);
         if (mouseButtonEvent->b1) {
           // If the window is the decoration window
           GWindow *gwin = windowsManager.getGWindow(mouseButtonEvent->window);
