@@ -422,4 +422,22 @@ struct RqMoveWindow : public PronRequest {
   int y;
 };
 
+/**
+ * Resize a Window
+ * Sent by a client to resize a window
+ */
+struct RqResizeWindow : public PronRequest {
+  /** Constructor. */
+  RqResizeWindow(unsigned int window, int width, int height)
+      : PronRequest(RQ_RESIZE_WINDOW) {
+    this->window = window;
+    this->width  = width;
+    this->height = height;
+  }
+
+  unsigned int window; /**< id of Window */
+  int width;
+  int height;
+};
+
 #endif // __PRONLIB_REQUESTS_H__

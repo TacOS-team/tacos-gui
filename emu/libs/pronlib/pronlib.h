@@ -240,6 +240,15 @@ void pronDestroyWindow(Display *d, unsigned int w);
 void pronMoveWindow(Display *d, unsigned int w, int x, int y);
 
 /**
+ * Resize a Window
+ * @param d The connection to pron
+ * @param w The window
+ * @param width The new width
+ * @param height The new height
+ */
+void pronResizeWindow(Display *d, unsigned int w, int width, int height);
+
+/**
  * Describes a connection to pron.
  * TODO: move to a real class and propose an object-oriented API.
  */
