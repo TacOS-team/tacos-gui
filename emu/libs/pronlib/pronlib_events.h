@@ -142,6 +142,20 @@ struct EventDestroyWindow : public PronEvent {
       : PronEvent(EV_DESTROY_WINDOW, window) {}
 };
 
+/**
+ * EventResizeWindow asks an application to resize his window drawing
+ */
+struct EventResizeWindow : public PronEvent {
+  /** Constructor. */
+  EventResizeWindow(int width, int height)
+      : PronEvent(EV_RESIZE_WINDOW, window) {
+    this->width  = width;
+    this->height = height;
+  }
+  int width;
+  int height;
+};
+
 PronEvent* getPronEvent();
 
 #endif // __PRONLIB_EVENTS_H__

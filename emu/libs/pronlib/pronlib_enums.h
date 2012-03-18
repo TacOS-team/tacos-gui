@@ -46,6 +46,7 @@ enum MessageType {
   EV_KEY_RELEASED             = (EV_PREFIX |  5),
   EV_MOUSE_BUTTON             = (EV_PREFIX |  6),
   EV_DESTROY_WINDOW           = (EV_PREFIX |  7),
+  EV_RESIZE_WINDOW            = (EV_PREFIX |  8),
 
   /* Errors */
 };
