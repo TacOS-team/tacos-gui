@@ -240,6 +240,18 @@ void pronDestroyWindow(Display *d, unsigned int w);
 void pronMoveWindow(Display *d, unsigned int w, int x, int y);
 
 /**
+ * Put an image on the server 
+ * On a Window
+ * TODO : pixmap & window
+ * @param d The connection to pron
+ * @param w The window
+ * @param x The relative move on x
+ * @param y The relative move on y
+ */
+void pronPutImage(Display *d, Window w, GC gc, PronImage *image, 
+  int srcX, int srcY, int destX, int destY, int width, int height);  
+
+/**
  * Resize a Window
  * @param d The connection to pron
  * @param w The window

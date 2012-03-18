@@ -113,8 +113,11 @@ int main(int argc, char *argv[]) {
     if (pronNextEvent(d, event, true)) {
       switch (event->type) {
         case EV_DESTROY_WINDOW : {
-          //EventDestroyWindow *destroyWindowEvent = (EventDestroyWindow*) event;
-          printf("DestroyWindow event received\n");
+          EventDestroyWindow *destroyWindowEvent = (EventDestroyWindow*) event;
+          printf("DestroyWindow event received for %d\n", destroyWindowEvent->window);
+          if (destroyWindowEvent->window == w) {
+            pronDisconnect(d);
+          }
           return 0;
           break;
         }
