@@ -75,6 +75,7 @@ int main() {
               PRON_EVENTMASK(EV_MOUSE_BUTTON));
             
             pronReparentWindow(display, windowCreated->window, parentWindowId);
+            pronDontPropagateEvent(display,windowCreated->window,PRON_EVENTMASK(EV_MOUSE_BUTTON));
             
             GWindow *gw = new GWindow(windowCreated->window, parentWindowId);
             gw->attributes = windowCreated->attributes;
@@ -152,7 +153,6 @@ int main() {
         if (mouseButtonEvent->b1) {
           // If the window is the decoration window
           GWindow *gwin = windowsManager.getGWindow(mouseButtonEvent->window);
-        printf("id mouse event : %d, resize : %d\n", mouseButtonEvent->window, gwin->resizeButton);
           if (mouseButtonEvent->window == gwin->closeButton) {
             pronDestroyWindow(display,gwin->parent);
             windowsManager.destroy(gwin->parent);
