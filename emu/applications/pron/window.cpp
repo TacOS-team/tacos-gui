@@ -109,13 +109,13 @@ void Window::map() {
 
 void Window::reduce(int &x, int &y, int &width, int &height) {
   if (x < 0) {
-    x = 0;
     width += x;
+    x = 0;
   }
 
   if (y < 0) {
-    y = 0;
     height += y;
+    y = 0;
   }
 
   if (x + width > this->width) {
