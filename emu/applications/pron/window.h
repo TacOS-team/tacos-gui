@@ -60,6 +60,8 @@ public: //XXX: bourrin
   void drawRect(int x1, int y1, int width, int height) ;
   
   void fillRectangle(int x, int y, int width, int height);
+
+  void putImage(PronImage *image, int x, int y);
   
   void drawCircle(int x, int y, int radius);
 

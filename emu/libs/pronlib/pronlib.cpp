@@ -180,7 +180,7 @@ void pronMoveWindow(Display *d, unsigned int w, int x, int y) {
 }
 
 void pronPutImage(Display *d, Window w, GC gc, PronImage *image, 
-    int srcX, int srcY, int destX, int destY, int width, int height) {
+    int srcX, int srcY, int width, int height, int destX, int destY) {
   // We have to check if the rectangle the client wants to send enters 
   // in the source image
   if((srcX + width > image->width) || (srcY + height > image->height)) {
@@ -188,27 +188,28 @@ void pronPutImage(Display *d, Window w, GC gc, PronImage *image,
     return;
   }
   // Compute the size of the needed send buffer
-  int bufferSize = sizeof(RqPutImage) + width * height * image->depth;
+  int bufferSize = sizeof(RqPutImage) + width * height * image->bytesPerPixel;
   // Test if we can send the image 
   if(! (bufferSize <= MAX_MSG_SIZE)) {
     fprintf(stderr, "Message is to small\n");
     return;
   }
   // We allocate the image request buffer
-  char *buf = (char *)malloc(bufferSize);
+  char *buf = (char*) malloc(bufferSize);
   // Creation of the request object
-  RqPutImage rq(w, width, height, destX, destY, image->depth, image->format);
+  RqPutImage rq(w, destX, destY, width, height, image->format, image->depth, image->bytesPerPixel);
   // Copy of the request object in the send buffer
   memcpy(buf, &rq, sizeof(rq));
   // Now we have to copy the subimage we have to send
   for(int y = 0; y < height; y++){
     for(int x = 0; x < width; x++){
       // Buffer destination
-      void * dest = buf + sizeof(rq) + (x + y * width) * image->depth ;
+      void * dest = buf + sizeof(rq) + (x + y * width) * image->bytesPerPixel ;
       // Image source
-      void * src = image->data + (srcY * image->width + srcX + x + y * width) * image->depth;
+      void * src = image->data + (srcY * image->width + srcX + x + y * image->width) * image->bytesPerPixel;
       // Copy the pixel dude
-      memcpy(dest, src, image->depth);
+      //printf("Pixel colors {%d, %d, %d}\n", *((char*) dest) & ~(0xFFFFFF00), (*((char*) dest) >> 8 ) & ~(0xFFFFFF00), (*((char*) dest) >> 16) & ~(0xFFFFFF00));
+      memcpy(dest, src, image->bytesPerPixel);
     }
   }
   // We can send the buffer

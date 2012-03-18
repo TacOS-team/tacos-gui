@@ -147,6 +147,10 @@ void Window::fillRectangle(int x1, int y1, int width, int height) {
   this->screen->fillRectangle(this->x + x1, this->y + y1, width, height);
 }
 
+void Window::putImage(PronImage *image, int x, int y) {
+  this->screen->putImage(image, this->x + x, this->y + y);
+}
+
 void Window::drawCircle(int x, int y, int radius) {
   this->screen->drawCircle(this->x + x, this->y + y, radius); 
 }

@@ -95,9 +95,10 @@ int main() {
   PronEvent *e = getPronEvent();
 
   //On cree une fake image
-  int x = 1, y = 1, width = 6, height = 6, depth = 24;
+  int x = 1, y = 1, width = 6, height = 6, depth = 24, bytesPerPixel = 3;
   char * image_data = (char *)malloc(width * width * depth);
-  PronImage image(width, height, ZPixmap, image_data, depth);
+  memset(image_data, -1, width * width * depth);
+  PronImage image(width, height, ZPixmap, image_data, depth, bytesPerPixel);
 
   while (1) {
 
@@ -127,10 +128,10 @@ int main() {
     pronFillRectangle(d, w, gc, ballX, ballY, BALL_SIZE, BALL_SIZE);
     // drax the racket
     pronFillRectangle(d, w, gc, 0, racketY, RACKET_WIDTH, RACKET_HEIGHT);
-    usleep(10000);
 
     //on envoie une sous image de l'image dans la fenetre
-    pronPutImage(d, w, gc, &image, x, y, 0, 0, width - 1, height - 1);
+    pronPutImage(d, w, gc, &image, x, y, width - 1, height - 1, 0, 0);
+    usleep(10000);
   }
 
   pronDisconnect(d);

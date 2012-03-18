@@ -248,7 +248,17 @@ void Client::handle() {
       break;
     }
     case RQ_PUT_IMAGE: {
-      printf("RQ_PUT_IMAGE\n");
+      RqPutImage *rq = (RqPutImage*) Client::recvBuf;
+      // Gets the image buffer
+      char *image_buf = ((char*) rq) + sizeof(RqPutImage);
+      // Gets the window 
+      Window *w = screen->getWindow(rq->window);
+      if(w != NULL){
+        // Create the PronImage
+        PronImage image(rq->width, rq->height, rq->format, image_buf, rq->depth, rq->bytesPerPixel, false);
+        // Request the copy into the window
+        w->putImage(&image, rq->x, rq->y);
+      }
       break;
     }
     case RQ_RESIZE_WINDOW: {

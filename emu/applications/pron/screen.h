@@ -52,6 +52,8 @@ public: // XXX: bourrin
   void fillCircle(int n_cx, int n_cy, int radius);
   void fillRectangle(int x, int y, int width, int height);
 
+  void putImage(PronImage *image, int x, int y);
+
   Window* getWindow(unsigned int id);
   void addWindow(Window *w);
 
