@@ -35,8 +35,8 @@ int main() {
 
   // TODO
   // Très moche mais très provisoirement ça marche :D
-  unsigned int windowIdLeftButtonPressed   = 0;
-  unsigned int windowIdResizeButtonPressed = 0;
+  GWindow *windowLeftButtonPressed   = NULL;
+  GWindow *windowResizeButtonPressed = NULL;
   int mouseLastXPosition = -1;
   int mouseLastYPosition = -1;
 
@@ -160,10 +160,10 @@ int main() {
             windowsManager.destroy(gwin->parent);
           } else {
             if (mouseButtonEvent->window == gwin->resizeButton) {
-              windowIdResizeButtonPressed = mouseButtonEvent->window;
+              windowResizeButtonPressed = gwin;
             }
             else if (mouseButtonEvent->window == gwin->parent) {
-              windowIdLeftButtonPressed = mouseButtonEvent->window;
+              windowLeftButtonPressed = gwin;
             }
             // Puts the window on foreground
             pronRaiseWindow(display, gwin->parent);
@@ -174,8 +174,8 @@ int main() {
             mouseLastXPosition = -1;
           }
         } else {
-          windowIdLeftButtonPressed   = 0;
-          windowIdResizeButtonPressed = 0;
+          windowLeftButtonPressed   = NULL;
+          windowResizeButtonPressed = NULL;
           // Unsubscribe of events of the root window to avoid useless events
           currentRootEventMask &= ~PRON_EVENTMASK(EV_MOUSE_BUTTON);
           currentRootEventMask &= ~PRON_EVENTMASK(EV_POINTER_MOVED);
@@ -188,29 +188,27 @@ int main() {
         if (mouseLastXPosition != -1) {
           int xMove = mousePointerEvent->xRoot - mouseLastXPosition;
           int yMove = mousePointerEvent->yRoot - mouseLastYPosition;
-          if (windowIdLeftButtonPressed) {
-            pronMoveWindow(display, windowIdLeftButtonPressed, xMove, yMove);
-            GWindow *pGWindow = windowsManager.getGWindow(windowIdLeftButtonPressed);
-            pGWindow->parentAttributes.x += xMove;
-            pGWindow->parentAttributes.y += yMove;
-            pGWindow->attributes.x       += xMove;
-            pGWindow->attributes.y       += yMove;
+          if (windowLeftButtonPressed) {
+            pronMoveWindow(display, windowLeftButtonPressed->parent, xMove, yMove);
+            windowLeftButtonPressed->parentAttributes.x += xMove;
+            windowLeftButtonPressed->parentAttributes.y += yMove;
+            windowLeftButtonPressed->attributes.x       += xMove;
+            windowLeftButtonPressed->attributes.y       += yMove;
             mouseLastXPosition = mousePointerEvent->xRoot;
             mouseLastYPosition = mousePointerEvent->yRoot;
-          } else if (windowIdResizeButtonPressed) {
+          } else if (windowResizeButtonPressed) {
             eventCalmeur = (eventCalmeur+1)%2;
             if (eventCalmeur == 0) {
-              GWindow *pGWindow = windowsManager.getGWindow(windowIdResizeButtonPressed);
-              pGWindow->parentAttributes.width  += xMove;
-              pGWindow->parentAttributes.height += yMove;
-              pGWindow->attributes.width        += xMove;
-              pGWindow->attributes.height       += yMove;
-              pronResizeWindow(display, pGWindow->parent, pGWindow->parentAttributes.width,
-                pGWindow->parentAttributes.height);
-              pronResizeWindow(display, pGWindow->window, pGWindow->attributes.width,
-                pGWindow->attributes.height);
-              pronMoveWindow(display, pGWindow->resizeButton, xMove, yMove);
-              pronMoveWindow(display, pGWindow->closeButton, xMove, 0);
+              windowResizeButtonPressed->parentAttributes.width  += xMove;
+              windowResizeButtonPressed->parentAttributes.height += yMove;
+              windowResizeButtonPressed->attributes.width        += xMove;
+              windowResizeButtonPressed->attributes.height       += yMove;
+              pronResizeWindow(display, windowResizeButtonPressed->parent, windowResizeButtonPressed->parentAttributes.width,
+                windowResizeButtonPressed->parentAttributes.height);
+              pronResizeWindow(display, windowResizeButtonPressed->window, windowResizeButtonPressed->attributes.width,
+                windowResizeButtonPressed->attributes.height);
+              pronMoveWindow(display, windowResizeButtonPressed->resizeButton, xMove, yMove);
+              pronMoveWindow(display, windowResizeButtonPressed->closeButton, xMove, 0);
               mouseLastXPosition = mousePointerEvent->xRoot;
               mouseLastYPosition = mousePointerEvent->yRoot;
             }
