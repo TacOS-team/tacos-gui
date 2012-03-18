@@ -32,6 +32,7 @@
 #include <pronlib.h>
 #include <libtacos.h>       
 #include <string.h>
+#include <errno.h>
 
 #define WIDTH 320
 #define HEIGHT 200
@@ -101,20 +102,22 @@ int main() {
   while (1) {
 
     //On récupère un évènement
-    if (!pronNextEvent(d, e)) {
-      fprintf(stderr, "pron has closed the connection.\n");
-      exit(1);
-    }
-
-    switch (e->type) {
-    case EV_POINTER_MOVED: {
-      EventPointerMoved *pointerMoved = (EventPointerMoved*) e;
-      // Récupération de la coordonnée Y de la souris pour la raquette
-      racketY = pointerMoved->y;
-      break;
-    }
-    default:
-      break;
+    if (!pronNextEvent(d, e, true)) {
+      if (errno != EAGAIN && errno != EWOULDBLOCK) {
+        fprintf(stderr, "pron has closed the connection.\n");
+        exit(1);
+      }
+    } else {
+      switch (e->type) {
+      case EV_POINTER_MOVED: {
+        EventPointerMoved *pointerMoved = (EventPointerMoved*) e;
+        // Récupération de la coordonnée Y de la souris pour la raquette
+        racketY = pointerMoved->y;
+        break;
+      }
+      default:
+        break;
+      }
     }
 
     pronClearWindow(d, w);  
