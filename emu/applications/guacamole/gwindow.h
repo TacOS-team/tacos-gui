@@ -10,6 +10,7 @@ struct GWindow {
   Window window;
   Window parent;
   Window closeButton;
+  Window resizeButton;
   PronWindowAttributes attributes;
   PronWindowAttributes parentAttributes;
 

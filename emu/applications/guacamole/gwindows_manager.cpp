@@ -11,7 +11,10 @@ void GWindowsManager::addGWindow(GWindow *w) {
 
 GWindow* GWindowsManager::getGWindow(Window w) {
   for (size_t i = 0; i < this->windowsList.size(); ++i) {
-    if (this->windowsList[i]->window == w || this->windowsList[i]->parent == w || this->windowsList[i]->closeButton == w) {
+    if (this->windowsList[i]->window            == w
+          || this->windowsList[i]->parent       == w
+          || this->windowsList[i]->closeButton  == w
+          || this->windowsList[i]->resizeButton == w) {
       return this->windowsList[i];
     }
   }
@@ -61,6 +64,7 @@ void GWindowsManager::initWindowPosition(GWindow *gw) {
       }
     }
     // Si ça rentre en dessous
+    
     if (this->windowsList[i]->parentAttributes.y + this->windowsList[i]->parentAttributes.height
           + gw->parentAttributes.height < rootWindowAttributes.height) {
       gw->parentAttributes.x = 0;
