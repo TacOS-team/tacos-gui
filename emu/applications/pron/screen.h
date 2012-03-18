@@ -23,6 +23,8 @@ private:
   void drawHorizLine(int x, int y, int width);
   void drawVertLine(int x, int y, int height);
 
+  bool isValid(int x, int y);
+
 public: // XXX: bourrin
   int width, height;
   int bitsPerPixel;
@@ -42,7 +44,7 @@ public: // XXX: bourrin
   void setClipWindow(Window *w);
   bool prepareDrawing(Window *w, GC *gc = NULL);
 
-  void drawPoint(int x, int y);
+  void drawPoint(int x, int y, bool check = true);
   void drawLine(int x1, int y1, int x2, int y2);
   void drawRect(int x, int y, int width, int height) ;
   void drawCircle(int x, int y, int r);

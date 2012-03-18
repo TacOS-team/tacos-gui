@@ -42,25 +42,34 @@ Screen* Screen::getInstance() {
   return instance;
 }
 
-void Screen::drawPoint(int x, int y) {
-  if (x >= 0 && x < this->width && y >= 0 && y < this->height &&  (this->clipZone == NULL || this->clipZone->contains(x, y))) {
+
+bool Screen::isValid(int x, int y) {
+  return (x >= 0 && x < this->width && y >= 0 && y < this->height
+            &&  (this->clipZone == NULL || this->clipZone->contains(x, y)));
+}
+
+inline void Screen::drawPoint(int x, int y, bool check) {
+  if (!check || this->isValid(x,y)) {
     memcpy(this->videoBuffer + (y * this->width + x) * 3, &COLOR(this->gc->fg, 24), sizeof(COLOR(this->gc->fg, 24)));
   }
 }
 
 void Screen::drawHorizLine(int x, int y, int width) {
+  bool isValid = this->isValid(x, y) && this->isValid(x+width, y);
   for (int c = 0; c < width; c++) {
-    this->drawPoint(x + c, y);
+    this->drawPoint(x + c, y, !isValid);
   }
 }
 
 void Screen::drawVertLine(int x, int y, int height) {
+  bool isValid = this->isValid(x, y) && this->isValid(x, y+height);
   for (int l = 0; l < height; l++) {
-    this->drawPoint(x, y + l);
+    this->drawPoint(x, y + l, !isValid);
   }
 }
 
 void Screen::drawLine(int x1, int y1, int x2, int y2) {
+  bool isValid = this->isValid(x1, y1) && this->isValid(x2, y2);
   /*
   float dx, dy, sdx, sdy, dxabs, dyabs, x, y, coordProv, delta;
   int i, px, py;
@@ -156,7 +165,7 @@ void Screen::drawLine(int x1, int y1, int x2, int y2) {
   px = x1;
   py = y1;
 
-  this->drawPoint(px, py);
+  this->drawPoint(px, py, !isValid);
 
   if (dxabs >= dyabs) {
     for (i = 0; i < dxabs; i++) {
@@ -166,7 +175,7 @@ void Screen::drawLine(int x1, int y1, int x2, int y2) {
         py += sdy;
       }
       px += sdx;
-      this->drawPoint(px, py);
+      this->drawPoint(px, py, !isValid);
     }
   } else { 
     for (i = 0; i < dyabs; i++) {
@@ -176,7 +185,7 @@ void Screen::drawLine(int x1, int y1, int x2, int y2) {
         px += sdx;
       }
       py += sdy;
-      this->drawPoint(px, py);
+      this->drawPoint(px, py, !isValid);
     }
   }
   // */

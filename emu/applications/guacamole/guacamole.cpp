@@ -196,8 +196,7 @@ int main() {
             mouseLastXPosition = mousePointerEvent->xRoot;
             mouseLastYPosition = mousePointerEvent->yRoot;
           } else if (windowIdResizeButtonPressed) {
-            eventCalmeur = (eventCalmeur+1)%4;
-            printf("%d\n", eventCalmeur);
+            eventCalmeur = (eventCalmeur+1)%2;
             if (eventCalmeur == 0) {
               GWindow *pGWindow = windowsManager.getGWindow(windowIdResizeButtonPressed);
               pGWindow->parentAttributes.width  += xMove;
