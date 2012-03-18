@@ -46,6 +46,15 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
       this->parent->lastChild = this;
     }
   }
+
+  // Add the new window to the screen's list of windows
+  this->screen->addWindow(this);
+  
+  if (this->parent != NULL) {
+    // Send an event notifiying the window creation
+    EventWindowCreated eventCreated(this->id, this->parent->id, this->getAttributes());
+    this->deliverWindowEvent(&eventCreated, sizeof(eventCreated));
+  }
 }
 
 // Destructor : delete all of the childs

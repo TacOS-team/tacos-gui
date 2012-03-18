@@ -31,10 +31,7 @@ void Client::handle() {
     }
     case RQ_CREATE_WINDOW: {
       RqCreateWindow *rq = (RqCreateWindow*) Client::recvBuf;
-      Window *w = new Window(screen, rq->id, this, screen->getWindow(rq->parent), rq->x, rq->y, rq->width, rq->height);
-      screen->addWindow(w);
-      EventWindowCreated eventCreated(w->id, rq->parent, w->getAttributes());
-      w->deliverWindowEvent(&eventCreated, sizeof(eventCreated));
+      new Window(screen, rq->id, this, screen->getWindow(rq->parent), rq->x, rq->y, rq->width, rq->height);
       //screen->traceWindows();
       break;
     }

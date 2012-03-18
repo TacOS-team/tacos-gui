@@ -35,7 +35,6 @@ void PronInit() {
   
   // Create root window
   screen->root = new Window(screen, 0, NULL, NULL, 0, 0, 800, 600);
-  screen->addWindow(screen->root);
   screen->root->map();
 
   // Listen for clients
