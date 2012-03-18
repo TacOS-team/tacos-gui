@@ -201,6 +201,27 @@ void Screen::fillRectangle(int x, int y, int width, int height) {
   }
 }
 
+void Screen::putImage(PronImage *image, int x, int y) {
+  // We have to test if the image and the screen have the same depth
+  //printf("width & height & depth{%d, %d, %d}\n", image->height, image->width, image->depth);
+  //printf("absX & absY {%d, %d}\n", srcX + x, srcY + y);
+  if(image->depth == this->bitsPerPixel){
+    // Copy the image in the video memory
+    for (int srcY = 0; srcY < image->height; srcY++) {
+      for (int srcX = 0; srcX < image->width; srcX++) {
+        if (this->isValid(srcX + x, srcY + y)) {
+          // Computing the buffer pointers
+          void *src = image->data + (srcX + srcY * image->width) * image->bytesPerPixel;
+          void *dest = this->videoBuffer + ( x + y * this->width + srcX + srcY * this->width ) * image->bytesPerPixel;
+          //printf("Pointers %p, %p\n", src, dest);
+          //printf("Pixel colors {%d, %d, %d}\n", *((char*) src) & ~(0xFFFFFF00), (*((char*) src) >> 8 ) & ~(0xFFFFFF00), (*((char*) src) >> 16) & ~(0xFFFFFF00));
+          memcpy(dest, src, image->bytesPerPixel);
+        }
+      }
+    }
+  }
+}
+
 // source : http://content.gpwiki.org/index.php/SDL:Tutorials:Drawing_and_Filling_Circles
 void Screen::drawCircle(int n_cx, int n_cy, int radius) {
   double error = (double) -radius;

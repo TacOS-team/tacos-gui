@@ -437,7 +437,7 @@ struct RqMoveWindow : public PronRequest {
  */
 struct RqPutImage : public PronRequest {
   /** Constructor. */
-  RqPutImage(unsigned int window, int width, int height, int x, int y, int depth, int format)
+  RqPutImage(unsigned int window, int x, int y, int width, int height, int format, int depth, int bytesPerPixel)
       : PronRequest(RQ_PUT_IMAGE) {
     this->window = window;
     this->width = width;  
@@ -446,6 +446,7 @@ struct RqPutImage : public PronRequest {
     this->y = y;
     this->depth = depth;
     this->format = format;
+    this->bytesPerPixel = bytesPerPixel;
   }
 
   unsigned int window; /**< id of Window */
@@ -455,6 +456,7 @@ struct RqPutImage : public PronRequest {
   int y;
   int depth;
   int format;
+  int bytesPerPixel;
 };
 
 /**

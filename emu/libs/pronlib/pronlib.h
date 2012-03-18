@@ -245,11 +245,15 @@ void pronMoveWindow(Display *d, unsigned int w, int x, int y);
  * TODO : pixmap & window
  * @param d The connection to pron
  * @param w The window
- * @param x The relative move on x
- * @param y The relative move on y
+ * @param srcX Left top corner of the subimage x
+ * @param srcY Left top corner of the subimage y
+ * @param width Width of the subimage
+ * @param height Height of the subimage
+ * @param destX Left top corner of the destination x
+ * @param destY Left top corner of the destination y
  */
 void pronPutImage(Display *d, Window w, GC gc, PronImage *image, 
-  int srcX, int srcY, int destX, int destY, int width, int height);  
+  int srcX, int srcY, int width, int height, int destX, int destY);  
 
 /**
  * Resize a Window
