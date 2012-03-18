@@ -32,6 +32,7 @@
 #include <pronlib.h>
 #include <libtacos.h>       
 #include <string.h>
+#include <errno.h>
 
 #define WIDTH 320
 #define HEIGHT 200
@@ -93,23 +94,30 @@ int main() {
   // On cree un énènement
   PronEvent *e = getPronEvent();
 
+  //On cree une fake image
+  int x = 1, y = 1, width = 6, height = 6, depth = 24;
+  char * image_data = (char *)malloc(width * width * depth);
+  PronImage image(width, height, ZPixmap, image_data, depth);
+
   while (1) {
 
     //On récupère un évènement
-    if (!pronNextEvent(d, e)) {
-      fprintf(stderr, "pron has closed the connection.\n");
-      exit(1);
-    }
-
-    switch (e->type) {
-    case EV_POINTER_MOVED: {
-      EventPointerMoved *pointerMoved = (EventPointerMoved*) e;
-      // Récupération de la coordonnée Y de la souris pour la raquette
-      racketY = pointerMoved->y;
-      break;
-    }
-    default:
-      break;
+    if (!pronNextEvent(d, e, true)) {
+      if (errno != EAGAIN && errno != EWOULDBLOCK) {
+        fprintf(stderr, "pron has closed the connection.\n");
+        exit(1);
+      }
+    } else {
+      switch (e->type) {
+      case EV_POINTER_MOVED: {
+        EventPointerMoved *pointerMoved = (EventPointerMoved*) e;
+        // Récupération de la coordonnée Y de la souris pour la raquette
+        racketY = pointerMoved->y;
+        break;
+      }
+      default:
+        break;
+      }
     }
 
     pronClearWindow(d, w);  
@@ -121,6 +129,8 @@ int main() {
     pronFillRectangle(d, w, gc, 0, racketY, RACKET_WIDTH, RACKET_HEIGHT);
     usleep(10000);
 
+    //on envoie une sous image de l'image dans la fenetre
+    pronPutImage(d, w, gc, &image, x, y, 0, 0, width - 1, height - 1);
   }
 
   pronDisconnect(d);

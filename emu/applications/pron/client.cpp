@@ -29,12 +29,15 @@ void Client::handle() {
       this->send(&welcome, sizeof(welcome));
       break;
     }
+    case RQ_GOODBYE: {
+      printf("RQ_GOODBYE from fd %d\n", this->fd);
+      tsock_close(this->fd);
+      this->fd = -1; // so that pron knows he can delete the client
+      break;
+    }
     case RQ_CREATE_WINDOW: {
       RqCreateWindow *rq = (RqCreateWindow*) Client::recvBuf;
-      Window *w = new Window(screen, rq->id, this, screen->getWindow(rq->parent), rq->x, rq->y, rq->width, rq->height);
-      screen->addWindow(w);
-      EventWindowCreated eventCreated(w->id, rq->parent, w->getAttributes());
-      w->deliverWindowEvent(&eventCreated, sizeof(eventCreated));
+      new Window(screen, rq->id, this, screen->getWindow(rq->parent), rq->x, rq->y, rq->width, rq->height);
       //screen->traceWindows();
       break;
     }
@@ -239,6 +242,10 @@ void Client::handle() {
         }
         w->map();
       }
+      break;
+    }
+    case RQ_PUT_IMAGE: {
+      printf("RQ_PUT_IMAGE\n");
       break;
     }
     case RQ_RESIZE_WINDOW: {

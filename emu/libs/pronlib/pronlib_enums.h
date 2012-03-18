@@ -34,6 +34,8 @@ enum MessageType {
   RQ_CHANGE_GC                = (RQ_PREFIX | 22),
   RQ_FREE_GC                  = (RQ_PREFIX | 23),
   RQ_RESIZE_WINDOW            = (RQ_PREFIX | 24),
+  RQ_GOODBYE                  = (RQ_PREFIX | 25),
+  RQ_PUT_IMAGE                = (RQ_PREFIX | 26),
   /* Responses */
   RS_WELCOME                  = (RS_PREFIX |  1),
   RS_WINDOW_ATTRIBUTES        = (RS_PREFIX |  2),

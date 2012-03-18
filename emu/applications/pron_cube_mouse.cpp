@@ -3,6 +3,7 @@
 #include "pronlib.h"
 #include <fcntl.h>
 #include <unistd.h>
+#include <errno.h>
 
 #define PI 3.14159f
 
@@ -110,25 +111,27 @@ int main(int argc, char **argv){
   PronEvent *e = getPronEvent();
   while (1) {	
     //On récupère un évènement
-    if (!pronNextEvent(d, e)) {
-      fprintf(stderr, "pron has closed the connection.\n");
-      exit(1);
-    }
-
-    switch (e->type) {
-    case EV_POINTER_MOVED: {
-      EventPointerMoved *pointerMoved = (EventPointerMoved*) e;
-      x = pointerMoved->x;
-      y = pointerMoved->y;
-      break;
-    }
-    case EV_MOUSE_BUTTON : {
-      EventMouseButton *mouseButton = (EventMouseButton*) e;
-      buttonPressed = mouseButton->b1;
-       break;
-    }
-    default:
-      break;
+    if (!pronNextEvent(d, e, true)) {
+      if (errno != EAGAIN && errno != EWOULDBLOCK) {
+        fprintf(stderr, "pron has closed the connection.\n");
+        exit(1);
+      }
+    } else {
+      switch (e->type) {
+      case EV_POINTER_MOVED: {
+        EventPointerMoved *pointerMoved = (EventPointerMoved*) e;
+        x = pointerMoved->x;
+        y = pointerMoved->y;
+        break;
+      }
+      case EV_MOUSE_BUTTON : {
+        EventMouseButton *mouseButton = (EventMouseButton*) e;
+        buttonPressed = mouseButton->b1;
+         break;
+      }
+      default:
+        break;
+      }
     }
 		
     if (buttonPressed) {// Bouton 1 appuyé
