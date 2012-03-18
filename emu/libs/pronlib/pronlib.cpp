@@ -30,6 +30,15 @@ Display* pronConnect() {
   return d; 
 }
 
+void pronDisconnect(Display *d) {
+  RqGoodbye rq;
+  tsock_write(d->fd,&rq, sizeof(rq));
+  //tsock_close(d->fd);
+  //delete d; 
+}
+
+
+
 Window pronCreateWindow(Display *d, Window parent, int x, int y, int width, int height) {
   Window w = d->newResourceId();
   RqCreateWindow rq(w, parent, x, y, width, height);
@@ -125,11 +134,6 @@ void pronGetWindowAttributes(Display *d, Window w, PronWindowAttributes *attr) {
 void pronSetWindowAttributes(Display * d, Window w, const PronWindowAttributes & newAttr, unsigned int mask) {  
   RqSetWindowAttributes rq(w,newAttr,mask);
   tsock_write(d->fd,&rq,sizeof(RqSetWindowAttributes));
-}
-
-void pronDisconnect(Display *d) {
-  tsock_close(d->fd);
-  delete d; 
 }
 
 void pronSelectInput(Display *d, Window w, uint32_t eventMask) {

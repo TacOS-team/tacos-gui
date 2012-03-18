@@ -25,6 +25,16 @@ struct RqHello : public PronRequest {
 };
 
 /**
+ * Goodbye request.
+ * Sent by a client to disconnect from pron
+ */
+struct RqGoodbye : public PronRequest {
+  /** Constructor. */
+  RqGoodbye()
+    : PronRequest(RQ_GOODBYE) {}
+};
+
+/**
  * CreateWindow request.
  * Sent by a client to create a new window.
  */

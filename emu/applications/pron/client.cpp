@@ -29,6 +29,10 @@ void Client::handle() {
       this->send(&welcome, sizeof(welcome));
       break;
     }
+    case RQ_GOODBYE: {
+      printf("RQ_GOODBYE from fd %d\n", this->fd);
+      break;
+    }
     case RQ_CREATE_WINDOW: {
       RqCreateWindow *rq = (RqCreateWindow*) Client::recvBuf;
       Window *w = new Window(screen, rq->id, this, screen->getWindow(rq->parent), rq->x, rq->y, rq->width, rq->height);
