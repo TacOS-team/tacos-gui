@@ -13,6 +13,8 @@ public:
 
   bool contains(int x, int y);
 
+  void print();
+
 private:
   vector<ClipRect*> clipRects;
 };

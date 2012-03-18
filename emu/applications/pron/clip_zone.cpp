@@ -1,5 +1,6 @@
 #include <clip_zone.h>
 #include <screen.h>
+#include <cstdio>
 
 ClipZone::ClipZone(Window *w) {
   // Initial rectangle
@@ -68,4 +69,12 @@ bool ClipZone::contains(int x, int y) {
   }
 
   return inZone; 
+}
+
+void ClipZone::print() {
+  printf("########## CLIP ZONE ##########\n");
+  for (unsigned int i = 0; i < this->clipRects.size(); i++) {
+    printf("x: %d  y: %d  w: %d  h: %d\n", this->clipRects[i]->x, this->clipRects[i]->y, this->clipRects[i]->width, this->clipRects[i]->height);
+  }
+  printf("###############################\n");
 }
