@@ -24,7 +24,7 @@ Screen::Screen(int width, int height, int bitsPerPixel) {
 
   this->root = NULL;
   this->clipWin = NULL;
-  this->clipZone = NULL;
+  this->clipZone = new ClipZone(0, 0, this->width, this->height);
 
   this->gc = &this->defaultGC;
 
@@ -305,13 +305,22 @@ void Screen::setRoot(Window *root) {
   this->root = root;
 }
 
-void Screen::setClipWindow(Window *w) {
+Window* Screen::getClipWin() {
+  return this->clipWin;
+}
+
+void Screen::setClipWin(Window *w) {
   if (w != this->clipWin) {
     // Update clipzone
     if (this->clipZone != NULL) {
       delete this->clipZone;
     }
-    this->clipZone = new ClipZone(w);
+    if (w == NULL) {
+      // Special case : whole screen
+      this->clipZone = new ClipZone(0, 0, this->width, this->height);
+    } else {
+      this->clipZone = new ClipZone(w);
+    }
     this->clipWin = w;
   }
 }
@@ -322,7 +331,7 @@ bool Screen::prepareDrawing(Window *w, GC *gc) {
     return false;
   }
 
-  this->setClipWindow(w);
+  this->setClipWin(w);
 
   if (gc != NULL) {
     this->gc = gc;

@@ -2,6 +2,12 @@
 #include <screen.h>
 #include <cstdio>
 
+ClipZone::ClipZone(int x, int y, int width, int height) {
+  // Clipping zone containing only 1 rectangle
+  ClipRect *clip = new ClipRect(x, y, width, height);
+  this->clipRects.push_back(clip);
+}
+
 ClipZone::ClipZone(Window *w) {
   // Initial rectangle
   ClipRect *clip = new ClipRect(w);

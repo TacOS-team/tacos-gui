@@ -165,9 +165,8 @@ void Mouse::drawPointer() {
   this->pointerBackuped = true;
 
   // Delete the obsolete clipZone
-  screen->clipWin = NULL;
-  delete screen->clipZone;
-  screen->clipZone = NULL;
+  screen->setClipWin(NULL);
+  
   // We can draw the new pointer
   screen->drawLine(this->mouseX,this->mouseY, this->mouseX, this->mouseY + PRON_MOUSE_POINTER_HEIGHT - 1);
   screen->drawLine(this->mouseX,this->mouseY, this->mouseX + PRON_MOUSE_POINTER_WIDTH - 1, this->mouseY);

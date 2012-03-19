@@ -195,7 +195,7 @@ void Client::handle() {
       Window *w = screen->getWindow(rq->window);
       if (w != NULL) {
         w->reparent(screen->getWindow(rq->newParent));
-        screen->clipWin = NULL;
+        screen->setClipWin(NULL);
         //screen->traceWindows();
       }
       break;

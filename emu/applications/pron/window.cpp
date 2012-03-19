@@ -93,8 +93,8 @@ void Window::unmap() {
   this->mapped = false;
 
   // TODO: check if we were clipwin/mousewin/focuswin
-  if (this->screen->clipWin == this) {
-    this->screen->clipWin = NULL;
+  if (this->screen->getClipWin() == this) {
+    this->screen->setClipWin(NULL);
   }
 
   if (this->screen->getMouseWin() == this) {
@@ -175,7 +175,7 @@ void Window::clear(int x, int y, int width, int height) {
   COLOR(this->screen->gc->fg, 24).r = COLOR(this->bgColor, 24).r;
   COLOR(this->screen->gc->fg, 24).g = COLOR(this->bgColor, 24).g;
   COLOR(this->screen->gc->fg, 24).b = COLOR(this->bgColor, 24).b;
-  this->screen->setClipWindow(this);
+  this->screen->setClipWin(this);
   this->screen->fillRectangle(this->x + x, this->y + y, width, height);
   // If it is the root window, we print a grid (provisoire !!!!!! TODO)
   if (this->id == 0) {

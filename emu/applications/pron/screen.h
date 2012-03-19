@@ -18,7 +18,9 @@ class Screen {
 private:
   Screen(int width, int height, int bitsPerPixel);
   static Screen *instance;
-  Window * mouseWin; // First window containing the mouse pointer
+  Window *clipWin; /*< Window for which the clipping zone is set */
+  ClipZone *clipZone; /*< Rectangles where we are allowed to draw */
+  Window *mouseWin; // First window containing the mouse pointer
 
   void drawHorizLine(int x, int y, int width);
   void drawVertLine(int x, int y, int height);
@@ -33,15 +35,12 @@ public: // XXX: bourrin
   char *videoBuffer;
   vector<Window*> windows; // XXX: ABR ? Rouge/noir ? B-Arbre ?
   Window *root;
-  Window *clipWin;
-  ClipZone *clipZone;
   GC defaultGC;
   GC *gc;
 
   static Screen* getInstance(int width, int height, int bitsPerPixel);
   static Screen* getInstance();
   
-  void setClipWindow(Window *w);
   bool prepareDrawing(Window *w, GC *gc = NULL);
 
   void drawPoint(int x, int y, bool check = true);
@@ -57,8 +56,12 @@ public: // XXX: bourrin
   Window* getWindow(unsigned int id);
   void addWindow(Window *w);
 
+  Window* getClipWin();
+  void setClipWin(Window *w);
+
   Window* getMouseWin();
   void setMouseWin(Window *mouseWin);
+
   Window* getRoot();
   void setRoot(Window *root);
 
