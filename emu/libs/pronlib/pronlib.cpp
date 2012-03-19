@@ -181,6 +181,11 @@ void pronMoveWindow(Display *d, unsigned int w, int x, int y) {
   tsock_write(d->fd, &rq, sizeof(rq));
 }
 
+void pronMoveWindowTo(Display *d, unsigned int w, int x, int y) {
+  RqMoveWindowTo rq(w, x, y);
+  tsock_write(d->fd, &rq, sizeof(rq));
+}
+
 void pronPutImage(Display *d, Window w, GC gc, PronImage *image, 
     int srcX, int srcY, int width, int height, int destX, int destY) {
   // We have to check if the rectangle the client wants to send enters 

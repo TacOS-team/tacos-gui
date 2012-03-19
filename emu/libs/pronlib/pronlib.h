@@ -230,7 +230,7 @@ void pronReparentWindow(Display *d, unsigned int w, unsigned int newParent);
  * @param d The connection to pron
  * @param w The window
  */
-void pronDestroyWindow(Display *d, unsigned int w);   
+void pronDestroyWindow(Display *d, unsigned int w);
 
 /**
  * Move a Window of x pixels on x and y pixels on y
@@ -240,6 +240,15 @@ void pronDestroyWindow(Display *d, unsigned int w);
  * @param y The relative move on y
  */
 void pronMoveWindow(Display *d, unsigned int w, int x, int y);
+
+/**
+ * Move a Window at (x,y) position
+ * @param d The connection to pron
+ * @param w The window
+ * @param x The new x position
+ * @param y The nex y position
+ */
+void pronMoveWindowTo(Display *d, unsigned int w, int x, int y);
 
 /**
  * Put an image on the server 

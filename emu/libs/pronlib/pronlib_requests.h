@@ -433,6 +433,24 @@ struct RqMoveWindow : public PronRequest {
 };
 
 /**
+ * Move a Window at (x, y) position
+ * Sent by a client to move a window
+ */
+struct RqMoveWindowTo : public PronRequest {
+  /** Constructor. */
+  RqMoveWindowTo(unsigned int window, int x, int y)
+      : PronRequest(RQ_MOVE_WINDOW_TO) {
+    this->window    = window;
+    this->x = x;
+    this->y = y;
+  }
+
+  unsigned int window; /**< id of Window */
+  int x;
+  int y;
+};
+
+/**
  * Puts an image into a window or a pixmap
  */
 struct RqPutImage : public PronRequest {

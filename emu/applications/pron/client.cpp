@@ -244,6 +244,23 @@ void Client::handle() {
       }
       break;
     }
+    case RQ_MOVE_WINDOW_TO: {// TODO Faire une fonction générale pour les deux move
+      RqMoveWindowTo *rq = (RqMoveWindowTo*) Client::recvBuf;
+      Window *w = screen->getWindow(rq->window);
+      if (w != NULL) {
+        // TODO Gestion sous-filles + clean
+        // TODO Create method Window::move
+        w->unmap();
+        w->x = rq->x;
+        w->y = rq->y;
+        for (Window *currentChild = w->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
+          currentChild->x = rq->x;
+          currentChild->y = rq->y;
+        }
+        w->map();
+      }
+      break;
+    }
     case RQ_PUT_IMAGE: {
       RqPutImage *rq = (RqPutImage*) Client::recvBuf;
       // Gets the image buffer
