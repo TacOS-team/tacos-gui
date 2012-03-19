@@ -101,10 +101,24 @@ bool GWindow::overlaps(GWindow *gw) {
 
 void GWindow::decorate() {
   if (this->hasDecoration()) {
-    printf("déco !\n");
     pronDrawLine(display, this->closeButton, this->closeButtonGC, 0, 1, buttonSize-1, buttonSize);
     pronDrawLine(display, this->closeButton, this->closeButtonGC, 0, 0, buttonSize, buttonSize);
     pronDrawLine(display, this->closeButton, this->closeButtonGC, 0, buttonSize, buttonSize, 0);
     pronDrawLine(display, this->closeButton, this->closeButtonGC, 1, buttonSize, buttonSize, 1);
   }
+}
+
+
+void GWindow::resize(int width, int height) {
+  pronResizeWindow(display, this->parent, width, height);
+  pronMoveWindow(display, this->closeButton,
+    width - this->parentAttributes.width, 0);
+  pronMoveWindow(display, this->resizeButton,
+    width - this->parentAttributes.width, height - this->parentAttributes.height);
+  this->parentAttributes.width  = width;
+  this->parentAttributes.height = height;
+  this->attributes.width        = width  - 2*buttonSize;
+  this->attributes.height       = height - 2*buttonSize;
+  pronResizeWindow(display, this->window, this->attributes.width,
+    this->attributes.height);
 }

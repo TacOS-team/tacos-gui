@@ -44,16 +44,9 @@ void derout(int signum)
       windowLeftButtonPressed->attributes.x       += xMove;
       windowLeftButtonPressed->attributes.y       += yMove;
     } else if (windowResizeButtonPressed) {
-      windowResizeButtonPressed->parentAttributes.width  += xMove;
-      windowResizeButtonPressed->parentAttributes.height += yMove;
-      windowResizeButtonPressed->attributes.width        += xMove;
-      windowResizeButtonPressed->attributes.height       += yMove;
-      pronResizeWindow(display, windowResizeButtonPressed->parent, windowResizeButtonPressed->parentAttributes.width,
-        windowResizeButtonPressed->parentAttributes.height);
-      pronResizeWindow(display, windowResizeButtonPressed->window, windowResizeButtonPressed->attributes.width,
-        windowResizeButtonPressed->attributes.height);
-      pronMoveWindow(display, windowResizeButtonPressed->resizeButton, xMove, yMove);
-      pronMoveWindow(display, windowResizeButtonPressed->closeButton, xMove, 0);
+      windowResizeButtonPressed->resize(
+        windowResizeButtonPressed->parentAttributes.width  + xMove,
+        windowResizeButtonPressed->parentAttributes.height + yMove);
     }
     mouseActualXPosition = mouseLastXPosition;
     mouseActualYPosition = mouseLastYPosition;

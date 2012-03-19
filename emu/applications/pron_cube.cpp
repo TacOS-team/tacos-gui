@@ -123,7 +123,6 @@ int main(int argc, char *argv[]) {
         }
         case EV_RESIZE_WINDOW : {
           EventResizeWindow *resizeWindowEvent = (EventResizeWindow*) event;
-          printf("Resize event received\n");
           updateZoom(resizeWindowEvent->width, resizeWindowEvent->height);
           break;
         }

@@ -22,6 +22,7 @@ struct GWindow {
   bool overlaps(GWindow *gw);
 
   void decorate();
+  void resize(int width, int height);
 };
 
 #endif// _GWINDOW_H_
