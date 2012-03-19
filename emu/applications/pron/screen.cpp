@@ -42,162 +42,105 @@ Screen* Screen::getInstance() {
   return instance;
 }
 
-
-bool Screen::isValid(int x, int y) {
-  return (x >= 0 && x < this->width && y >= 0 && y < this->height
-            &&  (this->clipZone == NULL || this->clipZone->contains(x, y)));
+inline bool Screen::isValid(int x, int y) {
+  return (x >= 0 && x < this->width && y >= 0 && y < this->height && this->clipZone->contains(x, y));
 }
 
 inline void Screen::drawPoint(int x, int y, bool check) {
-  if (this->isValid(x,y)) {
+  if (!check || this->isValid(x, y)) {
     memcpy(this->videoBuffer + (y * this->width + x) * 3, &COLOR(this->gc->fg, 24), sizeof(COLOR(this->gc->fg, 24)));
   }
 }
 
-void Screen::drawHorizLine(int x, int y, int width) {
+void Screen::drawHorizLine(int x, int y, int width, bool check) {
+  if (check) {
+    check = !this->clipZone->contains(x, y, x + width - 1, y);
+  }
+
   for (int c = 0; c < width; c++) {
-    this->drawPoint(x + c, y);
+    this->drawPoint(x + c, y, check);
   }
 }
 
-void Screen::drawVertLine(int x, int y, int height) {
+void Screen::drawVertLine(int x, int y, int height, bool check) {
+  if (check) {
+    check = !this->clipZone->contains(x, y, x, y + height - 1);
+  }
+
   for (int l = 0; l < height; l++) {
-    this->drawPoint(x, y + l);
+    this->drawPoint(x, y + l, check);
   }
 }
 
-void Screen::drawLine(int x1, int y1, int x2, int y2) {
-  /*
-  float dx, dy, sdx, sdy, dxabs, dyabs, x, y, coordProv, delta;
-  int i, px, py;
+void Screen::drawLine(int x1, int y1, int x2, int y2, bool check) {
+  if (check) {
+    check = !this->clipZone->contains(x1, y1, x2, y2);
+  }
 
-  color_t c;
-  color_t cprov;
+  if (x1 == x2) {
+    // Vertical line
+    this->drawVertLine(x1, y1, (y2 - y1 + 1), check);
+  } else if (y1 == y2) {
+    // Horizontal line
+    this->drawHorizLine(x1, y1, (x2 - x1 + 1), check);
+  } else {
+    int i, dx, dy, sdx, sdy, dxabs, dyabs, x, y, px, py;
 
-  COLOR(c, 24).r = 255;
-  COLOR(c, 24).g = 77;
-  COLOR(c, 24).b = 182;
-
-  dx = x2 - x1; // the horizontal distance of the line
-  dy = y2 - y1; // the vertical distance of the line
-  dxabs = (dx >= 0 ? dx : -dx);
-  dyabs = (dy >= 0 ? dy : -dy);
-  px = x1;
-  py = y1;
-
-  // Je l'ai fait que pour ces lignes pour tester
-  if (dxabs >= dyabs) { // the line is more horizontal than vertical
+    dx = x2 - x1; 
+    dy = y2 - y1;
+    dxabs = (dx >= 0 ? dx : -dx);
+    dyabs = (dy >= 0 ? dy : -dy);
     sdx = (dx >= 0 ? 1 : -1);
-    sdy = (dy >= 0 ? 1 : -1) * dyabs/dxabs;
-    for (i = 0; i < dxabs; i++) {
-      printf("dx : %f\n", dx);
-      printf("dy : %f\n", dy);
-      printf("i : %d\n", i);
-      coordProv = y1 + sdy * i;
-      printf("coordProv : %f\n", coordProv);
-      py = coordProv;
-      px += sdx;
-      delta = coordProv - py;
-      printf("py : %f\n", py);
-      printf("delta : %f\n", delta);
-      COLOR(cprov, 24).r = delta * COLOR(c, 24).r;
-      COLOR(cprov, 24).g = delta * COLOR(c, 24).g;
-      COLOR(cprov, 24).b = delta * COLOR(c, 24).b;
-      if (delta >= 0.5) {
-        this->drawPoint(px, py, cprov);
-        printf("avant : %d %d %d\n", COLOR(cprov, 24).r, COLOR(cprov, 24).g, COLOR(cprov, 24).b);
-        COLOR(cprov, 24).r = ( 1.0 - delta) * COLOR(c, 24).r;
-        COLOR(cprov, 24).g = ( 1.0 - delta) * COLOR(c, 24).g;
-        COLOR(cprov, 24).b = ( 1.0 - delta) * COLOR(c, 24).b;
-        printf("après : %d %d %d\n", COLOR(cprov, 24).r, COLOR(cprov, 24).g, COLOR(cprov, 24).b);
-        this->drawPoint(px, py+1, cprov);
-        if (delta >= 0.7) {
-          printf("3eme : %d %d %d\n", COLOR(cprov, 24).r, COLOR(cprov, 24).g, COLOR(cprov, 24).b);
-          this->drawPoint(px, py-1, cprov);
-        }
-      } else {
-        this->drawPoint(px, py+1, cprov);
-        COLOR(cprov, 24).r = ( 1.0 - delta) * COLOR(c, 24).r;
-        COLOR(cprov, 24).g = ( 1.0 - delta) * COLOR(c, 24).g;
-        COLOR(cprov, 24).b = ( 1.0 - delta) * COLOR(c, 24).b;
-        this->drawPoint(px, py, cprov);
-        if (delta <= 0.3) {
-          this->drawPoint(px, py-1, cprov);
-        }
-      }
-    }
-  } else { // the line is more vertical than horizontal
-    sdx = (dx >= 0 ? 1 : -1) * dxabs/dyabs;
     sdy = (dy >= 0 ? 1 : -1);
-    for (i = 0; i < dyabs; i++) {
-      coordProv = x1 + sdx * i;
-      px = coordProv;
-      py += sdy;
-      delta = coordProv - px;
-      COLOR(cprov, 24).r = delta * COLOR(c, 24).r;
-      COLOR(cprov, 24).g = delta * COLOR(c, 24).g;
-      COLOR(cprov, 24).b = delta * COLOR(c, 24).b;
-      if (delta >= 0.5) {
-        this->drawPoint(px, py, cprov);
-        this->drawPoint(px+1, py, c);
-      } else {
-        this->drawPoint(px, py, c);
-        this->drawPoint(px+1, py, cprov);
-      }
-    }
-  }
-  // */
+    x = dyabs >> 1;
+    y = dxabs >> 1;
+    px = x1;
+    py = y1;
 
-  //*
-  int i, dx, dy, sdx, sdy, dxabs, dyabs, x, y, px, py;
+    this->drawPoint(px, py, check);
 
-  dx = x2 - x1; 
-  dy = y2 - y1;
-  dxabs = (dx >= 0 ? dx : -dx);
-  dyabs = (dy >= 0 ? dy : -dy);
-  sdx = (dx >= 0 ? 1 : -1);
-  sdy = (dy >= 0 ? 1 : -1);
-  x = dyabs >> 1;
-  y = dxabs >> 1;
-  px = x1;
-  py = y1;
-
-  this->drawPoint(px, py);
-
-  if (dxabs >= dyabs) {
-    for (i = 0; i < dxabs; i++) {
-      y += dyabs;
-      if (y >= dxabs) {
-        y -= dxabs;
-        py += sdy;
-      }
-      px += sdx;
-      this->drawPoint(px, py);
-    }
-  } else { 
-    for (i = 0; i < dyabs; i++) {
-      x += dxabs;
-      if (x >= dyabs) {
-        x -= dyabs;
+    if (dxabs >= dyabs) {
+      for (i = 0; i < dxabs; i++) {
+        y += dyabs;
+        if (y >= dxabs) {
+          y -= dxabs;
+          py += sdy;
+        }
         px += sdx;
+        this->drawPoint(px, py, check);
       }
-      py += sdy;
-      this->drawPoint(px, py);
+    } else { 
+      for (i = 0; i < dyabs; i++) {
+        x += dxabs;
+        if (x >= dyabs) {
+          x -= dyabs;
+          px += sdx;
+        }
+        py += sdy;
+        this->drawPoint(px, py, check);
+      }
     }
   }
-  // */
 }
 
-void Screen::drawRect(int x, int y, int width, int height) {
-  drawHorizLine(x, y, width);
-  drawHorizLine(x, y + height - 1, width);
-  drawVertLine(x, y + 1, height - 2);
-  drawVertLine(x + width - 1, y + 1, height - 2);
+void Screen::drawRect(int x, int y, int width, int height, bool check) {
+  if (check) {
+    check = !this->clipZone->contains(x, y, x + width - 1, y + height - 1);
+  }
+
+  drawHorizLine(x, y, width, check);
+  drawHorizLine(x, y + height - 1, width, check);
+  drawVertLine(x, y + 1, height - 2, check);
+  drawVertLine(x + width - 1, y + 1, height - 2, check);
 }
 
-void Screen::fillRectangle(int x, int y, int width, int height) {
+void Screen::fillRectangle(int x, int y, int width, int height, bool check) {
+  if (check) {
+    check = !this->clipZone->contains(x, y, x + width - 1, y + height - 1);
+  }
+
   for (int l = 0; l < height; l++) {
-    drawHorizLine(x, y + l, width);
+    drawHorizLine(x, y + l, width, check);
   }
 }
 

@@ -13,6 +13,7 @@ public:
   ClipZone(Window *w);
 
   bool contains(int x, int y);
+  bool contains(int x1, int y1, int x2, int y2);
 
   void print();
 
