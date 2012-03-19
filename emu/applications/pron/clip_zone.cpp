@@ -2,6 +2,12 @@
 #include <screen.h>
 #include <cstdio>
 
+ClipZone::ClipZone(int x, int y, int width, int height) {
+  // Clipping zone containing only 1 rectangle
+  ClipRect *clip = new ClipRect(x, y, width, height);
+  this->clipRects.push_back(clip);
+}
+
 ClipZone::ClipZone(Window *w) {
   // Initial rectangle
   ClipRect *clip = new ClipRect(w);
@@ -66,6 +72,16 @@ bool ClipZone::contains(int x, int y) {
   
   for (unsigned int i = 0; i < this->clipRects.size() && !inZone; i++) {
     inZone = inZone || this->clipRects[i]->contains(x, y);
+  }
+
+  return inZone; 
+}
+
+bool ClipZone::contains(int x1, int y1, int x2, int y2) {
+  bool inZone = false;
+  
+  for (unsigned int i = 0; i < this->clipRects.size() && !inZone; i++) {
+    inZone = inZone || (this->clipRects[i]->contains(x1, y1) && this->clipRects[i]->contains(x2, y2));
   }
 
   return inZone; 
