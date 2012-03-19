@@ -87,9 +87,9 @@ void draw_cube(Display *d, Window w, GC gc) {
 
 int main(int argc, char **argv){
   int i = 0;
-  int x, y;
-  int prevx,prevy;
-  bool buttonPressed;
+  int x = 0, y = 0;
+  int prevx = 0, prevy = 0;
+  bool buttonPressed = false;
 	
   float theta = 0.0f;
   float phi = 0.0f;

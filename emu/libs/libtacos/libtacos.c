@@ -126,7 +126,7 @@ int close(int fd) {
 }
 
 ssize_t read(int fd, void *buf, size_t count) {
-  int ret;
+  int ret = -1;
 
   //printf("read!\n");
 
@@ -156,7 +156,7 @@ ssize_t read(int fd, void *buf, size_t count) {
 }
 
 int ioctl(int fd, unsigned long request, void *data) {
-  int ret;
+  int ret = -1;
 
   //printf("ioctl!\n");
   

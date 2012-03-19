@@ -46,7 +46,7 @@ inline bool Screen::isValid(int x, int y) {
   return (x >= 0 && x < this->width && y >= 0 && y < this->height && this->clipZone->contains(x, y));
 }
 
-inline void Screen::drawPoint(int x, int y, bool check) {
+void Screen::drawPoint(int x, int y, bool check) {
   if (!check || this->isValid(x, y)) {
     memcpy(this->videoBuffer + (y * this->width + x) * 3, &COLOR(this->gc->fg, 24), sizeof(COLOR(this->gc->fg, 24)));
   }
