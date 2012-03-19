@@ -10,14 +10,18 @@ struct GWindow {
   Window window;
   Window parent;
   Window closeButton;
+  GC closeButtonGC;
   Window resizeButton;
   PronWindowAttributes attributes;
   PronWindowAttributes parentAttributes;
+  Display *display;
 
-  GWindow (Window w, Window parent);
+  GWindow (Window w, const PronWindowAttributes & attributes, bool decorate, Display *display);
 
   bool hasDecoration();
   bool overlaps(GWindow *gw);
+
+  void decorate();
 };
 
 #endif// _GWINDOW_H_
