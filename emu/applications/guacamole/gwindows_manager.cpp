@@ -30,6 +30,7 @@ PronWindowAttributes & GWindowsManager::getRootWindowAttributes() {
 void GWindowsManager::destroy(Window w) {
   for (size_t i = 0; i < this->windowsList.size(); ++i) {
     if (this->windowsList[i]->window == w || this->windowsList[i]->parent == w) {
+      this->windowsList[i]->destroy();
       delete this->windowsList[i];
       this->windowsList[i] = this->windowsList[this->windowsList.size()-1];
       this->windowsList.pop_back();

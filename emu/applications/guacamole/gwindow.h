@@ -9,7 +9,7 @@ using namespace std;
 class GWindow {
  protected:
   bool isMaximised;
-  
+
  public:
   Window window;
   Window parent;
@@ -31,6 +31,7 @@ class GWindow {
   void resize(int width, int height);
   void move(int xMove, int yMove);
   void maximise();
+  void destroy();
 };
 
 #endif// _GWINDOW_H_

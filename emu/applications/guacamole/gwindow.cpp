@@ -185,3 +185,9 @@ void GWindow::maximise() {
     pronGetWindowAttributes(display, this->parent, &this->parentAttributes);
   }
 }
+
+
+void GWindow::destroy() {
+  pronDestroyWindow(display,this->parent);
+  pronFreeGC(display, closeButtonGC);
+}

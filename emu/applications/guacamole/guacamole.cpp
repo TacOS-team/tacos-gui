@@ -144,7 +144,6 @@ int main() {
         if (gwin && mouseButtonEvent->b1) {
           // If the window is the decoration window
           if (mouseButtonEvent->window == gwin->closeButton) {
-            pronDestroyWindow(display,gwin->parent);
             windowsManager.destroy(gwin->parent);
           } else if (mouseButtonEvent->window == gwin->maximiseButton) {
             gwin->maximise();
@@ -188,7 +187,9 @@ int main() {
       case EV_EXPOSE : {
         EventExpose *mouseExposeEvent = (EventExpose*) e;
         GWindow *gwin = windowsManager.getGWindow(mouseExposeEvent->window);
-        gwin->decorate();
+        if (gwin) {
+          gwin->decorate();
+        }
 
       }
       default:
