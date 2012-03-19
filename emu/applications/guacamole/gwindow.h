@@ -23,6 +23,7 @@ class GWindow {
   Display *display;
 
   GWindow (Window w, const PronWindowAttributes & attributes, bool decorate, Display *display);
+  ~GWindow();
 
   bool hasDecoration();
   bool overlaps(GWindow *gw);
@@ -32,6 +33,7 @@ class GWindow {
   void move(int xMove, int yMove);
   void maximise();
   void destroy();
+  void raise();
 };
 
 #endif// _GWINDOW_H_

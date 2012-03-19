@@ -69,20 +69,19 @@ int main() {
   // connection to pron
   display = pronConnect();
   
+  GWindowsManager::init(display->rootWindow);
   // Get the root window informations
-  GWindowsManager windowsManager(display->rootWindow);
-  pronGetWindowAttributes(display, display->rootWindow, &windowsManager.getRootWindowAttributes());
+  pronGetWindowAttributes(display, display->rootWindow, &GWindowsManager::getInstance()->getRootWindowAttributes());
   
-  debug("Root window width : %d, height : %d\n", windowsManager.getRootWindowAttributes().width,
-    windowsManager.getRootWindowAttributes().height);
+  debug("Root window width : %d, height : %d\n", GWindowsManager::getInstance()->getRootWindowAttributes().width,
+    GWindowsManager::getInstance()->getRootWindowAttributes().height);
   
   // Subscribe to root window events
   int currentRootEventMask =  PRON_EVENTMASK(EV_WINDOW_CREATED)
-  | PRON_EVENTMASK(EV_KEY_PRESSED)
-  | PRON_EVENTMASK(EV_KEY_RELEASED);
+    | PRON_EVENTMASK(EV_KEY_PRESSED)
+    | PRON_EVENTMASK(EV_KEY_RELEASED);
   pronSelectInput(display, display->rootWindow, currentRootEventMask);
   PronEvent *e = getPronEvent();
-  
 
   while (1) {
     if (!pronNextEvent(display, e)) {
@@ -97,19 +96,13 @@ int main() {
         bool winAlreadyExists = false;
 
         // we don't want to add a window that is already known
-        if (windowsManager.getGWindow(windowCreated->window) != NULL) {
+        if (GWindowsManager::getInstance()->getGWindow(windowCreated->window) != NULL) {
           winAlreadyExists = true;
         }
         if (!winAlreadyExists && windowCreated->parent == 0) {
           printf("top level window\n");
           
-          GWindow *gw = new GWindow(windowCreated->window, windowCreated->attributes, true, display);
-
-          windowsManager.initWindowPosition(gw);
-          printf("nouvelle position %d %d\n", gw->parentAttributes.x, gw->parentAttributes.y);
-          pronMoveWindow(display, gw->parent, gw->parentAttributes.x, gw->parentAttributes.y);
-
-          windowsManager.addGWindow(gw);
+          new GWindow(windowCreated->window, windowCreated->attributes, true, display);
         }
         break;
       }
@@ -128,23 +121,20 @@ int main() {
         printf("DestroyWindow event received for %d\n", destroyWindowEvent->window);
 
         // Sending destroy request for the parent window
-        GWindow *pgwin = windowsManager.getGWindow(destroyWindowEvent->window);
+        GWindow *pgwin = GWindowsManager::getInstance()->getGWindow(destroyWindowEvent->window);
         if (pgwin) {
-          if (pgwin->parent != destroyWindowEvent->window) {
-            pronDestroyWindow(display,pgwin->parent);
-          }
-          windowsManager.destroy(destroyWindowEvent->window);
+          GWindowsManager::getInstance()->destroy(destroyWindowEvent->window);
         }
         break;
       }
       case EV_MOUSE_BUTTON : {
         EventMouseButton *mouseButtonEvent = (EventMouseButton*) e;
         printf("mouse button event. ID : %d\n", mouseButtonEvent->window);
-        GWindow *gwin = windowsManager.getGWindow(mouseButtonEvent->window);
+        GWindow *gwin = GWindowsManager::getInstance()->getGWindow(mouseButtonEvent->window);
         if (gwin && mouseButtonEvent->b1) {
           // If the window is the decoration window
           if (mouseButtonEvent->window == gwin->closeButton) {
-            windowsManager.destroy(gwin->parent);
+            GWindowsManager::getInstance()->destroy(gwin->parent);
           } else if (mouseButtonEvent->window == gwin->maximiseButton) {
             gwin->maximise();
           } else {
@@ -155,7 +145,7 @@ int main() {
               windowLeftButtonPressed = gwin;
             }
             // Puts the window on foreground
-            pronRaiseWindow(display, gwin->parent);
+            gwin->raise();
             // Subscribe to pointer moved and mouse button of the root window
             //   to avoid problems if it moves too fast
             currentRootEventMask |= PRON_EVENTMASK(EV_POINTER_MOVED) | PRON_EVENTMASK(EV_MOUSE_BUTTON);
@@ -186,7 +176,7 @@ int main() {
       }
       case EV_EXPOSE : {
         EventExpose *mouseExposeEvent = (EventExpose*) e;
-        GWindow *gwin = windowsManager.getGWindow(mouseExposeEvent->window);
+        GWindow *gwin = GWindowsManager::getInstance()->getGWindow(mouseExposeEvent->window);
         if (gwin) {
           gwin->decorate();
         }

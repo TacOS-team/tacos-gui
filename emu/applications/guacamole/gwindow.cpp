@@ -79,8 +79,10 @@ GWindow::GWindow (Window w, const PronWindowAttributes & attributes, bool decora
     pronSelectInput(display, this->maximiseButton, PRON_EVENTMASK(EV_MOUSE_BUTTON));
     pronDontPropagateEvent(display,this->maximiseButton,PRON_EVENTMASK(EV_MOUSE_BUTTON));
 
+    GWindowsManager::getInstance()->initWindowPosition(this);
+    pronMoveWindow(display, this->parent, this->parentAttributes.x, this->parentAttributes.y);
 
-    this->decorate();
+    GWindowsManager::getInstance()->addGWindow(this);
   }
 }
 
@@ -222,10 +224,9 @@ void GWindow::maximise() {
     pronGetWindowAttributes(display, this->window, &this->attributes);
     pronGetWindowAttributes(display, this->parent, &this->parentAttributes);
     this->oldParentAttributes = this->parentAttributes;
-    PronWindowAttributes rootAttributes;
-    pronGetWindowAttributes(display, display->rootWindow, &rootAttributes);
     pronMoveWindowTo(display, this->parent, 0, 0);
-    this->resize(rootAttributes.width, rootAttributes.height);
+    this->resize(GWindowsManager::getInstance()->getRootWindowAttributes().width,
+      GWindowsManager::getInstance()->getRootWindowAttributes().height);
     // TODO unmap de resizewindow
     this->isMaximised = true;
   } else {
@@ -239,7 +240,12 @@ void GWindow::maximise() {
 }
 
 
-void GWindow::destroy() {
-  pronDestroyWindow(display,this->parent);
+GWindow::~GWindow() {
+  pronDestroyWindow(display, this->parent);
   pronFreeGC(display, closeButtonGC);
+}
+
+
+void GWindow::raise() {
+  pronRaiseWindow(display, this->parent);
 }
