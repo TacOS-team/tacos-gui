@@ -110,7 +110,7 @@ int main(int argc, char *argv[]) {
   PronEvent * event= getPronEvent();
 
   while (1) {
-    if (pronNextEvent(d, event, true)) {
+    while (pronNextEvent(d, event, true)) {
       switch (event->type) {
         case EV_DESTROY_WINDOW : {
           EventDestroyWindow *destroyWindowEvent = (EventDestroyWindow*) event;
@@ -137,7 +137,7 @@ int main(int argc, char *argv[]) {
       rotate_point(cube[i]);
     }
     draw_cube(d, w);
-    usleep(20000);
+    usleep(50000);
   }
 
   pronDestroyWindow(d,w);
