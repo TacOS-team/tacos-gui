@@ -251,11 +251,13 @@ void Client::handle() {
         // TODO Gestion sous-filles + clean
         // TODO Create method Window::move
         w->unmap();
+        int xMove = rq->x - w->x;
+        int yMove = rq->y - w->y;
         w->x = rq->x;
         w->y = rq->y;
         for (Window *currentChild = w->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
-          currentChild->x = rq->x;
-          currentChild->y = rq->y;
+          currentChild->x += xMove;
+          currentChild->y += yMove;
         }
         w->map();
       }

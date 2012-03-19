@@ -38,11 +38,7 @@ void derout(int signum)
     int yMove = mouseLastYPosition - mouseActualYPosition;
 
     if (windowLeftButtonPressed) {
-      pronMoveWindow(display, windowLeftButtonPressed->parent, xMove, yMove);
-      windowLeftButtonPressed->parentAttributes.x += xMove;
-      windowLeftButtonPressed->parentAttributes.y += yMove;
-      windowLeftButtonPressed->attributes.x       += xMove;
-      windowLeftButtonPressed->attributes.y       += yMove;
+      windowLeftButtonPressed->move(xMove, yMove);
     } else if (windowResizeButtonPressed) {
       windowResizeButtonPressed->resize(
         windowResizeButtonPressed->parentAttributes.width  + xMove,
@@ -144,12 +140,14 @@ int main() {
       case EV_MOUSE_BUTTON : {
         EventMouseButton *mouseButtonEvent = (EventMouseButton*) e;
         printf("mouse button event. ID : %d\n", mouseButtonEvent->window);
-        if (mouseButtonEvent->b1) {
+        GWindow *gwin = windowsManager.getGWindow(mouseButtonEvent->window);
+        if (gwin && mouseButtonEvent->b1) {
           // If the window is the decoration window
-          GWindow *gwin = windowsManager.getGWindow(mouseButtonEvent->window);
           if (mouseButtonEvent->window == gwin->closeButton) {
             pronDestroyWindow(display,gwin->parent);
             windowsManager.destroy(gwin->parent);
+          } else if (mouseButtonEvent->window == gwin->maximiseButton) {
+            gwin->maximise();
           } else {
             if (mouseButtonEvent->window == gwin->resizeButton) {
               windowResizeButtonPressed = gwin;
