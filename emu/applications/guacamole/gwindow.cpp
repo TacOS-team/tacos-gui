@@ -116,19 +116,71 @@ bool GWindow::overlaps(GWindow *gw) {
 
 void GWindow::decorate() {
   if (this->hasDecoration()) {
-    pronDrawLine(display, this->closeButton, this->closeButtonGC, 0, 1, buttonSize-2, buttonSize-1);
-    pronDrawLine(display, this->closeButton, this->closeButtonGC, 0, 0, buttonSize-1, buttonSize-1);
-    pronDrawLine(display, this->closeButton, this->closeButtonGC, 0, buttonSize-1, buttonSize-1, 0);
-    pronDrawLine(display, this->closeButton, this->closeButtonGC, 1, buttonSize-1, buttonSize-1, 1);
+    pronDrawLine(display, this->closeButton, this->closeButtonGC,
+      0, 1, buttonSize-2, buttonSize-1);
+    pronDrawLine(display, this->closeButton, this->closeButtonGC,
+      0, 0, buttonSize-1, buttonSize-1);
+    pronDrawLine(display, this->closeButton, this->closeButtonGC,
+      0, buttonSize-1, buttonSize-1, 0);
+    pronDrawLine(display, this->closeButton, this->closeButtonGC,
+      1, buttonSize-1, buttonSize-1, 1);
     if (!this->isMaximised) {
-      pronDrawLine(display, this->maximiseButton, this->closeButtonGC, 2, 2, 2, buttonSize-3);
-      pronDrawLine(display, this->maximiseButton, this->closeButtonGC, 2, 2, buttonSize-3, 2);
-      pronDrawLine(display, this->maximiseButton, this->closeButtonGC, buttonSize-3, 2, buttonSize-3, buttonSize-3);
-      pronDrawLine(display, this->maximiseButton, this->closeButtonGC, 2, buttonSize-3, buttonSize-3, buttonSize-3);
-      pronDrawLine(display, this->maximiseButton, this->closeButtonGC, 3, 3, 3, buttonSize-4);
-      pronDrawLine(display, this->maximiseButton, this->closeButtonGC, 3, 3, buttonSize-4, 3);
-      pronDrawLine(display, this->maximiseButton, this->closeButtonGC, buttonSize-4, 3, buttonSize-4, buttonSize-4);
-      pronDrawLine(display, this->maximiseButton, this->closeButtonGC, 3, buttonSize-4, buttonSize-4, buttonSize-4);
+      // Trait du haut
+      pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
+        2, 2, buttonSize-3, 2);
+      pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
+        3, 3, buttonSize-4, 3);
+      // Trait de gauche
+      pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
+        2, 2, 2, buttonSize-3);
+      // Trait de droite
+      pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
+        buttonSize-3, 2, buttonSize-3, buttonSize-3);
+      // Trait du bas
+      pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
+        2, buttonSize-3, buttonSize-3, buttonSize-3);
+    } else {
+      // devant gauche
+      pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
+        2, 4, 2, buttonSize-3);
+      // devant bas
+      pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
+        2, buttonSize-3, buttonSize-5, buttonSize-3);
+      // devant droite
+      pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
+        buttonSize-5, 4, buttonSize-5, buttonSize-3);
+      // devant haut
+      pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
+        2, 4, buttonSize-5, 4);
+      // derrière haut
+      pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
+        4, 2, buttonSize-3, 2);
+      // derrière droite
+      pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
+        buttonSize-3, 2, buttonSize-3, buttonSize-8);
+      // derrière bas
+      pronDrawPoint(display, this->maximiseButton, this->closeButtonGC,
+        buttonSize-4, buttonSize-8);
+      // derrière gauche
+      pronDrawPoint(display, this->maximiseButton, this->closeButtonGC,
+        4, 3);
+
+// 012345678901234
+//0
+//2    *********
+//3    *       *
+//4  ********* *
+//5  *       * *
+//6  *       * *
+//7  *       ***
+//8  *       *
+//9  *       *
+//0  *       *
+//1  *       *
+//2  *********
+//3
+//4
+
     }
   }
 }
