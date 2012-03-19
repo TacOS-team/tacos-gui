@@ -4,6 +4,8 @@
 #include <cstdio>
 #include <vector>
 #include <algorithm>
+#include <signal.h>
+#include <sys/time.h>
 
 
 #include <pronlib.h>
@@ -12,8 +14,68 @@
 using namespace std;
 
 
+GWindow *windowLeftButtonPressed   = NULL;
+GWindow *windowResizeButtonPressed = NULL;
+int mouseLastXPosition = -1;
+int mouseLastYPosition = -1;
+int mouseActualXPosition = -1;
+int mouseActualYPosition = -1;
+bool isTimerActive = false;
+
+void derout(int signum)
+{
+  if(SIGALRM == signum)
+  {
+    isTimerActive = false;
+    struct itimerval timer;
+    // We stop the timer
+    timer.it_value.tv_sec  = 0;
+    timer.it_value.tv_usec = 0;
+    timer.it_interval = timer.it_value;
+    setitimer(ITIMER_REAL, &timer, (struct itimerval*)NULL);
+
+    int xMove = mouseLastXPosition - mouseActualXPosition;
+    int yMove = mouseLastYPosition - mouseActualYPosition;
+
+    if (windowLeftButtonPressed) {
+      pronMoveWindow(display, windowLeftButtonPressed->parent, xMove, yMove);
+      windowLeftButtonPressed->parentAttributes.x += xMove;
+      windowLeftButtonPressed->parentAttributes.y += yMove;
+      windowLeftButtonPressed->attributes.x       += xMove;
+      windowLeftButtonPressed->attributes.y       += yMove;
+    } else if (windowResizeButtonPressed) {
+      windowResizeButtonPressed->parentAttributes.width  += xMove;
+      windowResizeButtonPressed->parentAttributes.height += yMove;
+      windowResizeButtonPressed->attributes.width        += xMove;
+      windowResizeButtonPressed->attributes.height       += yMove;
+      pronResizeWindow(display, windowResizeButtonPressed->parent, windowResizeButtonPressed->parentAttributes.width,
+        windowResizeButtonPressed->parentAttributes.height);
+      pronResizeWindow(display, windowResizeButtonPressed->window, windowResizeButtonPressed->attributes.width,
+        windowResizeButtonPressed->attributes.height);
+      pronMoveWindow(display, windowResizeButtonPressed->resizeButton, xMove, yMove);
+      pronMoveWindow(display, windowResizeButtonPressed->closeButton, xMove, 0);
+    }
+    mouseActualXPosition = mouseLastXPosition;
+    mouseActualYPosition = mouseLastYPosition;
+  }
+}
+
+void activateTimer(unsigned int usec) {
+  struct itimerval timer;
+
+  if (!isTimerActive) {
+    timer.it_value.tv_sec  = 0;
+    timer.it_value.tv_usec = usec;
+    timer.it_interval = timer.it_value;
+    setitimer(ITIMER_REAL, &timer, (struct itimerval*)NULL);
+    isTimerActive = true;
+  }
+}
+
+
 int main() {
   srand(time(NULL));
+  signal(SIGALRM, &derout);
   
   // connection to pron
   display = pronConnect();
@@ -32,16 +94,6 @@ int main() {
   pronSelectInput(display, display->rootWindow, currentRootEventMask);
   PronEvent *e = getPronEvent();
   
-
-  // TODO
-  // Très moche mais très provisoirement ça marche :D
-  GWindow *windowLeftButtonPressed   = NULL;
-  GWindow *windowResizeButtonPressed = NULL;
-  int mouseLastXPosition = -1;
-  int mouseLastYPosition = -1;
-
-  // Variable provisoire pour ralentir le flux dévènements souris et être un peu plus fluide.
-  int eventCalmeur = 0;
 
   while (1) {
     if (!pronNextEvent(display, e)) {
@@ -118,7 +170,7 @@ int main() {
             //   to avoid problems if it moves too fast
             currentRootEventMask |= PRON_EVENTMASK(EV_POINTER_MOVED) | PRON_EVENTMASK(EV_MOUSE_BUTTON);
             // Ask to reset the last mouse position
-            mouseLastXPosition = -1;
+            mouseActualXPosition = -1;
           }
         } else {
           windowLeftButtonPressed   = NULL;
@@ -132,38 +184,14 @@ int main() {
       }
       case EV_POINTER_MOVED : {
         EventPointerMoved *mousePointerEvent = (EventPointerMoved*) e;
-        if (mouseLastXPosition != -1) {
-          int xMove = mousePointerEvent->xRoot - mouseLastXPosition;
-          int yMove = mousePointerEvent->yRoot - mouseLastYPosition;
-          eventCalmeur = (eventCalmeur+1)%3;
-          if (eventCalmeur == 0) {
-            if (windowLeftButtonPressed) {
-              pronMoveWindow(display, windowLeftButtonPressed->parent, xMove, yMove);
-              windowLeftButtonPressed->parentAttributes.x += xMove;
-              windowLeftButtonPressed->parentAttributes.y += yMove;
-              windowLeftButtonPressed->attributes.x       += xMove;
-              windowLeftButtonPressed->attributes.y       += yMove;
-              mouseLastXPosition = mousePointerEvent->xRoot;
-              mouseLastYPosition = mousePointerEvent->yRoot;
-            } else if (windowResizeButtonPressed) {
-              windowResizeButtonPressed->parentAttributes.width  += xMove;
-              windowResizeButtonPressed->parentAttributes.height += yMove;
-              windowResizeButtonPressed->attributes.width        += xMove;
-              windowResizeButtonPressed->attributes.height       += yMove;
-              pronResizeWindow(display, windowResizeButtonPressed->parent, windowResizeButtonPressed->parentAttributes.width,
-                windowResizeButtonPressed->parentAttributes.height);
-              pronResizeWindow(display, windowResizeButtonPressed->window, windowResizeButtonPressed->attributes.width,
-                windowResizeButtonPressed->attributes.height);
-              pronMoveWindow(display, windowResizeButtonPressed->resizeButton, xMove, yMove);
-              pronMoveWindow(display, windowResizeButtonPressed->closeButton, xMove, 0);
-              mouseLastXPosition = mousePointerEvent->xRoot;
-              mouseLastYPosition = mousePointerEvent->yRoot;
-            }
-          }
+        if (mouseActualXPosition == -1) {
+          mouseActualXPosition = mousePointerEvent->xRoot;
+          mouseActualYPosition = mousePointerEvent->yRoot;
         } else {
-          mouseLastXPosition = mousePointerEvent->xRoot;
-          mouseLastYPosition = mousePointerEvent->yRoot;
+          activateTimer(60000);
         }
+        mouseLastXPosition = mousePointerEvent->xRoot;
+        mouseLastYPosition = mousePointerEvent->yRoot;
         break;
       }
       case EV_EXPOSE : {
