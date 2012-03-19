@@ -6,6 +6,8 @@
 #include <pronlib.h>
 #include <unistd.h>
 
+Display *display = NULL;
+
 Display* pronConnect() {
   int fd = tsock_connect("/tmp/pron.sock");
   if (fd < 0) {

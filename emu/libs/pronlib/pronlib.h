@@ -20,6 +20,8 @@ using namespace std;
 
 struct Display;
 
+extern Display *display;
+
 /**
  * Connects to the pron server.
  * @return A pointer to the Display object describing the connection, or NULL if connection failed
