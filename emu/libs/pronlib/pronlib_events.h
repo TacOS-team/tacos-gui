@@ -96,7 +96,7 @@ struct EventMouseButton : public PronEvent {
   bool b6;
   int  x;
   int  y;
-  int xRoot
+  int xRoot;
   int yRoot;
 };
 
