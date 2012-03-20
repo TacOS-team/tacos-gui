@@ -221,7 +221,7 @@ void Screen::fillCircle(int cx, int cy, int radius) {
 
 Window* Screen::getWindow(unsigned int id) {
   for (unsigned int i = 0; i < this->windows.size(); i++) {
-    if (windows[i]->id == id) {
+    if (windows[i]->getId() == id) {
       return windows[i];
     }
   }
@@ -286,12 +286,12 @@ bool Screen::prepareDrawing(Window *w, GC *gc) {
 void traceWindowsRec(Window *w, string prefix) {
   printf("%s%d (p: %d, fc: %d, lc: %d, ps: %d, ns: %d)\n",
         prefix.c_str(),
-        w->id,
-        w->parent == NULL ? 0 : w->parent->id,
-        w->firstChild == NULL ? 0 : w->firstChild->id,
-        w->lastChild == NULL ? 0 : w->lastChild->id,
-        w->prevSibling == NULL ? 0 : w->prevSibling->id,
-        w->nextSibling == NULL ? 0 : w->nextSibling->id);
+        w->getId(),
+        w->parent == NULL ? 0 : w->parent->getId(),
+        w->firstChild == NULL ? 0 : w->firstChild->getId(),
+        w->lastChild == NULL ? 0 : w->lastChild->getId(),
+        w->prevSibling == NULL ? 0 : w->prevSibling->getId(),
+        w->nextSibling == NULL ? 0 : w->nextSibling->getId());
   for (Window *currentChild = w->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
     traceWindowsRec(currentChild, prefix + "--");
   }

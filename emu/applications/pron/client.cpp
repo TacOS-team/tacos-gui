@@ -25,7 +25,7 @@ void Client::handle() {
   switch (reqType) { 
     case RQ_HELLO: {
       // Identifiers: 16 upper bits for client id, 16 lower bits for resource id
-      RespWelcome welcome(screen->root->id, this->id << 16, (this->id << 17) - 1);
+      RespWelcome welcome(screen->root->getId(), this->id << 16, (this->id << 17) - 1);
       this->send(&welcome, sizeof(welcome));
       break;
     }
@@ -206,7 +206,7 @@ void Client::handle() {
       if (w != NULL) {
         Window *currentWindow = w;
         while (currentWindow != NULL && currentWindow != w->parent) {
-          EventDestroyWindow eventDestroyWindow(currentWindow->id);
+          EventDestroyWindow eventDestroyWindow(currentWindow->getId());
           currentWindow->deliverWindowEvent(&eventDestroyWindow, sizeof(eventDestroyWindow));
           if (currentWindow->firstChild != NULL) {
             currentWindow = currentWindow->firstChild;
@@ -284,8 +284,8 @@ void Client::handle() {
       w->deliverWindowEvent(&eventResizeWindow, sizeof(eventResizeWindow));
       if (w != NULL) {
         w->unmap();
-        w->width  = rq->width;
-        w->height = rq->height;
+        w->setWidth(rq->width);
+        w->setHeight(rq->height);
         w->map();
       }
       break;
