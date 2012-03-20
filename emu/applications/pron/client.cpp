@@ -195,7 +195,7 @@ void Client::handle() {
       Window *w = screen->getWindow(rq->window);
       if (w != NULL) {
         w->reparent(screen->getWindow(rq->newParent));
-        screen->clipWin = NULL;
+        screen->setClipWin(NULL);
         //screen->traceWindows();
       }
       break;
@@ -239,6 +239,25 @@ void Client::handle() {
         for (Window *currentChild = w->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
           currentChild->x += rq->x;
           currentChild->y += rq->y;
+        }
+        w->map();
+      }
+      break;
+    }
+    case RQ_MOVE_WINDOW_TO: {// TODO Faire une fonction générale pour les deux move
+      RqMoveWindowTo *rq = (RqMoveWindowTo*) Client::recvBuf;
+      Window *w = screen->getWindow(rq->window);
+      if (w != NULL) {
+        // TODO Gestion sous-filles + clean
+        // TODO Create method Window::move
+        w->unmap();
+        int xMove = rq->x - w->x;
+        int yMove = rq->y - w->y;
+        w->x = rq->x;
+        w->y = rq->y;
+        for (Window *currentChild = w->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
+          currentChild->x += xMove;
+          currentChild->y += yMove;
         }
         w->map();
       }

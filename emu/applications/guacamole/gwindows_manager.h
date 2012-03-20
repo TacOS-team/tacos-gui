@@ -15,13 +15,18 @@ class GWindowsManager {
   PronWindowAttributes rootWindowAttributes;
 
   bool overlaps(GWindow *gw);
+
+  static GWindowsManager *instance;
+  GWindowsManager() {}
+
  public:
-  GWindowsManager(Window rootWindow);
+  static GWindowsManager * getInstance();
   void addGWindow(GWindow *w);
 
   // Get the guacamole window from a window id
   // matches if it is the id of the window or of the decorator
   GWindow* getGWindow(Window w);
+  static void init(Window rootWindow);
   PronWindowAttributes & getRootWindowAttributes();
 
   void destroy(Window w);

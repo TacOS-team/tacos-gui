@@ -9,9 +9,11 @@ using namespace std;
 
 class ClipZone {
 public:
+  ClipZone(int x, int y, int width, int height);
   ClipZone(Window *w);
 
   bool contains(int x, int y);
+  bool contains(int x1, int y1, int x2, int y2);
 
   void print();
 

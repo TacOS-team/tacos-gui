@@ -8,10 +8,10 @@
  * Structure for pron window attributes
  */
 struct PronWindowAttributes {
-  unsigned short x;
-  unsigned short y;
-  unsigned short width;
-  unsigned short height;
+  int x;
+  int y;
+  int width;
+  int height;
   color_t        bgColor;
 };
 

@@ -1,30 +1,28 @@
 #include <gwindows_manager.h>
 #include <cstdio>
 
-
 int buttonSize = 15;
 
 GWindow::GWindow (Window w, const PronWindowAttributes & attributes, bool decorate, Display *display) {
-  this->window     = w;
-  this->display    = display;
-  this->attributes = attributes;
+  this->window      = w;
+  this->attributes  = attributes;
+  this->display     = display;
+  this->isMaximised = false;
+
   if (decorate) {
     this->parent = pronCreateWindow(display, display->rootWindow,
-      attributes.x - buttonSize, attributes.y - buttonSize,
-      attributes.width + 2*buttonSize, attributes.height + 2*buttonSize);
+      this->attributes.x - buttonSize, this->attributes.y - buttonSize,
+      this->attributes.width + 2*buttonSize, this->attributes.height + 2*buttonSize);
     
-    pronMapWindow(display, this->parent);
-
     // Abonnement aux évènements souris de la fenêtre de décoration
     pronSelectInput(display, this->parent,
       PRON_EVENTMASK(EV_MOUSE_BUTTON) | PRON_EVENTMASK(EV_EXPOSE));
     
-    pronReparentWindow(display, this->window, this->parent);
-    pronDontPropagateEvent(display,this->window,PRON_EVENTMASK(EV_MOUSE_BUTTON) | PRON_EVENTMASK(EV_EXPOSE));
-    
-    this->attributes = attributes;
+    pronReparentWindow(display, w, this->parent);
+    pronDontPropagateEvent(display,w,PRON_EVENTMASK(EV_MOUSE_BUTTON));
+
     // registering for any EV_DESTROY_WINDOW event
-    pronSelectInput(display, this->window,
+    pronSelectInput(display, w,
       PRON_EVENTMASK(EV_DESTROY_WINDOW) | PRON_EVENTMASK(EV_MOUSE_BUTTON));
     pronGetWindowAttributes(display, this->parent, &(this->parentAttributes));
 
@@ -33,12 +31,11 @@ GWindow::GWindow (Window w, const PronWindowAttributes & attributes, bool decora
     COLOR(this->parentAttributes.bgColor, 24).g = 0;
     COLOR(this->parentAttributes.bgColor, 24).b = 0;
     pronSetWindowAttributes(display, this->parent, this->parentAttributes, WIN_ATTR_BG_COLOR);
-    pronDontPropagateEvent(display,this->parent,
-      PRON_EVENTMASK(EV_MOUSE_BUTTON));
+    pronDontPropagateEvent(display,this->parent,PRON_EVENTMASK(EV_MOUSE_BUTTON));
 
     // Adding the close button
-    /*this->closeButton = pronCreateWindow(display, this->parent,
-      attributes.x + attributes.width, attributes.y - buttonSize,
+    this->closeButton = pronCreateWindow(display, this->parent,
+      this->attributes.x + this->attributes.width, this->attributes.y - buttonSize,
       buttonSize, buttonSize);
     PronWindowAttributes closeButtonAttributes;
     COLOR(closeButtonAttributes.bgColor, 24).r = 0;
@@ -46,11 +43,11 @@ GWindow::GWindow (Window w, const PronWindowAttributes & attributes, bool decora
     COLOR(closeButtonAttributes.bgColor, 24).b = 0;
     pronSetWindowAttributes(display, this->closeButton, closeButtonAttributes, WIN_ATTR_BG_COLOR);
     pronSelectInput(display, this->closeButton, PRON_EVENTMASK(EV_MOUSE_BUTTON));
-    pronDontPropagateEvent(display,this->closeButton,PRON_EVENTMASK(EV_MOUSE_BUTTON));*/
+    pronDontPropagateEvent(display,this->closeButton,PRON_EVENTMASK(EV_MOUSE_BUTTON));
 
     PronGCValues values;
     COLOR(values.fg, 24).r = 0;
-    COLOR(values.fg, 24).g = 255;
+    COLOR(values.fg, 24).g = 0;
     COLOR(values.fg, 24).b = 0;
     COLOR(values.bg, 24).r = 0;
     COLOR(values.bg, 24).g = 0;
@@ -58,77 +55,197 @@ GWindow::GWindow (Window w, const PronWindowAttributes & attributes, bool decora
     this->closeButtonGC = pronCreateGC(this->display, values, GC_VAL_FG | GC_VAL_BG);
 
     // Adding the resize button
-    COLOR(values.fg, 24).r = 0;
-    COLOR(values.fg, 24).g = 0;
-    COLOR(values.fg, 24).b = 255;
-    COLOR(values.bg, 24).r = 0;
-    COLOR(values.bg, 24).g = 0;
-    COLOR(values.bg, 24).b = 0;
-    this->resizeButtonGC = pronCreateGC(this->display, values, GC_VAL_FG | GC_VAL_BG);
-
-    /*this->resizeButton = pronCreateWindow(display, this->parent,
-      attributes.x + attributes.width,
-      attributes.y + attributes.height,
+    this->resizeButton = pronCreateWindow(display, this->parent,
+      this->attributes.x + this->attributes.width,
+      this->attributes.y + this->attributes.height,
       buttonSize, buttonSize);
     PronWindowAttributes resizeButtonAttributes;
-    COLOR(resizeButtonAttributes.bgColor, 24).r = 0;
-    COLOR(resizeButtonAttributes.bgColor, 24).g = 0;
-    COLOR(resizeButtonAttributes.bgColor, 24).b = 255;
+    COLOR(closeButtonAttributes.bgColor, 24).r = 0;
+    COLOR(closeButtonAttributes.bgColor, 24).g = 0;
+    COLOR(closeButtonAttributes.bgColor, 24).b = 150;
     pronSetWindowAttributes(display, this->resizeButton, resizeButtonAttributes, WIN_ATTR_BG_COLOR);
     pronSelectInput(display, this->resizeButton, PRON_EVENTMASK(EV_MOUSE_BUTTON));
-    pronDontPropagateEvent(display,this->resizeButton,PRON_EVENTMASK(EV_MOUSE_BUTTON));*/
+    pronDontPropagateEvent(display,this->resizeButton,PRON_EVENTMASK(EV_MOUSE_BUTTON));
+
+    // Adding the maximise button
+    this->maximiseButton = pronCreateWindow(display, this->parent,
+      this->attributes.x + this->attributes.width - buttonSize, this->attributes.y - buttonSize,
+      buttonSize, buttonSize);
+    PronWindowAttributes maximiseButtonAttributes;
+    COLOR(maximiseButtonAttributes.bgColor, 24).r = 30;
+    COLOR(maximiseButtonAttributes.bgColor, 24).g = 190;
+    COLOR(maximiseButtonAttributes.bgColor, 24).b = 255;
+    pronSetWindowAttributes(display, this->maximiseButton, maximiseButtonAttributes, WIN_ATTR_BG_COLOR);
+    pronSelectInput(display, this->maximiseButton, PRON_EVENTMASK(EV_MOUSE_BUTTON));
+    pronDontPropagateEvent(display,this->maximiseButton,PRON_EVENTMASK(EV_MOUSE_BUTTON));
+
+    GWindowsManager::getInstance()->initWindowPosition(this);
+    pronMoveWindow(display, this->parent, this->parentAttributes.x, this->parentAttributes.y);
+
+    GWindowsManager::getInstance()->addGWindow(this);
   }
 }
 
 bool GWindow::hasDecoration() {
-  return (parent == 0);
+  return (parent != 0);
 }
 
 bool GWindow::overlaps(GWindow *gw) {
   bool res =
       // Si coin en haut à gauche dedans
-      (this->parentAttributes.x >= gw->parentAttributes.x
-      && this->parentAttributes.y >= gw->parentAttributes.y
-      && this->parentAttributes.x < gw->parentAttributes.x + gw->parentAttributes.width
-      && this->parentAttributes.y < gw->parentAttributes.y + gw->parentAttributes.height)
+      (this->parentAttributes.x >= this->parentAttributes.x
+      && this->parentAttributes.y >= this->parentAttributes.y
+      && this->parentAttributes.x < this->parentAttributes.x + this->parentAttributes.width
+      && this->parentAttributes.y < this->parentAttributes.y + this->parentAttributes.height)
     || // SI coin en haut à droite
-      (this->parentAttributes.x + this->parentAttributes.width >= gw->parentAttributes.x
-      && this->parentAttributes.y >= gw->parentAttributes.y
-      && this->parentAttributes.x + this->parentAttributes.width < gw->parentAttributes.x + gw->parentAttributes.width
-      && this->parentAttributes.y < gw->parentAttributes.y + gw->parentAttributes.height)
+      (this->parentAttributes.x + this->parentAttributes.width >= this->parentAttributes.x
+      && this->parentAttributes.y >= this->parentAttributes.y
+      && this->parentAttributes.x + this->parentAttributes.width < this->parentAttributes.x + this->parentAttributes.width
+      && this->parentAttributes.y < this->parentAttributes.y + this->parentAttributes.height)
     || // SI coin en bas à gauche
-      (this->parentAttributes.x >= gw->parentAttributes.x
-      && this->parentAttributes.y + this->parentAttributes.height >= gw->parentAttributes.y
-      && this->parentAttributes.x < gw->parentAttributes.x + gw->parentAttributes.width
-      && this->parentAttributes.y + this->parentAttributes.height < gw->parentAttributes.y + gw->parentAttributes.height)
+      (this->parentAttributes.x >= this->parentAttributes.x
+      && this->parentAttributes.y + this->parentAttributes.height >= this->parentAttributes.y
+      && this->parentAttributes.x < this->parentAttributes.x + this->parentAttributes.width
+      && this->parentAttributes.y + this->parentAttributes.height < this->parentAttributes.y + this->parentAttributes.height)
     || // SI coin en bas à droite
-      (this->parentAttributes.x + this->parentAttributes.width >= gw->parentAttributes.x
-      && this->parentAttributes.y + this->parentAttributes.height >= gw->parentAttributes.y
-      && this->parentAttributes.x + this->parentAttributes.width < gw->parentAttributes.x + gw->parentAttributes.width
-      && this->parentAttributes.y + this->parentAttributes.height < gw->parentAttributes.y + gw->parentAttributes.height);
+      (this->parentAttributes.x + this->parentAttributes.width >= this->parentAttributes.x
+      && this->parentAttributes.y + this->parentAttributes.height >= this->parentAttributes.y
+      && this->parentAttributes.x + this->parentAttributes.width < this->parentAttributes.x + this->parentAttributes.width
+      && this->parentAttributes.y + this->parentAttributes.height < this->parentAttributes.y + this->parentAttributes.height);
   return res;
 }
 
 
 void GWindow::decorate() {
-  // A décommenter quand on aura moins de expose event
-  //pronClearWindow(display, this->parent);
-  pronFillRectangle(display, this->parent, this->closeButtonGC, this->parentAttributes.width - 15,0,15,15);
-  pronFillRectangle(display, this->parent, this->resizeButtonGC, this->parentAttributes.width - 15,
-    this->parentAttributes.height - 15,15,15);
+  if (this->hasDecoration()) {
+    pronDrawLine(display, this->closeButton, this->closeButtonGC,
+      0, 1, buttonSize-2, buttonSize-1);
+    pronDrawLine(display, this->closeButton, this->closeButtonGC,
+      0, 0, buttonSize-1, buttonSize-1);
+    pronDrawLine(display, this->closeButton, this->closeButtonGC,
+      0, buttonSize-1, buttonSize-1, 0);
+    pronDrawLine(display, this->closeButton, this->closeButtonGC,
+      1, buttonSize-1, buttonSize-1, 1);
+    if (!this->isMaximised) {
+      // Trait du haut
+      pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
+        2, 2, buttonSize-3, 2);
+      pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
+        3, 3, buttonSize-4, 3);
+      // Trait de gauche
+      pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
+        2, 2, 2, buttonSize-3);
+      // Trait de droite
+      pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
+        buttonSize-3, 2, buttonSize-3, buttonSize-3);
+      // Trait du bas
+      pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
+        2, buttonSize-3, buttonSize-3, buttonSize-3);
+    } else {
+      // devant gauche
+      pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
+        2, 4, 2, buttonSize-3);
+      // devant bas
+      pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
+        2, buttonSize-3, buttonSize-5, buttonSize-3);
+      // devant droite
+      pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
+        buttonSize-5, 4, buttonSize-5, buttonSize-3);
+      // devant haut
+      pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
+        2, 4, buttonSize-5, 4);
+      // derrière haut
+      pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
+        4, 2, buttonSize-3, 2);
+      // derrière droite
+      pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
+        buttonSize-3, 2, buttonSize-3, buttonSize-8);
+      // derrière bas
+      pronDrawPoint(display, this->maximiseButton, this->closeButtonGC,
+        buttonSize-4, buttonSize-8);
+      // derrière gauche
+      pronDrawPoint(display, this->maximiseButton, this->closeButtonGC,
+        4, 3);
 
+// 012345678901234
+//0
+//2    *********
+//3    *       *
+//4  ********* *
+//5  *       * *
+//6  *       * *
+//7  *       ***
+//8  *       *
+//9  *       *
+//0  *       *
+//1  *       *
+//2  *********
+//3
+//4
+
+    }
+  }
 }
 
-bool GWindow::isCloseButton(int x, int y) {
-  return (this->parentAttributes.x + this->parentAttributes.width > x
-    && this->parentAttributes.x + this->parentAttributes.width - 15 <= x
-    && this->parentAttributes.y < y
-    && this->parentAttributes.y + 15 >= y);
+
+void GWindow::resize(int width, int height) {
+  if (!this->isMaximised) {
+    pronResizeWindow(display, this->parent, width, height);
+    pronMoveWindow(display, this->closeButton,
+      width - this->parentAttributes.width, 0);
+    pronMoveWindow(display, this->maximiseButton,
+      width - this->parentAttributes.width, 0);
+    pronMoveWindow(display, this->resizeButton,
+      width - this->parentAttributes.width, height - this->parentAttributes.height);
+    this->parentAttributes.width  = width;
+    this->parentAttributes.height = height;
+    this->attributes.width        = width  - 2*buttonSize;
+    this->attributes.height       = height - 2*buttonSize;
+    pronResizeWindow(display, this->window, this->attributes.width,
+      this->attributes.height);
+  }
 }
 
-bool GWindow::isResizeButton(int x, int y) {
-  return (this->parentAttributes.x + this->parentAttributes.width > x
-    && this->parentAttributes.x + this->parentAttributes.width - 15 <= x
-    && this->parentAttributes.y + this->parentAttributes.height > y
-    && this->parentAttributes.y + this->parentAttributes.height - 15 <= y);
+
+void GWindow::move(int xMove, int yMove) {
+  if (!this->isMaximised) {
+    pronMoveWindow(display, this->parent, xMove, yMove);
+    this->parentAttributes.x += xMove;
+    this->parentAttributes.y += yMove;
+    this->attributes.x       += xMove;
+    this->attributes.y       += yMove;
+  }
+}
+
+
+void GWindow::maximise() {
+  if (!this->isMaximised) {
+    // On en profite pour mettre tous les attributs à jour
+    pronGetWindowAttributes(display, this->window, &this->attributes);
+    pronGetWindowAttributes(display, this->parent, &this->parentAttributes);
+    this->oldParentAttributes = this->parentAttributes;
+    pronMoveWindowTo(display, this->parent, 0, 0);
+    this->resize(GWindowsManager::getInstance()->getRootWindowAttributes().width,
+      GWindowsManager::getInstance()->getRootWindowAttributes().height);
+    // TODO unmap de resizewindow
+    this->isMaximised = true;
+  } else {
+    this->isMaximised = false;
+    this->resize(this->oldParentAttributes.width, this->oldParentAttributes.height);
+    pronMoveWindowTo(display, this->parent, this->oldParentAttributes.x, this->oldParentAttributes.y);
+    // On en profite pour mettre tous les attributs à jour
+    pronGetWindowAttributes(display, this->window, &this->attributes);
+    pronGetWindowAttributes(display, this->parent, &this->parentAttributes);
+  }
+}
+
+
+GWindow::~GWindow() {
+  pronDestroyWindow(display, this->parent);
+  pronFreeGC(display, closeButtonGC);
+}
+
+
+void GWindow::raise() {
+  pronRaiseWindow(display, this->parent);
 }

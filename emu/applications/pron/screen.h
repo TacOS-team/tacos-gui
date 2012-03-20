@@ -18,10 +18,12 @@ class Screen {
 private:
   Screen(int width, int height, int bitsPerPixel);
   static Screen *instance;
-  Window * mouseWin; // First window containing the mouse pointer
+  Window *clipWin; /*< Window for which the clipping zone is set */
+  ClipZone *clipZone; /*< Rectangles where we are allowed to draw */
+  Window *mouseWin; // First window containing the mouse pointer
 
-  void drawHorizLine(int x, int y, int width);
-  void drawVertLine(int x, int y, int height);
+  void drawHorizLine(int x, int y, int width, bool check = true);
+  void drawVertLine(int x, int y, int height, bool check = true);
 
   bool isValid(int x, int y);
 
@@ -33,32 +35,33 @@ public: // XXX: bourrin
   char *videoBuffer;
   vector<Window*> windows; // XXX: ABR ? Rouge/noir ? B-Arbre ?
   Window *root;
-  Window *clipWin;
-  ClipZone *clipZone;
   GC defaultGC;
   GC *gc;
 
   static Screen* getInstance(int width, int height, int bitsPerPixel);
   static Screen* getInstance();
   
-  void setClipWindow(Window *w);
   bool prepareDrawing(Window *w, GC *gc = NULL);
 
   void drawPoint(int x, int y, bool check = true);
-  void drawLine(int x1, int y1, int x2, int y2);
-  void drawRect(int x, int y, int width, int height) ;
+  void drawLine(int x1, int y1, int x2, int y2, bool check = true);
+  void drawRect(int x, int y, int width, int height, bool check = true);
   void drawCircle(int x, int y, int r);
 
   void fillCircle(int n_cx, int n_cy, int radius);
-  void fillRectangle(int x, int y, int width, int height);
+  void fillRectangle(int x, int y, int width, int height, bool check = true);
 
   void putImage(PronImage *image, int x, int y);
 
   Window* getWindow(unsigned int id);
   void addWindow(Window *w);
 
+  Window* getClipWin();
+  void setClipWin(Window *w);
+
   Window* getMouseWin();
   void setMouseWin(Window *mouseWin);
+
   Window* getRoot();
   void setRoot(Window *root);
 

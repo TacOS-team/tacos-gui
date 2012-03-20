@@ -1,9 +1,21 @@
 #include <gwindows_manager.h>
 #include <cstdio>
 
-GWindowsManager::GWindowsManager(Window rootWindow) {
-  this->rootWindow = rootWindow;
+GWindowsManager * GWindowsManager::instance = NULL;
+
+void GWindowsManager::init(Window rootWindow) {
+  if (instance != NULL) {
+    delete instance;
+  }
+  instance = new GWindowsManager();
+  instance->rootWindow = rootWindow;
 }
+
+
+GWindowsManager * GWindowsManager::getInstance() {
+  return instance;
+}
+
 
 void GWindowsManager::addGWindow(GWindow *w) {
   this->windowsList.push_back(w);
@@ -12,7 +24,10 @@ void GWindowsManager::addGWindow(GWindow *w) {
 GWindow* GWindowsManager::getGWindow(Window w) {
   for (size_t i = 0; i < this->windowsList.size(); ++i) {
     if (this->windowsList[i]->window            == w
-          || this->windowsList[i]->parent       == w) {
+          || this->windowsList[i]->parent       == w
+          || this->windowsList[i]->closeButton  == w
+          || this->windowsList[i]->resizeButton == w
+          || this->windowsList[i]->maximiseButton == w) {
       return this->windowsList[i];
     }
   }

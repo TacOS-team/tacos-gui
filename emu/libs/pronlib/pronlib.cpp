@@ -6,6 +6,8 @@
 #include <pronlib.h>
 #include <unistd.h>
 
+Display *display = NULL;
+
 Display* pronConnect() {
   int fd = tsock_connect("/tmp/pron.sock");
   if (fd < 0) {
@@ -176,6 +178,11 @@ void pronDestroyWindow(Display *d, unsigned int w) {
 
 void pronMoveWindow(Display *d, unsigned int w, int x, int y) {
   RqMoveWindow rq(w, x, y);
+  tsock_write(d->fd, &rq, sizeof(rq));
+}
+
+void pronMoveWindowTo(Display *d, unsigned int w, int x, int y) {
+  RqMoveWindowTo rq(w, x, y);
   tsock_write(d->fd, &rq, sizeof(rq));
 }
 

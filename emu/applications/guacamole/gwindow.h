@@ -6,24 +6,34 @@
 using namespace std;
 
 
-struct GWindow {
+class GWindow {
+ protected:
+  bool isMaximised;
+
+ public:
   Window window;
   Window parent;
+  Window closeButton;
   GC closeButtonGC;
-  GC resizeButtonGC;
+  Window resizeButton;
+  Window maximiseButton;
   PronWindowAttributes attributes;
   PronWindowAttributes parentAttributes;
+  PronWindowAttributes oldParentAttributes;
   Display *display;
 
   GWindow (Window w, const PronWindowAttributes & attributes, bool decorate, Display *display);
+  ~GWindow();
 
   bool hasDecoration();
   bool overlaps(GWindow *gw);
 
   void decorate();
-
-  bool isCloseButton (int x, int y);
-  bool isResizeButton(int x, int y);
+  void resize(int width, int height);
+  void move(int xMove, int yMove);
+  void maximise();
+  void destroy();
+  void raise();
 };
 
 #endif// _GWINDOW_H_
