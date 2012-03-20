@@ -82,11 +82,17 @@ void pronFreeGC(Display *d, GC gc);
 
 /**
  * Maps a window (shows it on the screen).
- * @todo Implement this
  * @param d The connection to pron
  * @param w The window to map
  */
 void pronMapWindow(Display *d, Window w);
+
+/**
+ * Unmaps a window (hides it from the screen).
+ * @param d The connection to pron
+ * @param w The window to unmap
+ */
+void pronUnmapWindow(Display *d, Window w);
 
 /**
  * Raises a window (moves it on top of the screen).
