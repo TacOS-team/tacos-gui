@@ -6,6 +6,9 @@
 \usepackage{color}
 \usepackage{graphicx}
 \usepackage[table]{xcolor}
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
 
 \title{Conduite de projet \\ Développement d'un interface graphique pour le système d'exploitation TacOS}
 
@@ -29,14 +32,8 @@ Adrien Sulpice \texttt{<sulpice@etud.insa-toulouse.fr>}}
 \definecolor{light_grey}{HTML}{F0F0F0}
 \rowcolors{1}{light_grey}{white}
 
-\section{Sujet}
-\input{sujet.tex}
-\section{Enjeux}
-\input{enjeux.tex}
-\section{Objectifs}
-\input{objectifs.tex}
-\section{Méthodologie}
-\input{methodologie.tex}
+\section{Présentation du projet}
+\input{presentation.tex}
 \section{Charges et coûts}
 \input{charges_et_couts.tex}
 \section{Tâches}
