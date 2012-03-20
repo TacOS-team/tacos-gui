@@ -105,11 +105,11 @@ int main() {
         if (mouseButtonEvent->b1) {
           // If the window is the decoration window
           GWindow *gwin = windowsManager.getGWindow(mouseButtonEvent->window);
-          if (gwin->isCloseButton(mouseButtonEvent->x, mouseButtonEvent->y)) {
+          if (gwin->isCloseButton(mouseButtonEvent->xRoot, mouseButtonEvent->yRoot)) {
             pronDestroyWindow(display,gwin->parent);
             windowsManager.destroy(gwin->parent);
           } else {
-            if (gwin->isResizeButton(mouseButtonEvent->x, mouseButtonEvent->y)) {
+            if (gwin->isResizeButton(mouseButtonEvent->xRoot, mouseButtonEvent->yRoot)) {
               windowResizeButtonPressed = gwin;
             }
             else if (mouseButtonEvent->window == gwin->parent) {
