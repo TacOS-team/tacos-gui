@@ -1,17 +1,15 @@
 \subsection{Revues hebdomadaires}
 
-\paragraph{}
-Chaque dimanche nous faisons un bilan du travail de la semaine pour faire le compte rendu à rendre aux tuteurs. Ce bilan nous permet d'y voir plus clair et de bien mettre à jour le wiki mais nous en profitons également pour vérifier le travail des autres. Nous faisons des tests sur les nouvelles fonctionnalités et nous vérifions les codes par binômes.
+Chaque dimanche, nous effectuons un bilan du travail de la semaine pour rédiger le compte-rendu hebdomadaire et l'envoyer à nos tuteurs. Ce bilan nous permet de concerver une vision d'ensemble du projet et de nous recentrer sur les objectifs de l'itération courante si besoin, mais nous en profitons également pour revoir le travail des autres membres de l'équipe. Nous testons les nouvelles fonctionnalités et relisons le code par binômes.
 
 \subsection{Revues de version}
 
-\paragraph{}
-Avant de cloturer une version, nous vérifions que toutes les demandes ont bien été terminées. Nous effectuons donc de nouveaux tests. Ceci est important pour faire des tests de non régression. Si l'achévement du dernier ticket cause des bugs dans d'autres fonctionnalités.
+Avant de clôturer une version, nous vérifions que toutes les demandes ont bien été terminées. Nous effectuons alors de nouveaux tests, importants pour s'assurer que l'on n'introduit pas de régression. Nous gardons le même fonctionnement que pour les revues hebdomadaires : le code est relu et testé par binômes, chaque binôme vérifiant de préférence du code qu'il n'a pas écrit. Cela permet de se tenir à jour des avancées réalisées par l'ensemble de l'équipe.
 
 \subsection{Revues de code}
 
-\paragraph{}
-Les revues de codes sont effectuées par tout le monde grâce à l'interface web redmine. Il est possible de comparer les versions (différences). On peut donc facilement voir les ajouts et suppressions effectuées par les autres membres depuis une certaine révision. Pour une personne qui fait une modification, il y a donc trois personnes qui vérifient le code. Cependant pour éviter une trop grosse charge, nous avons définit deux binômes qui surveillent mutuellement leur code de façon plus approfondie. Tout le monde regarde toutes les modifications mais une attention plus particulière est donc portée sur le code de son binôme.
+Les revues de code sont effectuées grâce à l'interface proposée par Redmine : tous les commits sont référencés, et l'on peut comparer les versions. On peut donc facilement voir les ajouts et suppressions effectuées par les autres membres du projet depuis une certaine révision, et annoter des sections de code en cas de problème. Ces annotations sont liées à des demandes de type "Revue", et automatiquement assignées à l'auteur de la modification.\\
 
-\paragraph{}
-Pour ne pas mélanger les codes revus, nous avons mis en place un système de branches. Chacun travaille sur sa branche et il envoie ses modifications sur la branche développement que lorsque son code est stable et revu. Enfin à chaque nouvelle vesion, le contenu de la branche de développement est envoyé sur la branche master dite stable.
+Chaque modification est donc potentiellement revue par les trois autres membres de l'équipe. Pour éviter une trop grosse charge, nous avons défini deux binômes qui surveillent mutuellement leur code de façon plus approfondie. Tout le monde est donc susceptible de revoir l'ensemble des modifications apportées au projet, mais une attention plus particulière est portée sur le code de son binôme.\\
+
+Les revues sont entièrement intégrées à notre système de gestion des branches. Une branche de fonctionnalité n'est fusionnée avec la branche de développement qu'à l'issue de la revue et de la validation de l'ensemble des commits associés. De manière similaire, lors de la clôture d'une version, la branche de développement n'est fusionnée avec la branche principale (stable) qu'une fois la revue de version effectuée.
