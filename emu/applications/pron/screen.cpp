@@ -252,6 +252,10 @@ Window* Screen::getClipWin() {
   return this->clipWin;
 }
 
+void Screen::printClipZone() {
+  this->clipZone->print();
+}
+
 void Screen::setClipWin(Window *w) {
   if (w != this->clipWin) {
     // Update clipzone

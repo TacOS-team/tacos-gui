@@ -65,6 +65,8 @@ public: // XXX: bourrin
   Window* getRoot();
   void setRoot(Window *root);
 
+  void printClipZone();
+
   void traceWindows();
 
 };
