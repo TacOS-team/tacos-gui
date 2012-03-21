@@ -10,8 +10,8 @@ ClipRect::ClipRect(int x, int y, int width, int height) {
 ClipRect::ClipRect(Window *w) {
   this->x = w->x;
   this->y = w->y;
-  this->width = w->width;
-  this->height = w->height;
+  this->width = w->getWidth();
+  this->height = w->getHeight();
 }
 
 vector<ClipRect*> ClipRect::split(ClipRect *obscurer) {

@@ -62,8 +62,10 @@ struct EventPointerMoved : public PronEvent {
     this->yRoot = yRoot;
   }
 
-  int x, y;
-  int xRoot, yRoot;
+  int x; 
+  int y;
+  int xRoot; 
+  int yRoot;
 };
 
 /**
@@ -94,7 +96,8 @@ struct EventMouseButton : public PronEvent {
   bool b6;
   int  x;
   int  y;
-  int xRoot, yRoot;
+  int xRoot;
+  int yRoot;
 };
 
 /**

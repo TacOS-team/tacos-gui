@@ -22,10 +22,10 @@ void Keyboard::checkEvents() {
     // TODO: compute real source window
     Window *src = screen->windows[0];
     if (state.state == PRON_RELEASED) {
-      EventKeyReleased keyReleased(src->id, src->id, 0, 0, 0, 0, state.keysym, state.modifiers);
+      EventKeyReleased keyReleased(src->getId(), src->getId(), 0, 0, 0, 0, state.keysym, state.modifiers);
       src->deliverDeviceEvent(&keyReleased, sizeof(keyReleased));
     } else if (state.state == PRON_PRESSED) {
-      EventKeyPressed keyPressed(src->id, src->id, 0, 0, 0, 0, state.keysym, state.modifiers);
+      EventKeyPressed keyPressed(src->getId(), src->getId(), 0, 0, 0, 0, state.keysym, state.modifiers);
       src->deliverDeviceEvent(&keyPressed, sizeof(keyPressed));
     }
   }

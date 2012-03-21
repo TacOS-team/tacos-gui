@@ -5,11 +5,13 @@
 #include <pronlib_structs.h>
 #include <pronlib_events.h>
 #include <vector>
+#include <drawable.h>
 
 using namespace std;
 
 class Screen;
 class Client;
+class drawable;
 
 struct OtherClient {
   OtherClient(Client *client, unsigned int mask) {
@@ -21,16 +23,11 @@ struct OtherClient {
   unsigned int mask;
 };
 
-class Window {
+class Window : public Drawable {
 public: //XXX: bourrin
-  Screen *screen;
-
-  unsigned int id;
-  Client *creator;
 
   // Window attributes
   int x, y;
-  int width, height;
   color_t bgColor;
   int eventMask;
   int dontPropagateMask;
@@ -49,15 +46,11 @@ public: //XXX: bourrin
 
   void unmap();
 
-  //short getCreator();
-
-  Client* getCreator();
-
   void drawPoint(int x, int y);
 
   void drawLine(int x1, int y1, int x2, int y2);
 
-  void drawRect(int x1, int y1, int width, int height) ;
+  void drawRect(int x1, int y1, int width, int height);
   
   void fillRectangle(int x, int y, int width, int height);
 
@@ -122,10 +115,6 @@ public: //XXX: bourrin
   void setX(int x);
   int getY();
   void setY(int y);
-  int getWidth();
-  void setWidth(int width);
-  int getHeight();
-  void setHeight(int height);
 
   /*
    * Sets a new parent to the Window.

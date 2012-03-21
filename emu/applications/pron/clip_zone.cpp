@@ -16,7 +16,7 @@ ClipZone::ClipZone(Window *w) {
   // Restrict this rectangle to the part visible through all its parents
   Window *parent, *sibling;
   parent = w;
-  while (parent != w->screen->root) {
+  while (parent != w->getScreen()->root) {
     parent = parent->parent;
 
     // X1
@@ -32,13 +32,13 @@ ClipZone::ClipZone(Window *w) {
     }
 
     // X2
-    if (parent->x + parent->width < clip->x + clip->width) {
-      clip->width -= (clip->x + clip->width - (parent->x + parent->width));
+    if (parent->x + parent->getWidth() < clip->x + clip->width) {
+      clip->width -= (clip->x + clip->width - (parent->x + parent->getWidth()));
     }
 
     // Y2
-    if (parent->y + parent->height < clip->y + clip->height) {
-      clip->height -= (clip->y + clip->height - (parent->y + parent->height));
+    if (parent->y + parent->getHeight() < clip->y + clip->height) {
+      clip->height -= (clip->y + clip->height - (parent->y + parent->getHeight()));
     }
   }
 
@@ -46,7 +46,7 @@ ClipZone::ClipZone(Window *w) {
   if (clip->width > 0 || clip->height > 0) {
     // Break this rectangle into pieces not obscured by other windows
     parent = w;
-    while (parent != w->screen->root) {
+    while (parent != w->getScreen()->root) {
       w = parent;
       parent = w->parent;
       sibling = w->nextSibling;

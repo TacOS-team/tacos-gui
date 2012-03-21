@@ -62,7 +62,7 @@ void Mouse::handleMotion(mousestate_t *state) {
     //debug("Position du pointeur %d %d, mouseWin window %d %d, width height %d %d \n",x, y, mouseWin->x, mouseWin->y, mouseWin->width, mouseWin->height);
 
     // it's time to send mouse Event
-    EventPointerMoved pointerMoved(mouseWin->id, x, y, state->x, state->y);
+    EventPointerMoved pointerMoved(mouseWin->getId(), x, y, state->x, state->y);
     mouseWin->deliverDeviceEvent(&pointerMoved, sizeof(pointerMoved));
   }
 }
@@ -95,7 +95,7 @@ void Mouse::handleButton(mousestate_t *state) {
     int relY = state->y - mouseWin->y;
 
     // delivers the event
-    EventMouseButton mouseButton(mouseWin->id, state->b1, state->b2,
+    EventMouseButton mouseButton(mouseWin->getId(), state->b1, state->b2,
                                  state->b3, state->b4, state->b5, state->b6,
                                  relX, relY, state->x, state->y);
     mouseWin->deliverDeviceEvent(&mouseButton, sizeof(mouseButton));
