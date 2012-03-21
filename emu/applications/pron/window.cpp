@@ -102,7 +102,7 @@ void Window::map() {
   this->mapped = true;
 
   // Clear the window and send exposure event
-  this->clear();
+  //this->clear();
 
   // Map all children
   for (Window *child = this->firstChild; child != NULL; child = child->nextSibling) {
