@@ -54,6 +54,42 @@ GWindow::GWindow (Window w, const PronWindowAttributes & attributes, bool decora
     COLOR(values.bg, 24).b = 0;
     this->closeButtonGC = pronCreateGC(this->display, values, GC_VAL_FG | GC_VAL_BG);
 
+
+    COLOR(values.fg, 24).r = 255;
+    COLOR(values.fg, 24).g = 0;
+    COLOR(values.fg, 24).b = 0;
+    COLOR(values.bg, 24).r = 0;
+    COLOR(values.bg, 24).g = 0;
+    COLOR(values.bg, 24).b = 0;
+    this->backgroundParentGC = pronCreateGC(this->display, values, GC_VAL_FG | GC_VAL_BG);
+
+
+    COLOR(values.fg, 24).r = 0;
+    COLOR(values.fg, 24).g = 255;
+    COLOR(values.fg, 24).b = 0;
+    COLOR(values.bg, 24).r = 0;
+    COLOR(values.bg, 24).g = 0;
+    COLOR(values.bg, 24).b = 0;
+    this->backgroundCloseButtonGC = pronCreateGC(this->display, values, GC_VAL_FG | GC_VAL_BG);
+
+
+    COLOR(values.fg, 24).r = 30;
+    COLOR(values.fg, 24).g = 190;
+    COLOR(values.fg, 24).b = 255;
+    COLOR(values.bg, 24).r = 0;
+    COLOR(values.bg, 24).g = 0;
+    COLOR(values.bg, 24).b = 0;
+    this->backgroundMaximiseButtonGC = pronCreateGC(this->display, values, GC_VAL_FG | GC_VAL_BG);
+
+
+    COLOR(values.fg, 24).r = 0;
+    COLOR(values.fg, 24).g = 0;
+    COLOR(values.fg, 24).b = 200;
+    COLOR(values.bg, 24).r = 0;
+    COLOR(values.bg, 24).g = 0;
+    COLOR(values.bg, 24).b = 0;
+    this->backgroundResizeButtonGC = pronCreateGC(this->display, values, GC_VAL_FG | GC_VAL_BG);
+
     // Adding the resize button
     this->resizeButton = pronCreateWindow(display, this->parent,
       this->attributes.x + this->attributes.width,
@@ -83,6 +119,7 @@ GWindow::GWindow (Window w, const PronWindowAttributes & attributes, bool decora
     pronMoveWindow(display, this->parent, this->parentAttributes.x, this->parentAttributes.y);
 
     GWindowsManager::getInstance()->addGWindow(this);
+    this->decorate();
   }
 }
 
@@ -118,6 +155,12 @@ bool GWindow::overlaps(GWindow *gw) {
 
 void GWindow::decorate() {
   if (this->hasDecoration()) {
+    // Dessin des fonds
+    pronFillRectangle(display, this->parent, this->backgroundParentGC, 0,0,
+      this->parentAttributes.width, this->parentAttributes.height);
+    pronFillRectangle(display, this->closeButton, this->backgroundCloseButtonGC, 0,0, buttonSize, buttonSize);
+    pronFillRectangle(display, this->maximiseButton, this->backgroundMaximiseButtonGC, 0,0, buttonSize, buttonSize);
+
     pronDrawLine(display, this->closeButton, this->closeButtonGC,
       0, 1, buttonSize-2, buttonSize-1);
     pronDrawLine(display, this->closeButton, this->closeButtonGC,
@@ -141,6 +184,7 @@ void GWindow::decorate() {
       // Trait du bas
       pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
         2, buttonSize-3, buttonSize-3, buttonSize-3);
+      pronFillRectangle(display, this->resizeButton, this->backgroundResizeButtonGC, 0,0, buttonSize, buttonSize);
     } else {
       // devant gauche
       pronDrawLine(display, this->maximiseButton, this->closeButtonGC,
