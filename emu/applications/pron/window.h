@@ -76,6 +76,12 @@ public: //XXX: bourrin
 
   void destroy();
 
+  void move(int dx, int dy);
+
+  void moveTo(int x, int y);
+
+  void resize(int width, int height);
+
   /**
    * Delivers an event to this window.
    *

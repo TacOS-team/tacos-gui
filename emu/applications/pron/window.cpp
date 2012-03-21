@@ -381,3 +381,40 @@ void Window::destroy() {
   }
   delete this;
 }
+
+void Window::move(int dx, int dy) {
+  // TODO Gestion sous-filles + clean
+  this->unmap();
+  this->x += dx;
+  this->y += dy;
+  for (Window *currentChild = this->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
+    currentChild->x += dx;
+    currentChild->y += dy;
+  }
+  this->map();
+}
+
+void Window::moveTo(int x, int y) {
+  // TODO Gestion sous-filles + clean
+  this->unmap();
+  int xMove = x - this->x;
+  int yMove = y - this->y;
+  this->x = x;
+  this->y = y;
+  for (Window *currentChild = this->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
+    currentChild->x += xMove;
+    currentChild->y += yMove;
+  }
+  this->map();
+}
+
+void Window::resize(int width, int height) {
+  this->unmap();
+  this->setWidth(width);
+  this->setHeight(height);
+  this->map();
+
+  // Send resize event
+  EventResizeWindow eventResizeWindow(width, height);
+  this->deliverWindowEvent(&eventResizeWindow, sizeof(eventResizeWindow));
+}
