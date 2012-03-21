@@ -78,6 +78,8 @@ void Window::unmap() {
     child->unmap();
   }
 
+  this->mapped = false;
+
   if (this->parent->mapped) {
     // Clear the area of the parent window occupied by this window and send exposure event
     this->parent->clear(this->x, this->y, this->width, this->height);
@@ -85,12 +87,10 @@ void Window::unmap() {
     // Redraw covered lower siblings
     for (Window *sib = this->prevSibling; sib != NULL; sib = sib->prevSibling) {
       if (this->overlaps(sib)) {
-        sib->clear(this->x, this->y, this->width, this->height);
+        sib->clear(this->x - sib->x, this->y - sib->y, this->width, this->height);
       }
     }
   }
-
-  this->mapped = false;
 
   // TODO: check if we were clipwin/mousewin/focuswin
   if (this->screen->getClipWin() == this) {
