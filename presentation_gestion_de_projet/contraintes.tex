@@ -1,12 +1,55 @@
+\subsection{Contraintes}
+\frame{
+
+  \frametitle{Contraintes technologiques}
+
+  \begin{alertblock}{TacOS}
+    \begin{description}
+    \item[Architecture] Intel x86
+    \item[Langage] C
+    \item[Virtualisation] QEMU
+    \end{description}
+  \end{alertblock}
+
+  \begin{alertblock}{TacOS GUI}
+    \begin{description}
+    \item[Langage] C++
+    \item[Système d'exploitation] TacOS
+    \end{description}
+  \end{alertblock}
+}
 
 \frame{
 
-  \frametitle{Contraintes}
+  \frametitle{Contraintes temporelles}
 
-  \begin{alertblock}{alertblock 1}
+  \begin{alertblock}{Horaires de travail}
     \begin{description}
-    \item[lol1] lol1
+    \item[Cours] Deux heures par semaine
+    \item[Travail personnel] Durant le temps libre
     \end{description}
   \end{alertblock}
+}
+
+\subsection{Gestion des risques}
+\frame{
+
+  \frametitle{Tableau de gestion des risques}
+
+  \footnotesize
+  \begin{tabular}{|p{1cm}|p{6cm}|p{1.5cm}|c|}
+    \hline
+    Type & Description & Gravité & Statut \\
+    \hline
+    Ext & Dépendance du projet père Tacos & Bloquant & \color{green} \begin{picture}(10, 10) \put(0, 3){\circle*{10}} \end{picture} \\
+    \hline
+    Ext & Portage des fonctionnalités de l'émulateur sur TacOS & Bloquant & \color{orange} \begin{picture}(10, 10) \put(0, 3){\circle*{10}} \end{picture} \\
+    \hline
+    Ext & Portage du système de fenêtrage sur TacOS & Bloquant & \color{red} \begin{picture}(10, 10) \put(0, 3){\circle*{10}} \end{picture} \\  
+    \hline
+    Int & Apprentissage des systèmes de fenêtrages, gestionnaires de fenêtres et librairies de widget existantes & Bloquant & \color{orange} \begin{picture}(10, 10) \put(0, 3){\circle*{10}} \end{picture} \\
+    \hline
+  \end{tabular}
+  \normalsize
 
 }
