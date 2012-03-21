@@ -34,15 +34,15 @@ public:
   /**
    * Graphic methods
    */
-  void drawPoint(int x, int y);
-  void drawLine(int x1, int y1, int x2, int y2);
-  void drawRect(int x1, int y1, int width, int height);
-  void fillRectangle(int x, int y, int width, int height);
-  void putImage(PronImage *image, int x, int y);
-  void drawCircle(int x, int y, int radius);
-  void fillCircle(int x, int y, int radius);
-  void clear();
-  void clear(int x, int y, int width, int height);
+  virtual void drawPoint(int x, int y) = 0;
+  virtual void drawLine(int x1, int y1, int x2, int y2) = 0;
+  virtual void drawRect(int x1, int y1, int width, int height) = 0;
+  virtual void fillRectangle(int x, int y, int width, int height) = 0;
+  virtual void putImage(PronImage *image, int x, int y) = 0;
+  virtual void drawCircle(int x, int y, int radius) = 0;
+  virtual void fillCircle(int x, int y, int radius) = 0;
+  virtual void clear() = 0;
+  virtual void clear(int x, int y, int width, int height) = 0;
 
 private:
 
