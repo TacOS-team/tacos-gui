@@ -156,9 +156,23 @@ bool GWindow::overlaps(GWindow *gw) {
 void GWindow::decorate() {
   if (this->hasDecoration()) {
     // Dessin des fonds
+    // Barre du haut
     pronFillRectangle(display, this->parent, this->backgroundParentGC, 0,0,
-      this->parentAttributes.width, this->parentAttributes.height);
+      this->parentAttributes.width - 2* buttonSize, buttonSize);
+    // Barre de gauche
+    pronFillRectangle(display, this->parent, this->backgroundParentGC, 0,buttonSize,
+      buttonSize, this->parentAttributes.height-buttonSize);
+    // Barre du bas
+    pronFillRectangle(display, this->parent, this->backgroundParentGC,
+      buttonSize, this->parentAttributes.height - buttonSize,
+      this->parentAttributes.width - buttonSize, buttonSize);
+    // Barre de droite
+    pronFillRectangle(display, this->parent, this->backgroundParentGC,
+      this->parentAttributes.width - buttonSize, buttonSize,
+      buttonSize, this->parentAttributes.height - 2*buttonSize);/**/
+    // Bouton close
     pronFillRectangle(display, this->closeButton, this->backgroundCloseButtonGC, 0,0, buttonSize, buttonSize);
+    // Bouton maximise
     pronFillRectangle(display, this->maximiseButton, this->backgroundMaximiseButtonGC, 0,0, buttonSize, buttonSize);
 
     pronDrawLine(display, this->closeButton, this->closeButtonGC,

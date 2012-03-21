@@ -144,14 +144,14 @@ int main() {
             else if (mouseButtonEvent->window == gwin->parent) {
               windowLeftButtonPressed = gwin;
             }
-            // Puts the window on foreground
-            gwin->raise();
             // Subscribe to pointer moved and mouse button of the root window
             //   to avoid problems if it moves too fast
             currentRootEventMask |= PRON_EVENTMASK(EV_POINTER_MOVED) | PRON_EVENTMASK(EV_MOUSE_BUTTON);
             // Ask to reset the last mouse position
             mouseActualXPosition = -1;
           }
+          // Puts the window on foreground
+          gwin->raise();
         } else {
           windowLeftButtonPressed   = NULL;
           windowResizeButtonPressed = NULL;
