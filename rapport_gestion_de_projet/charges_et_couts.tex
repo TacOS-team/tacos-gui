@@ -2,13 +2,15 @@
 
 \begin{tabular}{|l|c|}
   \hline
-  Lot & Estimation (en heures) \\
+  \rowcolor{dark_grey} Lot & Estimation (en heures) \\
   \hline
   Émulateur et bases du système de fenêtrage & 30 \\
   \hline
   Gestion des événements et gestionnaire de fenêtres basique & 40 \\
   \hline
-  Système de fenêtrage complet et gestionnaire de fenêtres avancé & 60 \\
+  Système de fenêtrage complet & 30 \\
+  \hline
+  Gestionnaire de fenêtres avancé & 30 \\
   \hline
   Librairie de widgets  & 70 \\
   \hline
@@ -16,7 +18,7 @@
   \hline
   Développement de programmes de démo & 50 \\
   \hline
-  Total & 270 \\
+  \rowcolor{dark_grey} Total & 270 \\
   \hline
 \end{tabular}
 
@@ -26,7 +28,7 @@ Nous prévoyons d'allouer environ 500 heures au total, réparties sur les 4 memb
 
 \begin{tabular}{|l|c|c|c|c|c|c|c|c|c|c|c|c|c|}
   \hline
-                    &   6   &   7   &   8   &   9     &   10  &   11  &   12  &   13    &   14  &   15    &   16    &   17    &  Total \\
+  \rowcolor{dark_grey} Semaine           &   6   &   7   &   8   &   9     &   10  &   11  &   12  &   13    &   14  &   15    &   16    &   17    &  Total \\
   \hline
   Nicolas Hug       &   8   &   9   &   8   &   14    &   9   &   9   &   9   &   12    &   9   &   10    &   13    &   13    &   123 \\
   \hline
@@ -36,13 +38,21 @@ Nous prévoyons d'allouer environ 500 heures au total, réparties sur les 4 memb
   \hline
   Adrien Sulpice    &   10  &   10  &   9   &   10    &   10  &   12  &   11  &   11    &   12  &   12    &   12    &   13    &   132 \\
   \hline
-  Total             &   36  &   36  &   36  &   45    &   42  &   37  &   38  &   41    &   40  &   50    &   54    &   55    &   510  \\
+  \rowcolor{dark_grey} Total             &   36  &   36  &   36  &   45    &   42  &   37  &   38  &   41    &   40  &   50    &   54    &   55    &   510  \\
   \hline
 \end{tabular}
 
+Cela peut sembler important au regard de la charge horaire estimée (~ 270h), mais nous prévoyons volontairement une charge de travail plus conséquente car :
+\begin{itemize}
+\renewcommand{\labelitemi}{$\bullet$}
+\item Le temps que nous devrons consacrer à la gestion du projet, (planification/affectation des tâches, rédaction des compte-rendus d'avancement, réunions avec les tuteurs...) n'est pas compris dans les estimations horaires de chaque lot
+\item Certaines tâches (de conception notamment, mais possiblement d'implémentation et de correction de bugs) nécessiteront une synchronisation de l'équipe et nous perdrons alors la parralélisation des tâches (si nous sommes 3 ou 4 sur la même tâche, cela consommera 3 ou 4 fois plus de temps)
+\item Nous sommes conscients que nous aurons forcément des aléas qui nous obligeront à dévier de notre planning et à consommer davantage de temps ! 
+\end{itemize}
+
 \subsection{Tableau de compétences des acteurs}
 \begin{tabular}{|l|c|c|c|c|c|c|c|c|}
-  \hline &  C \footnote{low-level} & C++ \footnote{high-level}  & TacOS & Git & Redmine & WS \footnote{Fonctionnement des systèmes de fenêtrage, ie X Window} & WM \footnote{Fonctionnement des gestionnaires de fenêtres, ie Metacity, Awesome...} & Widgets \footnote{Fonctionnement des librairies de widgets, ie Xaw, Motif, GTK+, Qt...}  \\
+  \rowcolor{dark_grey} \hline &  C \footnotemark[1] & C++ \footnotemark[2] & TacOS & Git & Redmine & WS \footnotemark[3] & WM \footnotemark[4] & Widgets \footnotemark[5] \\
   %                 &   C     &   C++   & Tacos &   Git   & Redmine &   WS    &  WM     & Widgets
   \hline
   Nicolas Hug       &   ++    &   ++    &   +   &   ++    &   ++    &   +     &   ++    &   +++ \\
@@ -55,4 +65,29 @@ Nous prévoyons d'allouer environ 500 heures au total, réparties sur les 4 memb
   \hline
 \end{tabular}
 
-\subsection{Tableau des comptétences nécessaires aux lots}
+\footnotetext[1]{low-level}
+\footnotetext[2]{high-level}
+\footnotetext[3]{Fonctionnement des systèmes de fenêtrage, ie X Window}
+\footnotetext[4]{Fonctionnement des gestionnaires de fenêtres, ie Metacity, Awesome...} 
+\footnotetext[5]{Fonctionnement des librairies de widgets, ie Xaw, Motif, GTK+, Qt...} 
+
+\subsection{Tableau des compétences nécessaires aux lots}
+\begin{tabular}{|l|c|c|c|c|c|c|c|c|}
+  \rowcolor{dark_grey} \hline &  C \footnotemark[1] & C++ \footnotemark[2] & TacOS & Git & Redmine & WS \footnotemark[3] & WM \footnotemark[4] & Widgets \footnotemark[5] \\
+  %                 &   C     &   C++   & Tacos &   Git   & Redmine &   WS    &  WM     & Widgets
+  \hline
+  Émulateur/bases du système de fenêtrage & \cellcolor[gray]{0} & \cellcolor[gray]{0.5} & \cellcolor[gray]{0} & \cellcolor[gray]{0.9} & \cellcolor[gray]{0.9} & \cellcolor[gray]{0} & \ \cellcolor[gray]{1} & \cellcolor[gray]{1} \\
+  \hline
+  Événements/WM basique & \cellcolor[gray]{0.75} & \cellcolor[gray]{0.25} & \cellcolor[gray]{1} & \cellcolor[gray]{0.9} & \cellcolor[gray]{0.9} & \cellcolor[gray]{0.25} & \ \cellcolor[gray]{0.5} & \cellcolor[gray]{1} \\
+  \hline
+  Système de fenêtrage complet & \cellcolor[gray]{0.5} & \cellcolor[gray]{0.25} & \cellcolor[gray]{1} & \cellcolor[gray]{0.9} & \cellcolor[gray]{0.9} & \cellcolor[gray]{0} & \ \cellcolor[gray]{0.75} & \cellcolor[gray]{1} \\
+  \hline
+  Gestionnaire de fenêtres avancé & \cellcolor[gray]{1} & \cellcolor[gray]{0} & \cellcolor[gray]{1} & \cellcolor[gray]{0.9} & \cellcolor[gray]{0.9} & \cellcolor[gray]{0.75} & \ \cellcolor[gray]{0} & \cellcolor[gray]{1} \\
+  \hline
+  Librairie de widgets & \cellcolor[gray]{1} & \cellcolor[gray]{0} & \cellcolor[gray]{1} & \cellcolor[gray]{0.9} & \cellcolor[gray]{0.9} & \cellcolor[gray]{1} & \ \cellcolor[gray]{1} & \cellcolor[gray]{0} \\
+  \hline
+  Intégration avec TacOS & \cellcolor[gray]{0} & \cellcolor[gray]{1} & \cellcolor[gray]{0} & \cellcolor[gray]{0.9} & \cellcolor[gray]{0.9} & \cellcolor[gray]{1} & \ \cellcolor[gray]{1} & \cellcolor[gray]{1} \\
+  \hline
+  Développement de programmes de démo & \cellcolor[gray]{1} & \cellcolor[gray]{0.5} & \cellcolor[gray]{1} & \cellcolor[gray]{0.9} & \cellcolor[gray]{0.9} & \cellcolor[gray]{1} & \ \cellcolor[gray]{1} & \cellcolor[gray]{0.25} \\
+  \hline
+\end{tabular}
