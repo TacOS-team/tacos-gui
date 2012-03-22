@@ -232,7 +232,7 @@ void Window::selectInput(Client *client, unsigned int mask) {
         this->otherClients[i].mask = mask;
         break;
       }
-    }
+   }
     if (i == this->otherClients.size()) { // Not found, add it
       this->otherClients.push_back(OtherClient(client, mask));
     }
@@ -243,7 +243,7 @@ void Window::deliverEvent(PronEvent *e, unsigned int size) {
   unsigned int eventMask = PRON_EVENTMASK(e->type);
   
   // Deliver to creator
-  if (this != this->getScreen()->root && (this->eventMask & eventMask)) {
+  if (this != this->getScreen()->tree->getRoot() && (this->eventMask & eventMask)) {
     this->getCreator()->send(e, size);
   }
 
@@ -380,4 +380,41 @@ void Window::destroy() {
     this->parent->lastChild = this->prevSibling;
   }
   delete this;
+}
+
+void Window::move(int dx, int dy) {
+  // TODO Gestion sous-filles + clean
+  this->unmap();
+  this->x += dx;
+  this->y += dy;
+  for (Window *currentChild = this->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
+    currentChild->x += dx;
+    currentChild->y += dy;
+  }
+  this->map();
+}
+
+void Window::moveTo(int x, int y) {
+  // TODO Gestion sous-filles + clean
+  this->unmap();
+  int xMove = x - this->x;
+  int yMove = y - this->y;
+  this->x = x;
+  this->y = y;
+  for (Window *currentChild = this->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
+    currentChild->x += xMove;
+    currentChild->y += yMove;
+  }
+  this->map();
+}
+
+void Window::resize(int width, int height) {
+  this->unmap();
+  this->setWidth(width);
+  this->setHeight(height);
+  this->map();
+
+  // Send resize event
+  EventResizeWindow eventResizeWindow(width, height);
+  this->deliverWindowEvent(&eventResizeWindow, sizeof(eventResizeWindow));
 }

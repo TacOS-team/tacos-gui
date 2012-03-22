@@ -34,8 +34,8 @@ void PronInit() {
   keyboard = new Keyboard();
   
   // Create root window
-  screen->root = new Window(screen, 0, NULL, NULL, 0, 0, 800, 600);
-  screen->root->map();
+  screen->tree->setRoot(new Window(screen, 0, NULL, NULL, 0, 0, 800, 600));
+  screen->tree->getRoot()->map();
 
   // Listen for clients
   unlink("/tmp/pron.sock");

@@ -16,19 +16,19 @@ ClipZone::ClipZone(Window *w) {
   // Restrict this rectangle to the part visible through all its parents
   Window *parent, *sibling;
   parent = w;
-  while (parent != w->getScreen()->root) {
+  while (parent != w->getScreen()->tree->getRoot()) {
     parent = parent->parent;
 
     // X1
     if (parent->x > clip->x) {
-      clip->x = parent->x;
       clip->width -= (parent->x - clip->x);
+      clip->x = parent->x;
     }
 
     // Y1
     if (parent->y > clip->y) {
-      clip->y = parent->y,
       clip->height -= (parent->y - clip->y);
+      clip->y = parent->y;
     }
 
     // X2
@@ -46,7 +46,7 @@ ClipZone::ClipZone(Window *w) {
   if (clip->width > 0 || clip->height > 0) {
     // Break this rectangle into pieces not obscured by other windows
     parent = w;
-    while (parent != w->getScreen()->root) {
+    while (parent != w->getScreen()->tree->getRoot()) {
       w = parent;
       parent = w->parent;
       sibling = w->nextSibling;

@@ -4,6 +4,7 @@
 #include <vector>
 #include <clip_zone.h>
 #include <gc.h>
+#include <windowsTree.h>
 
 extern "C" {
 #include <vesa_types.h>
@@ -34,7 +35,7 @@ public: // XXX: bourrin
   int vesa_fd;
   char *videoBuffer;
   vector<Window*> windows; // XXX: ABR ? Rouge/noir ? B-Arbre ?
-  Window *root;
+  WindowsTree *tree;
   GC defaultGC;
   GC *gc;
 

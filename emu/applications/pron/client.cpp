@@ -25,7 +25,7 @@ void Client::handle() {
   switch (reqType) { 
     case RQ_HELLO: {
       // Identifiers: 16 upper bits for client id, 16 lower bits for resource id
-      RespWelcome welcome(screen->root->getId(), this->id << 16, (this->id << 17) - 1);
+      RespWelcome welcome(screen->tree->getRoot()->getId(), this->id << 16, (this->id << 17) - 1);
       this->send(&welcome, sizeof(welcome));
       break;
     }
@@ -231,35 +231,15 @@ void Client::handle() {
       RqMoveWindow *rq = (RqMoveWindow*) Client::recvBuf;
       Window *w = screen->getWindow(rq->window);
       if (w != NULL) {
-        // TODO Gestion sous-filles + clean
-        // TODO Create method Window::move
-        w->unmap();
-        w->x += rq->x;
-        w->y += rq->y;
-        for (Window *currentChild = w->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
-          currentChild->x += rq->x;
-          currentChild->y += rq->y;
-        }
-        w->map();
+        w->move(rq->x, rq->y);
       }
       break;
     }
-    case RQ_MOVE_WINDOW_TO: {// TODO Faire une fonction générale pour les deux move
+    case RQ_MOVE_WINDOW_TO: { // TODO Faire une fonction générale pour les deux move
       RqMoveWindowTo *rq = (RqMoveWindowTo*) Client::recvBuf;
       Window *w = screen->getWindow(rq->window);
       if (w != NULL) {
-        // TODO Gestion sous-filles + clean
-        // TODO Create method Window::move
-        w->unmap();
-        int xMove = rq->x - w->x;
-        int yMove = rq->y - w->y;
-        w->x = rq->x;
-        w->y = rq->y;
-        for (Window *currentChild = w->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
-          currentChild->x += xMove;
-          currentChild->y += yMove;
-        }
-        w->map();
+        w->moveTo(rq->x, rq->y);
       }
       break;
     }
@@ -280,13 +260,8 @@ void Client::handle() {
     case RQ_RESIZE_WINDOW: {
       RqResizeWindow *rq = (RqResizeWindow*) Client::recvBuf;
       Window *w = screen->getWindow(rq->window);
-      EventResizeWindow eventResizeWindow(rq->width, rq->height);
-      w->deliverWindowEvent(&eventResizeWindow, sizeof(eventResizeWindow));
       if (w != NULL) {
-        w->unmap();
-        w->setWidth(rq->width);
-        w->setHeight(rq->height);
-        w->map();
+        w->resize(rq->width, rq->height);
       }
       break;
     }
