@@ -1,12 +1,35 @@
-\subsection{Diagramme de Gantt}
+\subsection{Chronologie des versions}
+Comme expliqué à la section \ref{Outils de travail} nous avons organisé le développement de notre projet en différentes versions, dont on peut observer les dates butoires sur la figure \ref{fig:chrono}. Voici une description très générale de l'objectif de chaque version :
+\begin{itemize}
+\renewcommand{\labelitemi}{$\bullet$}
+\item v0.1 : Création de l'émulateur, et premières bases du serveur graphique (définition du protocole, primitives de dessin) ;
+\item v0.2 : Bases du gestionnaire de fenêtre : gestion des événements et décoration simpliste ;
+\item v0.3 : Renforcement du serveur graphique : gestion de plusieurs fenêtres, gestion du clavier ;
+\item v0.4 : Renforcement du gestionnaire de fenêtre : décoration élaborée et déplacement des fenêtres, gestion du focus, gestion de la souris ;
+\item v0.5 : Elaboration de la librairie de widgets, gestion du texte et des images ;
+\item v1.0 : Intégration dans TacOS, création d'applications graphiques basées sur la librairie de widgets.
+\end{itemize}
 
-\begin{figure}[H]
+
+\begin{figure}[H!]
+  \centering
+    \includegraphics[width=15cm]{figures/chrono}
+  \caption{\label{fig:chrono}Chronologie des versions du projet}
+\end{figure}
+
+\subsection{Diagramme de Gantt}
+Sur le diagramme de Gantt (figure \ref{fig:diagGant}), on peut observer les dates butoires de chacune des versions, ainsi que toutes les demandes associées (conception, développement, bug \ldots). Pour chaque demande, on peut connaître sa date de début, sa date de fin, son état (ouverte, fermée \ldots), et son pourcentage avancement.
+\begin{figure}[H!]
   \centering
     \includegraphics[width=15cm]{figures/tacos-gui-gantt}
-  \caption{Diagramme de Gantt du projet}
-  \label{fig:diagGant}
+  \caption{\label{fig:diagGant}Diagramme de Gantt du projet}
 \end{figure}
 
 \subsection{Tableau de distribution des tâches}
-(screenshot de redmine)
-\subsection{Camembert de répartition des tâches a l'intérieur des trackers}
+On peut observer sur la figure \ref{fig:pie} les pourcentages de répartition des demandes en fonction de leur type.
+\subsection{Répartition des types des demandes}
+\begin{figure}[H!]
+  \centering
+    \includegraphics[width=15cm]{figures/pie}
+  \caption{\label{fig:pie}Répartition des types des demandes}
+\end{figure}
