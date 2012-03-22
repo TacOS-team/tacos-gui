@@ -5,8 +5,11 @@
 \usepackage[utf8]{inputenc}
 \usepackage[francais]{babel}
 \usepackage{color}
-\usepackage{graphicx}
+\usepackage{tikz}
 %\usepackage[table]{xcolor}
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
 
 \definecolor{macouleur}{HTML}{0080DB}
 
@@ -36,8 +39,8 @@ Adrien Sulpice \texttt{<sulpice@etud.insa-toulouse.fr>}}
 \section[Plan]{Plan}
 \frame{\tableofcontents}
 
-\section{Présentation}
-\input{partie_presentation.tex}
+\section{Présentation du projet}
+\input{presentation_projet.tex}
 \section{Contraintes}
 \input{contraintes.tex}
 \section{Taches}
