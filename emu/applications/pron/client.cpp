@@ -25,7 +25,7 @@ void Client::handle() {
   switch (reqType) { 
     case RQ_HELLO: {
       // Identifiers: 16 upper bits for client id, 16 lower bits for resource id
-      RespWelcome welcome(screen->root->getId(), this->id << 16, (this->id << 17) - 1);
+      RespWelcome welcome(screen->tree->getRoot()->getId(), this->id << 16, (this->id << 17) - 1);
       this->send(&welcome, sizeof(welcome));
       break;
     }

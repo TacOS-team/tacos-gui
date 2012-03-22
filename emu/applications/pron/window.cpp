@@ -232,7 +232,7 @@ void Window::selectInput(Client *client, unsigned int mask) {
         this->otherClients[i].mask = mask;
         break;
       }
-    }
+   }
     if (i == this->otherClients.size()) { // Not found, add it
       this->otherClients.push_back(OtherClient(client, mask));
     }
@@ -243,7 +243,7 @@ void Window::deliverEvent(PronEvent *e, unsigned int size) {
   unsigned int eventMask = PRON_EVENTMASK(e->type);
   
   // Deliver to creator
-  if (this != this->getScreen()->root && (this->eventMask & eventMask)) {
+  if (this != this->getScreen()->tree->getRoot() && (this->eventMask & eventMask)) {
     this->getCreator()->send(e, size);
   }
 

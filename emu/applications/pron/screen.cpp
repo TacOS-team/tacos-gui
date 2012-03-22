@@ -22,13 +22,14 @@ Screen::Screen(int width, int height, int bitsPerPixel) {
   ioctl(this->vesa_fd, SETMODE, &req);
   ioctl(this->vesa_fd, GETVIDEOADDR, &this->videoBuffer);
 
-  this->root = NULL;
   this->clipWin = NULL;
   this->clipZone = new ClipZone(0, 0, this->width, this->height);
 
   this->gc = &this->defaultGC;
 
   this->mouseWin = NULL;
+
+  this->tree = new WindowsTree();
 }
 
 Screen* Screen::getInstance(int width, int height, int bitsPerPixel) {
@@ -241,11 +242,11 @@ void Screen::setMouseWin(Window *mouseWin) {
 }
 
 Window* Screen::getRoot() {
-  return this->root;
+  return this->tree->getRoot();
 }
 
-void Screen::setRoot(Window *root) {
-  this->root = root;
+void Screen::setRoot(Window *newRoot) {
+  this->tree->setRoot(newRoot);
 }
 
 Window* Screen::getClipWin() {
@@ -302,5 +303,5 @@ void traceWindowsRec(Window *w, string prefix) {
 }
 
 void Screen::traceWindows() {
-  traceWindowsRec(this->root, "");
+  traceWindowsRec(this->tree->getRoot(), "");
 }
