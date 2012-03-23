@@ -1,4 +1,4 @@
-\subsection{Versions}
+\subsection{Chronologie des versions}
   \frame{
     \frametitle{Chronologie}
     \begin{figure}[H]
@@ -7,11 +7,41 @@
     \end{figure}
   }
 
+\subsection{Diagramme de Gantt}
+  \frame{
+    \frametitle{Diagramme de Gantt}
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width=280px]{figures/tacos-gui-gantt}
+    \end{figure}
+  }
+
+\subsection{Système de review}
+\frame{
+  \frametitle{Modèle pilote/copilote}
+  \begin{itemize}
+    \item Groupe divisé en deux binômes
+    \item Un membre code, l'autre observe, conseille, aide
+    \item Intérêt : parallélisation des tâches, avec partage de connaissances
+  \end{itemize}
+}
+
+\frame{
+  \frametitle{Les différentes branches}
+  \begin{itemize}
+    \item Master : dernière version stable du projet
+    \item Develop : version en cours de développement
+    \item Une branche par fonctionnalité
+    \item Une fois revues et validées, les branches de fonctionnalité fusionnent avec develop
+    \item Une fois achevée, revue et validée, les versions sont taggées dans master 
+  \end{itemize}
+}
+
 \subsection{Distribution des tâches}
   \frame{
-    \frametitle{Distribution des tâches}
+    \frametitle{Répartition de la charge des tâches en fonction de leur nature}
     \begin{figure}[H]
     \centering
-    \includegraphics[width=150px]{figures/pie}
+    \includegraphics[width=250px]{figures/pie}
     \end{figure}
   }
