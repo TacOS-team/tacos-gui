@@ -1,15 +1,15 @@
 \subsection{Chronologie des versions}
-Comme expliqué à la section \ref{Outils de travail} nous avons organisé le développement de notre projet en différentes versions, dont on peut observer les dates butoires sur la figure \ref{fig:chrono}. Voici une description très générale de l'objectif de chaque version :
+\label{chrono}
+Comme expliqué à la section \ref{Outils de travail}, nous avons organisé le développement de notre projet en différentes versions, dont on peut observer les dates butoires sur la figure \ref{fig:chrono}. Voici une description très générale de l'objectif de chaque version :
 \begin{itemize}
 \renewcommand{\labelitemi}{$\bullet$}
-\item v0.1 : Création de l'émulateur, et premières bases du serveur graphique (définition du protocole, primitives de dessin) ;
-\item v0.2 : Bases du gestionnaire de fenêtre : gestion des événements et décoration simpliste ;
-\item v0.3 : Renforcement du serveur graphique : gestion de plusieurs fenêtres, gestion du clavier ;
-\item v0.4 : Renforcement du gestionnaire de fenêtre : décoration élaborée et déplacement des fenêtres, gestion du focus, gestion de la souris ;
-\item v0.5 : Elaboration de la librairie de widgets, gestion du texte et des images ;
-\item v1.0 : Intégration dans TacOS, création d'applications graphiques basées sur la librairie de widgets.
+\item \textbf{v0.1 :} Création de l'émulateur, et premières bases du serveur graphique\footnote{Également appelé ``système de fenêtrage''.} (définition du protocole, primitives de dessin) ;
+\item \textbf{v0.2 :} Bases du gestionnaire de fenêtres : gestion des événements et décoration simpliste ;
+\item \textbf{v0.3 :} Renforcement du serveur graphique : gestion de plusieurs fenêtres, gestion du clavier ;
+\item \textbf{v0.4 :} Renforcement du gestionnaire de fenêtres : décoration élaborée et déplacement des fenêtres, gestion du focus, gestion de la souris ;
+\item \textbf{v0.5 :} Élaboration de la librairie de widgets, gestion du texte et des images ;
+\item \textbf{v1.0 :} Intégration dans TacOS, création d'applications graphiques basées sur la librairie de widgets.
 \end{itemize}
-
 
 \begin{figure}[H]
   \centering
@@ -18,7 +18,8 @@ Comme expliqué à la section \ref{Outils de travail} nous avons organisé le d�
 \end{figure}
 
 \subsection{Diagramme de Gantt}
-Sur le diagramme de Gantt (figure \ref{fig:diagGant}), on peut observer les dates butoires de chacune des versions, ainsi que toutes les demandes associées (de type conception et développement). Pour chaque demande, on peut connaître sa date de début, sa date de fin, son état (ouverte, fermée \ldots), et son pourcentage avancement.
+\label{taches}
+Sur le diagramme de Gantt (figure \ref{fig:diagGant}), on peut observer les dates butoires de chacune des versions, ainsi que toutes les demandes associées (de type conception et développement). Pour chaque demande, on peut connaître sa date de début, sa date de fin, son état (nouvelle, assignée, en cours, fermée...), et son pourcentage d'avancement. On observe également la répartition des tâches dans les différentes versions.
 \begin{figure}[H]
   \centering
     \includegraphics[width=15cm]{figures/tacos-gui-gantt}
@@ -26,9 +27,9 @@ Sur le diagramme de Gantt (figure \ref{fig:diagGant}), on peut observer les date
 \end{figure}
 
 \subsection{Charge en temps selon le type des demandes}
-On peut observer sur la figure \ref{fig:pie} les pourcentages de répartition des demandes en fonction de leur type.
+On peut observer sur la figure \ref{fig:pie} la répartition du temps selon les types de demandes.
 \begin{figure}[H]
   \centering
-    \includegraphics[width=15cm]{figures/pie}
-  \caption{\label{fig:pie}Répartition en charge selon le type des demandes}
+    \includegraphics[width=10cm]{figures/pie}
+  \caption{\label{fig:pie}Répartition de la charge horaire selon les types de demandes}
 \end{figure}

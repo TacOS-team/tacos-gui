@@ -1,21 +1,25 @@
 \subsection{Sujet}
-Le but du projet est de permettre la création d'une interface graphique pour le système d'exploitation TacOS, développé il y a deux ans et toujours maintenu par des étudiants de l'INSA de Toulouse. Ce système propose actuellement une interface en mode texte.
+Le but du projet est de créer une interface graphique pour le système d'exploitation TacOS, développé il y a deux ans et toujours maintenu par des étudiants de l'INSA de Toulouse. Ce système propose actuellement une interface en mode texte.
 
 \subsection{Enjeux}
 Pour créer une interface graphique il est nécessaire de bien discerner les différents acteurs qu'il faudra développer et qui sont les suivants :
 
 \begin{itemize}
 \renewcommand{\labelitemi}{$\bullet$}
-\item Un système de fenêtrage que nous avons appelé ``pron''
-\item Un gestionnaire de fenêtres flottant, ``guacamole''
-\item Une librairie de widgets simplifiant la création d'interfaces graphiques complexes, ``sombrero''
-\item Un environnement de bureau minimaliste, ``salsa''
+\item Un système de fenêtrage que nous avons appelé ``pron'',
+\item Un gestionnaire de fenêtres flottant, ``guacamole'',
+\item Une librairie de widgets simplifiant la création d'interfaces graphiques complexes, ``sombrero'',
+\item Un environnement de bureau minimaliste, ``salsa''.
 \end{itemize}
+
+\vspace{1em}
 
 L'environnement de bureau sera composé d'applications graphiques telles qu'un gestionnaire de fichiers, un éditeur de texte ou un émulateur de terminal. Ces applications seront développées grâce à la librairie de widgets que nous aurons mise en place.
 
 \subsection{Objectifs}
 Pour réaliser ce projet, nous avons défini les objectifs suivants. Le numéro indiqué détermine les tâches qui peuvent être parallélisées. Les tâches de même niveau peuvent être réalisées en même temps par les différents membres de l'équipe, mais on ne peut commencer les étapes de niveau $n$ sans que les étapes de niveau $n-1$ ne soient terminées.
+
+\vspace{0.5em}
 
 \begin{itemize}
 \renewcommand{\labelitemi}{$\bullet$}
@@ -33,21 +37,21 @@ Pour réaliser ce projet, nous avons défini les objectifs suivants. Le numéro 
 \subsection{Méthodologie}
 \subsubsection{Travail en groupe}
 
-Travailler en groupe nécessite de répartir les tâches entre les différents membres de l'équipe. Il reste toutefois indispensable de communiquer sur l'avancement du travail de chacun et de se synchroniser régulièrement. Pour ce faire, nous utilisons les outils présentés section \ref{Outils de travail} et restons disponibles sur Jabber\footnote{Messagerie instantanée open-source} pour discuter ensemble des problèmes que nous rencontrons. Nous plannifions également des réunions de groupe régulières qui nous permettent de faire un bilan sur l'avancement, de discuter des tâches qui nécessitent une concertation de l'ensemble de l'équipe et de réaliser les revues.\\
+Travailler en groupe nécessite de répartir les tâches entre les différents membres de l'équipe. Il reste toutefois indispensable de communiquer sur l'avancement du travail de chacun et de se synchroniser régulièrement. Pour ce faire, nous utilisons les outils présentés section \ref{Outils de travail} et restons disponibles sur Jabber\footnote{Messagerie instantanée open-source.} pour discuter ensemble des problèmes que nous rencontrons. Nous planifions également des réunions de groupe régulières qui nous permettent de faire un bilan sur l'avancement, de discuter des tâches qui nécessitent une concertation de l'ensemble de l'équipe et de réaliser les revues.\\
 
 Nous avons divisé le groupe en deux binômes. Chaque membre du binôme est chargé de vérifier le travail de son homologue, ce qui permet de bénéficier des avantages du travail de groupe (partage des connaissances, entraide, parallélisation des tâches), tout en gardant une certaine réactivité (synchronisation à deux plus facile qu'à quatre, organisation pilote/copilote pour éviter les erreurs triviales de développement).
 
 \subsubsection{Outils de travail}
 \label{Outils de travail}
-Nous utilisons plusieurs outils afin d'optimiser le travail en groupe, principalement un gestionnaire de versions (git) couplé à un gestionnaire de projet (Redmine).
+Nous utilisons plusieurs outils afin d'optimiser le travail en groupe, principalement un gestionnaire de versions (git) couplé à un gestionnaire de projet (Redmine).\\
 
-Avant de commencer à travailler, nous avons découpé le projet en plusieurs versions. Ce ``découpage'' n'était pas facile car notre projet se compose d'entités qui évoluent en parallèle, communiquent entre elles et dépendent des unes des autres, et ne peuvent être vues comme des silos indépendants construits les uns après les autres.
+Avant de commencer à travailler, nous avons découpé le projet en plusieurs versions. Ce ``découpage'' n'était pas facile car notre projet se compose d'entités qui évoluent en parallèle, communiquent entre elles et dépendent des unes des autres, et ne peuvent être vues comme des silos indépendants construits les uns après les autres.\\
 
-Nous avons donc décidé de procéder de manière itérative, chaque version ne représentant pas une nouvelle entité à part entière mais plutôt un raffinement de l'ensemble du système. Elles sont liées à un objectif précis (``replacer aléatoirement les fenêtres créés grâce à un gestionnaire de fenêtres basique'', ``gérer plusieurs fenêtres à l'écran et passer de l'une à l'autre''...) qui nous permet de visualiser concrètement le but de l'itération et confère une certaine cohérence aux différentes versions. 
+Nous avons donc décidé de procéder de manière itérative, chaque version ne représentant pas une nouvelle entité à part entière mais plutôt un raffinement de l'ensemble du système. Elles sont liées à un objectif précis (``replacer aléatoirement les fenêtres créés grâce à un gestionnaire de fenêtres basique'', ``gérer plusieurs fenêtres à l'écran et passer de l'une à l'autre''...) qui nous permet de visualiser concrètement le but de l'itération et confère une certaine cohérence aux différentes versions.\\
 
-Chaque version est numérotée, se voit assigner plusieurs tâches (bug, conception, fonctionnalité, revue, support) ainsi qu'une date butoire. Une fois toutes ces tâches fermées, la version est clôturée, taggée et nous commençons à travailler sur la suivante. Pour gérer l'ensemble des versions et des tâches, nous utilisons Redmine qui est un outil adapté à nos besoins. Il permet la gestion des demandes (``tickets''), leur assignation à un membre de l'équipe et leur suivi. Il nous permet également de garder un oeil sur l'avancement du projet grâce aux modules ``Roadmap'' et ``Gant''. Nous pouvons également gérer un Wiki afin de rédiger et de partager de la documentation technique.
+Chaque version est numérotée, se voit assigner plusieurs tâches (bug, conception, fonctionnalité, revue, support) ainsi qu'une date butoire. Une fois toutes ces tâches fermées, la version est clôturée, taggée et nous commençons à travailler sur la suivante. Pour gérer l'ensemble des versions et des tâches, nous utilisons Redmine qui répond parfaitement à nos besoins. Il permet la gestion des demandes (``tickets''), leur assignation à un membre de l'équipe et leur suivi. Il nous permet également de garder un oeil sur l'avancement du projet grâce aux modules ``Roadmap'' et ``Gantt''. Nous pouvons également gérer un Wiki afin de rédiger et de partager de la documentation technique.\\
 
-Nous avons couplé Redmine avec le gestionnaire de versions Git, qui nous semble le plus approprié à nos besoins notamment grâce à sa simplicité de gestion des branches. L'intégration Redmine/Git nous permet de consulter le contenu du dépôt depuis Redmine, de visualiser l'ensemble des commits et de leur associer des revues, ainsi que lier des commits à des demandes (commit de résolution d'un bug associé automatiquement à la fermeture du ticket associé par exemple).
+Nous avons couplé Redmine avec le gestionnaire de versions Git, qui nous semble le plus approprié à nos besoins notamment grâce à sa simplicité de gestion des branches. L'intégration Redmine/Git nous permet de consulter le contenu du dépôt depuis Redmine, de visualiser l'ensemble des commits et de leur associer des revues, ainsi que lier des commits à des demandes (commit de résolution d'un bug associé automatiquement à la fermeture du ticket associé par exemple).\\
 
 Pour gérer l'avancée du projet, nous suivons une méthodologie très structurée qui tire partie de la simplicité de gestion des branches de Git :
 \begin{itemize}
