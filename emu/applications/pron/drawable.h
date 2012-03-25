@@ -18,6 +18,7 @@ protected:
   Drawable(int type, Screen *screen, int id, Client *creator, int width, int height);
   ~Drawable(); 
 
+  void reduce(int &x, int &y, int &width, int &height);
 public: 
 
   /**

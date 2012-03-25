@@ -112,26 +112,6 @@ void Window::map() {
   // TODO: update clipwin/mousewin/focuswin
 }
 
-void Window::reduce(int &x, int &y, int &width, int &height) {
-  if (x < 0) {
-    width += x;
-    x = 0;
-  }
-
-  if (y < 0) {
-    height += y;
-    y = 0;
-  }
-
-  if (x + width > this->getWidth()) {
-    width = this->getWidth() - x;
-  }
-
-  if (y + height > this->getHeight()) {
-    height = this->getHeight() - y;
-  }
-}
-
 void Window::drawPoint(int x, int y) {
   this->getScreen()->drawPoint(this->x + x, this->y + y);
 }

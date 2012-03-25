@@ -130,8 +130,7 @@ public: //XXX: bourrin
   void reparent(Window *w);
 
 private:
-  void reduce(int &x, int &y, int &width, int &height);
-
+  
   bool overlaps(Window *w);
 };
 

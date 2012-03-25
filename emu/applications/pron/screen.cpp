@@ -305,3 +305,11 @@ void traceWindowsRec(Window *w, string prefix) {
 void Screen::traceWindows() {
   traceWindowsRec(this->tree->getRoot(), "");
 }
+
+GC* Screen::getGC(){
+  return this->gc;
+}
+
+void Screen::setGC(GC *gc){
+  this->gc = gc;
+}

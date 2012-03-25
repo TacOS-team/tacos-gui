@@ -70,6 +70,9 @@ public: // XXX: bourrin
 
   void traceWindows();
 
+  GC* getGC();
+  void setGC(GC *gc);
+
 };
 
 #endif

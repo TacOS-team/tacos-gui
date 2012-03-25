@@ -7,6 +7,19 @@
 #define PIXMAP_BYTES_PER_PIXEL 3
 #define PIXMAP_DEPTH 24
 
+/**
+ * Macro to draw a pixel using the screen
+ * and the graphic context
+ */
+#define PIXMAP_DRAW_POINT(X, Y) \
+    if ((X) < this->getWidth() && (Y) < this->getHeight() && \
+        (X) > 0 && (Y) > 0) { \
+      memcpy(this->buf + (Y) * this->getWidth() + (X) * PIXMAP_BYTES_PER_PIXEL, \
+          &COLOR(this->getScreen()->getGC()->fg, PIXMAP_DEPTH), \
+          sizeof(COLOR(this->getScreen()->getGC()->fg, PIXMAP_DEPTH))); \
+    }
+// We can remove the last semicolon but the texteditor fails at coloring
+
 class Drawable;
 class Screen;
 
@@ -34,6 +47,9 @@ public:
 private:
   // Image buffer
   char *buf;
+
+  void drawHorizLine(int x, int y, int width);
+  void drawVertLine(int x, int y, int height);
 };
 
 #endif
