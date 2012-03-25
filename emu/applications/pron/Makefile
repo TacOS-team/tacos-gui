@@ -1,4 +1,4 @@
-OBJS = pron.o gc.o screen.o mouse.o keyboard.o window.o client.o clip_zone.o clip_rect.o drawable.o windowsTree.o
+OBJS = pron.o gc.o screen.o mouse.o keyboard.o window.o client.o clip_zone.o clip_rect.o drawable.o windowsTree.o pixmap.o
 
 all: $(BUILDDIRAPPS)/pron
 

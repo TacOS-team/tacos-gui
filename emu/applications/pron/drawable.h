@@ -1,5 +1,6 @@
 #ifndef _DRAWABLE_H_
 #define _DRAWABLE_H_
+#include <pronlib_structs.h>
 
 using namespace std;
 
