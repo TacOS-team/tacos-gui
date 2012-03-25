@@ -20,7 +20,7 @@ void Keyboard::checkEvents() {
 
   if (read(this->fd, &state, 0) > 0) {
     // TODO: compute real source window
-    Window *src = screen->windows[0];
+    Window *src = (Window *) screen->getDrawable(0, D_WINDOW);
     if (state.state == PRON_RELEASED) {
       EventKeyReleased keyReleased(src->getId(), src->getId(), 0, 0, 0, 0, state.keysym, state.modifiers);
       src->deliverDeviceEvent(&keyReleased, sizeof(keyReleased));

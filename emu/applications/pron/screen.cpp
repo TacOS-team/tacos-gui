@@ -220,17 +220,17 @@ void Screen::fillCircle(int cx, int cy, int radius) {
   }
 }
 
-Window* Screen::getWindow(unsigned int id) {
-  for (unsigned int i = 0; i < this->windows.size(); i++) {
-    if (windows[i]->getId() == id) {
-      return windows[i];
+Drawable* Screen::getDrawable(unsigned int id, int drawableType) {
+  for (unsigned int i = 0; i < this->drawables.size(); i++) {
+    if (drawables[i]->getId() == id) {
+      return (drawables[i]->getType() == drawableType) ? drawables[i] : NULL;
     }
   }
   return NULL;
 }
 
 void Screen::addWindow(Window *w) {
-  this->windows.push_back(w);
+  this->drawables.push_back(w);
 }
 
 Window* Screen::getMouseWin() {

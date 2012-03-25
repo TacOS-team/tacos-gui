@@ -366,4 +366,12 @@ enum PixmapType{
   ZPixmap  = 0X0002
 };
 
+/**
+ * Drawable type
+ */
+enum DrawableType{
+  D_WINDOW = 0x0000, 
+  D_PIXMAP = 0x0001
+};
+
 #endif // __PRONLIB_ENUMS_H__

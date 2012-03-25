@@ -10,7 +10,7 @@
 #include <drawable.h>
 
 Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, int y, int width, int height) 
-    : Drawable(0, screen, id, creator, width, height) {
+    : Drawable(D_WINDOW, screen, id, creator, width, height) {
 
   this->x = x;
   this->y = y;
@@ -55,7 +55,7 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
 
 // Destructor : delete all of the childs
 Window::~Window() {
-  this->getScreen()->windows.erase(std::find(this->getScreen()->windows.begin(), this->getScreen()->windows.end(), this));
+  this->getScreen()->drawables.erase(std::find(this->getScreen()->drawables.begin(), this->getScreen()->drawables.end(), this));
 
   for (Window *child = this->firstChild, *nextChild; child != NULL; child = nextChild) {
     nextChild = child->nextSibling;

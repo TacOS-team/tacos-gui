@@ -34,7 +34,7 @@ public: // XXX: bourrin
   int bytesPerPixel;
   int vesa_fd;
   char *videoBuffer;
-  vector<Window*> windows; // XXX: ABR ? Rouge/noir ? B-Arbre ?
+  vector<Drawable*> drawables; // XXX: ABR ? Rouge/noir ? B-Arbre ?
   WindowsTree *tree;
   GC defaultGC;
   GC *gc;
@@ -54,7 +54,7 @@ public: // XXX: bourrin
 
   void putImage(PronImage *image, int x, int y);
 
-  Window* getWindow(unsigned int id);
+  Drawable* getDrawable(unsigned int id, int drawableType);
   void addWindow(Window *w);
 
   Window* getClipWin();
