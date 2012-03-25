@@ -13,12 +13,11 @@
  */
 #define PIXMAP_DRAW_POINT(X, Y) \
     if ((X) < this->getWidth() && (Y) < this->getHeight() && \
-        (X) > 0 && (Y) > 0) { \
+        (X) >= 0 && (Y) >= 0) { \
       memcpy(this->buf + (Y) * this->getWidth() + (X) * PIXMAP_BYTES_PER_PIXEL, \
           &COLOR(this->getScreen()->getGC()->fg, PIXMAP_DEPTH), \
           sizeof(COLOR(this->getScreen()->getGC()->fg, PIXMAP_DEPTH))); \
     }
-// We can remove the last semicolon but the texteditor fails at coloring
 
 class Drawable;
 class Screen;
