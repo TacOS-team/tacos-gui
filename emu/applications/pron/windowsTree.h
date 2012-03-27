@@ -4,25 +4,37 @@
 #include <window.h>
 
 class WindowsTree {
-
-public:
-	WindowsTree ();
-	
-	Window * getRoot();
-	void setRoot(Window * newRoot);
-
-	
-	class Iterator {
+  public:
+    class Iterator {
       public:
-      int i;
+      Iterator(Window * win);
+      // pre incrementation
+        Iterator operator++(); 
+      // post incrementation
+      Iterator operator++(int junk);
 
-	};
-	Iterator begin();
-	Iterator end();
+      Window & operator*();
 
+      Window * operator->();
 
-private:
-	Window * root;
+      bool operator==(Iterator it);
+
+      bool operator!=(Iterator it);
+
+      private:
+      Window * currentWindow;
+    };
+
+    WindowsTree ();
+
+    Window * getRoot();
+    void setRoot(Window * newRoot);
+
+    Iterator begin();
+    Iterator end();
+
+  private:
+    Window * root;
 
 };
 
