@@ -219,7 +219,7 @@ void Screen::fillCircle(int cx, int cy, int radius) {
 int Screen::getPixel(int x, int y) {
   if (this->isValid(x, y)) {
     int ret;
-    memcpy(&ret, this->videoBuffer + (y * this->width + x) * 3, 3);
+    memcpy(&ret, this->videoBuffer + (y * this->width + x) * this->bytesPerPixel, this->bytesPerPixel);
     return ret;
   }
   return -1;
@@ -227,7 +227,7 @@ int Screen::getPixel(int x, int y) {
 
 void Screen::setPixel(int x, int y, int pixel) {
   if (this->isValid(x, y)) {
-    memcpy(this->videoBuffer + (y * this->width + x) * 3, &pixel, 3);
+    memcpy(this->videoBuffer + (y * this->width + x) * this->bytesPerPixel, &pixel, this->bytesPerPixel);
   }
 }
 
