@@ -100,8 +100,10 @@ int main() {
   memset(image_data, -1, width * width * depth);
   PronImage image(width, height, ZPixmap, image_data, depth, bytesPerPixel);
 
-  Pixmap p = pronCreatePixmap(d, 5, 5, 24);
-  pronFreePixmap(d, p);
+  Pixmap p = pronCreatePixmap(d, width, height, depth);
+
+  //on envoie une sous image de l'image dans la fenetre
+  pronPutImage(d, p, gc, &image, x, y, width - 1, height - 1, 0, 0);
 
   while (1) {
 
@@ -132,11 +134,13 @@ int main() {
     // drax the racket
     pronFillRectangle(d, w, gc, 0, racketY, RACKET_WIDTH, RACKET_HEIGHT);
 
-    //on envoie une sous image de l'image dans la fenetre
-    pronPutImage(d, w, gc, &image, x, y, width - 1, height - 1, 0, 0);
+    //xopy the pixmap into the window
+    pronCopyArea(d, p, w, gc, 0, 0, width, height, ballX, 0);
+
     usleep(10000);
   }
 
+  pronFreePixmap(d, p);
   pronDisconnect(d);
   
   return 0;
