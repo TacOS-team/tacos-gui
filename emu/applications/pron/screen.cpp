@@ -293,13 +293,17 @@ void Screen::setClipWin(Window *w) {
   }
 }
 
-bool Screen::prepareDrawing(Window *w, GC *gc) {
-  if (!w->mapped) {
-    // Can't draw in unmapped window
-    return false;
-  }
+bool Screen::prepareDrawing(Drawable *d, GC *gc) {
+  if (d->getType() == D_WINDOW) {
+    Window *w = (Window*) d;
 
-  this->setClipWin(w);
+    if (!w->mapped) {
+      // Can't draw in unmapped window
+      return false;
+    }
+
+    this->setClipWin(w);
+  }
 
   if (gc != NULL) {
     this->gc = gc;

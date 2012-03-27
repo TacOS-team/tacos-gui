@@ -42,7 +42,7 @@ public: // XXX: bourrin
   static Screen* getInstance(int width, int height, int bitsPerPixel);
   static Screen* getInstance();
   
-  bool prepareDrawing(Window *w, GC *gc = NULL);
+  bool prepareDrawing(Drawable *d, GC *gc = NULL);
 
   void drawPoint(int x, int y, bool check = true);
   void drawLine(int x1, int y1, int x2, int y2, bool check = true);

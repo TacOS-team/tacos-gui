@@ -140,55 +140,55 @@ void Client::handle() {
     }
     case RQ_DRAW_POINT: {
       RqDrawPoint *rq = (RqDrawPoint*) Client::recvBuf;
-      Window *w = (Window*) screen->getDrawable(rq->drawable);
+      Drawable *d = screen->getDrawable(rq->drawable);
       GC *gc = GC::getGC(rq->gc);
-      if (w != NULL && screen->prepareDrawing(w, gc)) {
-        w->drawPoint(rq->x, rq->y);
+      if (d != NULL && screen->prepareDrawing(d, gc)) {
+        d->drawPoint(rq->x, rq->y);
       }
       break;
     }
     case RQ_DRAW_CIRCLE: {
       RqDrawCircle *rq = (RqDrawCircle*) Client::recvBuf;
-      Window *w = (Window*) screen->getDrawable(rq->drawable);
+      Drawable *d = screen->getDrawable(rq->drawable);
       GC *gc = GC::getGC(rq->gc);
-      if (w != NULL && screen->prepareDrawing(w, gc)) {
-        w->drawCircle(rq->x, rq->y, rq->radius);
+      if (d != NULL && screen->prepareDrawing(d, gc)) {
+        d->drawCircle(rq->x, rq->y, rq->radius);
       }
       break;
     }
     case RQ_DRAW_LINE: {
       RqDrawLine *rq = (RqDrawLine*) Client::recvBuf;
-      Window *w = (Window*) screen->getDrawable(rq->drawable);
+      Drawable *d = screen->getDrawable(rq->drawable);
       GC *gc = GC::getGC(rq->gc);
-      if (w != NULL && screen->prepareDrawing(w, gc)) {
-        w->drawLine(rq->x1, rq->y1, rq->x2, rq->y2);
+      if (d != NULL && screen->prepareDrawing(d, gc)) {
+        d->drawLine(rq->x1, rq->y1, rq->x2, rq->y2);
       }
       break;
     }
     case RQ_DRAW_RECT: {
       RqDrawRect *rq = (RqDrawRect*) Client::recvBuf;
-      Window *w = (Window*) screen->getDrawable(rq->drawable);
+      Drawable *d = screen->getDrawable(rq->drawable);
       GC *gc = GC::getGC(rq->gc);
-      if (w != NULL && screen->prepareDrawing(w, gc)) {
-        w->drawRect(rq->x, rq->y, rq->width, rq->height);
+      if (d != NULL && screen->prepareDrawing(d, gc)) {
+        d->drawRect(rq->x, rq->y, rq->width, rq->height);
       }
       break;
     }
     case RQ_FILL_CIRCLE: {
       RqFillCircle *rq = (RqFillCircle*) Client::recvBuf;
-      Window *w = (Window*) screen->getDrawable(rq->drawable);
+      Drawable *d = screen->getDrawable(rq->drawable);
       GC *gc = GC::getGC(rq->gc);
-      if (w != NULL && screen->prepareDrawing(w, gc)) {
-        w->fillCircle(rq->x, rq->y, rq->radius);
+      if (d != NULL && screen->prepareDrawing(d, gc)) {
+        d->fillCircle(rq->x, rq->y, rq->radius);
       }
       break;
     }
     case RQ_FILL_RECTANGLE: {
       RqFillRectangle *rq = (RqFillRectangle*) Client::recvBuf;
-      Window *w = (Window*) screen->getDrawable(rq->drawable);
+      Drawable *d = screen->getDrawable(rq->drawable);
       GC *gc = GC::getGC(rq->gc);
-      if (w != NULL && screen->prepareDrawing(w, gc)) {
-        w->fillRectangle(rq->x, rq->y, rq->width, rq->height);
+      if (d != NULL && screen->prepareDrawing(d, gc)) {
+        d->fillRectangle(rq->x, rq->y, rq->width, rq->height);
       }
       break;
     }
