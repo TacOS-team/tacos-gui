@@ -132,7 +132,7 @@ void Client::handle() {
     }
     case RQ_CLEAR_WINDOW: {
       RqClearWindow *rq = (RqClearWindow*) Client::recvBuf;
-      Window *w = (Window*) screen->getDrawable(rq->window, D_WINDOW);
+      Window *w = (Window*) screen->getDrawable(rq->window);
       if (w != NULL && screen->prepareDrawing(w)) {
         w->clear();
       }
@@ -140,7 +140,7 @@ void Client::handle() {
     }
     case RQ_DRAW_POINT: {
       RqDrawPoint *rq = (RqDrawPoint*) Client::recvBuf;
-      Window *w = (Window*) screen->getDrawable(rq->drawable, D_WINDOW);
+      Window *w = (Window*) screen->getDrawable(rq->drawable);
       GC *gc = GC::getGC(rq->gc);
       if (w != NULL && screen->prepareDrawing(w, gc)) {
         w->drawPoint(rq->x, rq->y);
@@ -149,7 +149,7 @@ void Client::handle() {
     }
     case RQ_DRAW_CIRCLE: {
       RqDrawCircle *rq = (RqDrawCircle*) Client::recvBuf;
-      Window *w = (Window*) screen->getDrawable(rq->drawable, D_WINDOW);
+      Window *w = (Window*) screen->getDrawable(rq->drawable);
       GC *gc = GC::getGC(rq->gc);
       if (w != NULL && screen->prepareDrawing(w, gc)) {
         w->drawCircle(rq->x, rq->y, rq->radius);
@@ -158,7 +158,7 @@ void Client::handle() {
     }
     case RQ_DRAW_LINE: {
       RqDrawLine *rq = (RqDrawLine*) Client::recvBuf;
-      Window *w = (Window*) screen->getDrawable(rq->drawable, D_WINDOW);
+      Window *w = (Window*) screen->getDrawable(rq->drawable);
       GC *gc = GC::getGC(rq->gc);
       if (w != NULL && screen->prepareDrawing(w, gc)) {
         w->drawLine(rq->x1, rq->y1, rq->x2, rq->y2);
@@ -167,7 +167,7 @@ void Client::handle() {
     }
     case RQ_DRAW_RECT: {
       RqDrawRect *rq = (RqDrawRect*) Client::recvBuf;
-      Window *w = (Window*) screen->getDrawable(rq->drawable, D_WINDOW);
+      Window *w = (Window*) screen->getDrawable(rq->drawable);
       GC *gc = GC::getGC(rq->gc);
       if (w != NULL && screen->prepareDrawing(w, gc)) {
         w->drawRect(rq->x, rq->y, rq->width, rq->height);
@@ -176,7 +176,7 @@ void Client::handle() {
     }
     case RQ_FILL_CIRCLE: {
       RqFillCircle *rq = (RqFillCircle*) Client::recvBuf;
-      Window *w = (Window*) screen->getDrawable(rq->drawable, D_WINDOW);
+      Window *w = (Window*) screen->getDrawable(rq->drawable);
       GC *gc = GC::getGC(rq->gc);
       if (w != NULL && screen->prepareDrawing(w, gc)) {
         w->fillCircle(rq->x, rq->y, rq->radius);
@@ -185,7 +185,7 @@ void Client::handle() {
     }
     case RQ_FILL_RECTANGLE: {
       RqFillRectangle *rq = (RqFillRectangle*) Client::recvBuf;
-      Window *w = (Window*) screen->getDrawable(rq->drawable, D_WINDOW);
+      Window *w = (Window*) screen->getDrawable(rq->drawable);
       GC *gc = GC::getGC(rq->gc);
       if (w != NULL && screen->prepareDrawing(w, gc)) {
         w->fillRectangle(rq->x, rq->y, rq->width, rq->height);
@@ -250,7 +250,7 @@ void Client::handle() {
       // Gets the image buffer
       char *image_buf = ((char*) rq) + sizeof(RqPutImage);
       // Gets the window 
-      Window *w = (Window*) screen->getDrawable(rq->window, D_WINDOW);
+      Window *w = (Window*) screen->getDrawable(rq->window);
       if(w != NULL){
         // Create the PronImage
         PronImage image(rq->width, rq->height, rq->format, image_buf, rq->depth, rq->bytesPerPixel, false);
@@ -276,6 +276,22 @@ void Client::handle() {
       RqFreePixmap *rq = (RqFreePixmap*) Client::recvBuf;
       Pixmap *p = (Pixmap*) screen->getDrawable(rq->pixmap, D_PIXMAP);
       delete p;
+      break;
+    }
+    case RQ_COPY_AREA: {
+      RqCopyArea *rq = (RqCopyArea*) Client::recvBuf;
+      Pixmap *p = (Pixmap*) screen->getDrawable(rq->src, D_PIXMAP);
+      Pixmap *w = (Pixmap*) screen->getDrawable(rq->dest, D_WINDOW);
+      int pixel = -1; // 0xFFFFFFFF
+      if (p != NULL && w != NULL) {
+        // XXX : Bourrin à revoir (problème de depth et de byte per pixel de la pixmap et de l'écran)
+        int l, c;
+        for (l = rq->srcX; l < rq->height; l++) {
+          for (c = rq->srcY; c < rq->width; c++) {// Lol C++ noob THERE IS STILL PLACE URGENT PPI
+            w->setPixel(c + rq->destX, l + rq->destY, p->getPixel(c, l));
+          }
+        }
+      }
       break;
     }
   }

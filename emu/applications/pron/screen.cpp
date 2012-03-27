@@ -147,8 +147,6 @@ void Screen::fillRectangle(int x, int y, int width, int height, bool check) {
 
 void Screen::putImage(PronImage *image, int x, int y) {
   // We have to test if the image and the screen have the same depth
-  //printf("width & height & depth{%d, %d, %d}\n", image->height, image->width, image->depth);
-  //printf("absX & absY {%d, %d}\n", srcX + x, srcY + y);
   if(image->depth == this->bitsPerPixel){
     // Copy the image in the video memory
     for (int srcY = 0; srcY < image->height; srcY++) {
@@ -157,8 +155,6 @@ void Screen::putImage(PronImage *image, int x, int y) {
           // Computing the buffer pointers
           void *src = image->data + (srcX + srcY * image->width) * image->bytesPerPixel;
           void *dest = this->videoBuffer + ( x + y * this->width + srcX + srcY * this->width ) * image->bytesPerPixel;
-          //printf("Pointers %p, %p\n", src, dest);
-          //printf("Pixel colors {%d, %d, %d}\n", *((char*) src) & ~(0xFFFFFF00), (*((char*) src) >> 8 ) & ~(0xFFFFFF00), (*((char*) src) >> 16) & ~(0xFFFFFF00));
           memcpy(dest, src, image->bytesPerPixel);
         }
       }
@@ -217,6 +213,21 @@ void Screen::fillCircle(int cx, int cy, int radius) {
       this->drawPoint(x, cy + r - dy);
       this->drawPoint(x, cy - r + dy);
     }
+  }
+}
+
+int Screen::getPixel(int x, int y) {
+  if (this->isValid(x, y)) {
+    int ret;
+    memcpy(&ret, this->videoBuffer + (y * this->width + x) * 3, 3);
+    return ret;
+  }
+  return -1;
+}
+
+void Screen::setPixel(int x, int y, int pixel) {
+  if (this->isValid(x, y)) {
+    memcpy(this->videoBuffer + (y * this->width + x) * 3, &pixel, 3);
   }
 }
 

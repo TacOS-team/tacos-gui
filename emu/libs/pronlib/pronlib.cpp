@@ -246,3 +246,10 @@ void pronFreePixmap(Display *d, unsigned int p) {
   RqFreePixmap rq(p);
   tsock_write(d->fd, &rq, sizeof(rq));
 }
+
+void pronCopyArea(Display *d, Drawable src, Drawable dest, GC gc, 
+    int srcX, int srcY, unsigned int width, 
+    unsigned int height, int destX, int destY) {
+  RqCopyArea rq(src, dest, gc, srcX, srcY, width, height, destX, destY);
+  tsock_write(d->fd, &rq, sizeof(rq));
+}

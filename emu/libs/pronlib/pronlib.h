@@ -299,6 +299,15 @@ Pixmap pronCreatePixmap(Display *d, int width, int height, int depth);
 void pronFreePixmap(Display *d, unsigned int p);
 
 /**
+ * Copy an area from a drawable to an other one
+ * @param d The connection to pron
+ * @param d The drawable src
+ * @param d The drawable dest
+ */
+void pronCopyArea(Display *d, Drawable src, Drawable dest, GC gc, 
+  int srcX, int srcY, unsigned int width, unsigned int height, int destX, int destY);
+
+/**
  * Describes a connection to pron.
  * TODO: move to a real class and propose an object-oriented API.
  */

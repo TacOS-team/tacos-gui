@@ -42,6 +42,8 @@ public:
   void fillCircle(int x, int y, int radius);
   void clear();
   void clear(int x, int y, int width, int height);
+  int getPixel(int x, int y);
+  void setPixel(int x, int y, int pixel);
 
 private:
   // Image buffer

@@ -95,8 +95,6 @@ void Pixmap::fillRectangle(int x, int y, int width, int height){
 
 void Pixmap::putImage(PronImage *image, int x, int y){
   // We have to test if the image and the pixmap have the same depth
-  //printf("width & height & depth{%d, %d, %d}\n", image->height, image->width, image->depth);
-  //printf("absX & absY {%d, %d}\n", srcX + x, srcY + y);
   if(image->depth == PIXMAP_DEPTH){
     // Copy the image in the video memory
     for (int srcY = 0; srcY < image->height; srcY++) {
@@ -106,8 +104,6 @@ void Pixmap::putImage(PronImage *image, int x, int y){
           // Computing the buffer pointers
           void *src = image->data + (srcX + srcY * image->width) * image->bytesPerPixel;
           void *dest = this->buf + ( x + y * this->getWidth() + srcX + srcY * this->getWidth() ) * image->bytesPerPixel;
-          //printf("Pointers %p, %p\n", src, dest);
-          //printf("Pixel colors {%d, %d, %d}\n", *((char*) src) & ~(0xFFFFFF00), (*((char*) src) >> 8 ) & ~(0xFFFFFF00), (*((char*) src) >> 16) & ~(0xFFFFFF00));
           memcpy(dest, src, image->bytesPerPixel);
         }
       }
@@ -181,4 +177,19 @@ void Pixmap::clear(int x, int y, int width, int height){
 
 void Pixmap::clear(){
   this->clear(0, 0, this->getWidth(), this->getHeight());
+}
+
+int Pixmap::getPixel(int x, int y) {
+  if (x < this->getWidth() && y < this->getHeight() && x >= 0 && y >= 0) {
+    int ret = 0;
+    memcpy(&ret, this->buf + (y * this->getWidth() + x) * PIXMAP_BYTES_PER_PIXEL, PIXMAP_BYTES_PER_PIXEL);
+    return ret; 
+  }
+  return -1;
+}
+
+void Pixmap::setPixel(int x, int y, int pixel) {
+  if (x < this->getWidth() && y < this->getHeight() && x >= 0 && y >= 0) {
+    memcpy(this->buf + (y * this->getWidth() + x), &pixel, PIXMAP_BYTES_PER_PIXEL);
+  }
 }

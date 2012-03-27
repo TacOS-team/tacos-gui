@@ -64,6 +64,10 @@ public: //XXX: bourrin
 
   void clear(int x, int y, int width, int height);
 
+  int getPixel(int x, int y);
+
+  void setPixel(int x, int y, int pixel);
+
   PronWindowAttributes getAttributes();
 
   void setAttributes(PronWindowAttributes *newAttributes, unsigned int mask);

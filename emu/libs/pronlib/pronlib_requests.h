@@ -528,4 +528,35 @@ struct RqFreePixmap : public PronRequest {
   unsigned int pixmap; /**< id of Window */
 };
 
+/**
+ * Copy a rectangle from a drawable to an other one
+ */
+struct RqCopyArea : public PronRequest {
+  /** Constructor. */
+  RqCopyArea(unsigned int src, unsigned int dest, 
+      unsigned int gc, int srcX, int srcY, int width, 
+      int height, int destX, int destY)
+    : PronRequest(RQ_COPY_AREA) {
+      this->src = src;
+      this->dest = dest;
+      this->gc = gc;
+      this->srcX = srcX;
+      this->srcY = srcY;
+      this->width = width;
+      this->height = height;
+      this->destX = destX;
+      this->destY = destY;
+    }
+
+  unsigned int src; /**< id of the src drawable */
+  unsigned int dest; /**< id of the dest drawable */
+  unsigned int gc; /**< graphic context */
+  int srcX; /**< src x coordinate */
+  int srcY; /**< src y coordinate */
+  int width; /**< width to copy */
+  int height; /**< height to copy */
+  int destX; /**< dest x to copy */
+  int destY; /**< dest y to copy */
+};
+
 #endif // __PRONLIB_REQUESTS_H__

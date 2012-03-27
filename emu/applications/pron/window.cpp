@@ -179,6 +179,14 @@ PronWindowAttributes Window::getAttributes() {
   return attr;
 }
 
+int Window::getPixel(int x, int y) {
+  return this->getScreen()->getPixel(this->x + x, this->y + y);
+}
+
+void Window::setPixel(int x, int y, int pixel) {
+  this->getScreen()->setPixel(this->x + x, this->y + y, pixel);
+}
+
 void Window::setAttributes(PronWindowAttributes *newAttr, unsigned int mask) {
   if (mask & WIN_ATTR_X) {
     this->x = newAttr->x;

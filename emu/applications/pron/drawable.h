@@ -45,6 +45,8 @@ public:
   virtual void fillCircle(int x, int y, int radius) = 0;
   virtual void clear() = 0;
   virtual void clear(int x, int y, int width, int height) = 0;
+  virtual int getPixel(int x, int y) = 0;
+  virtual void setPixel(int x, int y, int pixel) = 0;
 
 private:
 

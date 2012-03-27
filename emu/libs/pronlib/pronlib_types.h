@@ -7,5 +7,7 @@ typedef unsigned int Window;
 typedef unsigned int GC;
 /** Identifier of a pixmap. */
 typedef unsigned int Pixmap;
+/** Identifier of a pixmap. */
+typedef unsigned int Drawable;
 
 #endif // __PRONLIB_TYPES_H__
