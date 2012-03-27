@@ -100,6 +100,9 @@ int main() {
   memset(image_data, -1, width * width * depth);
   PronImage image(width, height, ZPixmap, image_data, depth, bytesPerPixel);
 
+  Pixmap p = pronCreatePixmap(d, 5, 5, 24);
+  pronFreePixmap(d, p);
+
   while (1) {
 
     //On récupère un évènement

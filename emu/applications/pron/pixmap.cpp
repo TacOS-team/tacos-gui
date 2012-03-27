@@ -14,7 +14,6 @@ Pixmap::Pixmap(Screen *screen, int id, Client *creator, int width, int height, i
 }
 
 Pixmap::~Pixmap() {
-  this->getScreen()->drawables.erase(std::find(this->getScreen()->drawables.begin(), this->getScreen()->drawables.end(), (Drawable*) this));
   free(this->buf);
 }
 

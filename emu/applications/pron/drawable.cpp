@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <string.h>
+#include <algorithm>
 #include <drawable.h>
 
 Drawable::Drawable(int type, Screen *screen, int id, Client *creator, int width, int height) {
@@ -20,6 +21,7 @@ Drawable::Drawable(int type, Screen *screen, int id, Client *creator, int width,
 
 Drawable::~Drawable() {
   // Destruction
+  this->getScreen()->drawables.erase(std::find(this->getScreen()->drawables.begin(), this->getScreen()->drawables.end(), (Drawable*) this));
 }
 
 int Drawable::getType() {
