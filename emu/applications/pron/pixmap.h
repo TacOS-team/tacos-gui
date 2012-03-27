@@ -27,7 +27,7 @@ public:
   /**
   * Constructors
   */
-  Pixmap(Screen *screen, int id, Client *creator, int width, int height);
+  Pixmap(Screen *screen, int id, Client *creator, int width, int height, int depth);
   ~Pixmap();
 
   /**
@@ -46,6 +46,8 @@ public:
 private:
   // Image buffer
   char *buf;
+  // Deth of the pixmap
+  int depth;
 
   void drawHorizLine(int x, int y, int width);
   void drawVertLine(int x, int y, int height);

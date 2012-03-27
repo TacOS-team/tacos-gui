@@ -282,6 +282,23 @@ void pronPutImage(Display *d, Window w, GC gc, PronImage *image,
 void pronResizeWindow(Display *d, unsigned int w, int width, int height);
 
 /**
+ * Creates a new PixMap.
+ * @param d The connection to pron
+ * @param width The width
+ * @param height The height
+ * @param depth of the pixmap
+ * @return The pixmap id of the created pixmap
+ */
+Pixmap pronCreatePixmap(Display *d, int width, int height, int depth);
+
+/**
+ * Free a pixmap
+ * @param d The connection to pron
+ * @param p The pixmap
+ */
+void pronFreePixmap(Display *d, unsigned int p);
+
+/**
  * Describes a connection to pron.
  * TODO: move to a real class and propose an object-oriented API.
  */

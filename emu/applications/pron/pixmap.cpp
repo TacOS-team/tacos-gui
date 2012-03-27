@@ -1,12 +1,16 @@
 #include <pixmap.h>
-#include <unistd.h>
-#include <pronlib_enums.h>
-#include <string.h>
 #include <math.h>
+#include <cstdio>
+#include <string.h>
+#include <algorithm>
+#include <drawable.h>
 
-Pixmap::Pixmap(Screen *screen, int id, Client *creator, int width, int height) 
+using namespace std;
+
+Pixmap::Pixmap(Screen *screen, int id, Client *creator, int width, int height, int depth) 
     : Drawable(D_PIXMAP, screen, id, creator, width, height) {
   this->buf = (char*) malloc(PIXMAP_BYTES_PER_PIXEL * width * height);
+  this->depth = depth;
 }
 
 Pixmap::~Pixmap() {

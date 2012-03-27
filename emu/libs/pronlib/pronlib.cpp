@@ -230,3 +230,19 @@ void pronResizeWindow(Display *d, unsigned int w, int width, int height) {
   RqResizeWindow rq(w, width, height);
   tsock_write(d->fd, &rq, sizeof(rq));
 }
+
+Pixmap pronCreatePixmap(Display *d, int width, int height, int depth) {
+  if(depth == 24/* || Other available depths*/) {
+    Pixmap p = (Pixmap) d->newResourceId();
+    RqCreatePixmap rq(p, width, height, depth);
+    tsock_write(d->fd, &rq, sizeof(rq));
+
+    return p;
+  }
+  return -1;
+}
+
+void pronFreePixmap(Display *d, unsigned int p) {
+  RqFreePixmap rq(p);
+  tsock_write(d->fd, &rq, sizeof(rq));
+}

@@ -3,6 +3,8 @@
 #include <screen.h>
 #include <tsock.h>
 #include <window.h>
+#include <pixmap.h>
+#include <drawable.h>
 #include <cstdio>
 
 int Client::recvLen;
@@ -263,6 +265,17 @@ void Client::handle() {
       if (w != NULL) {
         w->resize(rq->width, rq->height);
       }
+      break;
+    }
+    case RQ_CREATE_PIXMAP: {
+      RqCreatePixmap *rq = (RqCreatePixmap*) Client::recvBuf;
+      new Pixmap(screen, rq->id, this, rq->width, rq->height, rq->depth);
+      break;
+    }
+    case RQ_FREE_PIXMAP: {
+      RqFreePixmap *rq = (RqFreePixmap*) Client::recvBuf;
+      Pixmap *p = (Pixmap*) screen->getDrawable(rq->pixmap, D_PIXMAP);
+      delete p;
       break;
     }
   }

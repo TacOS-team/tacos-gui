@@ -55,7 +55,8 @@ public: // XXX: bourrin
   void putImage(PronImage *image, int x, int y);
 
   Drawable* getDrawable(unsigned int id, int drawableType);
-  void addWindow(Window *w);
+  Drawable* getDrawable(unsigned int id);
+  void addDrawable(Drawable *d);
 
   Window* getClipWin();
   void setClipWin(Window *w);

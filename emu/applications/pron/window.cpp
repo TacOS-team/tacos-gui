@@ -42,9 +42,6 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
       this->parent->lastChild = this;
     }
   }
-
-  // Add the new window to the screen's list of windows
-  this->getScreen()->addWindow(this);
   
   if (this->parent != NULL) {
     // Send an event notifiying the window creation
@@ -55,8 +52,6 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
 
 // Destructor : delete all of the childs
 Window::~Window() {
-  this->getScreen()->drawables.erase(std::find(this->getScreen()->drawables.begin(), this->getScreen()->drawables.end(), this));
-
   for (Window *child = this->firstChild, *nextChild; child != NULL; child = nextChild) {
     nextChild = child->nextSibling;
     delete child;

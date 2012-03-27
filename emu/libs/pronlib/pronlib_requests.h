@@ -495,4 +495,37 @@ struct RqResizeWindow : public PronRequest {
   int height;
 };
 
+/**
+ * Create a pixmap
+ */
+struct RqCreatePixmap : public PronRequest {
+  /** Constructor. */
+  RqCreatePixmap(unsigned int id, int width, int height, int depth)
+    : PronRequest(RQ_CREATE_PIXMAP) {
+      this->id = id;
+      this->width = width;
+      this->height = height;
+      this->depth = depth;
+    }
+
+  unsigned  int id; /**< id of the pixmap to create */
+  int width; /**< width of the pixmap */
+  int height; /**< height of the pixmap */
+  int depth; /**< depth of the pixmap */
+};
+
+/**
+ * Destroy a pixmap
+ * Sent by a client to free a pixmap
+ */
+struct RqFreePixmap : public PronRequest {
+  /** Constructor. */
+  RqFreePixmap(unsigned int pixmap)
+      : PronRequest(RQ_FREE_PIXMAP) {
+    this->pixmap    = pixmap;
+  }
+
+  unsigned int pixmap; /**< id of Window */
+};
+
 #endif // __PRONLIB_REQUESTS_H__
