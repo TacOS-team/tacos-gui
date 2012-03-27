@@ -4,9 +4,10 @@
 #include <string.h>
 #include <math.h>
 
-Pixmap::Pixmap(Screen *screen, int id, Client *creator, int width, int height) 
+Pixmap::Pixmap(Screen *screen, int id, Client *creator, int width, int height, int depth) 
     : Drawable(D_PIXMAP, screen, id, creator, width, height) {
   this->buf = (char*) malloc(PIXMAP_BYTES_PER_PIXEL * width * height);
+  this->depth = depth;
 }
 
 Pixmap::~Pixmap() {

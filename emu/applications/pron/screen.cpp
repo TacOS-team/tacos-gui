@@ -229,6 +229,15 @@ Drawable* Screen::getDrawable(unsigned int id, int drawableType) {
   return NULL;
 }
 
+Drawable* Screen::getDrawable(unsigned int id) {
+  for (unsigned int i = 0; i < this->drawables.size(); i++) {
+    if (drawables[i]->getId() == id) {
+      return drawables[i];
+    }
+  }
+  return NULL;
+}
+
 void Screen::addWindow(Window *w) {
   this->drawables.push_back(w);
 }
