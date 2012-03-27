@@ -56,7 +56,7 @@ public: // XXX: bourrin
 
   Drawable* getDrawable(unsigned int id, int drawableType);
   Drawable* getDrawable(unsigned int id);
-  void addWindow(Window *w);
+  void addDrawable(Drawable *d);
 
   Window* getClipWin();
   void setClipWin(Window *w);

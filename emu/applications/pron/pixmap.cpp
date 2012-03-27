@@ -1,8 +1,11 @@
 #include <pixmap.h>
-#include <unistd.h>
-#include <pronlib_enums.h>
-#include <string.h>
 #include <math.h>
+#include <cstdio>
+#include <string.h>
+#include <algorithm>
+#include <drawable.h>
+
+using namespace std;
 
 Pixmap::Pixmap(Screen *screen, int id, Client *creator, int width, int height, int depth) 
     : Drawable(D_PIXMAP, screen, id, creator, width, height) {
@@ -11,6 +14,7 @@ Pixmap::Pixmap(Screen *screen, int id, Client *creator, int width, int height, i
 }
 
 Pixmap::~Pixmap() {
+  this->getScreen()->drawables.erase(std::find(this->getScreen()->drawables.begin(), this->getScreen()->drawables.end(), (Drawable*) this));
   free(this->buf);
 }
 

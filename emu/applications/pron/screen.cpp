@@ -238,8 +238,8 @@ Drawable* Screen::getDrawable(unsigned int id) {
   return NULL;
 }
 
-void Screen::addWindow(Window *w) {
-  this->drawables.push_back(w);
+void Screen::addDrawable(Drawable *d) {
+  this->drawables.push_back(d);
 }
 
 Window* Screen::getMouseWin() {

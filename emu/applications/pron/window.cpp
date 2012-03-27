@@ -42,9 +42,6 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
       this->parent->lastChild = this;
     }
   }
-
-  // Add the new window to the screen's list of windows
-  this->getScreen()->addWindow(this);
   
   if (this->parent != NULL) {
     // Send an event notifiying the window creation

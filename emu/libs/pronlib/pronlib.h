@@ -289,7 +289,7 @@ void pronResizeWindow(Display *d, unsigned int w, int width, int height);
  * @param depth of the pixmap
  * @return The pixmap id of the created pixmap
  */
-Pixmap pronCreatePixMap(Display *d, int width, int height, int depth);
+Pixmap pronCreatePixmap(Display *d, int width, int height, int depth);
 
 /**
  * Free a pixmap

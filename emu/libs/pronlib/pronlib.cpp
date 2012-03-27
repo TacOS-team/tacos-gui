@@ -231,7 +231,7 @@ void pronResizeWindow(Display *d, unsigned int w, int width, int height) {
   tsock_write(d->fd, &rq, sizeof(rq));
 }
 
-Pixmap pronCreatePixMap(Display *d, int width, int height, int depth) {
+Pixmap pronCreatePixmap(Display *d, int width, int height, int depth) {
   if(depth == 24/* || Other available depths*/) {
     Pixmap p = (Pixmap) d->newResourceId();
     RqCreatePixmap rq(p, width, height, depth);

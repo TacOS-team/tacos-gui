@@ -13,6 +13,9 @@ Drawable::Drawable(int type, Screen *screen, int id, Client *creator, int width,
   this->creator = creator;
   this->width = width;
   this->height = height;
+
+  // Add the new drawable to the screen's list of drawables
+  screen->addDrawable(this);
 }
 
 Drawable::~Drawable() {
