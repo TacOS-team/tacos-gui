@@ -190,6 +190,6 @@ int Pixmap::getPixel(int x, int y) {
 
 void Pixmap::setPixel(int x, int y, int pixel) {
   if (x < this->getWidth() && y < this->getHeight() && x >= 0 && y >= 0) {
-    memcpy(this->buf + (y * this->getWidth() + x), &pixel, PIXMAP_BYTES_PER_PIXEL);
+    memcpy(this->buf + (y * this->getWidth() + x) * PIXMAP_BYTES_PER_PIXEL, &pixel, PIXMAP_BYTES_PER_PIXEL);
   }
 }

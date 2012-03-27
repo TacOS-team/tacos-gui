@@ -14,7 +14,7 @@
 #define PIXMAP_DRAW_POINT(X, Y) \
     if ((X) < this->getWidth() && (Y) < this->getHeight() && \
         (X) >= 0 && (Y) >= 0) { \
-      memcpy(this->buf + (Y) * this->getWidth() + (X) * PIXMAP_BYTES_PER_PIXEL, \
+      memcpy(this->buf + ((Y) * this->getWidth() + (X) )* PIXMAP_BYTES_PER_PIXEL, \
           &COLOR(this->getScreen()->getGC()->fg, PIXMAP_DEPTH), \
           sizeof(COLOR(this->getScreen()->getGC()->fg, PIXMAP_DEPTH))); \
     }
