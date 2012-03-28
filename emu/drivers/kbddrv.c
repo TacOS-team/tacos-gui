@@ -1,4 +1,6 @@
 #include <kbddrv.h>
+#include <stdio.h>
+#include <string.h>
 #include <SDL/SDL_mutex.h>
 
 extern SDL_mutex *mutex;
