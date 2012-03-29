@@ -20,6 +20,7 @@ WindowsTree::Iterator WindowsTree::begin() {
   WindowsTree::Iterator it(this->root);
   return it;
 }
+
 WindowsTree::Iterator WindowsTree::begin(Window * root) {
   WindowsTree::Iterator it(root);
   return it;
@@ -36,10 +37,10 @@ WindowsTree::Iterator WindowsTree::end() {
 
 /* WindowsTree::Iterator methods */
 
-WindowsTree::Iterator::Iterator(Window * win) {
-  this->currentWindow = this->root = win;
-  if (win != END_OF_TREE && win->firstChild != NULL) {
-    this->winQueue.push(win->firstChild); 
+WindowsTree::Iterator::Iterator(Window * localRoot) {
+  this->currentWindow = this->localRoot = localRoot;
+  if (this->localRoot != END_OF_TREE && this->localRoot->firstChild != NULL) {
+    this->winQueue.push(this->localRoot->firstChild); 
   }
 }
 
@@ -50,10 +51,10 @@ WindowsTree::Iterator WindowsTree::Iterator::operator++() {
 WindowsTree::Iterator WindowsTree::Iterator::operator++(int junk) {
   /* 
   Breadth First Search algorithm
-  We only push the first child because we can access all the other childs by using nextSibling.
+  We only push the first child of a window because we can access all the other childs by using nextSibling.
   */
   // Go right while you can
-   if (this->currentWindow->nextSibling != NULL) { 
+   if (this->currentWindow != this->localRoot && this->currentWindow->nextSibling != NULL) { 
     this->currentWindow = this->currentWindow->nextSibling;
   } else {
     if (!this->winQueue.empty()) {

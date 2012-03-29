@@ -12,22 +12,27 @@ class WindowsTree {
     class Iterator {
       public:
       Iterator(Window * win);
-      // pre incrementation
-        Iterator operator++(); 
+      // pre incrementation 
+      // TODO : implement this
+      Iterator operator++(); 
       // post incrementation
       Iterator operator++(int junk);
 
+      // Returns *(this->currentWindow)
       Window & operator*();
 
+      // Returns *(this->currentWindow)
       Window * operator->();
 
+      // Compares currentWindows attributes
       bool operator==(Iterator it);
 
+      // Compares currentWindows attributes
       bool operator!=(Iterator it);
 
       private:
-      Window * root; // The window from where we start discovering the tree
-      Window * currentWindow; // The window that will be return by *iterator
+      Window * localRoot; // The window from where we start discovering the tree (by default : the root of the windowsTree)
+      Window * currentWindow; // The window that will be return by a call to *iterator
       queue<Window *> winQueue; // The queue of the windows not yet covered (actually we only save the first child of their parent)
     };
 
@@ -41,7 +46,7 @@ class WindowsTree {
     Iterator end();
 
   private:
-    Window * root;
+    Window * root; // Root of the windowsTree
 
 };
 
