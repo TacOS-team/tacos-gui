@@ -1,4 +1,5 @@
 #include <windowsTree.h>
+#include <cstdio>
 
 /* WindowsTree methods */
 
@@ -19,16 +20,14 @@ WindowsTree::Iterator WindowsTree::begin() {
   WindowsTree::Iterator it(this->root);
   return it;
 }
+WindowsTree::Iterator WindowsTree::begin(Window * root) {
+  WindowsTree::Iterator it(root);
+  return it;
+}
 
 WindowsTree::Iterator WindowsTree::end() {
-  
-  Window * win = this->root;
-  while (win->lastChild != NULL) {
-    win = win->lastChild;
-  }
+  Window * win = END_OF_TREE;
   WindowsTree::Iterator it(win);
-  
-
   return it;
 }   
 
@@ -38,7 +37,10 @@ WindowsTree::Iterator WindowsTree::end() {
 /* WindowsTree::Iterator methods */
 
 WindowsTree::Iterator::Iterator(Window * win) {
-  this->currentWindow = win;
+  this->currentWindow = this->root = win;
+  if (win != END_OF_TREE && win->firstChild != NULL) {
+    this->winQueue.push(win->firstChild); 
+  }
 }
 
 WindowsTree::Iterator WindowsTree::Iterator::operator++() {
@@ -46,28 +48,28 @@ WindowsTree::Iterator WindowsTree::Iterator::operator++() {
 }
 
 WindowsTree::Iterator WindowsTree::Iterator::operator++(int junk) {
-  // We go to the right of the tree as long as we can
-  if (this->currentWindow->nextSibling != NULL) {
+  /* 
+  Breadth First Search algorithm
+  We only push the first child because we can access all the other childs by using nextSibling.
+  */
+  // Go right while you can
+   if (this->currentWindow->nextSibling != NULL) { 
     this->currentWindow = this->currentWindow->nextSibling;
-  } else { // If we can't go right, then we have to go to the next level of the tree
-    if (this->currentWindow->parent == NULL) { // We are the root window, just go to first child
-      this->currentWindow = this->currentWindow->firstChild;
-    } else {
-      // We return to the first child of the parent of currentWindow
-      this->currentWindow = this->currentWindow->parent->firstChild;
-      // and then we continue to the first window we encounter at the next level of the tree
-      while (this->currentWindow->firstChild != NULL && this->currentWindow->nextSibling != NULL) {
-        this->currentWindow = this->currentWindow->nextSibling;
-      }
-      // We're still not sure the current window actually has a child...
-      if (this->currentWindow->firstChild != NULL) {
-        this->currentWindow = this->currentWindow->firstChild;
-      }
+  } else {
+    if (!this->winQueue.empty()) {
+      this->currentWindow = this->winQueue.front();
+      this->winQueue.pop();
+    } else { 
+      // here we're finished
+      this->currentWindow = END_OF_TREE;
     }
+  }
+  // Pushing the first child
+  if (this->currentWindow != END_OF_TREE && this->currentWindow->firstChild != NULL) {
+      this->winQueue.push(this->currentWindow->firstChild);
   }
   return *this;
 }
-
 
 Window & WindowsTree::Iterator::operator*() {
   return *(this->currentWindow);

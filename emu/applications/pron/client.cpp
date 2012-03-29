@@ -40,6 +40,7 @@ void Client::handle() {
     case RQ_CREATE_WINDOW: {
       RqCreateWindow *rq = (RqCreateWindow*) Client::recvBuf;
       new Window(screen, rq->id, this, (Window*) screen->getDrawable(rq->parent, D_WINDOW), rq->x, rq->y, rq->width, rq->height);
+      //printf("Adding %d\n",rq->id);
       //screen->traceWindows();
       break;
     }
