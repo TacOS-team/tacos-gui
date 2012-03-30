@@ -259,7 +259,8 @@ void Window::deliverDeviceEvent(PronEvent *e, unsigned int size) {
 }
 
 void Window::raise() {
-  if (this->parent->lastChild == this) {
+  // Do nothing if we are the root window or already the last child of our parent
+  if (this->parent == NULL || this->parent->lastChild == this) {
     return;
   }
 
