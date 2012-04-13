@@ -14,6 +14,10 @@ class GWindowsManager {
   Window rootWindow;
   PronWindowAttributes rootWindowAttributes;
 
+  int currentInitXPosition;
+  int currentInitYPosition;
+  int positionTranslation;
+
   bool overlaps(GWindow *gw);
 
   static GWindowsManager *instance;
@@ -31,6 +35,7 @@ class GWindowsManager {
 
   void destroy(Window w);
 
+  bool findFreeSpace(int & x, int & y, int width, int height);
   void initWindowPosition(GWindow *gw);
 
   bool empty();
