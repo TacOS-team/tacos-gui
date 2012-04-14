@@ -327,11 +327,11 @@ void traceWindowsRec(Window *w, string prefix) {
 }
 
 void Screen::traceWindows() {
-  //traceWindowsRec(this->tree->getRoot(), "");
-  printf("TraceWindow : ");
+  traceWindowsRec(this->tree->getRoot(), "");
+  /*printf("TraceWindow : ");
   for (WindowsTree::Iterator it = tree->begin() ; it != tree->end(); it++) {
     printf("%d ", it->getId());
-  }
+  }*/
   printf("\n");
 }
 

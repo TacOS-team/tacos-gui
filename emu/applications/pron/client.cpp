@@ -39,9 +39,10 @@ void Client::handle() {
     }
     case RQ_CREATE_WINDOW: {
       RqCreateWindow *rq = (RqCreateWindow*) Client::recvBuf;
-      new Window(screen, rq->id, this, (Window*) screen->getDrawable(rq->parent, D_WINDOW), rq->x, rq->y, rq->width, rq->height);
+      new Window(screen, rq->id, this, (Window*) screen->getDrawable(rq->parent, D_WINDOW),
+        rq->x, rq->y, rq->width, rq->height);
       //printf("Adding %d\n",rq->id);
-      //screen->traceWindows();
+      screen->traceWindows();
       break;
     }
     case RQ_MAP_WINDOW: {
@@ -199,12 +200,13 @@ void Client::handle() {
       if (w != NULL) {
         w->reparent((Window*) screen->getDrawable(rq->newParent, D_WINDOW));
         screen->setClipWin(NULL);
-        //screen->traceWindows();
+        screen->traceWindows();
       }
       break;
     }
     case RQ_DESTROY_WINDOW: {
       // XXX: move this outside client.cpp
+      screen->traceWindows();
       RqDestroyWindow *rq = (RqDestroyWindow*) Client::recvBuf;
       Window *w = (Window*) screen->getDrawable(rq->window, D_WINDOW);
       if (w != NULL) {
@@ -222,8 +224,10 @@ void Client::handle() {
                     && currentWindow != w->parent) {
               currentWindow = currentWindow->parent;
             }
-            if (currentWindow->parent != NULL) {
+            if (currentWindow->parent != NULL && currentWindow->parent->nextSibling != w->nextSibling) {
               currentWindow = currentWindow->parent->nextSibling;
+            } else {
+              currentWindow = NULL;
             }
           }
         }
