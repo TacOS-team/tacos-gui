@@ -89,26 +89,26 @@ void add(vector<freeSpace> & spaces, vector<freeSpace> & oldSpaces, freeSpace sp
   bool covered = false;
   vector<freeSpace>::iterator it;
   for ( it = spaces.begin() ; it < spaces.end(); ) {
-    printf("\t\t\t\ttest ("); space.print(); printf(") par ("); it->print(); printf(")\n");
+    //printf("\t\t\t\ttest ("); space.print(); printf(") par ("); it->print(); printf(")\n");
     if (space.isRecoveredBy(*it)) {
       covered = true;
-      printf("\t\t\tcovered\n");
+      //printf("\t\t\tcovered\n");
       break;
     } else if (it->isRecoveredBy(space)) {
-      printf("\t\t\tcovers\n");
+      //printf("\t\t\tcovers\n");
       spaces.erase(it);
     } else {
       ++it;
     }
   }
   for ( it = oldSpaces.begin() ; it < oldSpaces.end(); ) {
-    printf("\t\t\t\ttest ("); space.print(); printf(") par ("); it->print(); printf(")\n");
+    //printf("\t\t\t\ttest ("); space.print(); printf(") par ("); it->print(); printf(")\n");
     if (space.isRecoveredBy(*it)) {
       covered = true;
-      printf("\t\t\tcovered\n");
+      //printf("\t\t\tcovered\n");
       break;
     } else if (it->isRecoveredBy(space)) {
-      printf("\t\t\tcovers\n");
+      //printf("\t\t\tcovers\n");
       oldSpaces.erase(it);
     } else {
       ++it;
@@ -117,11 +117,11 @@ void add(vector<freeSpace> & spaces, vector<freeSpace> & oldSpaces, freeSpace sp
   if (!covered) {
     spaces.push_back(space);
   }
-  for (size_t i = 0; i < spaces.size(); ++i) {
+  /*for (size_t i = 0; i < spaces.size(); ++i) {
     printf("\t\tRes final %d (%d, %d, %d, %d)\n",
       (int)i,
       spaces[i].x, spaces[i].y, spaces[i].width, spaces[i].height);
-  }
+  }*/
 }
 
 bool GWindowsManager::findFreeSpace(int & x, int & y, int width, int height) {
@@ -144,19 +144,15 @@ bool GWindowsManager::findFreeSpace(int & x, int & y, int width, int height) {
   for (size_t i = 0; i < this->windowsList.size(); ++i) {
     oldSpaces = newSpaces;
     sort(oldSpaces.begin(), oldSpaces.end());
-    for (size_t j = 0; j < newSpaces.size(); ++j) {
-      printf ("   old spaces sorted %d (x, y, width, height) : %d, %d, %d, %d\n",
-        (int)j, newSpaces[j].x, newSpaces[j].y, newSpaces[j].width, newSpaces[j].height);
-    }
     newSpaces.clear();
     GWindow * gw = this->windowsList[i];
-    printf("Nouvelle Window (x, y, width, height) : %d, %d, %d, %d\n",
-      gw->parentAttributes.x, gw->parentAttributes.y, gw->parentAttributes.width, gw->parentAttributes.height);
+    /*printf("Nouvelle Window (x, y, width, height) : %d, %d, %d, %d\n",
+      gw->parentAttributes.x, gw->parentAttributes.y, gw->parentAttributes.width, gw->parentAttributes.height);*/
     while (!oldSpaces.empty())
     {
       current = oldSpaces.front();
       oldSpaces.erase(oldSpaces.begin());
-      printf("Nouvel espace (x,y,width, height) : "); current.print(); printf("\n");
+      //printf("Nouvel espace (x,y,width, height) : "); current.print(); printf("\n");
       bool isCut = false;
       // Coupure du haut (y of the window in the vertical space)
       // Et point HG à droite du coté gauche et point HD à gauche du cté droit
@@ -165,9 +161,9 @@ bool GWindowsManager::findFreeSpace(int & x, int & y, int width, int height) {
           && current.x + current.width > gw->parentAttributes.x) {
         freeSpace newSpace = current;
         newSpace.height = gw->parentAttributes.y - current.y;
-        printf("\tCoupure en haut faite (x,y,width, height) : "); newSpace.print(); printf("\n");
+        //printf("\tCoupure en haut faite (x,y,width, height) : "); newSpace.print(); printf("\n");
         if (newSpace.height >= height && newSpace.width >= width) {
-          printf("\tCoupure valide !!!!!!!!!!!!!!\n");
+          //printf("\tCoupure valide !!!!!!!!!!!!!!\n");
           add(newSpaces, oldSpaces, newSpace);
         }
         isCut = true;
@@ -179,9 +175,9 @@ bool GWindowsManager::findFreeSpace(int & x, int & y, int width, int height) {
           && current.y < gw->parentAttributes.y + gw->parentAttributes.height) {
         freeSpace newSpace = current;
         newSpace.width = gw->parentAttributes.x - current.x;
-        printf("\tCoupure à gauche faite (x,y,width, height) : "); newSpace.print(); printf("\n");
+        //printf("\tCoupure à gauche faite (x,y,width, height) : "); newSpace.print(); printf("\n");
         if (newSpace.height >= height && newSpace.width >= width) {
-          printf("\tCoupure valide !!!!!!!!!!!!!!\n");
+          //printf("\tCoupure valide !!!!!!!!!!!!!!\n");
           add(newSpaces, oldSpaces, newSpace);
         }
         isCut = true;
@@ -195,9 +191,9 @@ bool GWindowsManager::findFreeSpace(int & x, int & y, int width, int height) {
         freeSpace newSpace = current;
         newSpace.x = gw->parentAttributes.x + gw->parentAttributes.width;
         newSpace.width = current.x + current.width - newSpace.x;
-        printf("\tCoupure à droite faite (x,y,width, height) : "); newSpace.print(); printf("\n");
+        //printf("\tCoupure à droite faite (x,y,width, height) : "); newSpace.print(); printf("\n");
         if (newSpace.height >= height && newSpace.width >= width) {
-          printf("\tCoupure valide !!!!!!!!!!!!!!\n");
+          //printf("\tCoupure valide !!!!!!!!!!!!!!\n");
           add(newSpaces, oldSpaces, newSpace);
         }
         isCut = true;
@@ -211,9 +207,9 @@ bool GWindowsManager::findFreeSpace(int & x, int & y, int width, int height) {
         freeSpace newSpace = current;
         newSpace.y = gw->parentAttributes.y + gw->parentAttributes.height;
         newSpace.height = current.y + current.height - newSpace.y;
-        printf("\tCoupure en bas faite (x,y,width, height) : "); newSpace.print(); printf("\n");
+        //printf("\tCoupure en bas faite (x,y,width, height) : "); newSpace.print(); printf("\n");
         if (newSpace.height >= height && newSpace.width >= width) {
-          printf("\tCoupure valide !!!!!!!!!!!!!!\n");
+          //printf("\tCoupure valide !!!!!!!!!!!!!!\n");
           add(newSpaces, oldSpaces, newSpace);
         }
         isCut = true;
@@ -224,17 +220,17 @@ bool GWindowsManager::findFreeSpace(int & x, int & y, int width, int height) {
     }
   }
   sort(newSpaces.begin(), newSpaces.end());
-  printf("\n");
+  /*printf("\n");
   for (size_t i = 0; i < newSpaces.size(); ++i) {
     printf ("debug space %d (x, y, width, height) : %d, %d, %d, %d\n",
       (int)i, newSpaces[i].x, newSpaces[i].y, newSpaces[i].width, newSpaces[i].height);
-  }
+  }*/
   if (!newSpaces.empty())
   {
     freeSpace res = newSpaces.front();
     x = res.x;
     y = res.y;
-    printf("Position trouvée : %d, %d\n", x, y);
+    //printf("Position trouvée : %d, %d\n", x, y);
     return true;
   } else {
     // The height stands at the current y position
@@ -256,7 +252,7 @@ bool GWindowsManager::findFreeSpace(int & x, int & y, int width, int height) {
     x = this->currentInitXPosition;
     y = this->currentInitYPosition;
     this->currentInitYPosition += this->positionTranslation;
-    printf("PAS de position libre trouvée\n");
+    //printf("PAS de position libre trouvée\n");
     return false;
   }
 }
