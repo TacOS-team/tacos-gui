@@ -16,39 +16,53 @@ void WindowsTree::setRoot(Window * newRoot) {
 }
 
 
-WindowsTree::Iterator WindowsTree::begin() {
-  WindowsTree::Iterator it(this->root);
+WindowsTree::IteratorBFS WindowsTree::beginBFS() {
+  WindowsTree::IteratorBFS it(this->root);
   return it;
 }
 
-WindowsTree::Iterator WindowsTree::begin(Window * root) {
-  WindowsTree::Iterator it(root);
+WindowsTree::IteratorBFS WindowsTree::beginBFS(Window * root) {
+  WindowsTree::IteratorBFS it(root);
   return it;
 }
 
-WindowsTree::Iterator WindowsTree::end() {
+WindowsTree::IteratorBFS WindowsTree::endBFS() {
   Window * win = END_OF_TREE;
-  WindowsTree::Iterator it(win);
+  WindowsTree::IteratorBFS it(win);
   return it;
 }   
 
+WindowsTree::IteratorDFS WindowsTree::beginDFS() {
+  WindowsTree::IteratorDFS it(this->root);
+  return it;
+}
+
+WindowsTree::IteratorDFS WindowsTree::beginDFS(Window * root) {
+  WindowsTree::IteratorDFS it(root);
+  return it;
+}
+
+WindowsTree::IteratorDFS WindowsTree::endDFS() {
+  Window * win = END_OF_TREE;
+  WindowsTree::IteratorDFS it(win);
+  return it;
+}  
 
 
+/* WindowsTree::IteratorBFS methods */
 
-/* WindowsTree::Iterator methods */
-
-WindowsTree::Iterator::Iterator(Window * localRoot) {
+WindowsTree::IteratorBFS::IteratorBFS(Window * localRoot) {
   this->currentWindow = this->localRoot = localRoot;
   if (this->localRoot != END_OF_TREE && this->localRoot->firstChild != NULL) {
     this->winQueue.push(this->localRoot->firstChild); 
   }
 }
 
-WindowsTree::Iterator WindowsTree::Iterator::operator++() {
+WindowsTree::IteratorBFS WindowsTree::IteratorBFS::operator++() {
   return *this;
 }
 
-WindowsTree::Iterator WindowsTree::Iterator::operator++(int junk) {
+WindowsTree::IteratorBFS WindowsTree::IteratorBFS::operator++(int junk) {
   /* 
   Breadth First Search algorithm
   We only push the first child of a window because we can access all the other childs by using nextSibling.
@@ -72,18 +86,71 @@ WindowsTree::Iterator WindowsTree::Iterator::operator++(int junk) {
   return *this;
 }
 
-Window & WindowsTree::Iterator::operator*() {
+Window & WindowsTree::IteratorBFS::operator*() {
   return *(this->currentWindow);
 }
 
-Window * WindowsTree::Iterator::operator->() {
+Window * WindowsTree::IteratorBFS::operator->() {
   return (this->currentWindow);
 }
 
-bool WindowsTree::Iterator::operator==(Iterator it) {
+bool WindowsTree::IteratorBFS::operator==(IteratorBFS it) {
   return (it.currentWindow == this->currentWindow);
 }
 
-bool WindowsTree::Iterator::operator!=(Iterator it) {
+bool WindowsTree::IteratorBFS::operator!=(IteratorBFS it) {
+  return (it.currentWindow != this->currentWindow);
+}
+
+
+
+
+/* WindowsTree::IteratorDFS methods */
+
+WindowsTree::IteratorDFS::IteratorDFS(Window * localRoot) {
+  this->currentWindow = this->localRoot = localRoot;
+}
+
+WindowsTree::IteratorDFS WindowsTree::IteratorDFS::operator++() {
+  return *this;
+}
+
+WindowsTree::IteratorDFS WindowsTree::IteratorDFS::operator++(int junk) {
+  /* Depth first Search algorithm */
+
+  // go down the tree while you can
+  if (this->currentWindow->firstChild != NULL) {
+    this->currentWindow = this->currentWindow->firstChild;
+  } 
+  else if (this->currentWindow->nextSibling != NULL ) { // then try to go right
+    this->currentWindow = this->currentWindow->nextSibling;
+  } else { // else try to find the next sibling of one of your parent
+    while (this->currentWindow != localRoot) {
+      this->currentWindow = this->currentWindow->parent;
+      if (this->currentWindow->nextSibling != NULL) {
+        this->currentWindow= this->currentWindow->nextSibling;
+        break;
+      }
+    }
+    if (this->currentWindow == this->localRoot) {
+      this->currentWindow = END_OF_TREE;
+    }
+  }
+  return *this;
+}
+
+Window & WindowsTree::IteratorDFS::operator*() {
+  return *(this->currentWindow);
+}
+
+Window * WindowsTree::IteratorDFS::operator->() {
+  return (this->currentWindow);
+}
+
+bool WindowsTree::IteratorDFS::operator==(IteratorDFS it) {
+  return (it.currentWindow == this->currentWindow);
+}
+
+bool WindowsTree::IteratorDFS::operator!=(IteratorDFS it) {
   return (it.currentWindow != this->currentWindow);
 }

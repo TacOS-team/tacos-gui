@@ -9,14 +9,14 @@ using namespace std;
 
 class WindowsTree {
   public:
-    class Iterator {
+    class IteratorBFS {
       public:
-      Iterator(Window * win);
+      IteratorBFS(Window * win);
       // pre incrementation 
       // TODO : implement this
-      Iterator operator++(); 
+      IteratorBFS operator++(); 
       // post incrementation
-      Iterator operator++(int junk);
+      IteratorBFS operator++(int junk);
 
       // Returns *(this->currentWindow)
       Window & operator*();
@@ -25,25 +25,56 @@ class WindowsTree {
       Window * operator->();
 
       // Compares currentWindows attributes
-      bool operator==(Iterator it);
+      bool operator==(IteratorBFS it);
 
       // Compares currentWindows attributes
-      bool operator!=(Iterator it);
+      bool operator!=(IteratorBFS it);
 
       private:
       Window * localRoot; // The window from where we start discovering the tree (by default : the root of the windowsTree)
-      Window * currentWindow; // The window that will be return by a call to *iterator
+      Window * currentWindow; // The window that will be return by a call to *Iterator
       queue<Window *> winQueue; // The queue of the windows not yet covered (actually we only save the first child of their parent)
     };
+
+    class IteratorDFS {
+      public:
+      IteratorDFS(Window * win);
+      // pre incrementation 
+      // TODO : implement this
+      IteratorDFS operator++(); 
+      // post incrementation
+      IteratorDFS operator++(int junk);
+
+      // Returns *(this->currentWindow)
+      Window & operator*();
+
+      // Returns *(this->currentWindow)
+      Window * operator->();
+
+      // Compares currentWindows attributes
+      bool operator==(IteratorDFS it);
+
+      // Compares currentWindows attributes
+      bool operator!=(IteratorDFS it);
+
+      private:
+      Window * localRoot; // The window from where we start discovering the tree (by default : the root of the windowsTree)
+      Window * currentWindow; // The window that will be return by a call to *Iterator
+    };
+
 
     WindowsTree ();
 
     Window * getRoot();
     void setRoot(Window * newRoot);
 
-    Iterator begin();
-    Iterator begin(Window * root);
-    Iterator end();
+    IteratorBFS beginBFS();
+    IteratorBFS beginBFS(Window * root);
+    IteratorBFS endBFS();
+
+    IteratorDFS beginDFS();
+    IteratorDFS beginDFS(Window * root);
+    IteratorDFS endDFS();
 
   private:
     Window * root; // Root of the windowsTree
