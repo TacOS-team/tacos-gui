@@ -33,6 +33,7 @@ public: //XXX: bourrin
   int dontPropagateMask;
   vector<OtherClient> otherClients;
   bool mapped;
+  bool isResizable;
 
   Window *parent;
   Window *prevSibling, *nextSibling;

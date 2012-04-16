@@ -62,11 +62,12 @@ enum MessageType {
 
 /** Pron window attributes fields for mask on get/set attributes */
 enum WindowAttributeField {
-  WIN_ATTR_X        = (1 << 0), 
-  WIN_ATTR_Y        = (1 << 1), 
-  WIN_ATTR_WIDTH    = (1 << 2), 
-  WIN_ATTR_HEIGHT   = (1 << 3),
-  WIN_ATTR_BG_COLOR = (1 << 4),
+  WIN_ATTR_X            = (1 << 0), 
+  WIN_ATTR_Y            = (1 << 1), 
+  WIN_ATTR_WIDTH        = (1 << 2), 
+  WIN_ATTR_HEIGHT       = (1 << 3),
+  WIN_ATTR_BG_COLOR     = (1 << 4),
+  WIN_ATTR_IS_RESIZABLE = (1 << 5),
 };
 
 /** Pron GC values fields for mask on get/set values */

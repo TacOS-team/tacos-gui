@@ -59,9 +59,9 @@ void PronSelect() {
   PronAcceptClient();
 
   // Handle requests from clients
-  printf("clients list : ");
+  //printf("clients list : ");
   for (unsigned int client = 0; client < clients.size(); client++) {
-    printf("%d ",clients[client]->fd);
+    //printf("%d ",clients[client]->fd);
     // check if client has sent a destroy request
     if (clients[client]->fd == -1) {
       delete clients[client];
@@ -71,7 +71,7 @@ void PronSelect() {
       clients[client]->handle();
     }
   }
-  printf("\n");
+  //printf("\n");
   
   // Read from devices
   mouse->checkEvents();

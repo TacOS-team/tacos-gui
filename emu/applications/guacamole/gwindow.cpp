@@ -247,7 +247,7 @@ void GWindow::decorate() {
 
 
 void GWindow::resize(int width, int height) {
-  if (!this->isMaximised) {
+  if (!this->isMaximised && this->attributes.isResizable){
     pronResizeWindow(display, this->parent, width, height);
     pronMoveWindow(display, this->closeButton,
       width - this->parentAttributes.width, 0);
@@ -277,23 +277,25 @@ void GWindow::move(int xMove, int yMove) {
 
 
 void GWindow::maximise() {
-  if (!this->isMaximised) {
+  if  (this->attributes.isResizable) {
+    if (!this->isMaximised) {
     // On en profite pour mettre tous les attributs à jour
-    pronGetWindowAttributes(display, this->window, &this->attributes);
-    pronGetWindowAttributes(display, this->parent, &this->parentAttributes);
-    this->oldParentAttributes = this->parentAttributes;
-    pronMoveWindowTo(display, this->parent, 0, 0);
-    this->resize(GWindowsManager::getInstance()->getRootWindowAttributes().width,
-      GWindowsManager::getInstance()->getRootWindowAttributes().height);
+      pronGetWindowAttributes(display, this->window, &this->attributes);
+      pronGetWindowAttributes(display, this->parent, &this->parentAttributes);
+      this->oldParentAttributes = this->parentAttributes;
+      pronMoveWindowTo(display, this->parent, 0, 0);
+      this->resize(GWindowsManager::getInstance()->getRootWindowAttributes().width,
+        GWindowsManager::getInstance()->getRootWindowAttributes().height);
     // TODO unmap de resizewindow
-    this->isMaximised = true;
-  } else {
-    this->isMaximised = false;
-    this->resize(this->oldParentAttributes.width, this->oldParentAttributes.height);
-    pronMoveWindowTo(display, this->parent, this->oldParentAttributes.x, this->oldParentAttributes.y);
+      this->isMaximised = true;
+    } else {
+      this->isMaximised = false;
+      this->resize(this->oldParentAttributes.width, this->oldParentAttributes.height);
+      pronMoveWindowTo(display, this->parent, this->oldParentAttributes.x, this->oldParentAttributes.y);
     // On en profite pour mettre tous les attributs à jour
-    pronGetWindowAttributes(display, this->window, &this->attributes);
-    pronGetWindowAttributes(display, this->parent, &this->parentAttributes);
+      pronGetWindowAttributes(display, this->window, &this->attributes);
+      pronGetWindowAttributes(display, this->parent, &this->parentAttributes);
+    }
   }
 }
 

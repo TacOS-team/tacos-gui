@@ -21,6 +21,7 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
   this->eventMask = 0;
   this->dontPropagateMask = 0;
   this->mapped = false;
+  this->isResizable = true;
 
   // Père
   this->parent = parent;
@@ -202,6 +203,9 @@ void Window::setAttributes(PronWindowAttributes *newAttr, unsigned int mask) {
   }
   if (mask & WIN_ATTR_BG_COLOR) {
     this->bgColor = newAttr->bgColor;
+  }
+  if (mask & WIN_ATTR_IS_RESIZABLE) {
+    this->isResizable = newAttr->isResizable;
   }
 }
 
@@ -393,12 +397,14 @@ void Window::moveTo(int x, int y) {
 }
 
 void Window::resize(int width, int height) {
-  this->unmap();
-  this->setWidth(width);
-  this->setHeight(height);
-  this->map();
+  if (this->isResizable) {
+    this->unmap();
+    this->setWidth(width);
+    this->setHeight(height);
+    this->map();
 
   // Send resize event
-  EventResizeWindow eventResizeWindow(width, height);
-  this->deliverWindowEvent(&eventResizeWindow, sizeof(eventResizeWindow));
+    EventResizeWindow eventResizeWindow(width, height);
+    this->deliverWindowEvent(&eventResizeWindow, sizeof(eventResizeWindow));
+  }
 }

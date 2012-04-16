@@ -12,7 +12,8 @@ struct PronWindowAttributes {
   int y;
   int width;
   int height;
-  color_t        bgColor;
+  color_t bgColor;
+  bool isResizable;
 };
 
 /**
