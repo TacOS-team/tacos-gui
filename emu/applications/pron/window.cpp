@@ -176,6 +176,7 @@ PronWindowAttributes Window::getAttributes() {
   attr.width = this->getWidth();
   attr.height = this->getHeight();
   attr.bgColor = this->bgColor;
+  attr.isResizable = this->isResizable;
 
   return attr;
 }
@@ -397,14 +398,12 @@ void Window::moveTo(int x, int y) {
 }
 
 void Window::resize(int width, int height) {
-  if (this->isResizable) {
-    this->unmap();
-    this->setWidth(width);
-    this->setHeight(height);
-    this->map();
+  this->unmap();
+  this->setWidth(width);
+  this->setHeight(height);
+  this->map();
 
   // Send resize event
-    EventResizeWindow eventResizeWindow(width, height);
-    this->deliverWindowEvent(&eventResizeWindow, sizeof(eventResizeWindow));
-  }
+  EventResizeWindow eventResizeWindow(width, height);
+  this->deliverWindowEvent(&eventResizeWindow, sizeof(eventResizeWindow));
 }

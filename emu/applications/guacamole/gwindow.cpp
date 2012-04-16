@@ -247,7 +247,12 @@ void GWindow::decorate() {
 
 
 void GWindow::resize(int width, int height) {
-  if (!this->isMaximised && this->attributes.isResizable){
+  // We first retrieve the attributes of the window that has to be resize
+  // so that we can know if the window is resizable
+  PronWindowAttributes windowAttributes;
+  pronGetWindowAttributes(this->display, this->window, &windowAttributes);
+
+  if (!this->isMaximised && windowAttributes.isResizable){
     pronResizeWindow(display, this->parent, width, height);
     pronMoveWindow(display, this->closeButton,
       width - this->parentAttributes.width, 0);
@@ -277,7 +282,11 @@ void GWindow::move(int xMove, int yMove) {
 
 
 void GWindow::maximise() {
-  if  (this->attributes.isResizable) {
+  // We first retrieve the attributes of the window that has to be resize
+  // so that we can know if the window is resizable
+  PronWindowAttributes windowAttributes;
+  pronGetWindowAttributes(this->display, this->window, &windowAttributes);
+  if (windowAttributes.isResizable){
     if (!this->isMaximised) {
     // On en profite pour mettre tous les attributs à jour
       pronGetWindowAttributes(display, this->window, &this->attributes);
