@@ -14,6 +14,7 @@ static Mouse *mouse;
 static Keyboard *keyboard;
 static vector<Client*> clients;
 int clientsFd, newClientFd;
+unsigned int newClientID; // Id given to the client that connects to pron
 
 void PronInit() {
   printf(                                             
@@ -37,6 +38,9 @@ void PronInit() {
   screen->tree->setRoot(new Window(screen, 0, NULL, NULL, 0, 0, 800, 600));
   screen->tree->getRoot()->map();
 
+  // The id of the first client to connect will be 0
+  newClientID = 0;
+
   // Listen for clients
   unlink("/tmp/pron.sock");
   clientsFd = tsock_listen("/tmp/pron.sock");
@@ -44,7 +48,7 @@ void PronInit() {
 
 void PronAcceptClient() {
   if ((newClientFd = tsock_accept(clientsFd)) > 0) {
-    Client *newClient = new Client(clients.size() + 1, newClientFd);
+    Client *newClient = new Client(newClientID++, newClientFd);
     debug("New client (id %d, fd %d)!\n", newClient->id, newClient->fd);
     clients.push_back(newClient);
   }
@@ -55,9 +59,9 @@ void PronSelect() {
   PronAcceptClient();
 
   // Handle requests from clients
-  //printf("clients list : ");
+  printf("clients list : ");
   for (unsigned int client = 0; client < clients.size(); client++) {
-    //printf("%d ",clients[client]->fd);
+    printf("%d ",clients[client]->fd);
     // check if client has sent a destroy request
     if (clients[client]->fd == -1) {
       delete clients[client];
@@ -67,7 +71,7 @@ void PronSelect() {
       clients[client]->handle();
     }
   }
-  //printf("\n");
+  printf("\n");
   
   // Read from devices
   mouse->checkEvents();
