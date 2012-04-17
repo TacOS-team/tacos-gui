@@ -343,3 +343,10 @@ GC* Screen::getGC(){
 void Screen::setGC(GC *gc){
   this->gc = gc;
 }
+
+void Screen::destroy(Window * w) {
+  for (WindowsTree::IteratorBFS it = this->tree->beginBFS(w); it != this->tree->endBFS(); it++) {
+    EventDestroyWindow eventDestroyWindow(it->getId());
+    it->deliverWindowEvent(&eventDestroyWindow, sizeof(eventDestroyWindow));
+  }
+}

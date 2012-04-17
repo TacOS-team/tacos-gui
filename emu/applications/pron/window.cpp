@@ -388,6 +388,7 @@ void Window::destroy() {
   } else {
     this->parent->lastChild = this->prevSibling;
   }
+  this->getScreen()->destroy(this);
   delete this;
 }
 

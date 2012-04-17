@@ -205,32 +205,10 @@ void Client::handle() {
       break;
     }
     case RQ_DESTROY_WINDOW: {
-      // XXX: move this outside client.cpp
       screen->traceWindows();
       RqDestroyWindow *rq = (RqDestroyWindow*) Client::recvBuf;
       Window *w = (Window*) screen->getDrawable(rq->window, D_WINDOW);
       if (w != NULL) {
-        Window *currentWindow = w;
-        while (currentWindow != NULL && currentWindow != w->parent) {
-          EventDestroyWindow eventDestroyWindow(currentWindow->getId());
-          currentWindow->deliverWindowEvent(&eventDestroyWindow, sizeof(eventDestroyWindow));
-          if (currentWindow->firstChild != NULL) {
-            currentWindow = currentWindow->firstChild;
-          } else if (currentWindow->nextSibling != NULL) {
-            currentWindow = currentWindow->nextSibling;
-          } else {
-            while (currentWindow->parent != NULL
-                    && currentWindow->parent->nextSibling == NULL
-                    && currentWindow != w->parent) {
-              currentWindow = currentWindow->parent;
-            }
-            if (currentWindow->parent != NULL && currentWindow->parent->nextSibling != w->nextSibling) {
-              currentWindow = currentWindow->parent->nextSibling;
-            } else {
-              currentWindow = NULL;
-            }
-          }
-        }
         w->destroy();  
       }
       break;

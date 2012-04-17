@@ -75,6 +75,8 @@ public: // XXX: bourrin
 
   void traceWindows();
 
+  void destroy(Window * w);
+
   GC* getGC();
   void setGC(GC *gc);
 
