@@ -104,7 +104,12 @@ int main(int argc, char *argv[]) {
   COLOR(newAttr.bgColor, 24).g = (w >> 16) << 3;
   COLOR(newAttr.bgColor, 24).b = (w >> 16) << 3;
   
-  pronSetWindowAttributes(d, w, newAttr, WIN_ATTR_BG_COLOR);
+  newAttr.maxWidth = 400;
+  newAttr.minHeight = 100;
+  newAttr.maxHeight = 400;
+  newAttr.minWidth = 100;
+
+  pronSetWindowAttributes(d, w, newAttr, WIN_ATTR_MIN_WIDTH | WIN_ATTR_MAX_HEIGHT | WIN_ATTR_MIN_HEIGHT | WIN_ATTR_MAX_WIDTH | WIN_ATTR_BG_COLOR);
   
   pronMapWindow(d, w);
 

@@ -14,6 +14,10 @@ struct PronWindowAttributes {
   int height;
   color_t bgColor;
   bool isResizable;
+  int maxWidth;
+  int maxHeight;
+  int minWidth;
+  int minHeight;
 };
 
 /**

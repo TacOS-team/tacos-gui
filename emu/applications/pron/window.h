@@ -34,6 +34,10 @@ public: //XXX: bourrin
   vector<OtherClient> otherClients;
   bool mapped;
   bool isResizable;
+  int maxWidth;
+  int maxHeight;
+  int minWidth;
+  int minHeight;
 
   Window *parent;
   Window *prevSibling, *nextSibling;

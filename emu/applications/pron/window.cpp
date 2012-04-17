@@ -22,6 +22,10 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
   this->dontPropagateMask = 0;
   this->mapped = false;
   this->isResizable = true;
+  this->maxWidth = -1; // -1 means there is no limit
+  this->maxHeight = -1;
+  this->minWidth = -1;
+  this->minHeight = -1;
 
   // Père
   this->parent = parent;
@@ -177,6 +181,10 @@ PronWindowAttributes Window::getAttributes() {
   attr.height = this->getHeight();
   attr.bgColor = this->bgColor;
   attr.isResizable = this->isResizable;
+  attr.maxWidth = this->maxWidth;
+  attr.maxHeight = this->maxHeight;
+  attr.minWidth = this->minWidth;
+  attr.minHeight = this->minHeight;
 
   return attr;
 }
@@ -207,6 +215,18 @@ void Window::setAttributes(PronWindowAttributes *newAttr, unsigned int mask) {
   }
   if (mask & WIN_ATTR_IS_RESIZABLE) {
     this->isResizable = newAttr->isResizable;
+  }
+  if (mask & WIN_ATTR_MAX_WIDTH) {
+    this->maxWidth = newAttr->maxWidth;
+  }
+  if (mask & WIN_ATTR_MAX_HEIGHT) {
+    this->maxHeight = newAttr->maxHeight;
+  }
+  if (mask & WIN_ATTR_MIN_WIDTH) {
+    this->minWidth = newAttr->minWidth;
+  }
+  if (mask & WIN_ATTR_MIN_HEIGHT) {
+    this->minHeight = newAttr->minHeight;
   }
 }
 
