@@ -351,3 +351,9 @@ void Screen::destroy(Window * w) {
     it->deliverWindowEvent(&eventDestroyWindow, sizeof(eventDestroyWindow));
   }
 }
+
+void Screen::reparent (Window * child, Window * newParent) {
+  child->reparent(newParent);
+  this->setClipWin(NULL);
+  this->traceWindows();
+}

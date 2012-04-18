@@ -42,7 +42,6 @@ void Client::handle() {
       RqCreateWindow *rq = (RqCreateWindow*) Client::recvBuf;
       new Window(screen, rq->id, this, (Window*) screen->getDrawable(rq->parent, D_WINDOW),
         rq->x, rq->y, rq->width, rq->height);
-      //printf("Adding %d\n",rq->id);
       screen->traceWindows();
       break;
     }
@@ -197,11 +196,10 @@ void Client::handle() {
     }
     case RQ_REPARENT: {
       RqReparent *rq = (RqReparent*) Client::recvBuf;
-      Window *w = (Window*) screen->getDrawable(rq->window, D_WINDOW);
-      if (w != NULL) {
-        w->reparent((Window*) screen->getDrawable(rq->newParent, D_WINDOW));
-        screen->setClipWin(NULL);
-        screen->traceWindows();
+      Window *child = (Window*) screen->getDrawable(rq->window, D_WINDOW);
+      Window *newParent = (Window*) screen->getDrawable(rq->newParent, D_WINDOW);
+      if (child != NULL && newParent != NULL) {
+        screen->reparent(child, newParent);
       }
       break;
     }
