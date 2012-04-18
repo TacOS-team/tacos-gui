@@ -1,11 +1,12 @@
+#include <fcntl.h>
+#include <math.h>
+#include <stdio.h>
+#include <string>
+#include <string.h>
+#include <sys/ioctl.h>
+
 #include <screen.h>
 #include <window.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
-#include <string.h>
-#include <cstdio>
-#include <math.h>
-#include <string>
 
 using namespace std;
 

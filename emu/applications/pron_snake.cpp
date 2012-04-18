@@ -26,12 +26,12 @@
  * Description de ce que fait le fichier
  */
 
-#include <cstdio>
-#include <signal.h>
-#include <unistd.h>
-#include <pronlib.h>
-#include <time.h>
 #include <errno.h>
+#include <stdio.h>
+#include <time.h>
+#include <unistd.h>
+
+#include <pronlib.h>
 
 #define LARGEUR 320
 #define HAUTEUR 200

@@ -1,5 +1,6 @@
+#include <stdio.h>
+
 #include <windowsTree.h>
-#include <cstdio>
 
 /* WindowsTree methods */
 

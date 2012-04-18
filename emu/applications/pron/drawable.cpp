@@ -1,11 +1,12 @@
-#include <window.h>
-#include <screen.h>
-#include <client.h>
-#include <cstdlib>
-#include <cstdio>
-#include <string.h>
 #include <algorithm>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <client.h>
 #include <drawable.h>
+#include <screen.h>
+#include <window.h>
 
 Drawable::Drawable(int type, Screen *screen, int id, Client *creator, int width, int height) {
   this->type = type;

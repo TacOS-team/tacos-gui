@@ -15,7 +15,7 @@ export LD=@printf "\033[35m   LD\t$$@\033[0m\n" && ld
 # Compilation flags
 DEBUG=-DDEBUG
 CURRENTDIR=$(realpath .)
-export INCLUDES= -I. -I$(CURRENTDIR)/include/ -I$(CURRENTDIR)/drivers/include/ -I$(CURRENTDIR)/libs/libtacos/include/ -I$(CURRENTDIR)/libs/pronlib/ -I$(CURRENTDIR)/libs/libtsock/
+export INCLUDES= -I. -I$(CURRENTDIR)/include/ -I$(CURRENTDIR)/drivers/include/ -I$(CURRENTDIR)/libs/libtacos/ -I$(CURRENTDIR)/libs/pronlib/ -I$(CURRENTDIR)/libs/libtsock/
 export CFLAGS=-Wall -g $(DEBUG)
 export CXXFLAGS=-Wall -g $(DEBUG)
 export MFLAGS=-s

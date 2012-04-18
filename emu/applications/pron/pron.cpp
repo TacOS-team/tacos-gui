@@ -1,11 +1,12 @@
-#include <cstdio>
-#include <clibtacos>
+#include <stdio.h>
+#include <unistd.h>
+#include <vector>
+
 #include <keyboard.h>
+#include <libtacos.h>
 #include <mouse.h>
 #include <pron.h>
 #include <tsock.h>
-#include <unistd.h>
-#include <vector>
 
 using namespace std;
 

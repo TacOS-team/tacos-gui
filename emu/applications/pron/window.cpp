@@ -1,17 +1,17 @@
-#include <client.h>
-#include <window.h>
-#include <screen.h>
-#include <cstdlib>
-#include <cstdio>
-#include <string.h>
-#include <pronlib_enums.h>
 #include <algorithm>
-#include <mouse.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <client.h>
 #include <drawable.h>
+#include <mouse.h>
+#include <pronlib_enums.h>
+#include <screen.h>
+#include <window.h>
 
 Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, int y, int width, int height) 
     : Drawable(D_WINDOW, screen, id, creator, width, height) {
-
   this->x = x;
   this->y = y;
   memset(&this->bgColor, 0, sizeof(this->bgColor));

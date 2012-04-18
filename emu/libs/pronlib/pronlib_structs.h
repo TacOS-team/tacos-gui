@@ -1,8 +1,9 @@
 #ifndef __PRONLIB_STRUCTS_H__
 #define __PRONLIB_STRUCTS_H__
 
+#include <stdlib.h>
+
 #include <vesa_types.h>
-#include <cstdlib>
 
 /**
  * Structure for pron window attributes

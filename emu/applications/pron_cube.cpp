@@ -1,9 +1,8 @@
-#include <cstdlib>
-#include <pronlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
-#include <cstdio>
-#include <pronlib_structs.h>
-#include <pronlib_enums.h>
+
+#include <pronlib.h>
 
 float cube[][3]= {
   {  1.0f,  1.0f, -1.0f },

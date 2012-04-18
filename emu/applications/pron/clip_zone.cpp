@@ -1,6 +1,7 @@
+#include <stdio.h>
+
 #include <clip_zone.h>
 #include <screen.h>
-#include <cstdio>
 
 ClipZone::ClipZone(int x, int y, int width, int height) {
   // Clipping zone containing only 1 rectangle

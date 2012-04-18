@@ -1,9 +1,10 @@
-#include <pixmap.h>
-#include <math.h>
-#include <cstdio>
-#include <string.h>
 #include <algorithm>
+#include <math.h>
+#include <stdio.h>
+#include <string.h>
+
 #include <drawable.h>
+#include <pixmap.h>
 
 using namespace std;
 

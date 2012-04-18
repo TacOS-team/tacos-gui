@@ -2,9 +2,10 @@
  * @file pronlib.cpp
  * Implementation of the pronlib.
  */
-#include <cstdio>
-#include <pronlib.h>
+#include <stdio.h>
 #include <unistd.h>
+
+#include <pronlib.h>
 
 Display *display = NULL;
 

@@ -26,13 +26,14 @@
  * Very basic pong game
  */
 
-#include <cstdlib>
-#include <cstdio>
-#include <unistd.h>
-#include <pronlib.h>
-#include <libtacos.h>       
-#include <string.h>
 #include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+#include <libtacos.h>       
+#include <pronlib.h>
 
 #define WIDTH 320
 #define HEIGHT 200

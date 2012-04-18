@@ -5,14 +5,15 @@
 #ifndef _PRONLIB_H_
 #define _PRONLIB_H_
 
+#include <queue>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+#include <utility>
+
 #include <pron_proto.h>
 #include <pronlib_types.h>
-#include <stdint.h>
-#include <queue>
-#include <utility>
 #include <tsock.h>
-#include <string.h>
-#include <cstdio>
 
 using namespace std;
 

@@ -1,18 +1,15 @@
-#include <iostream>
-#include <time.h>
-#include <clibtacos>
-#include <cstdio>
-#include <vector>
 #include <algorithm>
 #include <signal.h>
+#include <stdio.h>
 #include <sys/time.h>
+#include <time.h>
+#include <vector>
 
-
-#include <pronlib.h>
 #include <gwindows_manager.h>
+#include <libtacos.h>
+#include <pronlib.h>
 
 using namespace std;
-
 
 GWindow *windowLeftButtonPressed   = NULL;
 GWindow *windowResizeButtonPressed = NULL;
@@ -60,7 +57,6 @@ void activateTimer(unsigned int usec) {
     isTimerActive = true;
   }
 }
-
 
 int main() {
   srand(time(NULL));

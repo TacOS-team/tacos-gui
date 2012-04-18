@@ -1,11 +1,12 @@
+#include <stdio.h>
+
 #include <client.h>
+#include <drawable.h>
+#include <pixmap.h>
 #include <pron_proto.h>
 #include <screen.h>
 #include <tsock.h>
 #include <window.h>
-#include <pixmap.h>
-#include <drawable.h>
-#include <cstdio>
 
 int Client::recvLen;
 char Client::recvBuf[MAX_MSG_SIZE];

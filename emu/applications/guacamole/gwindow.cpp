@@ -1,5 +1,6 @@
+#include <stdio.h>
+
 #include <gwindows_manager.h>
-#include <cstdio>
 
 int buttonSize = 15;
 

@@ -1,6 +1,7 @@
-#include <gwindows_manager.h>
-#include <cstdio>
 #include <algorithm>
+#include <stdio.h>
+
+#include <gwindows_manager.h>
 
 GWindowsManager * GWindowsManager::instance = NULL;
 
