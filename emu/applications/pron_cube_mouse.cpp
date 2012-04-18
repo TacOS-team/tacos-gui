@@ -55,17 +55,17 @@ float my_sin(float angle) {
 
 void rotate_point(float point[3], float theta, float phi) {
   float temp[3];
-	
-  float cos_theta = 	my_cos(theta);
-  float sin_theta = 	my_sin(theta);
-	
-  float cos_phi = 	my_cos(phi);
-  float sin_phi = 	my_sin(phi);
-	
+
+  float cos_theta = my_cos(theta);
+  float sin_theta = my_sin(theta);
+
+  float cos_phi = my_cos(phi);
+  float sin_phi = my_sin(phi);
+
   temp[0] = point[0];
   temp[1] = point[1]*cos_theta - point[2]*sin_theta;
   temp[2] = point[1]*sin_theta + point[2]*cos_theta;
-	
+
   point[0] = temp[0]*cos_phi - temp[2]*sin_phi;
   point[1] = temp[1];
   point[2] = temp[0]*sin_phi + temp[2]*cos_phi;
@@ -76,13 +76,13 @@ void draw_cube(Display *d, Window w, GC gc) {
 
   //On efface la fenêtre
   pronClearWindow(d, w);
-	
+
   for (ligne = 0; ligne < 12; ligne++) {
     pronDrawLine(d, w, gc, 
-		 (int)(cube[lignes[ligne][0]][0]*50+150), 
-		 (int)(cube[lignes[ligne][0]][1]*50+100), 
-		 (int)(cube[lignes[ligne][1]][0]*50+150), 
-		 (int)(cube[lignes[ligne][1]][1]*50+100));
+        (int)(cube[lignes[ligne][0]][0]*50+150),
+        (int)(cube[lignes[ligne][0]][1]*50+100),
+        (int)(cube[lignes[ligne][1]][0]*50+150),
+        (int)(cube[lignes[ligne][1]][1]*50+100));
   }
 }
 
@@ -91,7 +91,7 @@ int main(int argc, char **argv){
   int x = 0, y = 0;
   int prevx = 0, prevy = 0;
   bool buttonPressed = false;
-	
+
   float theta = 0.0f;
   float phi = 0.0f;
   // On se connecte a PRON
@@ -110,7 +110,7 @@ int main(int argc, char **argv){
   pronSelectInput(d, w, PRON_EVENTMASK(EV_POINTER_MOVED) | PRON_EVENTMASK(EV_MOUSE_BUTTON));
   // On cree un énènement
   PronEvent *e = getPronEvent();
-  while (1) {	
+  while (1) {
     //On récupère un évènement
     if (!pronNextEvent(d, e, true)) {
       if (errno != EAGAIN && errno != EWOULDBLOCK) {
@@ -119,26 +119,26 @@ int main(int argc, char **argv){
       }
     } else {
       switch (e->type) {
-      case EV_POINTER_MOVED: {
-        EventPointerMoved *pointerMoved = (EventPointerMoved*) e;
-        x = pointerMoved->x;
-        y = pointerMoved->y;
-        break;
-      }
-      case EV_MOUSE_BUTTON : {
-        EventMouseButton *mouseButton = (EventMouseButton*) e;
-        buttonPressed = mouseButton->b1;
-         break;
-      }
-      default:
-        break;
+        case EV_POINTER_MOVED: {
+                                 EventPointerMoved *pointerMoved = (EventPointerMoved*) e;
+                                 x = pointerMoved->x;
+                                 y = pointerMoved->y;
+                                 break;
+                               }
+        case EV_MOUSE_BUTTON : {
+                                 EventMouseButton *mouseButton = (EventMouseButton*) e;
+                                 buttonPressed = mouseButton->b1;
+                                 break;
+                               }
+        default:
+                               break;
       }
     }
-		
+
     if (buttonPressed) {// Bouton 1 appuyé
       phi = (float)(x-prevx) * FRICTION;
       theta = (float)(y-prevy) * FRICTION;
-    }	else {
+    } else {
       printf("appuyé\n");
       phi = FRICTION * phi;
       theta = FRICTION * theta;
@@ -146,13 +146,12 @@ int main(int argc, char **argv){
     for (i = 0; i < 8; i++) {
       rotate_point(cube[i],theta,phi);
     }
-		
+
     draw_cube(d, w, gc);
-		
+
     prevx = x;
     prevy = y;
-		
+
     usleep(10000);
   }
-
 }
