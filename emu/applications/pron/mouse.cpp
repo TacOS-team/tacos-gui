@@ -32,7 +32,7 @@ void Mouse::checkEvents() {
   // Get the mouse state
   mousestate_t state;
   memset(&state, 0, sizeof(mousestate_t));
-  read(this->fd, &state, 0);
+  read(this->fd, &state, sizeof(mousestate_t));
 
   // Handle motion mouse events
   this->handleMotion(&state);
