@@ -229,16 +229,11 @@ void Client::handle() {
       break;
     }
     case RQ_PUT_IMAGE: {
-      // XXX: move this outside client.cpp
       RqPutImage *rq = (RqPutImage*) Client::recvBuf;
-      // Gets the image buffer
-      char *image_buf = ((char*) rq) + sizeof(RqPutImage);
-      // Gets the window 
       Window *w = (Window*) screen->getDrawable(rq->window);
-      if(w != NULL){
-        // Create the PronImage
+      if (w != NULL) {
+      	char *image_buf = ((char*) rq) + sizeof(RqPutImage);
         PronImage image(rq->width, rq->height, rq->format, image_buf, rq->depth, rq->bytesPerPixel, false);
-        // Request the copy into the window
         w->putImage(&image, rq->x, rq->y);
       }
       break;
@@ -263,19 +258,12 @@ void Client::handle() {
       break;
     }
     case RQ_COPY_AREA: {
-      // XXX: move this outside client.cpp
       RqCopyArea *rq = (RqCopyArea*) Client::recvBuf;
       Pixmap *p = (Pixmap*) screen->getDrawable(rq->src, D_PIXMAP);
       Window *w = (Window*) screen->getDrawable(rq->dest, D_WINDOW);
       GC *gc = GC::getGC(rq->gc);
-      //int pixel = -1; // 0xFFFFFFFF
       if (p != NULL && w != NULL && screen->prepareDrawing(w, gc)) {
-        // XXX : Bourrin à revoir (problème de depth et de byte per pixel de la pixmap et de l'écran)
-        for (int y = 0; y < rq->height; y++) {
-          for (int x = 0; x < rq->width; x++) {// Lol C++ noob THERE IS STILL PLACE URGENT PPI
-            w->setPixel(x + rq->destX, y + rq->destY, p->getPixel(x + rq->srcX, y + rq->srcY));
-          }
-        }
+        w->copyArea(rq->destX, rq->destY, p, rq->srcX, rq->srcY, rq->width, rq->height);
       }
       break;
     }
