@@ -1,14 +1,15 @@
 #define _GNU_SOURCE
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/un.h>
-#include <string.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <errno.h>
 
-#include "tsock.h"
+#include <errno.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <sys/un.h>
+#include <unistd.h>
+
+#include <tsock.h>
 
 int tsock_listen(const char *path) {
   int tsockServ = 0;
@@ -23,7 +24,7 @@ int tsock_listen(const char *path) {
   addrLen = sizeof(addr);
 
   // Création de la socket
-  tsockServ = socket(PF_UNIX, SOCK_SEQPACKET | SOCK_NONBLOCK, 0);
+  tsockServ = socket(PF_UNIX, SOCK_SEQPACKET, 0);
   if (tsockServ == -1) {
     perror("socket");
   }
@@ -54,7 +55,7 @@ int tsock_connect(const char *path) {
   addrLen = sizeof(addr);
 
   // Création de la socket
-  tsockClient = socket(PF_UNIX, SOCK_SEQPACKET/* | SOCK_NONBLOCK*/, 0);
+  tsockClient = socket(PF_UNIX, SOCK_SEQPACKET, 0);
   if (tsockClient == -1) {
     perror("socket");
   }
@@ -73,7 +74,7 @@ int tsock_accept(int tsockServer) {
   socklen_t addrLenOSEF = sizeof(addrClientOSEF);
   int tsockCanal = 0; // socket du canal client <--> serveur
 
-  tsockCanal = accept4(tsockServer, (struct sockaddr*) &addrClientOSEF, &addrLenOSEF, SOCK_NONBLOCK);
+  tsockCanal = accept(tsockServer, (struct sockaddr*) &addrClientOSEF, &addrLenOSEF);
   if (tsockCanal == -1) {
     //perror("accept");
   }
@@ -95,9 +96,7 @@ ssize_t tsock_write(int tsock, void * buffer, size_t len) {
   ssize_t nbBytesSent = send(tsock, buffer, len, 0);
 
   if (nbBytesSent == -1) {
-    perror("write");
-    printf("errno = %d, waiting a bit...\n", errno);
-    usleep(1000000);
+    //perror("write");
   }
 
   return nbBytesSent;

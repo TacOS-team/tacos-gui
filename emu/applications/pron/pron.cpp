@@ -45,10 +45,12 @@ void PronInit() {
   // Listen for clients
   unlink("/tmp/pron.sock");
   clientsFd = tsock_listen("/tmp/pron.sock");
+  tsock_set_nonblocking(clientsFd);
 }
 
 void PronAcceptClient() {
   if ((newClientFd = tsock_accept(clientsFd)) > 0) {
+    tsock_set_nonblocking(newClientFd);
     Client *newClient = new Client(newClientID++, newClientFd);
     debug("New client (id %d, fd %d)!\n", newClient->id, newClient->fd);
     clients.push_back(newClient);
