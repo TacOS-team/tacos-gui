@@ -1,3 +1,5 @@
+#include <font_loader.h>
+#include <dirent.h>
 #include <screen.h>
 #include <window.h>
 #include <sys/ioctl.h>
@@ -21,6 +23,23 @@ Screen::Screen(int width, int height, int bitsPerPixel) {
   struct vesa_setmode_req req = { this->width, this->height, this->bitsPerPixel };
   ioctl(this->vesa_fd, SETMODE, &req);
   ioctl(this->vesa_fd, GETVIDEOADDR, &this->videoBuffer);
+
+  DIR *dp;
+  struct dirent *ep;  
+  dp = opendir("fonts");
+  if (dp != NULL) {
+    while ((ep = readdir(dp))) {
+      if (ep->d_type == DT_REG) {
+        char fileName[256] = "fonts/";
+        strcat(fileName, ep->d_name);
+        this->fonts.push_back(FontLoader::load(fileName));
+      }
+    }
+    closedir (dp);
+  } else {
+    fprintf(stderr, "Could not open the fonts directory.\n");
+    exit(1);
+  }
 
   this->clipWin = NULL;
   this->clipZone = new ClipZone(0, 0, this->width, this->height);
@@ -199,6 +218,11 @@ void Screen::drawCircle(int n_cx, int n_cy, int radius) {
       }
     }
   }
+}
+
+void Screen::drawText(int x, int y, const char *text, int length) {
+  Font *font = this->fonts[this->gc->font_num];
+  font->drawText(x, y, text, length);
 }
 
 // source : http://content.gpwiki.org/index.php/SDL:Tutorials:Drawing_and_Filling_Circles

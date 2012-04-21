@@ -7,9 +7,11 @@
 class GC {
 public:
   static std::vector<GC*> gcs;
+
   unsigned int id;
   color_t bg;
   color_t fg;
+  int font_num;
 
   static GC* getGC(unsigned int id);
 

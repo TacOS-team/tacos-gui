@@ -1,6 +1,7 @@
 #ifndef _SCREEN_H_
 #define _SCREEN_H_
 
+#include <font.h>
 #include <vector>
 #include <clip_zone.h>
 #include <gc.h>
@@ -19,6 +20,7 @@ class Screen {
 private:
   Screen(int width, int height, int bitsPerPixel);
   static Screen *instance;
+  vector<Font*> fonts;
   Window *clipWin; /*< Window for which the clipping zone is set */
   ClipZone *clipZone; /*< Rectangles where we are allowed to draw */
   Window *mouseWin; // First window containing the mouse pointer
@@ -77,6 +79,8 @@ public: // XXX: bourrin
 
   GC* getGC();
   void setGC(GC *gc);
+
+  void drawText(int x, int y, const char *text, int length);
 
 };
 

@@ -16,6 +16,9 @@ GC::GC() {
   COLOR(this->bg, 24).r = 0;
   COLOR(this->bg, 24).g = 0;
   COLOR(this->bg, 24).b = 0;
+
+  // Default font
+  this->font_num = 0;
 }
 
 GC::GC(unsigned int id, const PronGCValues &values, unsigned int mask) {

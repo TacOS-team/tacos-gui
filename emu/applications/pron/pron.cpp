@@ -6,6 +6,7 @@
 #include <tsock.h>
 #include <unistd.h>
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -40,6 +41,9 @@ void PronInit() {
   // Listen for clients
   unlink("/tmp/pron.sock");
   clientsFd = tsock_listen("/tmp/pron.sock");
+
+  string welcome = "Welcome to pron!";
+  screen->drawText(10, 20, welcome.c_str(), welcome.length());
 }
 
 void PronAcceptClient() {
