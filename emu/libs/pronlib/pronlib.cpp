@@ -7,6 +7,9 @@
 
 #include <pronlib.h>
 
+/**
+ * Pron namespace
+ */
 namespace pron {
 
   Display* pronConnect() {
