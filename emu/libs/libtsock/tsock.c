@@ -1,3 +1,7 @@
+/**
+ * @file tsock.c
+ * Implementation of the trivial sockets (tsock) library.
+ */
 #define _GNU_SOURCE
 
 #include <errno.h>
