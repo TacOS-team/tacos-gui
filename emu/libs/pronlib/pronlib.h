@@ -340,7 +340,7 @@ struct Display {
   }
 
   int read(PronMessage *msg, size_t len) {
-    int sizeRead = tsock_read(this->fd, msg, MAX_MSG_SIZE);
+    int sizeRead = tsock_read(this->fd, msg, len);
 
     if (sizeRead < 0) {
       // TODO: handle read error?
