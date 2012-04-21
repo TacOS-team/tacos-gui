@@ -10,6 +10,7 @@
 #include <pronlib.h>
 
 using namespace std;
+using namespace pron;
 
 GWindow *windowLeftButtonPressed   = NULL;
 GWindow *windowResizeButtonPressed = NULL;

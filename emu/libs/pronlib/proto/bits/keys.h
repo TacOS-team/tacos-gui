@@ -4,6 +4,8 @@
 #define PRON_RELEASED    0
 #define PRON_PRESSED     1
 
+namespace pron {
+
 /**
  * Taken from the SDL
  */
@@ -280,6 +282,8 @@ enum PronMod {
   KMOD_MODE      = 0x4000,
   KMOD_RESERVED  = 0x8000
 };
+
+} // namespace pron
 
 #define KMOD_CTRL   (KMOD_LCTRL | KMOD_RCTRL)
 #define KMOD_SHIFT  (KMOD_LSHIFT  | KMOD_RSHIFT)

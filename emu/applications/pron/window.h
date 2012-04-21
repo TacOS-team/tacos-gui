@@ -6,6 +6,7 @@
 #include <drawable.h>
 
 using namespace std;
+using namespace pron;
 
 class Screen;
 class Client;

@@ -4,6 +4,7 @@
 #include <proto/bits/image.h>
 
 using namespace std;
+using namespace pron;
 
 class Window;
 //class PixMap;

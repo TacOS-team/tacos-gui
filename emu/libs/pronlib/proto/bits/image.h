@@ -3,6 +3,8 @@
 
 #include <stdlib.h>
 
+namespace pron {
+
 /**
  * Pixmap types.
  * @todo Describe the different types.
@@ -56,5 +58,7 @@ struct PronImage {
   bool freeBuffer; /**< Whether we have to free the data buffer or not */
   int bytesPerPixel; /**< Bytes per pixel of the image (1, 2 or 3 bpp) */
 };
+
+} // namespace pron
 
 #endif // __PRONPROTO_IMAGE_H__

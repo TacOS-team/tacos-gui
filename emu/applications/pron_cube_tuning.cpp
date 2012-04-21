@@ -4,6 +4,8 @@
 
 #include <pronlib.h>
 
+using namespace pron;
+
 float cube[][3]= {
   {  1.0f,  1.0f, -1.0f },
   {  1.0f, -1.0f, -1.0f },

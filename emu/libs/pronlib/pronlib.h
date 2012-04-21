@@ -20,6 +20,8 @@ using namespace std;
 
 #define MAX_MSG_SIZE 1024 /**< Maximum size of a message (1Kio) */
 
+namespace pron {
+
 struct Display;
 
 /**
@@ -462,5 +464,7 @@ struct Display {
   GC defaultGC; /**< Default graphics context */
   queue< pair<int, PronEvent*> > queuedEvents; /**< Events read from the server and queued */
 };
+
+} // namespace pron
 
 #endif
