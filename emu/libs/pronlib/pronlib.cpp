@@ -187,8 +187,9 @@ void pronMoveWindowTo(Display *d, unsigned int w, int x, int y) {
   tsock_write(d->fd, &rq, sizeof(rq));
 }
 
-void pronPutImage(Display *d, Window w, GC gc, PronImage *image, 
+void pronPutImage(Display *d, Window w, GC gc __attribute__((unused)), PronImage *image,
     int srcX, int srcY, int width, int height, int destX, int destY) {
+  // TODO: use GC?
   // We have to check if the rectangle the client wants to send enters 
   // in the source image
   if((srcX + width > image->width) || (srcY + height > image->height)) {
