@@ -18,7 +18,7 @@
 
 using namespace std;
 
-#define MAX_MSG_SIZE 1024 /**< max size of a message (1Kio) */
+#define MAX_MSG_SIZE 1024 /**< Maximum size of a message (1Kio) */
 
 struct Display;
 
@@ -32,8 +32,8 @@ Display* pronConnect();
  * Creates a new window.
  * @param d The connection to pron
  * @param parent The id of the the parent window
- * @param x The x coordinate
- * @param y The y coordinate
+ * @param x The x coordinate of the top-left corner
+ * @param y The y coordinate of the top-left corner
  * @param width The width
  * @param height The height
  * @return The window id of the created window
@@ -109,6 +109,7 @@ void pronRaiseWindow(Display *d, Window w);
  * @param gc The graphics context to use
  * @param x The x-coordinate of the point
  * @param y The y-coordinate of the point
+ * @return success
  */
 int pronDrawPoint(Display *d, Window w, GC gc, int x, int y);
 
@@ -122,6 +123,7 @@ int pronDrawPoint(Display *d, Window w, GC gc, int x, int y);
  * @param y1 The y-coordinate of the first point to join
  * @param x2 The x-coordinate of the second point to join
  * @param y2 The y-coordinate of the second point to join
+ * @return success
  */
 int pronDrawLine(Display *d, Window w, GC gc, int x1, int y1, int x2, int y2);
 
@@ -129,12 +131,13 @@ int pronDrawLine(Display *d, Window w, GC gc, int x1, int y1, int x2, int y2);
  * Sent by a client to draw a rectangle to (x,y) width height sized.
  * @todo Implement drawables instead of just windows
  * @param d The connection to pron
- * @param w The window in which to draw the line
+ * @param w The window in which to draw the rectangle
  * @param gc The graphics context to use
- * @param x The x-coordinate of the point to join
- * @param y The y-coordinate of the point to join
- * @param width of the rectangle
- * @param height of the rectangle
+ * @param x The x-coordinate of the top-left corner of the rectangle
+ * @param y The y-coordinate of the top-left corner of the rectangle
+ * @param width The width of the rectangle
+ * @param height The height of the rectangle
+ * @return success
  */
 int pronDrawRect(Display *d, Window w, GC gc, int x, int y, int width, int height);
 
@@ -142,39 +145,41 @@ int pronDrawRect(Display *d, Window w, GC gc, int x, int y, int width, int heigh
  * Sent by a client to fill a rectangle to (x,y) width height sized.
  * @todo Implement drawables instead of just windows
  * @param d The connection to pron
- * @param w The window in which to draw the line
+ * @param w The window in which to draw the rectangle
  * @param gc The graphics context to use
- * @param x The x-coordinate of the point to join
- * @param y The y-coordinate of the point to join
- * @param width of the rectangle
- * @param height of the rectangle
+ * @param x The x-coordinate of the top-left corner of the rectangle
+ * @param y The y-coordinate of the top-left corner of the rectangle
+ * @param width The width of the rectangle
+ * @param height The height of the rectangle
+ * @return success
  */
 int pronFillRectangle(Display *d, Window w, GC gc, int x, int y, int width, int height);
 
 /**
- * Sent by a client to draw a circle with given center (x,y) and radius
+ * Sent by a client to draw a circle with given center (x,y) and radius.
  * @todo Implement drawables instead of just windows
  * @param d The connection to pron
  * @param w The window in which to draw the line
  * @param gc The graphics context to use
- * @param x The x-coordinate of the point to join
- * @param y The y-coordinate of the point to join
- * @param radius of the circle
+ * @param x The x-coordinate of the top-left corner of the circle
+ * @param y The y-coordinate of the top-left corner of the circle
+ * @param radius The radius of the circle
+ * @return success
  */
 int pronDrawCircle(Display *d, Window w, GC gc, int x, int y, int radius);
 
 /**
- * Sent by a client to draw a filled circle with given center (x,y) and radius
+ * Sent by a client to draw a filled circle with given center (x,y) and radius.
  * @todo Implement drawables instead of just windows
  * @param d The connection to pron
  * @param w The window in which to draw the line
  * @param gc The graphics context to use
- * @param x The x-coordinate of the point to join
- * @param y The y-coordinate of the point to join
- * @param radius of the circle
+ * @param x The x-coordinate of the top-left corner of the circle
+ * @param y The y-coordinate of the top-left corner of the circle
+ * @param radius The radius of the circle
+ * @return success
  */
 int pronFillCircle(Display *d, Window w, GC gc, int x, int y, int radius);
-
 
 /**
  * Closes the connection to pron.
@@ -184,10 +189,9 @@ void pronDisconnect(Display *d);
 
 /**
  * Subscribes to the events associated with the specified event mask.
- * @todo Implement this
  * @param d The connection to pron
  * @param w The window whose events to subscribe
- * @param event_mask The event mask
+ * @param eventMask The event mask
  */
 void pronSelectInput(Display *d, Window w, uint32_t eventMask);
 
@@ -195,19 +199,22 @@ void pronSelectInput(Display *d, Window w, uint32_t eventMask);
  * Tells pron not to propagate the events associated with the specified event mask.
  * @param d The connection to pron
  * @param w The window whose events not to propagate
- * @param event_mask The event mask
+ * @param eventMask The event mask
  */
 void pronDontPropagateEvent(Display *d, Window w, uint32_t eventMask);
 
 /**
- * Wait a new event.
+ * Waits for a new event.
  * @param d The connection to pron
- * @param e Event returned
+ * @param e The returned event
+ * @param nonBlocking Whether the function should block or not if there is no
+ * available event.
+ * @return success
  */
 int pronNextEvent(Display *d, PronEvent *e, bool nonBlocking = false);
 
 /**
- * Get the attributes of a given window.
+ * Gets the attributes of a given window.
  * @param d The connection to pron
  * @param w The window whose attributes to get
  * @param attr The attributes of the widow
@@ -215,74 +222,75 @@ int pronNextEvent(Display *d, PronEvent *e, bool nonBlocking = false);
 void pronGetWindowAttributes(Display * d, Window w, PronWindowAttributes * attr);
 
 /**
- * Set the attributes of a given window.
+ * Sets the attributes of a given window.
  * @param d The connection to pron
- * @param w The window whose attributes to get
+ * @param w The window whose attributes to set
  * @param newAttr The new attributes structure
- * @param mask The mask that indiquates the attributes to be set
+ * @param mask The mask that specifies the attributes to be set
  */
 void pronSetWindowAttributes(Display * d, Window w, const PronWindowAttributes &  newAttr, unsigned int mask); 
 
 /**
- * Reparent a Window
+ * Reparents a window.
  * @param d The connection to pron
- * @param w The window
- * @param newParent The new parent window of w
+ * @param w The window to reparent
+ * @param newParent The id of the new parent window
  */
 void pronReparentWindow(Display *d, unsigned int w, unsigned int newParent);  
 
 /**
- * Destroy a Window
+ * Destroys a window.
  * @param d The connection to pron
- * @param w The window
+ * @param w The window to destroy
  */
 void pronDestroyWindow(Display *d, unsigned int w);
 
 /**
- * Move a Window of x pixels on x and y pixels on y
+ * Moves a window of x pixels on the x-axis and y pixels on the y-axis.
  * @param d The connection to pron
- * @param w The window
- * @param x The relative move on x
- * @param y The relative move on y
+ * @param w The window to move
+ * @param x The relative move on the x-axis
+ * @param y The relative move on the y-axis
  */
 void pronMoveWindow(Display *d, unsigned int w, int x, int y);
 
 /**
- * Move a Window at (x,y) position
+ * Moves a window at (x,y) position.
  * @param d The connection to pron
- * @param w The window
- * @param x The new x position
- * @param y The nex y position
+ * @param w The window to move
+ * @param x The new x-coordinate
+ * @param y The new y-coordinate
  */
 void pronMoveWindowTo(Display *d, unsigned int w, int x, int y);
 
 /**
- * Put an image on the server 
- * On a Window
- * TODO : pixmap & window
+ * Puts an image into a window.
+ * @todo put on any drawable (pixmap & window)
  * @param d The connection to pron
- * @param w The window
- * @param srcX Left top corner of the subimage x
- * @param srcY Left top corner of the subimage y
- * @param width Width of the subimage
- * @param height Height of the subimage
- * @param destX Left top corner of the destination x
- * @param destY Left top corner of the destination y
+ * @param w The window in which to put the image
+ * @param gc The graphics context to use
+ * @param image The PronImage to put
+ * @param srcX The x-coordinate of the top-left corner of the image area to put
+ * @param srcY The y-coordinate of the top-left corner of the image area to put
+ * @param width The width of the image area to put
+ * @param height The height of the image area to put
+ * @param destX The destination top-left corner x-coordinate
+ * @param destY The destination top-left corner y-coordinate
  */
-void pronPutImage(Display *d, Window w, GC gc, PronImage *image, 
-  int srcX, int srcY, int width, int height, int destX, int destY);  
+void pronPutImage(Display *d, Window w, GC __attribute__((unused)) gc, PronImage *image, 
+    int srcX, int srcY, int width, int height, int destX, int destY);  
 
 /**
- * Resize a Window
+ * Resizes a window.
  * @param d The connection to pron
- * @param w The window
+ * @param w The window to resize
  * @param width The new width
  * @param height The new height
  */
 void pronResizeWindow(Display *d, unsigned int w, int width, int height);
 
 /**
- * Creates a new PixMap.
+ * Creates a new pixmap.
  * @param d The connection to pron
  * @param width The width
  * @param height The height
@@ -292,27 +300,46 @@ void pronResizeWindow(Display *d, unsigned int w, int width, int height);
 Pixmap pronCreatePixmap(Display *d, int width, int height, int depth);
 
 /**
- * Free a pixmap
+ * Frees a pixmap.
  * @param d The connection to pron
- * @param p The pixmap
+ * @param p The pixmap to free
  */
 void pronFreePixmap(Display *d, unsigned int p);
 
 /**
- * Copy an area from a drawable to an other one
+ * Copies an area from a drawable to another one.
  * @param d The connection to pron
- * @param d The drawable src
- * @param d The drawable dest
+ * @param src The source drawable
+ * @param dest The destination drawable
+ * @param gc The graphics context to use during the copy
+ * @param srcX The x-coordinate of the top-left corner of the
+ * source drawable area to copy
+ * @param srcY The y-coordinate of the top-left corner of the
+ * source drawable area to copy
+ * @param width The width of the source drawable area to copy
+ * @param height The height of the source drawable area to copy
+ * @param destX The destination top-left corner x-coordinate
+ * @param destY The destination top-left corner y-coordinate
  */
 void pronCopyArea(Display *d, Drawable src, Drawable dest, GC gc, 
-  int srcX, int srcY, unsigned int width, unsigned int height, int destX, int destY);
+    int srcX, int srcY, unsigned int width, unsigned int height, int destX, int destY);
+
+/**
+ * Allocates memory needed to receive a pron event.
+ * @return Pointer to the allocated PronEvent
+ */
+PronEvent* getPronEvent();
 
 /**
  * Describes a connection to pron.
- * TODO: move to a real class and propose an object-oriented API.
+ * @todo Move to a real class and propose an object-oriented API.
  */
 struct Display {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param fd The file descriptor used for the connection to pron
+   * @param welcome The pron Welcome message
+   */
   Display(int fd, RespWelcome *welcome) {
     this->fd = fd;
     this->rootWindow = welcome->rootWindow;
@@ -331,13 +358,19 @@ struct Display {
 
   /**
    * Generates a new unique resource id.
-   * @todo check bounds
-   * @return the new resource id
+   * @todo Check bounds
+   * @return The new resource id
    */
   int newResourceId() {
     return this->curId++;
   }
 
+  /**
+   * Reads a message from pron.
+   * @param msg Pointer to a PronMessage to store the message read
+   * @param len The maximum length to read
+   * @return The size read (-1 if an error occured)
+   */
   int read(PronMessage *msg, size_t len) {
     int sizeRead = tsock_read(this->fd, msg, len);
 
@@ -355,6 +388,16 @@ struct Display {
     return sizeRead;
   }
 
+  /**
+   * @brief Reads a message of the given type from pron.
+   * Reads a message from pron. If the type of the message is equal
+   * to @a type, returns it. Else, if the message is an event, enqueues it
+   * into the event queue. Else, prints an error message.
+   * @param type The requested type
+   * @param buffer The buffer where to store the message
+   * @param len The length of the buffer
+   * @return The size read (-1 if an error occured)
+   */
   int read(MessageType type, void *buffer, size_t len) {
     PronMessage *msgRead;
     int sizeRead;
@@ -383,6 +426,13 @@ struct Display {
     return sizeRead;
   }
 
+  /**
+   * @brief Gets the next event from pron.
+   * If the events queue is not empty, returns the first event of the queue.
+   * Else, read a new event from the connection to pron.
+   * @param e The event returned
+   * @return success
+   */
   bool getNextEvent(PronEvent *e) {
     bool ok = false;
 
@@ -404,13 +454,13 @@ struct Display {
     return ok;
   }
 
-  int fd; /**< file descriptor used for the connection to pron */
-  Window rootWindow; /**< id of the root window */
-  int startId; /**< first usable resource id */
-  int endId; /**< last usable resource id */
-  int curId; /**< current resource id */
-  GC defaultGC; /**< default graphic context */
-  queue< pair<int, PronEvent*> > queuedEvents; /**< events read from the server and queued */
+  int fd; /**< File descriptor used for the connection to pron */
+  Window rootWindow; /**< Id of the root window */
+  int startId; /**< First usable resource id */
+  int endId; /**< Last usable resource id */
+  int curId; /**< Current resource id */
+  GC defaultGC; /**< Default graphics context */
+  queue< pair<int, PronEvent*> > queuedEvents; /**< Events read from the server and queued */
 };
 
 #endif
