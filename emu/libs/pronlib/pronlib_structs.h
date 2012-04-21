@@ -1,8 +1,9 @@
 #ifndef __PRONLIB_STRUCTS_H__
 #define __PRONLIB_STRUCTS_H__
 
+#include <stdlib.h>
+
 #include <vesa_types.h>
-#include <cstdlib>
 
 /**
  * Structure for pron window attributes
@@ -12,7 +13,12 @@ struct PronWindowAttributes {
   int y;
   int width;
   int height;
-  color_t        bgColor;
+  color_t bgColor;
+  bool isResizable;
+  int maxWidth;
+  int maxHeight;
+  int minWidth;
+  int minHeight;
 };
 
 /**

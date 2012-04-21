@@ -1,13 +1,14 @@
-#include <font_loader.h>
 #include <dirent.h>
+#include <fcntl.h>
+#include <math.h>
+#include <stdio.h>
+#include <string>
+#include <string.h>
+#include <sys/ioctl.h>
+
+#include <font_loader.h>
 #include <screen.h>
 #include <window.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
-#include <string.h>
-#include <cstdio>
-#include <math.h>
-#include <string>
 
 using namespace std;
 
@@ -352,6 +353,12 @@ void traceWindowsRec(Window *w, string prefix) {
 
 void Screen::traceWindows() {
   traceWindowsRec(this->tree->getRoot(), "");
+  /*printf("TraceWindow : ");
+  for (WindowsTree::IteratorDFS it = tree->beginDFS() ; it != tree->endDFS(); it++) {
+    printf("%d ", it->getId());
+  }
+  */
+  printf("\n");
 }
 
 GC* Screen::getGC(){
@@ -360,4 +367,17 @@ GC* Screen::getGC(){
 
 void Screen::setGC(GC *gc){
   this->gc = gc;
+}
+
+void Screen::destroy(Window * w) {
+  for (WindowsTree::IteratorBFS it = this->tree->beginBFS(w); it != this->tree->endBFS(); it++) {
+    EventDestroyWindow eventDestroyWindow(it->getId());
+    it->deliverWindowEvent(&eventDestroyWindow, sizeof(eventDestroyWindow));
+  }
+}
+
+void Screen::reparent (Window * child, Window * newParent) {
+  child->reparent(newParent);
+  this->setClipWin(NULL);
+  this->traceWindows();
 }

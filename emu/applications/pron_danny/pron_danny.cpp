@@ -1,10 +1,9 @@
-#include <pron_proto.h>
 #include <assert.h>
-#include <cstdlib>
+#include <math.h>
+#include <stdlib.h>
 #include <unistd.h>
-#include "pron_danny.h"
-#include <cmath>
-#include <iostream>
+
+#include <pron_danny.h>
 
 /**
  * @author John Carmack

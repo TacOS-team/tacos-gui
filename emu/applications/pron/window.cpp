@@ -1,17 +1,17 @@
-#include <client.h>
-#include <window.h>
-#include <screen.h>
-#include <cstdlib>
-#include <cstdio>
-#include <string.h>
-#include <pronlib_enums.h>
 #include <algorithm>
-#include <mouse.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <client.h>
 #include <drawable.h>
+#include <mouse.h>
+#include <pronlib_enums.h>
+#include <screen.h>
+#include <window.h>
 
 Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, int y, int width, int height) 
     : Drawable(D_WINDOW, screen, id, creator, width, height) {
-
   this->x = x;
   this->y = y;
   memset(&this->bgColor, 0, sizeof(this->bgColor));
@@ -21,6 +21,11 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
   this->eventMask = 0;
   this->dontPropagateMask = 0;
   this->mapped = false;
+  this->isResizable = true;
+  this->maxWidth = -1; // -1 means there is no limit
+  this->maxHeight = -1;
+  this->minWidth = -1;
+  this->minHeight = -1;
 
   // Père
   this->parent = parent;
@@ -175,6 +180,11 @@ PronWindowAttributes Window::getAttributes() {
   attr.width = this->getWidth();
   attr.height = this->getHeight();
   attr.bgColor = this->bgColor;
+  attr.isResizable = this->isResizable;
+  attr.maxWidth = this->maxWidth;
+  attr.maxHeight = this->maxHeight;
+  attr.minWidth = this->minWidth;
+  attr.minHeight = this->minHeight;
 
   return attr;
 }
@@ -202,6 +212,21 @@ void Window::setAttributes(PronWindowAttributes *newAttr, unsigned int mask) {
   }
   if (mask & WIN_ATTR_BG_COLOR) {
     this->bgColor = newAttr->bgColor;
+  }
+  if (mask & WIN_ATTR_IS_RESIZABLE) {
+    this->isResizable = newAttr->isResizable;
+  }
+  if (mask & WIN_ATTR_MAX_WIDTH) {
+    this->maxWidth = newAttr->maxWidth;
+  }
+  if (mask & WIN_ATTR_MAX_HEIGHT) {
+    this->maxHeight = newAttr->maxHeight;
+  }
+  if (mask & WIN_ATTR_MIN_WIDTH) {
+    this->minWidth = newAttr->minWidth;
+  }
+  if (mask & WIN_ATTR_MIN_HEIGHT) {
+    this->minHeight = newAttr->minHeight;
   }
 }
 
@@ -259,7 +284,8 @@ void Window::deliverDeviceEvent(PronEvent *e, unsigned int size) {
 }
 
 void Window::raise() {
-  if (this->parent->lastChild == this) {
+  // Do nothing if we are the root window or already the last child of our parent
+  if (this->parent == NULL || this->parent->lastChild == this) {
     return;
   }
 
@@ -362,6 +388,7 @@ void Window::destroy() {
   } else {
     this->parent->lastChild = this->prevSibling;
   }
+  this->getScreen()->destroy(this);
   delete this;
 }
 
@@ -400,4 +427,13 @@ void Window::resize(int width, int height) {
   // Send resize event
   EventResizeWindow eventResizeWindow(width, height);
   this->deliverWindowEvent(&eventResizeWindow, sizeof(eventResizeWindow));
+}
+
+void Window::copyArea(int dstX, int dstY, Drawable *d, int srcX, int srcY, int width, int height) {
+  // XXX : Bourrin à revoir (problème de depth et de byte per pixel de la pixmap et de l'écran)
+  for (int y = 0; y < height; y++) {
+    for (int x = 0; x < width; x++) {
+      this->setPixel(x + dstX, y + dstY, d->getPixel(x + srcX, y + srcY));
+    }
+  }
 }

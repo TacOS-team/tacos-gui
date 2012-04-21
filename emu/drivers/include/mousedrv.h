@@ -2,6 +2,7 @@
 #define __MOUSE_H__
 
 #include <mouse_types.h>
+#include <sys/types.h>
 #include <SDL/SDL.h>
 
 ssize_t mouse_read(void *buf);

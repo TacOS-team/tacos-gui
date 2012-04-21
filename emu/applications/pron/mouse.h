@@ -1,5 +1,6 @@
 #ifndef __MOUSE_H__
 #define __MOUSE_H__
+
 #include <mouse_types.h>
 
 #define PRON_MOUSE_POINTER_WIDTH 6

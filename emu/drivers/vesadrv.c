@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <vesadrv.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_mutex.h>

@@ -1,5 +1,6 @@
+#include <stdio.h>
+
 #include <gwindows_manager.h>
-#include <cstdio>
 
 int buttonSize = 15;
 
@@ -247,20 +248,39 @@ void GWindow::decorate() {
 
 
 void GWindow::resize(int width, int height) {
-  if (!this->isMaximised) {
-    pronResizeWindow(display, this->parent, width, height);
-    pronMoveWindow(display, this->closeButton,
-      width - this->parentAttributes.width, 0);
-    pronMoveWindow(display, this->maximiseButton,
-      width - this->parentAttributes.width, 0);
-    pronMoveWindow(display, this->resizeButton,
-      width - this->parentAttributes.width, height - this->parentAttributes.height);
-    this->parentAttributes.width  = width;
-    this->parentAttributes.height = height;
-    this->attributes.width        = width  - 2*buttonSize;
-    this->attributes.height       = height - 2*buttonSize;
-    pronResizeWindow(display, this->window, this->attributes.width,
-      this->attributes.height);
+  // We first retrieve the attributes of the window that has to be resize
+  // so that we can know if the window is resizable
+  PronWindowAttributes attr;
+  pronGetWindowAttributes(this->display, this->window, &attr);
+  if (attr.isResizable) {
+    if (attr.maxWidth != -1 && attr.maxWidth <= width) {
+      width = attr.maxWidth ;
+    }
+    if (attr.minWidth != -1 && attr.minWidth >= width ) {
+      width = attr.minWidth;
+    }  
+    if ((attr.maxHeight != -1 && attr.maxHeight <= height) ) {
+      height = attr.maxHeight ;
+    }
+    if (attr.minHeight != -1 && attr.minHeight >= height) {
+      height = attr.minHeight;
+    }
+    printf("%d %d %d %d\n",attr.minHeight, attr.minWidth, height, width);
+    if (!this->isMaximised){
+      pronResizeWindow(display, this->parent, width, height);
+      pronMoveWindow(display, this->closeButton,
+        width - this->parentAttributes.width, 0);
+      pronMoveWindow(display, this->maximiseButton,
+        width - this->parentAttributes.width, 0);
+      pronMoveWindow(display, this->resizeButton,
+        width - this->parentAttributes.width, height - this->parentAttributes.height);
+      this->parentAttributes.width  = width;
+      this->parentAttributes.height = height;
+      this->attributes.width        = width  - 2*buttonSize;
+      this->attributes.height       = height - 2*buttonSize;
+      pronResizeWindow(display, this->window, this->attributes.width,
+        this->attributes.height);
+    }
   }
 }
 
@@ -277,23 +297,29 @@ void GWindow::move(int xMove, int yMove) {
 
 
 void GWindow::maximise() {
-  if (!this->isMaximised) {
-    // On en profite pour mettre tous les attributs à jour
-    pronGetWindowAttributes(display, this->window, &this->attributes);
-    pronGetWindowAttributes(display, this->parent, &this->parentAttributes);
-    this->oldParentAttributes = this->parentAttributes;
-    pronMoveWindowTo(display, this->parent, 0, 0);
-    this->resize(GWindowsManager::getInstance()->getRootWindowAttributes().width,
-      GWindowsManager::getInstance()->getRootWindowAttributes().height);
-    // TODO unmap de resizewindow
-    this->isMaximised = true;
-  } else {
-    this->isMaximised = false;
-    this->resize(this->oldParentAttributes.width, this->oldParentAttributes.height);
-    pronMoveWindowTo(display, this->parent, this->oldParentAttributes.x, this->oldParentAttributes.y);
-    // On en profite pour mettre tous les attributs à jour
-    pronGetWindowAttributes(display, this->window, &this->attributes);
-    pronGetWindowAttributes(display, this->parent, &this->parentAttributes);
+  // We first retrieve the attributes of the window that has to be resize
+  // so that we can know if the window is resizable
+  PronWindowAttributes windowAttributes;
+  pronGetWindowAttributes(this->display, this->window, &windowAttributes);
+  if (windowAttributes.isResizable){
+    if (!this->isMaximised) {
+      // On en profite pour mettre tous les attributs à jour
+      this->attributes = windowAttributes;
+      pronGetWindowAttributes(display, this->parent, &this->parentAttributes);
+      this->oldParentAttributes = this->parentAttributes;
+      pronMoveWindowTo(display, this->parent, 0, 0);
+      this->resize(GWindowsManager::getInstance()->getRootWindowAttributes().width,
+        GWindowsManager::getInstance()->getRootWindowAttributes().height);
+      // TODO unmap de resizewindow
+      this->isMaximised = true;
+    } else {
+      this->isMaximised = false;
+      this->resize(this->oldParentAttributes.width, this->oldParentAttributes.height);
+      pronMoveWindowTo(display, this->parent, this->oldParentAttributes.x, this->oldParentAttributes.y);
+      // On en profite pour mettre tous les attributs à jour
+      this->attributes = windowAttributes;
+      pronGetWindowAttributes(display, this->parent, &this->parentAttributes);
+    }
   }
 }
 

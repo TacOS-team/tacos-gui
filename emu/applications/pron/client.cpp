@@ -1,11 +1,12 @@
+#include <stdio.h>
+
 #include <client.h>
+#include <drawable.h>
+#include <pixmap.h>
 #include <pron_proto.h>
 #include <screen.h>
 #include <tsock.h>
 #include <window.h>
-#include <pixmap.h>
-#include <drawable.h>
-#include <cstdio>
 
 int Client::recvLen;
 char Client::recvBuf[MAX_MSG_SIZE];
@@ -27,7 +28,7 @@ void Client::handle() {
   switch (reqType) { 
     case RQ_HELLO: {
       // Identifiers: 16 upper bits for client id, 16 lower bits for resource id
-      RespWelcome welcome(screen->tree->getRoot()->getId(), this->id << 16, (this->id << 17) - 1);
+      RespWelcome welcome(screen->tree->getRoot()->getId(), this->id << 16, ((this->id + 1) << 16) - 1);
       this->send(&welcome, sizeof(welcome));
       break;
     }
@@ -39,8 +40,9 @@ void Client::handle() {
     }
     case RQ_CREATE_WINDOW: {
       RqCreateWindow *rq = (RqCreateWindow*) Client::recvBuf;
-      new Window(screen, rq->id, this, (Window*) screen->getDrawable(rq->parent, D_WINDOW), rq->x, rq->y, rq->width, rq->height);
-      //screen->traceWindows();
+      new Window(screen, rq->id, this, (Window*) screen->getDrawable(rq->parent, D_WINDOW),
+        rq->x, rq->y, rq->width, rq->height);
+      screen->traceWindows();
       break;
     }
     case RQ_MAP_WINDOW: {
@@ -194,38 +196,18 @@ void Client::handle() {
     }
     case RQ_REPARENT: {
       RqReparent *rq = (RqReparent*) Client::recvBuf;
-      Window *w = (Window*) screen->getDrawable(rq->window, D_WINDOW);
-      if (w != NULL) {
-        w->reparent((Window*) screen->getDrawable(rq->newParent, D_WINDOW));
-        screen->setClipWin(NULL);
-        //screen->traceWindows();
+      Window *child = (Window*) screen->getDrawable(rq->window, D_WINDOW);
+      Window *newParent = (Window*) screen->getDrawable(rq->newParent, D_WINDOW);
+      if (child != NULL && newParent != NULL) {
+        screen->reparent(child, newParent);
       }
       break;
     }
     case RQ_DESTROY_WINDOW: {
-      // XXX: move this outside client.cpp
+      screen->traceWindows();
       RqDestroyWindow *rq = (RqDestroyWindow*) Client::recvBuf;
       Window *w = (Window*) screen->getDrawable(rq->window, D_WINDOW);
       if (w != NULL) {
-        Window *currentWindow = w;
-        while (currentWindow != NULL && currentWindow != w->parent) {
-          EventDestroyWindow eventDestroyWindow(currentWindow->getId());
-          currentWindow->deliverWindowEvent(&eventDestroyWindow, sizeof(eventDestroyWindow));
-          if (currentWindow->firstChild != NULL) {
-            currentWindow = currentWindow->firstChild;
-          } else if (currentWindow->nextSibling != NULL) {
-            currentWindow = currentWindow->nextSibling;
-          } else {
-            while (currentWindow->parent != NULL
-                    && currentWindow->parent->nextSibling == NULL
-                    && currentWindow != w->parent) {
-              currentWindow = currentWindow->parent;
-            }
-            if (currentWindow->parent != NULL) {
-              currentWindow = currentWindow->parent->nextSibling;
-            }
-          }
-        }
         w->destroy();  
       }
       break;
@@ -247,16 +229,11 @@ void Client::handle() {
       break;
     }
     case RQ_PUT_IMAGE: {
-      // XXX: move this outside client.cpp
       RqPutImage *rq = (RqPutImage*) Client::recvBuf;
-      // Gets the image buffer
-      char *image_buf = ((char*) rq) + sizeof(RqPutImage);
-      // Gets the window 
       Window *w = (Window*) screen->getDrawable(rq->window);
-      if(w != NULL){
-        // Create the PronImage
+      if (w != NULL) {
+      	char *image_buf = ((char*) rq) + sizeof(RqPutImage);
         PronImage image(rq->width, rq->height, rq->format, image_buf, rq->depth, rq->bytesPerPixel, false);
-        // Request the copy into the window
         w->putImage(&image, rq->x, rq->y);
       }
       break;
@@ -281,19 +258,12 @@ void Client::handle() {
       break;
     }
     case RQ_COPY_AREA: {
-      // XXX: move this outside client.cpp
       RqCopyArea *rq = (RqCopyArea*) Client::recvBuf;
       Pixmap *p = (Pixmap*) screen->getDrawable(rq->src, D_PIXMAP);
       Window *w = (Window*) screen->getDrawable(rq->dest, D_WINDOW);
       GC *gc = GC::getGC(rq->gc);
-      //int pixel = -1; // 0xFFFFFFFF
       if (p != NULL && w != NULL && screen->prepareDrawing(w, gc)) {
-        // XXX : Bourrin à revoir (problème de depth et de byte per pixel de la pixmap et de l'écran)
-        for (int y = 0; y < rq->height; y++) {
-          for (int x = 0; x < rq->width; x++) {// Lol C++ noob THERE IS STILL PLACE URGENT PPI
-            w->setPixel(x + rq->destX, y + rq->destY, p->getPixel(x + rq->srcX, y + rq->srcY));
-          }
-        }
+        w->copyArea(rq->destX, rq->destY, p, rq->srcX, rq->srcY, rq->width, rq->height);
       }
       break;
     }

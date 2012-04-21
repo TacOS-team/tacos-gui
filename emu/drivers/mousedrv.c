@@ -1,4 +1,5 @@
 #include <mousedrv.h>
+#include <string.h>
 #include <SDL/SDL_mutex.h>
 
 extern SDL_Surface *screen;

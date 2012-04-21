@@ -1,8 +1,6 @@
 #ifndef TSOCK_H
 #define TSOCK_H
 
-#include <sys/types.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -1,18 +1,15 @@
-#include <iostream>
-#include <time.h>
-#include <clibtacos>
-#include <cstdio>
-#include <vector>
 #include <algorithm>
 #include <signal.h>
+#include <stdio.h>
 #include <sys/time.h>
+#include <time.h>
+#include <vector>
 
-
-#include <pronlib.h>
 #include <gwindows_manager.h>
+#include <libtacos.h>
+#include <pronlib.h>
 
 using namespace std;
-
 
 GWindow *windowLeftButtonPressed   = NULL;
 GWindow *windowResizeButtonPressed = NULL;
@@ -60,7 +57,6 @@ void activateTimer(unsigned int usec) {
     isTimerActive = true;
   }
 }
-
 
 int main() {
   srand(time(NULL));
@@ -137,6 +133,8 @@ int main() {
             GWindowsManager::getInstance()->destroy(gwin->parent);
           } else if (mouseButtonEvent->window == gwin->maximiseButton) {
             gwin->maximise();
+            // Puts the window on foreground
+            gwin->raise();
           } else {
             if (mouseButtonEvent->window == gwin->resizeButton) {
               windowResizeButtonPressed = gwin;
@@ -149,9 +147,9 @@ int main() {
             currentRootEventMask |= PRON_EVENTMASK(EV_POINTER_MOVED) | PRON_EVENTMASK(EV_MOUSE_BUTTON);
             // Ask to reset the last mouse position
             mouseActualXPosition = -1;
+            // Puts the window on foreground
+            gwin->raise();
           }
-          // Puts the window on foreground
-          gwin->raise();
         } else {
           windowLeftButtonPressed   = NULL;
           windowResizeButtonPressed = NULL;

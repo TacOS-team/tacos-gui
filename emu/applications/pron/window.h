@@ -33,6 +33,11 @@ public: //XXX: bourrin
   int dontPropagateMask;
   vector<OtherClient> otherClients;
   bool mapped;
+  bool isResizable;
+  int maxWidth;
+  int maxHeight;
+  int minWidth;
+  int minHeight;
 
   Window *parent;
   Window *prevSibling, *nextSibling;
@@ -126,12 +131,24 @@ public: //XXX: bourrin
   int getY();
   void setY(int y);
 
-  /*
+  /**
    * Sets a new parent to the Window.
    *
    * @param w The new parent Window
    */
   void reparent(Window *w);
+
+  /**
+   * Copies a Drawable area into the window.
+   * @param dstX The top-left x-coordinate of the destination area
+   * @param dstY The top-left y-coordinate of the destination area
+   * @param d The source Drawable
+   * @param srcX The top-left x-coordinate of the source area
+   * @param srcY The top-left y-coordinate of the source area
+   * @param width The width of the area
+   * @param height The height of the area
+   */
+  void copyArea(int dstX, int dstY, Drawable *d, int srcX, int srcY, int width, int height);
 
 private:
   

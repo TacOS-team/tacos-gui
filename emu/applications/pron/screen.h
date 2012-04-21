@@ -77,6 +77,10 @@ public: // XXX: bourrin
 
   void traceWindows();
 
+  void destroy(Window * w);
+
+  void reparent (Window * child, Window * newParent);
+
   GC* getGC();
   void setGC(GC *gc);
 

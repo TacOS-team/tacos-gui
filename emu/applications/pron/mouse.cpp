@@ -1,10 +1,10 @@
-#include <clibtacos>
 #include <fcntl.h>
-#include <mouse.h>
-#include <mouse_types.h>
-#include <screen.h>
 #include <string.h>
 #include <unistd.h>
+
+#include <libtacos.h>
+#include <mouse.h>
+#include <screen.h>
 #include <window.h>
 
 Mouse* Mouse::instance = NULL;
@@ -32,7 +32,7 @@ void Mouse::checkEvents() {
   // Get the mouse state
   mousestate_t state;
   memset(&state, 0, sizeof(mousestate_t));
-  read(this->fd, &state, 0);
+  read(this->fd, &state, sizeof(mousestate_t));
 
   // Handle motion mouse events
   this->handleMotion(&state);
@@ -68,7 +68,6 @@ void Mouse::handleMotion(mousestate_t *state) {
 }
 
 void Mouse::handleButton(mousestate_t *state) {
-
   // We have to compare the state of each buttons and if one button has changed, send the event
   if (this->mouseB1 != state->b1 ||
       this->mouseB2 != state->b2 ||

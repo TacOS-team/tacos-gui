@@ -1,10 +1,11 @@
-#include <clibtacos>
 #include <fcntl.h>
-#include <keyboard.h>
-#include <kbd_types.h>
 #include <screen.h>
 #include <string.h>
 #include <unistd.h>
+
+#include <keyboard.h>
+#include <kbd_types.h>
+#include <libtacos.h>
 #include <window.h>
 
 Keyboard::Keyboard() {
