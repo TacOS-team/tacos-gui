@@ -34,7 +34,7 @@ enum tacos_descriptor_type {
 
 enum tacos_descriptor_type tacos_descriptors[MAX_FD];
 
-Uint32 libtacos_periodic_checks(Uint32 interval, void *param) {
+Uint32 libtacos_periodic_checks(Uint32 interval, void *param __attribute__((unused))) {
   static int i = 0;
 
   SDL_mutexP(mutex);
