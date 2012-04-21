@@ -30,7 +30,7 @@ export BUILDDIRAPPS=$(BUILDDIR)/applications
 export LIBTACOS=$(BUILDDIRLIBS)/libtacos.so
 export PRONLIB=$(BUILDDIRLIBS)/pronlib.so
 export LIBTSOCK=$(BUILDDIRLIBS)/libtsock.so
-export LIBTSOCK=$(BUILDDIRLIBS)/sombrero.so
+export SOMBRERO=$(BUILDDIRLIBS)/sombrero.so
 
 SUBDIRS = drivers libs applications
 
