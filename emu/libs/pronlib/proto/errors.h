@@ -3,8 +3,14 @@
 
 #include <proto/base.h>
 
+/**
+ * Base class representing a pron error message.
+ */
 struct PronError : public PronMessage {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param type The message type
+   */
   PronError(MessageType type)
       : PronMessage(type) {
   }
