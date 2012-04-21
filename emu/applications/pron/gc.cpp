@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <gc.h>
-#include <pronlib_enums.h>
 
 std::vector<GC*> GC::gcs;
 

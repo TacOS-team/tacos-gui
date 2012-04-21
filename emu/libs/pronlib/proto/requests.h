@@ -1,7 +1,9 @@
-#ifndef __PRONLIB_REQUESTS_H__
-#define __PRONLIB_REQUESTS_H__
+#ifndef __PRONPROTO_REQUESTS_H__
+#define __PRONPROTO_REQUESTS_H__
 
-#include <pron_messages.h>
+#include <proto/base.h>
+#include <proto/bits/attributes.h>
+#include <proto/bits/gc.h>
 
 struct PronRequest : public PronMessage {
   /** Constructor. */
@@ -559,4 +561,4 @@ struct RqCopyArea : public PronRequest {
   int destY; /**< dest y to copy */
 };
 
-#endif // __PRONLIB_REQUESTS_H__
+#endif // __PRONPROTO_REQUESTS_H__

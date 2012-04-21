@@ -6,7 +6,6 @@
 #include <client.h>
 #include <drawable.h>
 #include <mouse.h>
-#include <pronlib_enums.h>
 #include <screen.h>
 #include <window.h>
 

@@ -1,7 +1,7 @@
-#ifndef __PRONLIB_RESPONSES_H__
-#define __PRONLIB_RESPONSES_H__
+#ifndef __PRONPROTO_RESPONSES_H__
+#define __PRONPROTO_RESPONSES_H__
 
-#include <pron_messages.h>
+#include <proto/base.h>
 
 struct PronResponse : public PronMessage {
   /** Constructor. */
@@ -55,4 +55,4 @@ struct RespGCValues : public PronResponse {
   PronGCValues values; /**< values of the graphics context */
 };
 
-#endif // __PRONLIB_RESPONSES_H__
+#endif // __PRONPROTO_RESPONSES_H__

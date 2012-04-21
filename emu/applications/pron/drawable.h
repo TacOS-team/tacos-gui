@@ -1,6 +1,7 @@
 #ifndef _DRAWABLE_H_
 #define _DRAWABLE_H_
-#include <pronlib_structs.h>
+
+#include <proto/bits/image.h>
 
 using namespace std;
 
@@ -8,6 +9,14 @@ class Window;
 //class PixMap;
 class Screen;
 class Client;
+
+/**
+ * Drawable type
+ */
+enum DrawableType {
+  D_WINDOW = 0x0000, 
+  D_PIXMAP = 0x0001,
+};
 
 class Drawable {
 

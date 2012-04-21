@@ -1,8 +1,11 @@
-#ifndef __PRONLIB_EVENTS_H__
-#define __PRONLIB_EVENTS_H__
+#ifndef __PRONPROTO_EVENTS_H__
+#define __PRONPROTO_EVENTS_H__
 
-#include <pron_messages.h>
+#include <proto/base.h>
+#include <proto/bits/attributes.h>
 #include <stdlib.h>
+
+#define PRON_EVENTMASK(n) (1 << (n & ~CATEGORY_MASK))
 
 struct PronEvent : public PronMessage {
   /** Constructor. */
@@ -169,4 +172,4 @@ struct EventResizeWindow : public PronEvent {
 
 PronEvent* getPronEvent();
 
-#endif // __PRONLIB_EVENTS_H__
+#endif // __PRONPROTO_EVENTS_H__

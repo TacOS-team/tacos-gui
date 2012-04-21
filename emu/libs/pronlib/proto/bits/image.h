@@ -1,32 +1,15 @@
-#ifndef __PRONLIB_STRUCTS_H__
-#define __PRONLIB_STRUCTS_H__
+#ifndef __PRONPROTO_IMAGE_H__
+#define __PRONPROTO_IMAGE_H__
 
 #include <stdlib.h>
 
-#include <vesa_types.h>
-
 /**
- * Structure for pron window attributes
+ * Image pixmap types
  */
-struct PronWindowAttributes {
-  int x;
-  int y;
-  int width;
-  int height;
-  color_t bgColor;
-  bool isResizable;
-  int maxWidth;
-  int maxHeight;
-  int minWidth;
-  int minHeight;
-};
-
-/**
- * Structure for pron graphics contexts values
- */
-struct PronGCValues {
-  color_t fg;
-  color_t bg;
+enum PixmapType{
+  XYBitmap = 0x0000, 
+  XYPixmap = 0x0001, 
+  ZPixmap  = 0X0002
 };
 
 /**
@@ -68,4 +51,4 @@ struct PronImage {
   int bytesPerPixel;// Bytes per pixels
 };
 
-#endif // __PRONLIB_STRUCTS_H__
+#endif // __PRONPROTO_IMAGE_H__

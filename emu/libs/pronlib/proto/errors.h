@@ -1,7 +1,7 @@
-#ifndef __PRONLIB_ERRORS_H__
-#define __PRONLIB_ERRORS_H__
+#ifndef __PRONPROTO_ERRORS_H__
+#define __PRONPROTO_ERRORS_H__
 
-#include <pron_messages.h>
+#include <proto/base.h>
 
 struct PronError : public PronMessage {
   /** Constructor. */
@@ -10,4 +10,4 @@ struct PronError : public PronMessage {
   }
 };
 
-#endif // __PRONLIB_ERRORS_H__
+#endif // __PRONPROTO_ERRORS_H__

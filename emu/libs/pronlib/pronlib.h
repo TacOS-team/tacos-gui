@@ -12,6 +12,7 @@
 #include <utility>
 
 #include <pron_proto.h>
+#include <proto/bits/image.h>
 #include <pronlib_types.h>
 #include <tsock.h>
 

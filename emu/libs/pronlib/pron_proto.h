@@ -2,14 +2,12 @@
  * @file pron_proto.h
  * Defines the messages used by the pron protocol.
  */
-#ifndef _PRON_PROTO_H_
-#define _PRON_PROTO_H_
+#ifndef __PRON_PROTO_H__
+#define __PRON_PROTO_H__
 
-#include <pronlib_enums.h>
-#include <pronlib_structs.h>
-#include <pronlib_errors.h>
-#include <pronlib_events.h>
-#include <pronlib_requests.h>
-#include <pronlib_responses.h>
+#include <proto/requests.h>
+#include <proto/responses.h>
+#include <proto/events.h>
+#include <proto/errors.h>
 
-#endif
+#endif // __PRON_PROTO_H__

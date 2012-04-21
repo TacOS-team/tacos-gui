@@ -4,6 +4,7 @@
 #include <unistd.h>
 
 #include <keyboard.h>
+#include <proto/bits/keys.h>
 #include <kbd_types.h>
 #include <libtacos.h>
 #include <window.h>

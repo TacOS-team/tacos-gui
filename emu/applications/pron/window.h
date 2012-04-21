@@ -1,9 +1,7 @@
 #ifndef _WINDOW_H_
 #define _WINDOW_H_
 
-#include <pronlib_enums.h>
-#include <pronlib_structs.h>
-#include <pronlib_events.h>
+#include <proto/events.h>
 #include <vector>
 #include <drawable.h>
 

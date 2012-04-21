@@ -1,7 +1,7 @@
 #ifndef _GC_H_
 #define _GC_H_
 
-#include <pronlib_structs.h>
+#include <proto/bits/gc.h>
 #include <vector>
 
 class GC {
