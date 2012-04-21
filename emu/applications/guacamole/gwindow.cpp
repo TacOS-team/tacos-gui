@@ -129,30 +129,14 @@ bool GWindow::hasDecoration() {
 }
 
 bool GWindow::overlaps(GWindow *gw) {
-  bool res =
-      // Si coin en haut à gauche dedans
-      (this->parentAttributes.x >= this->parentAttributes.x
-      && this->parentAttributes.y >= this->parentAttributes.y
-      && this->parentAttributes.x < this->parentAttributes.x + this->parentAttributes.width
-      && this->parentAttributes.y < this->parentAttributes.y + this->parentAttributes.height)
-    || // SI coin en haut à droite
-      (this->parentAttributes.x + this->parentAttributes.width >= this->parentAttributes.x
-      && this->parentAttributes.y >= this->parentAttributes.y
-      && this->parentAttributes.x + this->parentAttributes.width < this->parentAttributes.x + this->parentAttributes.width
-      && this->parentAttributes.y < this->parentAttributes.y + this->parentAttributes.height)
-    || // SI coin en bas à gauche
-      (this->parentAttributes.x >= this->parentAttributes.x
-      && this->parentAttributes.y + this->parentAttributes.height >= this->parentAttributes.y
-      && this->parentAttributes.x < this->parentAttributes.x + this->parentAttributes.width
-      && this->parentAttributes.y + this->parentAttributes.height < this->parentAttributes.y + this->parentAttributes.height)
-    || // SI coin en bas à droite
-      (this->parentAttributes.x + this->parentAttributes.width >= this->parentAttributes.x
-      && this->parentAttributes.y + this->parentAttributes.height >= this->parentAttributes.y
-      && this->parentAttributes.x + this->parentAttributes.width < this->parentAttributes.x + this->parentAttributes.width
-      && this->parentAttributes.y + this->parentAttributes.height < this->parentAttributes.y + this->parentAttributes.height);
-  return res;
-}
+  bool dehors =
+    this->parentAttributes.x > gw->parentAttributes.x + gw->parentAttributes.width ||
+    this->parentAttributes.x + this->parentAttributes.width < gw->parentAttributes.x ||
+    this->parentAttributes.y > gw->parentAttributes.y + gw->parentAttributes.height ||
+    this->parentAttributes.y + this->parentAttributes.height < gw->parentAttributes.y;
 
+  return !dehors;
+}
 
 void GWindow::decorate() {
   if (this->hasDecoration()) {
