@@ -92,6 +92,15 @@ int main(int argc, char **argv){
   int prevx = 0, prevy = 0;
   bool buttonPressed = false;
 
+  if (argc > 2) {
+    x = atoi(argv[1]);
+    y = atoi(argv[2]);
+    printf("Position: %d %d\n", x, y);
+  } else {
+    x = 20;
+    y = 10;
+  }
+
   float theta = 0.0f;
   float phi = 0.0f;
   // On se connecte a PRON
@@ -101,7 +110,7 @@ int main(int argc, char **argv){
     return 1;
   }
   // On cree la fenêtre
-  Window w = pronCreateWindow(d, d->rootWindow, 0, 0, LARGEUR, HAUTEUR);
+  Window w = pronCreateWindow(d, d->rootWindow, x, y, LARGEUR, HAUTEUR);
   // On récupère le contexte graphique par défaut
   GC gc = d->defaultGC;
   // On mappe la fenêtre
