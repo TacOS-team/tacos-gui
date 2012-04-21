@@ -7,7 +7,9 @@
 #define ER_PREFIX (3 << 16)
 #define CATEGORY_MASK (3 << 16)
 
-/** Pron message types. */
+/**
+ * Pron message types.
+ */
 enum MessageType {
   /* Requests */
   RQ_HELLO                    = (RQ_PREFIX |  1),
@@ -58,13 +60,19 @@ enum MessageType {
   /* Errors */
 };
 
+/**
+ * Base class representing a pron message.
+ */
 struct PronMessage {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param type The message type
+   */
   PronMessage(MessageType type) {
     this->type = type;
   }
 
-  MessageType type;
+  MessageType type; /**< Message type */
 };
 
 #endif // __PRONPROTO_BASE_H__

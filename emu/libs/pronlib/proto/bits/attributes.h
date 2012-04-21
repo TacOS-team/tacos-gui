@@ -3,7 +3,9 @@
 
 #include <vesa_types.h>
 
-/** Pron window attributes fields for mask on get/set attributes */
+/**
+ * Pron window attributes fields for mask on get/set attributes
+ */
 enum WindowAttributeField {
   WIN_ATTR_X            = (1 << 0), 
   WIN_ATTR_Y            = (1 << 1), 
@@ -21,16 +23,16 @@ enum WindowAttributeField {
  * Structure for pron window attributes
  */
 struct PronWindowAttributes {
-  int x;
-  int y;
-  int width;
-  int height;
-  color_t bgColor;
-  bool isResizable;
-  int maxWidth;
-  int maxHeight;
-  int minWidth;
-  int minHeight;
+  int x; /**< X-coordinate of the top-left corner */
+  int y; /**< Y-coordinate of the top-left corner */
+  int width; /**< Width */
+  int height; /**< Height */
+  color_t bgColor; /**< Background color */
+  bool isResizable; /**< Whether the window is resizable or not */
+  int maxWidth; /**< Maximum width */
+  int maxHeight; /**< Maximum height */
+  int minWidth; /**< Minimum width */
+  int minHeight; /**< Minimum height */
 };
 
 #endif // __PRONPROTO_ATTRIBUTES_H__

@@ -3,18 +3,20 @@
 
 #include <vesa_types.h>
 
-/** Pron GC values fields for mask on get/set values */
+/**
+ * Graphics context fields masks for get/set requests.
+ */
 enum GCValueField {
   GC_VAL_FG        = (1 << 0), 
   GC_VAL_BG        = (1 << 1),
 };
 
 /**
- * Structure for pron graphics contexts values
+ * Graphics context values.
  */
 struct PronGCValues {
-  color_t fg;
-  color_t bg;
+  color_t fg; /**< Foreground color */
+  color_t bg; /**< Background color */
 };
 
 #endif // __PRONPROTO_GC_H__
