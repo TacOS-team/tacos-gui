@@ -7,8 +7,6 @@
 
 #include <pronlib.h>
 
-Display *display = NULL;
-
 Display* pronConnect() {
   int fd = tsock_connect("/tmp/pron.sock");
   if (fd < 0) {

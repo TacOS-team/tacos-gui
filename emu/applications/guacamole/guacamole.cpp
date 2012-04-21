@@ -63,7 +63,7 @@ int main() {
   signal(SIGALRM, &derout);
   
   // connection to pron
-  display = pronConnect();
+  Display *display = pronConnect();
   
   GWindowsManager::init(display->rootWindow);
   // Get the root window informations
