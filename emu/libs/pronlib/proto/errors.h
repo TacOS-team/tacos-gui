@@ -5,18 +5,18 @@
 
 namespace pron {
 
+/**
+ * Base class representing a pron error message.
+ */
+struct PronError : public PronMessage {
   /**
-   * Base class representing a pron error message.
+   * Constructor.
+   * @param type The message type
    */
-  struct PronError : public PronMessage {
-    /**
-     * Constructor.
-     * @param type The message type
-     */
-    PronError(MessageType type)
-        : PronMessage(type) {
-    }
-  };
+  PronError(MessageType type)
+      : PronMessage(type) {
+  }
+};
 
 } // namespace pron
 

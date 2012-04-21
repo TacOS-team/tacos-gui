@@ -5,21 +5,21 @@
 
 namespace pron {
 
-  /**
-   * Graphics context fields masks for get/set requests.
-   */
-  enum GCValueField {
-    GC_VAL_FG        = (1 << 0), 
-    GC_VAL_BG        = (1 << 1),
-  };
+/**
+ * Graphics context fields masks for get/set requests.
+ */
+enum GCValueField {
+  GC_VAL_FG        = (1 << 0), 
+  GC_VAL_BG        = (1 << 1),
+};
 
-  /**
-   * Graphics context values.
-   */
-  struct PronGCValues {
-    color_t fg; /**< Foreground color */
-    color_t bg; /**< Background color */
-  };
+/**
+ * Graphics context values.
+ */
+struct PronGCValues {
+  color_t fg; /**< Foreground color */
+  color_t bg; /**< Background color */
+};
 
 } // namespace pron
 
