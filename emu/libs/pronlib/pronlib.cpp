@@ -7,6 +7,8 @@
 
 #include <pronlib.h>
 
+namespace pron {
+
 Display *display = NULL;
 
 Display* pronConnect() {
@@ -255,3 +257,5 @@ void pronCopyArea(Display *d, Drawable src, Drawable dest, GC gc,
   RqCopyArea rq(src, dest, gc, srcX, srcY, width, height, destX, destY);
   tsock_write(d->fd, &rq, sizeof(rq));
 }
+
+} // namespace pron

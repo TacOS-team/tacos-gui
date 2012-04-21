@@ -4,6 +4,8 @@
 #include <proto/bits/gc.h>
 #include <vector>
 
+using namespace pron;
+
 class GC {
 public:
   static std::vector<GC*> gcs;

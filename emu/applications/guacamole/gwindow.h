@@ -4,7 +4,7 @@
 #include <pronlib.h>
 
 using namespace std;
-
+using namespace pron;
 
 class GWindow {
  protected:

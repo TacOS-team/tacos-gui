@@ -7,6 +7,8 @@
 
 #define PRON_EVENTMASK(n) (1 << (n & ~CATEGORY_MASK))
 
+namespace pron {
+
 struct PronEvent : public PronMessage {
   /** Constructor. */
   PronEvent(MessageType type, unsigned int window)
@@ -171,5 +173,7 @@ struct EventResizeWindow : public PronEvent {
 };
 
 PronEvent* getPronEvent();
+
+} // namespace pron
 
 #endif // __PRONPROTO_EVENTS_H__

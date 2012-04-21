@@ -3,6 +3,8 @@
 
 #include <vesa_types.h>
 
+namespace pron {
+
 /** Pron GC values fields for mask on get/set values */
 enum GCValueField {
   GC_VAL_FG        = (1 << 0), 
@@ -16,5 +18,7 @@ struct PronGCValues {
   color_t fg;
   color_t bg;
 };
+
+} // namespace pron
 
 #endif // __PRONPROTO_GC_H__

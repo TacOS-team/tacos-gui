@@ -33,6 +33,8 @@
 
 #include <pronlib.h>
 
+using namespace pron;
+
 #define LARGEUR 320
 #define HAUTEUR 200
 

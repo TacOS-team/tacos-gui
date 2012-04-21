@@ -6,6 +6,8 @@
 
 #include <pronlib.h>
 
+using namespace pron;
+
 #define PI 3.14159f
 
 #define LARGEUR 320

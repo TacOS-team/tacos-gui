@@ -3,6 +3,8 @@
 
 #include <proto/base.h>
 
+namespace pron {
+
 struct PronResponse : public PronMessage {
   /** Constructor. */
   PronResponse(MessageType type)
@@ -54,5 +56,7 @@ struct RespGCValues : public PronResponse {
   
   PronGCValues values; /**< values of the graphics context */
 };
+
+} // namespace pron
 
 #endif // __PRONPROTO_RESPONSES_H__

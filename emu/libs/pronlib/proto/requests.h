@@ -5,6 +5,8 @@
 #include <proto/bits/attributes.h>
 #include <proto/bits/gc.h>
 
+namespace pron {
+
 struct PronRequest : public PronMessage {
   /** Constructor. */
   PronRequest(MessageType type)
@@ -560,5 +562,7 @@ struct RqCopyArea : public PronRequest {
   int destX; /**< dest x to copy */
   int destY; /**< dest y to copy */
 };
+
+} // namespace pron
 
 #endif // __PRONPROTO_REQUESTS_H__

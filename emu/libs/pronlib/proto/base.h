@@ -7,6 +7,8 @@
 #define ER_PREFIX (3 << 16)
 #define CATEGORY_MASK (3 << 16)
 
+namespace pron {
+
 /** Pron message types. */
 enum MessageType {
   /* Requests */
@@ -66,5 +68,7 @@ struct PronMessage {
 
   MessageType type;
 };
+
+} // namespace pron
 
 #endif // __PRONPROTO_BASE_H__

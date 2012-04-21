@@ -35,6 +35,8 @@
 #include <libtacos.h>       
 #include <pronlib.h>
 
+using namespace pron;
+
 #define WIDTH 320
 #define HEIGHT 200
 

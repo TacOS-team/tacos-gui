@@ -3,6 +3,8 @@
 
 #include <vesa_types.h>
 
+namespace pron {
+
 /** Pron window attributes fields for mask on get/set attributes */
 enum WindowAttributeField {
   WIN_ATTR_X            = (1 << 0), 
@@ -32,5 +34,7 @@ struct PronWindowAttributes {
   int minWidth;
   int minHeight;
 };
+
+} // namespace pron
 
 #endif // __PRONPROTO_ATTRIBUTES_H__
