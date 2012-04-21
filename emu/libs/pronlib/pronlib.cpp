@@ -7,6 +7,9 @@
 
 #include <pronlib.h>
 
+/**
+ * Pron namespace
+ */
 namespace pron {
 
 Display::Display(int fd, RespWelcome *welcome) {

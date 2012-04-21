@@ -3,7 +3,27 @@
 #include "stdio.h"
 #include "pronlib.h"
 
-void init() {
-  printf("initialisation de sombrero\n");
-  // Application::getInstance();
+namespace sombrero{
+
+/**
+ * Prints the sombrero logo
+ */
+void sombrero_ascii_art(){
+  printf("\n"
+    " (       )    *         (       (       )   " "\n"
+    " )\\ ) ( /(  (  `     (  )\\ )    )\\ ) ( /(   " "\n"
+    "(()/( )\\()) )\\))(  ( )\\(()/((  (()/( )\\())  " "\n"
+    " /(_)|(_)\\ ((_)()\\ )((_)/(_))\\  /(_)|(_)\\   " "\n"
+    "(_))   ((_)(_()((_|(_)_(_))((_)(_))   ((_)  " "\n"
+    "/ __| / _ \\|  \\/  || _ ) _ \\ __| _ \\ / _ \\  " "\n"
+    "\\__ \\| (_) | |\\/| || _ \\   / _||   /| (_) | " "\n"
+    "|___/ \\___/|_|  |_||___/_|_\\___|_|_\\ \\___/  " "\n"
+  );
 }
+
+void init() {
+  sombrero_ascii_art();
+  sombrero::Application::getInstance();
+}
+
+} // namespace sombrero
