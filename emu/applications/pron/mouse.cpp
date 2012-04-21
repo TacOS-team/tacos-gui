@@ -207,7 +207,7 @@ int Mouse::getMouseX() {
 }
 
 void Mouse::setMouseX(int mouseX) {
-  this->mouseX = this->mouseX;
+  this->mouseX = mouseX;
 }
 
 int Mouse::getMouseY() {
@@ -215,7 +215,7 @@ int Mouse::getMouseY() {
 }
 
 void Mouse::setMouseY(int mouseY) {
-  this->mouseY = this->mouseY;
+  this->mouseY = mouseY;
 }
 
 void Mouse::setMouseB1(bool mouseB1) {
