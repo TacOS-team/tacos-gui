@@ -5,11 +5,17 @@
 #include <proto/bits/attributes.h>
 #include <proto/bits/gc.h>
 
+/**
+ * Base class representing a pron request message.
+ */
 struct PronRequest : public PronMessage {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param type The message type
+   */
   PronRequest(MessageType type)
-    : PronMessage(type) {
-    }
+      : PronMessage(type) {
+  }
 };
 
 /**
@@ -17,13 +23,16 @@ struct PronRequest : public PronMessage {
  * Sent by a client as the first message of the handshake.
  */
 struct RqHello : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param protoVersion The protocol version used
+   */
   RqHello(int protoVersion)
-    : PronRequest(RQ_HELLO) {
-      this->protoVersion = protoVersion;
-    }
+      : PronRequest(RQ_HELLO) {
+    this->protoVersion = protoVersion;
+  }
 
-  int protoVersion; /**< protocol version used */
+  int protoVersion; /**< Protocol version used */
 };
 
 /**
@@ -31,9 +40,11 @@ struct RqHello : public PronRequest {
  * Sent by a client to disconnect from pron
  */
 struct RqGoodbye : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   */
   RqGoodbye()
-    : PronRequest(RQ_GOODBYE) {}
+      : PronRequest(RQ_GOODBYE) {}
 };
 
 /**
@@ -41,23 +52,31 @@ struct RqGoodbye : public PronRequest {
  * Sent by a client to create a new window.
  */
 struct RqCreateWindow : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param id The id of the window to create
+   * @param parent The id of the the parent window
+   * @param x The x-coordinate of the top-left corner of the window
+   * @param y The y-coordinate of the top-left corner of the window
+   * @param width The width of the window
+   * @param height The height of the window
+   */
   RqCreateWindow(unsigned int id, unsigned int parent, int x, int y, int width, int height)
-    : PronRequest(RQ_CREATE_WINDOW) {
-      this->id = id;
-      this->parent = parent;
-      this->x = x;
-      this->y = y;
-      this->width = width;
-      this->height = height;
-    }
+      : PronRequest(RQ_CREATE_WINDOW) {
+    this->id = id;
+    this->parent = parent;
+    this->x = x;
+    this->y = y;
+    this->width = width;
+    this->height = height;
+  }
 
-  unsigned  int id; /**< id of the window to create */
-  int parent; /**< id of the parent window */
-  int x; /**< y-coordinate of the left-top corner of the window */
-  int y; /**< y-coordinate of the left-top corner of the window */
-  int width; /**< width of the window */
-  int height; /**< height of the window */
+  unsigned int id; /**< Id of the window to create */
+  int parent; /**< Id of the parent window */
+  int x; /**< X-coordinate of the left-top corner of the window */
+  int y; /**< Y-coordinate of the left-top corner of the window */
+  int width; /**< Width of the window */
+  int height; /**< Height of the window */
 };
 
 /**
@@ -65,13 +84,16 @@ struct RqCreateWindow : public PronRequest {
  * Sent by a client to clear the contents of a window.
  */
 struct RqClearWindow : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param window The id of the window to clear
+   */
   RqClearWindow(unsigned int window)
-    : PronRequest(RQ_CLEAR_WINDOW) {
-      this->window = window;
-    }
+      : PronRequest(RQ_CLEAR_WINDOW) {
+    this->window = window;
+  }
 
-  unsigned int window; /**< id of the window to clear */
+  unsigned int window; /**< Id of the window to clear */
 };
 
 /**
@@ -79,13 +101,16 @@ struct RqClearWindow : public PronRequest {
  * Sent by a client to show a window on the screen.
  */
 struct RqMapWindow : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param window The id of the window to map
+   */
   RqMapWindow(unsigned int window)
-    : PronRequest(RQ_MAP_WINDOW) {
-      this->window = window;
-    }
+      : PronRequest(RQ_MAP_WINDOW) {
+    this->window = window;
+  }
 
-  unsigned int window; /**< id of the window to map */
+  unsigned int window; /**< Id of the window to map */
 };
 
 /**
@@ -93,13 +118,16 @@ struct RqMapWindow : public PronRequest {
  * Sent by a client to hide a window.
  */
 struct RqUnmapWindow : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param window The id of the window to unmap
+   */
   RqUnmapWindow(int window)
-    : PronRequest(RQ_UNMAP_WINDOW) {
-      this->window = window;
-    }
+      : PronRequest(RQ_UNMAP_WINDOW) {
+    this->window = window;
+  }
 
-  int window; /**< id of the window to unmap */
+  int window; /**< Id of the window to unmap */
 };
 
 /**
@@ -107,13 +135,16 @@ struct RqUnmapWindow : public PronRequest {
  * Sent by a client to raise a window on the screen.
  */
 struct RqRaiseWindow : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param window The id of the window to raise
+   */
   RqRaiseWindow(unsigned int window)
-    : PronRequest(RQ_RAISE_WINDOW) {
-      this->window = window;
-    }
+      : PronRequest(RQ_RAISE_WINDOW) {
+    this->window = window;
+  }
 
-  unsigned int window; /**< id of the window to raise */
+  unsigned int window; /**< Id of the window to raise */
 };
 
 /**
@@ -121,7 +152,12 @@ struct RqRaiseWindow : public PronRequest {
  * Sent by a client to create a new graphics context.
  */
 struct RqCreateGC : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param id The id of the graphics context to create
+   * @param values The values to set in the new GC
+   * @param mask The mask that specifies the values to be set
+   */
   RqCreateGC(unsigned int id, const PronGCValues &values, unsigned int mask)
       : PronRequest(RQ_CREATE_GC) {
     this->id = id;
@@ -129,9 +165,9 @@ struct RqCreateGC : public PronRequest {
     this->mask = mask;
   }
 
-  unsigned int id; /**< id of the graphics context to create */
-  PronGCValues values; /**< GC values specified in mask */
-  unsigned int mask; /**< specifies which values have to be set */
+  unsigned int id; /**< Id of the graphics context to create */
+  PronGCValues values; /**< GC values to set */
+  unsigned int mask; /**< Specifies which values have to be set */
 };
 
 /**
@@ -139,13 +175,16 @@ struct RqCreateGC : public PronRequest {
  * Sent by a client to get the values of the specified graphics context.
  */
 struct RqGetGCValues : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param gc The graphics context whose values to get
+   */
   RqGetGCValues(unsigned int gc)
       : PronRequest(RQ_GET_GC_VALUES) {
     this->gc = gc;
   }
 
-  unsigned int gc; /**< id of the graphics context */
+  unsigned int gc; /**< GC whose values to get */
 };
 
 /**
@@ -153,7 +192,12 @@ struct RqGetGCValues : public PronRequest {
  * Sent by a client to change the values of a specified graphics context.
  */
 struct RqChangeGC : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param gc The graphics context whose values to set
+   * @param values The values to set
+   * @param mask The mask that specifies the values to be set
+   */
   RqChangeGC(unsigned int gc, const PronGCValues &values, unsigned int mask)
       : PronRequest(RQ_CHANGE_GC) {
     this->gc = gc;
@@ -161,9 +205,9 @@ struct RqChangeGC : public PronRequest {
     this->mask = mask;
   }
 
-  unsigned int gc; /**< id of the graphics context to change */
-  PronGCValues values; /**< GC values specified in mask */
-  unsigned int mask; /**< specifies which values have to be set */
+  unsigned int gc; /**< Id of the graphics context to change */
+  PronGCValues values; /**< The values to set */
+  unsigned int mask; /**< Specifies which values have to be set */
 };
 
 /**
@@ -171,13 +215,16 @@ struct RqChangeGC : public PronRequest {
  * Sent by a client to destroy a graphics context.
  */
 struct RqFreeGC : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param gc The id of the graphics context to destroy
+   */
   RqFreeGC(unsigned int gc)
       : PronRequest(RQ_FREE_GC) {
     this->gc = gc;
   }
 
-  unsigned int gc; /**< id of the graphics context to destroy */
+  unsigned int gc; /**< Id of the graphics context to destroy */
 };
 
 /**
@@ -185,19 +232,25 @@ struct RqFreeGC : public PronRequest {
  * Sent by a client to draw a point.
  */
 struct RqDrawPoint : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param gc The graphics context to use
+   * @param drawable The drawable in which to draw the line
+   * @param x The x-coordinate of the point
+   * @param y The y-coordinate of the point
+   */
   RqDrawPoint(unsigned int gc, unsigned int drawable, int x, int y)
-    : PronRequest(RQ_DRAW_POINT) {
-      this->gc = gc;
-      this->drawable = drawable;
-      this->x = x;
-      this->y = y;
-    }
+      : PronRequest(RQ_DRAW_POINT) {
+    this->gc = gc;
+    this->drawable = drawable;
+    this->x = x;
+    this->y = y;
+  }
 
-  unsigned int gc; /**< id of the graphics context to use */
-  unsigned int drawable; /**< id of the drawable in which to draw */ 
-  int x; /**< x-coordinate of the point */
-  int y; /**< y-coordinate of the point */
+  unsigned int gc; /**< Id of the graphics context to use */
+  unsigned int drawable; /**< Id of the drawable in which to draw */
+  int x; /**< X-coordinate of the point */
+  int y; /**< Y-coordinate of the point */
 };
 
 /**
@@ -205,23 +258,31 @@ struct RqDrawPoint : public PronRequest {
  * Sent by a client to draw a line between two points.
  */
 struct RqDrawLine : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param gc The graphics context to use
+   * @param drawable The drawable in which to draw the line
+   * @param x1 The x-coordinate of the first point to join
+   * @param y1 The y-coordinate of the first point to join
+   * @param x2 The x-coordinate of the second point to join
+   * @param y2 The y-coordinate of the second point to join
+   */
   RqDrawLine(unsigned int gc, unsigned int drawable, int x1, int y1, int x2, int y2)
-    : PronRequest(RQ_DRAW_LINE) {
-      this->gc = gc;
-      this->drawable = drawable;
-      this->x1 = x1;
-      this->y1 = y1;
-      this->x2 = x2;
-      this->y2 = y2;
-    }
+      : PronRequest(RQ_DRAW_LINE) {
+    this->gc = gc;
+    this->drawable = drawable;
+    this->x1 = x1;
+    this->y1 = y1;
+    this->x2 = x2;
+    this->y2 = y2;
+  }
 
-  unsigned int gc; /**< id of the graphics context to use */
-  unsigned int drawable; /**< id of the drawable in which to draw */ 
-  int x1; /**< x-coordinate of the first point to join */
-  int y1; /**< y-coordinate of the first point to join */
-  int x2; /**< x-coordinate of the second point to join */
-  int y2; /**< y-coordinate of the second point to join */
+  unsigned int gc; /**< Id of the graphics context to use */
+  unsigned int drawable; /**< Id of the drawable in which to draw */
+  int x1; /**< X-coordinate of the first point to join */
+  int y1; /**< Y-coordinate of the first point to join */
+  int x2; /**< X-coordinate of the second point to join */
+  int y2; /**< Y-coordinate of the second point to join */
 };
 
 /**
@@ -229,24 +290,31 @@ struct RqDrawLine : public PronRequest {
  * Sent by a client to draw a rectangle to (x,y) width height sized.
  */
 struct RqDrawRect : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param gc The graphics context to use
+   * @param drawable The drawable in which to draw the rectangle
+   * @param x The x-coordinate of the top-left corner of the rectangle
+   * @param y The y-coordinate of the top-left corner of the rectangle
+   * @param width of the rectangle
+   * @param height of the rectangle
+   */
   RqDrawRect(unsigned int gc, unsigned int drawable, int x, int y, int width, int height)
-    : PronRequest(RQ_DRAW_RECT) {
-      this->gc = gc;
-      this->drawable = drawable;
-      this->x = x;
-      this->y = y;
-      this->width = width;
-      this->height = height;
-    }
+      : PronRequest(RQ_DRAW_RECT) {
+    this->gc = gc;
+    this->drawable = drawable;
+    this->x = x;
+    this->y = y;
+    this->width = width;
+    this->height = height;
+  }
 
-  MessageType type; /**< message type, always first */
-  unsigned int gc; /**< id of the graphics context to use */
-  unsigned int drawable; /**< id of the drawable in which to draw */ 
-  int x; /**< x-coordinate of the point to join */
-  int y; /**< y-coordinate of the point to join */
-  int width; /**< width of the rectangle */
-  int height; /**< height of the rectangle */
+  unsigned int gc; /**< Id of the graphics context to use */
+  unsigned int drawable; /**< Id of the drawable in which to draw */
+  int x; /**< X-coordinate of the top-left corner of the rectangle */
+  int y; /**< Y-coordinate of the top-left corner of the rectangle */
+  int width; /**< Width of the rectangle */
+  int height; /**< Height of the rectangle */
 };
 
 /**
@@ -254,24 +322,31 @@ struct RqDrawRect : public PronRequest {
  * Sent by a client to fill a rectangle to (x,y) width height sized.
  */
 struct RqFillRectangle : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param gc The graphics context to use
+   * @param drawable The drawable in which to draw the rectangle
+   * @param x The x-coordinate of the top-left corner of the rectangle
+   * @param y The y-coordinate of the top-left corner of the rectangle
+   * @param width of the rectangle
+   * @param height of the rectangle
+   */
   RqFillRectangle(unsigned int gc, unsigned int drawable, int x, int y, int width, int height)
-    : PronRequest(RQ_FILL_RECTANGLE) {
-      this->gc = gc;
-      this->drawable = drawable;
-      this->x = x;
-      this->y = y;
-      this->width = width;
-      this->height = height;
-    }
+      : PronRequest(RQ_FILL_RECTANGLE) {
+    this->gc = gc;
+    this->drawable = drawable;
+    this->x = x;
+    this->y = y;
+    this->width = width;
+    this->height = height;
+  }
 
-  MessageType type; /**< message type, always first */
-  unsigned int gc; /**< id of the graphics context to use */
-  unsigned int drawable; /**< id of the drawable in which to draw */ 
-  int x; /**< x-coordinate of the point to join */
-  int y; /**< y-coordinate of the point to join */
-  int width; /**< width of the rectangle */
-  int height; /**< height of the rectangle */
+  unsigned int gc; /**< Id of the graphics context to use */
+  unsigned int drawable; /**< Id of the drawable in which to draw */
+  int x; /**< X-coordinate of the top-left corner of the rectangle */
+  int y; /**< Y-coordinate of the top-left corner of the rectangle */
+  int width; /**< Width of the rectangle */
+  int height; /**< Height of the rectangle */
 };
 
 /**
@@ -279,149 +354,190 @@ struct RqFillRectangle : public PronRequest {
  * Sent by a client to draw a circle with given center (x,y) and radius
  */
 struct RqDrawCircle : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param gc The graphics context to use
+   * @param drawable The drawable in which to draw the line
+   * @param x The x-coordinate of the top-left corner of the circle
+   * @param y The y-coordinate of the top-left corner of the circle
+   * @param radius The radius of the circle
+   */
   RqDrawCircle(unsigned int gc, unsigned int drawable, int x, int y, int radius)
-    : PronRequest(RQ_DRAW_CIRCLE) {
-      this->gc = gc;
-      this->drawable = drawable;
-      this->x = x;
-      this->y = y;
-      this->radius = radius;
-    }
+      : PronRequest(RQ_DRAW_CIRCLE) {
+    this->gc = gc;
+    this->drawable = drawable;
+    this->x = x;
+    this->y = y;
+    this->radius = radius;
+  }
 
-  MessageType type; /**< message type, always first */
-  unsigned int gc; /**< id of the graphics context to use */
-  unsigned int drawable; /**< id of the drawable in which to draw */ 
-  int x; /**< x-coordinate of the point to join */
-  int y; /**< y-coordinate of the point to join */
-  int radius; /**< radius of the circle */
+  unsigned int gc; /**< Id of the graphics context to use */
+  unsigned int drawable; /**< Id of the drawable in which to draw */
+  int x; /**< X-coordinate of the top-left corner of the circle */
+  int y; /**< X-coordinate of the top-left corner of the circle */
+  int radius; /**< Radius of the circle */
 };
 
 /**
  * FillCircle request.
- * Sent by a client to draw a filled circle with given center (x,y) and radius
+ * Sent by a client to draw a filled circle with given center (x,y) and radius.
  */
 struct RqFillCircle : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param gc The graphics context to use
+   * @param drawable The drawable in which to draw the line
+   * @param x The x-coordinate of the top-left corner of the circle
+   * @param y The y-coordinate of the top-left corner of the circle
+   * @param radius The radius of the circle
+   */
   RqFillCircle(unsigned int gc, unsigned int drawable, int x, int y, int radius)
-    : PronRequest(RQ_FILL_CIRCLE) {
-      this->gc = gc;
-      this->drawable = drawable;
-      this->x = x;
-      this->y = y;
-      this->radius = radius;
-    }
+      : PronRequest(RQ_FILL_CIRCLE) {
+    this->gc = gc;
+    this->drawable = drawable;
+    this->x = x;
+    this->y = y;
+    this->radius = radius;
+  }
 
-  MessageType type; /**< message type, always first */
-  unsigned int gc; /**< id of the graphics context to use */
-  unsigned int drawable; /**< id of the drawable in which to draw */ 
-  int x; /**< x-coordinate of the point to join */
-  int y; /**< y-coordinate of the point to join */
-  int radius; /**< radius of the circle */
+  unsigned int gc; /**< Id of the graphics context to use */
+  unsigned int drawable; /**< Id of the drawable in which to draw */
+  int x; /**< X-coordinate of the top-left corner of the circle */
+  int y; /**< X-coordinate of the top-left corner of the circle */
+  int radius; /**< Radius of the circle */
 };
 
 /**
  * GetWindowAttributes request.
- * Sent by a client to get the attributes of a window
+ * Sent by a client to get the attributes of a window.
  */
 struct RqGetWindowAttributes : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param window The window whose attributes to get
+   */
   RqGetWindowAttributes(unsigned int window)
-    : PronRequest(RQ_GET_WINDOW_ATTRIBUTES) {
-      this->window = window;
-    }
+      : PronRequest(RQ_GET_WINDOW_ATTRIBUTES) {
+    this->window = window;
+  }
 
-  unsigned int window; /**< id of Window */
+  unsigned int window; /**< Id of the window whose attributes to get */
 };
 
 /**
  * SetWindowAttributes request.
- * Sent by a client to set the attributes of a window
+ * Sent by a client to set the attributes of a window.
  */
 struct RqSetWindowAttributes : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param window The window whose attributes to set
+   * @param newAttr The new attributes to set
+   * @param mask The mask that specifies the attributes to be set
+   */
   RqSetWindowAttributes(unsigned int window, const PronWindowAttributes &newAttr, unsigned int mask)
-    : PronRequest(RQ_SET_WINDOW_ATTRIBUTES) {
-      this->window = window;
-      this->newAttr = newAttr;
-      this->mask = mask;
-    }
+      : PronRequest(RQ_SET_WINDOW_ATTRIBUTES) {
+    this->window = window;
+    this->newAttr = newAttr;
+    this->mask = mask;
+  }
 
-  unsigned int window; /**< id of Window */
-  PronWindowAttributes newAttr; /**< new attributes of the window */
-  unsigned int mask; /**< indiquates which attributes have to be set */
+  unsigned int window; /**< Id of the window whose attributes to set */
+  PronWindowAttributes newAttr; /**< New attributes to set */
+  unsigned int mask; /**< Specifies which attributes have to be set */
 };
-
 
 /**
  * SelectInput request.
- * Sent by a client to subscribe to events.
+ * Sent by a client to subscribe to the events associated with
+ * the given event mask.
  */
 struct RqSelectInput : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param window The window whose events to subscribe
+   * @param eventMask The event mask
+   */
   RqSelectInput(unsigned int window, unsigned int eventMask)
-    : PronRequest(RQ_SELECT_INPUT) {
-      this->window = window;
-      this->eventMask = eventMask;
-    }
+      : PronRequest(RQ_SELECT_INPUT) {
+    this->window = window;
+    this->eventMask = eventMask;
+  }
 
-  unsigned int window; /**< id of Window */
-  unsigned int eventMask; /**< event mask to set */
+  unsigned int window; /**< Id of the window whose events to subscribe */
+  unsigned int eventMask; /**< Specifies the events to subscribe */
 };
 
 /**
- * Don't propagate request.
- * Sent by a client to tell pron not to propagate the event to the parent window.
+ * DontPropagate request.
+ * Sent by a client to tell pron not to propagate the events associated with
+ * the given event mask.
  */
 struct RqDontPropagate : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param window The window whose events not to propagate
+   * @param eventMask The event mask
+   */
   RqDontPropagate(unsigned int window, unsigned int eventMask)
-    : PronRequest(RQ_DONT_PROPAGATE) {
-      this->window = window;
-      this->eventMask = eventMask;
-    }
+      : PronRequest(RQ_DONT_PROPAGATE) {
+    this->window = window;
+    this->eventMask = eventMask;
+  }
 
-  unsigned int window; /**< id of Window */
-  unsigned int eventMask; /**< event mask to set */
+  unsigned int window; /**< Id of the window whose events not to propagate */
+  unsigned int eventMask; /**< Specifies the events not to propagate */
 };
-
 
 /**
  * Reparent request.
  * Sent by a client to set a new parent to a window.
  */
 struct RqReparent : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param window The window to reparent
+   * @param newParent The id of the new parent window
+   */
   RqReparent(unsigned int window, unsigned int newParent)
-    : PronRequest(RQ_REPARENT) {
-      this->window    = window;
-      this->newParent = newParent;
-    }
+      : PronRequest(RQ_REPARENT) {
+    this->window    = window;
+    this->newParent = newParent;
+  }
 
-  unsigned int window; /**< id of Window */
-  unsigned int newParent; /**< id of new parent Window */
+  unsigned int window; /**< Id of the window to reparent */
+  unsigned int newParent; /**< Id of the new parent Window */
 };
 
 /**
- * Destroy a window
- * Sent by a client to close a window
+ * DestroyWindow request.
+ * Sent by a client to close a window.
  */
 struct RqDestroyWindow : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param window The window to destroy
+   */
   RqDestroyWindow(unsigned int window)
       : PronRequest(RQ_DESTROY_WINDOW) {
     this->window    = window;
   }
 
-  unsigned int window; /**< id of Window */
+  unsigned int window; /**< Id of the window to destroy */
 };
 
 /**
- * Move a Window of x pixels on x and y pixels on y
- * Sent by a client to move a window
+ * MoveWindow request.
+ * Sent by a client to move a window of x pixels on the x-axis
+ * and y pixels on the y-axis.
  */
 struct RqMoveWindow : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param window The window to move
+   * @param x The relative move on the x-axis
+   * @param y The relative move on the y-axis
+   */
   RqMoveWindow(unsigned int window, int x, int y)
       : PronRequest(RQ_MOVE_WINDOW) {
     this->window    = window;
@@ -429,17 +545,22 @@ struct RqMoveWindow : public PronRequest {
     this->y = y;
   }
 
-  unsigned int window; /**< id of Window */
-  int x;
-  int y;
+  unsigned int window; /**< Id of the window to move */
+  int x; /**< Relative move on the x-axis */
+  int y; /**< Relative move on the y-axis */
 };
 
 /**
- * Move a Window at (x, y) position
- * Sent by a client to move a window
+ * MoveWindowTo request.
+ * Sent by a client to move a window at an absolute position.
  */
 struct RqMoveWindowTo : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param window The window to move
+   * @param x The new x-coordinate
+   * @param y The new y-coordinate
+   */
   RqMoveWindowTo(unsigned int window, int x, int y)
       : PronRequest(RQ_MOVE_WINDOW_TO) {
     this->window    = window;
@@ -447,20 +568,31 @@ struct RqMoveWindowTo : public PronRequest {
     this->y = y;
   }
 
-  unsigned int window; /**< id of Window */
-  int x;
-  int y;
+  unsigned int window; /**< Id of the window to move */
+  int x; /**< New x-coordinate */
+  int y; /**< New y-coordinate */
 };
 
 /**
- * Puts an image into a window or a pixmap
+ * PutImage request.
+ * Sent by a client to put an image into a window or a pixmap.
  */
 struct RqPutImage : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param window The window in which to put the image
+   * @param x The destination top-left corner x-coordinate
+   * @param y The destination top-left corner y-coordinate
+   * @param width The width of the image
+   * @param height The height of the image
+   * @param format The format of the image (XYBitmap, XYPixmap, ZPixmap)
+   * @param depth The depth of the image (8, 16 or 24 bits)
+   * @param bytesPerPixel The bytes per pixel of the image (1, 2 or 3 bpp)
+   */
   RqPutImage(unsigned int window, int x, int y, int width, int height, int format, int depth, int bytesPerPixel)
       : PronRequest(RQ_PUT_IMAGE) {
     this->window = window;
-    this->width = width;  
+    this->width = width; 
     this->height = height;
     this->x = x;
     this->y = y;
@@ -469,22 +601,27 @@ struct RqPutImage : public PronRequest {
     this->bytesPerPixel = bytesPerPixel;
   }
 
-  unsigned int window; /**< id of Window */
-  int width;
-  int height;
-  int x;
-  int y;
-  int depth;
-  int format;
-  int bytesPerPixel;
+  unsigned int window; /**< Id of the window in which to put the image */
+  int width; /**< Width of the image */
+  int height; /**< Height of the image */
+  int x; /**< Destination top-left corner x-coordinate */
+  int y; /**< Destination top-left corner y-coordinate */
+  int depth; /**< Depth of the image (8, 16, 24 bits) */
+  int format; /**< Format of the image (XYBitmap, XYPixmap, ZPixmap) */
+  int bytesPerPixel; /**< Bytes per pixel of the image (1, 2, 3 bpp) */
 };
 
 /**
- * Resize a Window
- * Sent by a client to resize a window
+ * ResizeWindow request.
+ * Sent by a client to resize a window.
  */
 struct RqResizeWindow : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param window The window to resize
+   * @param width The new width
+   * @param height The new height
+   */
   RqResizeWindow(unsigned int window, int width, int height)
       : PronRequest(RQ_RESIZE_WINDOW) {
     this->window = window;
@@ -492,73 +629,97 @@ struct RqResizeWindow : public PronRequest {
     this->height = height;
   }
 
-  unsigned int window; /**< id of Window */
-  int width;
-  int height;
+  unsigned int window; /**< Id of the window to resize */
+  int width; /**< New width to set */
+  int height; /**< New height to set */
 };
 
 /**
- * Create a pixmap
+ * CreatePixmap request.
+ * Sent by a client to create a pixmap.
  */
 struct RqCreatePixmap : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param id The id of the pixmap to create
+   * @param width The width of the pixmap
+   * @param height The height of the pixmap
+   * @param depth The depth of the pixmap
+   */
   RqCreatePixmap(unsigned int id, int width, int height, int depth)
-    : PronRequest(RQ_CREATE_PIXMAP) {
-      this->id = id;
-      this->width = width;
-      this->height = height;
-      this->depth = depth;
-    }
+      : PronRequest(RQ_CREATE_PIXMAP) {
+    this->id = id;
+    this->width = width;
+    this->height = height;
+    this->depth = depth;
+  }
 
-  unsigned  int id; /**< id of the pixmap to create */
-  int width; /**< width of the pixmap */
-  int height; /**< height of the pixmap */
-  int depth; /**< depth of the pixmap */
+  unsigned int id; /**< Id of the pixmap to create */
+  int width; /**< Width of the pixmap */
+  int height; /**< Height of the pixmap */
+  int depth; /**< Depth of the pixmap */
 };
 
 /**
- * Destroy a pixmap
- * Sent by a client to free a pixmap
+ * FreePixmap request.
+ * Sent by a client to destroy a pixmap.
  */
 struct RqFreePixmap : public PronRequest {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param pixmap The pixmap to free
+   */
   RqFreePixmap(unsigned int pixmap)
       : PronRequest(RQ_FREE_PIXMAP) {
     this->pixmap    = pixmap;
   }
 
-  unsigned int pixmap; /**< id of Window */
+  unsigned int pixmap; /**< Id of the pixmap to free */
 };
 
 /**
- * Copy a rectangle from a drawable to an other one
+ * CopyArea request.
+ * Sent by a client to copy an area from a drawable to another one.
  */
 struct RqCopyArea : public PronRequest {
-  /** Constructor. */
-  RqCopyArea(unsigned int src, unsigned int dest, 
-      unsigned int gc, int srcX, int srcY, int width, 
+  /**
+   * Constructor.
+   * @param src The source drawable
+   * @param dest The destination drawable
+   * @param gc The graphics context to use during the copy
+   * @param srcX The x-coordinate of the top-left corner of the
+   * source drawable area to copy
+   * @param srcY The y-coordinate of the top-left corner of the
+   * source drawable area to copy
+   * @param width The width of the source drawable area to copy
+   * @param height The height of the source drawable area to copy
+   * @param destX The destination top-left corner x-coordinate
+   * @param destY The destination top-left corner y-coordinate
+   */
+  RqCopyArea(unsigned int src, unsigned int dest,
+      unsigned int gc, int srcX, int srcY, int width,
       int height, int destX, int destY)
-    : PronRequest(RQ_COPY_AREA) {
-      this->src = src;
-      this->dest = dest;
-      this->gc = gc;
-      this->srcX = srcX;
-      this->srcY = srcY;
-      this->width = width;
-      this->height = height;
-      this->destX = destX;
-      this->destY = destY;
-    }
+      : PronRequest(RQ_COPY_AREA) {
+    this->src = src;
+    this->dest = dest;
+    this->gc = gc;
+    this->srcX = srcX;
+    this->srcY = srcY;
+    this->width = width;
+    this->height = height;
+    this->destX = destX;
+    this->destY = destY;
+  }
 
-  unsigned int src; /**< id of the src drawable */
-  unsigned int dest; /**< id of the dest drawable */
-  unsigned int gc; /**< graphic context */
-  int srcX; /**< src x coordinate */
-  int srcY; /**< src y coordinate */
-  int width; /**< width to copy */
-  int height; /**< height to copy */
-  int destX; /**< dest x to copy */
-  int destY; /**< dest y to copy */
+  unsigned int src; /**< Id of the source drawable */
+  unsigned int dest; /**< Id of the destination drawable */
+  unsigned int gc; /**< Id of the graphics context to use */
+  int srcX; /**< Source top-left corner x-coordinate */
+  int srcY; /**< Source top-left corner x-coordinate */
+  int width; /**< Width to copy */
+  int height; /**< Height to copy */
+  int destX; /**< Destination top-left corner x-coordinate */
+  int destY; /**< Destination top-left corner y-coordinate */
 };
 
 #endif // __PRONPROTO_REQUESTS_H__
