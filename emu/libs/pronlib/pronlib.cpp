@@ -9,6 +9,92 @@
 
 namespace pron {
 
+Display::Display(int fd, RespWelcome *welcome) {
+  this->fd = fd;
+  this->rootWindow = welcome->rootWindow;
+  this->startId = welcome->startId;
+  this->endId = welcome->endId;
+  this->curId = this->startId;
+  PronGCValues values;
+  COLOR(values.fg, 24).r = 255;
+  COLOR(values.fg, 24).g = 77;
+  COLOR(values.fg, 24).b = 182;
+  COLOR(values.bg, 24).r = 0;
+  COLOR(values.bg, 24).g = 0;
+  COLOR(values.bg, 24).b = 0;
+  this->defaultGC = pronCreateGC(this, values, GC_VAL_FG | GC_VAL_BG);
+}
+
+int Display::newResourceId() {
+  return this->curId++;
+}
+
+int Display::read(PronMessage *msg, size_t len) {
+  int sizeRead = tsock_read(this->fd, msg, len);
+
+  if (sizeRead < 0) {
+    // TODO: handle read error?
+    //perror("Failed to read from server");
+  } else if (sizeRead == 0) {
+    // TODO: handle server disconnection
+    fprintf(stderr, "Server has closed the connection\n");
+  } else if ((msg->type & ER_PREFIX) == ER_PREFIX) {
+    // TODO: trigger error handler
+    fprintf(stderr, "Received error message from server: %x\n", msg->type);
+  }
+
+  return sizeRead;
+}
+
+int Display::read(MessageType type, void *buffer, size_t len) {
+  PronMessage *msgRead;
+  int sizeRead;
+  bool stop = false;
+
+  while (!stop) {
+    msgRead = (PronMessage*) malloc(MAX_MSG_SIZE);
+    sizeRead = this->read(msgRead, MAX_MSG_SIZE);
+
+    if (sizeRead > 0) {
+      if (msgRead->type == type) {
+        memcpy(buffer, msgRead, len);
+        free(msgRead);
+        stop = true;
+      } else if ((msgRead->type & EV_PREFIX) == EV_PREFIX) {
+        printf("Queuing event...\n");
+        this->queuedEvents.push(pair<int, PronEvent*>(sizeRead, (PronEvent*) msgRead));
+      } else {
+        fprintf(stderr, "Wrong message type (expected %x, got %x)\n", type, msgRead->type);
+        free(msgRead);
+        stop = true;
+      }
+    }  
+  }
+
+  return sizeRead;
+}
+
+bool Display::getNextEvent(PronEvent *e) {
+  bool ok = false;
+
+  if (!this->queuedEvents.empty()) {
+    memcpy(e, this->queuedEvents.front().second, this->queuedEvents.front().first);
+    free(this->queuedEvents.front().second);
+    this->queuedEvents.pop();
+    ok = true;
+  } else {
+    if (this->read(e, MAX_MSG_SIZE) > 0) {
+      if ((e->type & EV_PREFIX) == EV_PREFIX) {
+        ok = true;
+      } else {
+        fprintf(stderr, "Wrong message type (expected event, got %x)\n", e->type);
+      }
+    }
+  }
+
+  return ok;
+}
+
 Display* pronConnect() {
   int fd = tsock_connect("/tmp/pron.sock");
   if (fd < 0) {

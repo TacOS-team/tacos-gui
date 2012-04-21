@@ -22,7 +22,65 @@ using namespace std;
 
 namespace pron {
 
-struct Display;
+/**
+ * Describes a connection to pron.
+ * @todo Propose an object-oriented API.
+ */
+class Display {
+ public:
+  /**
+   * Constructor.
+   * @param fd The file descriptor used for the connection to pron
+   * @param welcome The pron Welcome message
+   */
+  Display(int fd, RespWelcome *welcome);
+
+  /**
+   * Generates a new unique resource id.
+   * @todo Check bounds
+   * @return The new resource id
+   */
+  int newResourceId();
+
+  /**
+   * Reads a message from pron.
+   * @param msg Pointer to a PronMessage to store the message read
+   * @param len The maximum length to read
+   * @return The size read (-1 if an error occured)
+   */
+  int read(PronMessage *msg, size_t len);
+
+  /**
+   * @brief Reads a message of the given type from pron.
+   * Reads a message from pron. If the type of the message is equal
+   * to @a type, returns it. Else, if the message is an event, enqueues it
+   * into the event queue. Else, prints an error message.
+   * @param type The requested type
+   * @param buffer The buffer where to store the message
+   * @param len The length of the buffer
+   * @return The size read (-1 if an error occured)
+   */
+  int read(MessageType type, void *buffer, size_t len);
+
+  /**
+   * @brief Gets the next event from pron.
+   * If the events queue is not empty, returns the first event of the queue.
+   * Else, read a new event from the connection to pron.
+   * @param e The event returned
+   * @return success
+   */
+  bool getNextEvent(PronEvent *e);
+
+  int fd; /**< File descriptor used for the connection to pron */
+  Window rootWindow; /**< Id of the root window */
+  int startId; /**< First usable resource id */
+  int endId; /**< Last usable resource id */
+  int curId; /**< Current resource id */
+  GC defaultGC; /**< Default graphics context */
+  
+ private:
+  queue< pair<int, PronEvent*> > queuedEvents; /**< Events read from the server and queued */
+};
 
 /**
  * Connects to the pron server.
@@ -331,139 +389,6 @@ void pronCopyArea(Display *d, Drawable src, Drawable dest, GC gc,
  * @return Pointer to the allocated PronEvent
  */
 PronEvent* getPronEvent();
-
-/**
- * Describes a connection to pron.
- * @todo Move to a real class and propose an object-oriented API.
- */
-struct Display {
-  /**
-   * Constructor.
-   * @param fd The file descriptor used for the connection to pron
-   * @param welcome The pron Welcome message
-   */
-  Display(int fd, RespWelcome *welcome) {
-    this->fd = fd;
-    this->rootWindow = welcome->rootWindow;
-    this->startId = welcome->startId;
-    this->endId = welcome->endId;
-    this->curId = this->startId;
-    PronGCValues values;
-    COLOR(values.fg, 24).r = 255;
-    COLOR(values.fg, 24).g = 77;
-    COLOR(values.fg, 24).b = 182;
-    COLOR(values.bg, 24).r = 0;
-    COLOR(values.bg, 24).g = 0;
-    COLOR(values.bg, 24).b = 0;
-    this->defaultGC = pronCreateGC(this, values, GC_VAL_FG | GC_VAL_BG);
-  }
-
-  /**
-   * Generates a new unique resource id.
-   * @todo Check bounds
-   * @return The new resource id
-   */
-  int newResourceId() {
-    return this->curId++;
-  }
-
-  /**
-   * Reads a message from pron.
-   * @param msg Pointer to a PronMessage to store the message read
-   * @param len The maximum length to read
-   * @return The size read (-1 if an error occured)
-   */
-  int read(PronMessage *msg, size_t len) {
-    int sizeRead = tsock_read(this->fd, msg, len);
-
-    if (sizeRead < 0) {
-      // TODO: handle read error?
-      //perror("Failed to read from server");
-    } else if (sizeRead == 0) {
-      // TODO: handle server disconnection
-      fprintf(stderr, "Server has closed the connection\n");
-    } else if ((msg->type & ER_PREFIX) == ER_PREFIX) {
-      // TODO: trigger error handler
-      fprintf(stderr, "Received error message from server: %x\n", msg->type);
-    }
-
-    return sizeRead;
-  }
-
-  /**
-   * @brief Reads a message of the given type from pron.
-   * Reads a message from pron. If the type of the message is equal
-   * to @a type, returns it. Else, if the message is an event, enqueues it
-   * into the event queue. Else, prints an error message.
-   * @param type The requested type
-   * @param buffer The buffer where to store the message
-   * @param len The length of the buffer
-   * @return The size read (-1 if an error occured)
-   */
-  int read(MessageType type, void *buffer, size_t len) {
-    PronMessage *msgRead;
-    int sizeRead;
-    bool stop = false;
-
-    while (!stop) {
-      msgRead = (PronMessage*) malloc(MAX_MSG_SIZE);
-      sizeRead = this->read(msgRead, MAX_MSG_SIZE);
-
-      if (sizeRead > 0) {
-        if (msgRead->type == type) {
-          memcpy(buffer, msgRead, len);
-          free(msgRead);
-          stop = true;
-        } else if ((msgRead->type & EV_PREFIX) == EV_PREFIX) {
-          printf("Queuing event...\n");
-          this->queuedEvents.push(pair<int, PronEvent*>(sizeRead, (PronEvent*) msgRead));
-        } else {
-          fprintf(stderr, "Wrong message type (expected %x, got %x)\n", type, msgRead->type);
-          free(msgRead);
-          stop = true;
-        }
-      }  
-    }
-
-    return sizeRead;
-  }
-
-  /**
-   * @brief Gets the next event from pron.
-   * If the events queue is not empty, returns the first event of the queue.
-   * Else, read a new event from the connection to pron.
-   * @param e The event returned
-   * @return success
-   */
-  bool getNextEvent(PronEvent *e) {
-    bool ok = false;
-
-    if (!this->queuedEvents.empty()) {
-      memcpy(e, this->queuedEvents.front().second, this->queuedEvents.front().first);
-      free(this->queuedEvents.front().second);
-      this->queuedEvents.pop();
-      ok = true;
-    } else {
-      if (this->read(e, MAX_MSG_SIZE) > 0) {
-        if ((e->type & EV_PREFIX) == EV_PREFIX) {
-          ok = true;
-        } else {
-          fprintf(stderr, "Wrong message type (expected event, got %x)\n", e->type);
-        }
-      }
-    }
-
-    return ok;
-  }
-
-  int fd; /**< File descriptor used for the connection to pron */
-  Window rootWindow; /**< Id of the root window */
-  int startId; /**< First usable resource id */
-  int endId; /**< Last usable resource id */
-  int curId; /**< Current resource id */
-  GC defaultGC; /**< Default graphics context */
-  queue< pair<int, PronEvent*> > queuedEvents; /**< Events read from the server and queued */
-};
 
 } // namespace pron
 
