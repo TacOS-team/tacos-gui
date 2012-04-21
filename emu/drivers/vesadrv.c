@@ -7,7 +7,7 @@
 extern SDL_Surface *screen;
 extern SDL_mutex *mutex;
 
-Uint32 libtacos_refresh_screen(Uint32 interval, void *param) {
+Uint32 libtacos_refresh_screen(Uint32 interval, void *param __attribute__((unused))) {
   vesa_flush();
   return interval;
 }

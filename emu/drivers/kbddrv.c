@@ -27,7 +27,7 @@ ssize_t kbd_read(void *buf) {
   return ret;
 }
 
-int kbd_ioctl(unsigned long request, void *data) {
+int kbd_ioctl(unsigned long request, void *data __attribute__((unused))) {
   int ret;
 
   switch (request) {

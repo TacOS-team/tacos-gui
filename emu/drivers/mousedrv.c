@@ -27,7 +27,7 @@ ssize_t mouse_read(void *buf) {
   return sizeof(mouse_state);
 }
 
-int mouse_ioctl(unsigned long request, void *data) {
+int mouse_ioctl(unsigned long request, void *data __attribute__((unused))) {
   int ret;
 
   switch (request) {
