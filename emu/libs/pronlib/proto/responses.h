@@ -3,8 +3,14 @@
 
 #include <proto/base.h>
 
+/**
+ * Base class representing a pron response message.
+ */
 struct PronResponse : public PronMessage {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param type The message type
+   */
   PronResponse(MessageType type)
       : PronMessage(type) {}
 };
@@ -14,7 +20,12 @@ struct PronResponse : public PronMessage {
  * Sent by the server in response to a Hello request.
  */
 struct RespWelcome : public PronResponse {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param rootWindow The id of the root window
+   * @param startId The first usable resource id
+   * @param endId The last usable resource id
+   */
   RespWelcome(int rootWindow, int startId, int endId)
       : PronResponse(RS_WELCOME) {
     this->rootWindow = rootWindow;
@@ -22,9 +33,9 @@ struct RespWelcome : public PronResponse {
     this->endId = endId;
   }
 
-  int rootWindow; /**< id of the root window */
-  int startId; /**< first usable resource id */
-  int endId; /**< last usable resource id */
+  int rootWindow; /**< Id of the root window */
+  int startId; /**< First usable resource id */
+  int endId; /**< Last usable resource id */
 };
 
 /**
@@ -32,13 +43,16 @@ struct RespWelcome : public PronResponse {
  * Sent by the server in response to a GetWindowAttributes request.
  */
 struct RespWindowAttributes : public PronResponse {
-  /** Constructor. */
-  RespWindowAttributes(const PronWindowAttributes & attributes)
-      : PronResponse(RS_WINDOW_ATTRIBUTES){
+  /**
+   * Constructor.
+   * @param attributes The attributes of the requested window
+   */
+  RespWindowAttributes(const PronWindowAttributes &attributes)
+      : PronResponse(RS_WINDOW_ATTRIBUTES) {
     this->attributes = attributes;
   }
-  
-  PronWindowAttributes attributes; /**< Attributes of the window */
+
+  PronWindowAttributes attributes; /**< Attributes of the requested window */
 };
 
 /**
@@ -46,13 +60,16 @@ struct RespWindowAttributes : public PronResponse {
  * Sent by the server in response to a GetGCValues request.
  */
 struct RespGCValues : public PronResponse {
-  /** Constructor. */
+  /**
+   * Constructor.
+   * @param values The values of the requested graphics context
+   */
   RespGCValues(const PronGCValues &values)
-      : PronResponse(RS_GC_VALUES){
+      : PronResponse(RS_GC_VALUES) {
     this->values = values;
   }
-  
-  PronGCValues values; /**< values of the graphics context */
+
+  PronGCValues values; /**< Values of the requested graphics context */
 };
 
 #endif // __PRONPROTO_RESPONSES_H__
