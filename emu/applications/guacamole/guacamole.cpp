@@ -1,7 +1,6 @@
 #include <algorithm>
 #include <signal.h>
 #include <stdio.h>
-#include <sys/time.h>
 #include <time.h>
 #include <vector>
 
@@ -18,50 +17,24 @@ int mouseLastXPosition = -1;
 int mouseLastYPosition = -1;
 int mouseActualXPosition = -1;
 int mouseActualYPosition = -1;
-bool isTimerActive = false;
 
-void derout(int signum)
-{
-  if(SIGALRM == signum)
-  {
-    isTimerActive = false;
-    struct itimerval timer;
-    // We stop the timer
-    timer.it_value.tv_sec  = 0;
-    timer.it_value.tv_usec = 0;
-    timer.it_interval = timer.it_value;
-    setitimer(ITIMER_REAL, &timer, (struct itimerval*)NULL);
+void handleMouseMove() {
+  int xMove = mouseLastXPosition - mouseActualXPosition;
+  int yMove = mouseLastYPosition - mouseActualYPosition;
 
-    int xMove = mouseLastXPosition - mouseActualXPosition;
-    int yMove = mouseLastYPosition - mouseActualYPosition;
-
-    if (windowLeftButtonPressed) {
-      windowLeftButtonPressed->move(xMove, yMove);
-    } else if (windowResizeButtonPressed) {
-      windowResizeButtonPressed->resize(
+  if (windowLeftButtonPressed) {
+    windowLeftButtonPressed->move(xMove, yMove);
+  } else if (windowResizeButtonPressed) {
+    windowResizeButtonPressed->resize(
         windowResizeButtonPressed->parentAttributes.width  + xMove,
         windowResizeButtonPressed->parentAttributes.height + yMove);
-    }
-    mouseActualXPosition = mouseLastXPosition;
-    mouseActualYPosition = mouseLastYPosition;
   }
-}
-
-void activateTimer(unsigned int usec) {
-  struct itimerval timer;
-
-  if (!isTimerActive) {
-    timer.it_value.tv_sec  = 0;
-    timer.it_value.tv_usec = usec;
-    timer.it_interval = timer.it_value;
-    setitimer(ITIMER_REAL, &timer, (struct itimerval*)NULL);
-    isTimerActive = true;
-  }
+  mouseActualXPosition = mouseLastXPosition;
+  mouseActualYPosition = mouseLastYPosition;
 }
 
 int main() {
   srand(time(NULL));
-  signal(SIGALRM, &derout);
   
   // connection to pron
   Display *display = pronConnect();
@@ -167,7 +140,7 @@ int main() {
           mouseActualXPosition = mousePointerEvent->xRoot;
           mouseActualYPosition = mousePointerEvent->yRoot;
         } else {
-          activateTimer(60000);
+          handleMouseMove();
         }
         mouseLastXPosition = mousePointerEvent->xRoot;
         mouseLastYPosition = mousePointerEvent->yRoot;
@@ -179,7 +152,6 @@ int main() {
         if (gwin) {
           gwin->decorate();
         }
-
       }
       default:
       break;
