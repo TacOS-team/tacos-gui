@@ -1,5 +1,5 @@
 #include <algorithm>
-#include <math.h>
+//#include <math.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -150,8 +150,8 @@ void Pixmap::drawCircle(int n_cx, int n_cy, int radius){
   }
 }
 
-void Pixmap::fillCircle(int cx, int cy, int radius){
-  double r = (double) radius;
+void Pixmap::fillCircle(int cx __attribute__((unused)), int cy __attribute__((unused)), int radius __attribute__((unused))){
+  /*double r = (double) radius;
 
   for (double dy = 1; dy <= r; dy += 1.0) {
     double dx = floor(sqrt((2.0 * r * dy) - (dy * dy)));
@@ -161,7 +161,7 @@ void Pixmap::fillCircle(int cx, int cy, int radius){
       PIXMAP_DRAW_POINT(x, (int)(cy + r - dy));
       PIXMAP_DRAW_POINT(x, (int)(cy - r + dy));
     }
-  }
+  }*/
 }
 
 void Pixmap::clear(int x, int y, int width, int height){
