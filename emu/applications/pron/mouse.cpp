@@ -1,6 +1,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/time.h>
 
 #include <libtacos.h>
 #include <mouse.h>
@@ -26,6 +27,10 @@ Mouse::Mouse() {
   this->mouseB4 = false;
   this->mouseB5 = false;
   this->mouseB6 = false;
+
+  this->lastMouseEvent = 0;
+  this->lastSentX = 0;
+  this->lastSentY = 0;
 }
 
 void Mouse::checkEvents() {
@@ -52,18 +57,26 @@ void Mouse::handleMotion(mousestate_t *state) {
 
     // We have to recompute the mouseWin
     this->updateMouseWin();
-    Window *mouseWin = screen->getMouseWin();
+  }
 
-    //computing relative coordinates 
-    int x = state->x - mouseWin->x;
-    int y = state->y - mouseWin->y;
-    
-    // send the event to the current mouseWin
-    //debug("Position du pointeur %d %d, mouseWin window %d %d, width height %d %d \n",x, y, mouseWin->x, mouseWin->y, mouseWin->width, mouseWin->height);
+  if (this->lastSentX != this->mouseX || this->lastSentY != this->mouseY) {
+    struct timeval now;
+    gettimeofday(&now, NULL);
+    unsigned long now_ms = now.tv_sec * 1000 + now.tv_usec/1000;
+    if (now_ms - this->lastMouseEvent > 60) {
+      // Send the event to the current mouseWin
+      Window *mouseWin = screen->getMouseWin();
+      
+      int x = this->mouseX - this->lastSentX;
+      int y = this->mouseY - this->lastSentY;
+      
+      EventPointerMoved pointerMoved(mouseWin->getId(), x, y, state->x, state->y);
+      mouseWin->deliverDeviceEvent(&pointerMoved, sizeof(pointerMoved));
 
-    // it's time to send mouse Event
-    EventPointerMoved pointerMoved(mouseWin->getId(), x, y, state->x, state->y);
-    mouseWin->deliverDeviceEvent(&pointerMoved, sizeof(pointerMoved));
+      this->lastMouseEvent = now_ms;
+      this->lastSentX = this->mouseX;
+      this->lastSentY = this->mouseY;
+    }
   }
 }
 

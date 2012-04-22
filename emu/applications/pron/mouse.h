@@ -32,6 +32,10 @@ private:
   bool mouseB5;
   bool mouseB6;
 
+  unsigned long lastMouseEvent; /**< Time of the last mouse event */
+  int lastSentX; /**< Last sent mouse x position */
+  int lastSentY; /**< Last sent mouse y position */
+
 public:
   int fd;
 
