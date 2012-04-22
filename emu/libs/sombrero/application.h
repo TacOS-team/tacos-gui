@@ -7,9 +7,11 @@
 #include <vector>
 #include "pronlib.h"
 #include "window.h"
+#include "widget.h"
 
 namespace sombrero {
 
+class widget;
 class Window;
 
 /**
@@ -57,6 +59,12 @@ class Application {
    * @param window The Window to remove
    */
   void removeWindow(Window &window);
+
+  /**
+   * Allows only the Widget class
+   * to read my private attributes and methods
+   */
+  friend class Widget;
 };
 
 } // namespace sombrero

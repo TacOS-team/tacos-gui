@@ -6,6 +6,8 @@
  */
 
 #include "application.h"
+#include "widget.h"
+#include "window.h"
 
 /**
  * Sombrero library namespace

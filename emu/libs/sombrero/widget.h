@@ -19,6 +19,8 @@ namespace sombrero {
 class Widget {
 
  private:
+  int x; /**< x coordinate */
+  int y; /**< y coordinate */
   int width; /**< Width */
   int height; /**< Height */
   bool active; /**< Dealing with activable widgets */
@@ -31,11 +33,43 @@ class Widget {
 
  protected:
   /**
+   * Widget constructor. With given width and height
+   * Create the pron window
+   * @param width
+   * @param height
+   */
+  Widget(int x, int y, int width, int height); 
+  /**
+   * Widget destructor. Destroys the pron top window
+   */
+  ~Widget(); 
+  /**
    * Gets the top window of the widget
    * @see topWindow
    * @return The pron window
    */
   pron::Window getTopWindow();
+  // Getters and setters
+  /**
+   * Gets x
+   * @return x
+   */
+  int getX();
+  /**
+   * Sets the x
+   * @param x
+   */
+  void setX(int x);
+  /**
+   * Gets y
+   * @return y
+   */
+  int getY();
+  /**
+   * Sets y
+   * @param y
+   */
+  void setY(int y);
   
  public:
   // Getters and setters
@@ -84,7 +118,7 @@ class Widget {
    */
   virtual void draw() = 0;
 
-}
+};
 
 } // namespace sombrero
 
