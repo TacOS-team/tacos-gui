@@ -1,6 +1,6 @@
 #include <dirent.h>
 #include <fcntl.h>
-#include <math.h>
+//#include <math.h>
 #include <stdio.h>
 #include <string>
 #include <string.h>
@@ -227,8 +227,8 @@ void Screen::drawText(int x, int y, const char *text, int length) {
 }
 
 // source : http://content.gpwiki.org/index.php/SDL:Tutorials:Drawing_and_Filling_Circles
-void Screen::fillCircle(int cx, int cy, int radius) {
-  double r = (double) radius;
+void Screen::fillCircle(int cx __attribute__((unused)), int cy __attribute__((unused)), int radius __attribute__((unused))) {
+  /*double r = (double) radius;
 
   for (double dy = 1; dy <= r; dy += 1.0) {
     double dx = floor(sqrt((2.0 * r * dy) - (dy * dy)));
@@ -238,7 +238,7 @@ void Screen::fillCircle(int cx, int cy, int radius) {
       this->drawPoint(x, cy + r - dy);
       this->drawPoint(x, cy - r + dy);
     }
-  }
+  }*/
 }
 
 int Screen::getPixel(int x, int y) {
