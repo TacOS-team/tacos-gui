@@ -23,6 +23,7 @@ class Canvas : public Widget {
  public:
   /**
    * Canvas constructor
+   * @param parent
    */
   Canvas(Container *parent);
   /**
@@ -31,6 +32,10 @@ class Canvas : public Widget {
   ~Canvas();
   /**
    * Draws a ligne
+   * @param x1
+   * @param y1
+   * @param x2
+   * @param y2
    */
   void drawLine(int x1, int y1, int x2, int y2);
   /**

@@ -136,6 +136,7 @@ class Widget {
   virtual void draw() = 0;
   /**
    * Gets parent container
+   * @return The parent Container
    */
   Container* getParent();
 

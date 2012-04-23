@@ -24,10 +24,19 @@ class Container : public Widget {
  protected:
   /**
    * Container constructor
+   * @param parent The parent container
+   * @param x
+   * @param y
+   * @param width
+   * @param height
    */
   Container(Container *parent, int x, int y, int width, int height);
   /**
    * Container constructor
+   * @param x
+   * @param y
+   * @param width
+   * @param height
    */
   Container(int x, int y, int width, int height);
   /**

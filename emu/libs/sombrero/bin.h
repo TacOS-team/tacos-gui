@@ -24,10 +24,19 @@ class Bin : public Container {
  protected:
   /**
    * Bin constructor
+   * @param parent The parent container
+   * @param x
+   * @param y
+   * @param width
+   * @param height
    */
   Bin(Container *parent, int x, int y, int width, int height);
   /**
    * Bin constructor
+   * @param x
+   * @param y
+   * @param width
+   * @param height
    */
   Bin(int x, int y, int width, int height);
   /**
