@@ -1,16 +1,15 @@
 #ifndef __WINDOW_H__
 #define __WINDOW_H__
-
-#include "widget.h"
-
 /**
  * @file window.h
  * Window class definition
  */
 
+#include "bin.h"
+
 namespace sombrero {
 
-class Widget;
+class Bin;
 
 /**
  * Window class definition
@@ -18,7 +17,7 @@ class Widget;
  * Creates a window which can be decorated 
  * by guacamole
  */ 
-class Window : public Widget {
+class Window : public Bin {
 
  private:
   
@@ -31,6 +30,9 @@ class Window : public Widget {
    * @param height
    */
   Window(int x, int y, int width, int height);
+  /**
+   * Window destructor
+   */
   ~Window();
   /**
    * Draws the window

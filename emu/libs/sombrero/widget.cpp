@@ -1,10 +1,21 @@
 #include "widget.h"
 #include "application.h"
+#include "container.h"
 
 namespace sombrero {
 
+Widget::Widget(Container *parent, int x, int y, int width, int height) 
+  : parent(parent), x(x), y(y), width(width), height(height) {
+  // Creates the window
+  this->topWindow = pron::pronCreateWindow(Application::getInstance()->d, this->parent->getTopWindow(), this->x, this->y, this->width, this->height);
+  // Maps the window
+  pron::pronMapWindow(Application::getInstance()->d, this->topWindow);
+}
+
 Widget::Widget(int x, int y, int width, int height) 
   : x(x), y(y), width(width), height(height) {
+  this->parent = NULL;
+  // Creates the window
   this->topWindow = pron::pronCreateWindow(Application::getInstance()->d, Application::getInstance()->d->rootWindow, this->x, this->y, this->width, this->height);
 }
 
@@ -61,6 +72,10 @@ int Widget::getY() {
 
 void Widget::setY(int y) {
   this->y = y;
+}
+
+Container* Widget::getParent() {
+  return this->parent;
 }
 
 } // namespace sombrero

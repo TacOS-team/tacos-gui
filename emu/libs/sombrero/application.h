@@ -6,8 +6,6 @@
  */
 #include <vector>
 #include "pronlib.h"
-#include "window.h"
-#include "widget.h"
 
 namespace sombrero {
 
@@ -44,23 +42,7 @@ class Application {
    * Lanches the application sombrero
    */
   void run();
-  /**
-   * Get application the windows
-   * @return Application windows vector
-   */
-  std::vector<Window*> getWindows();
-  /**
-   * Add a window to the application
-   * @param window The window to add
-   */
-  void addWindow(Window &window);
-  /**
-   * Removes a window from the application
-   * @param window The Window to remove
-   */
-  void removeWindow(Window &window);
-
-  /**
+ /**
    * Allows only the Widget class
    * to read my private attributes and methods
    */
