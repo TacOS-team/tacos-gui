@@ -19,6 +19,14 @@ Bin::~Bin() {
 void Bin::add(Widget *widget) {
   if (!this->full) {
     Container::add(widget);
+    this->full = 1;
+  }
+}
+
+void Bin::remove(Widget *widget) {
+  if (this->full) {
+    Container::remove(widget);
+    this->full = 0;
   }
 }
   

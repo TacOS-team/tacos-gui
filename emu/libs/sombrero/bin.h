@@ -41,7 +41,12 @@ class Bin : public Container {
    * @param widget Pointer to the widget to add
    */
   void add(Widget *widget);
-  
+  /**
+   * Remove a widget from the children vector
+   * @param widget Pointer to the widget to remove
+   */
+  void remove(Widget *widget);
+
 };
 
 } //namespace sombrero
