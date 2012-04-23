@@ -40,12 +40,12 @@ class Container : public Widget {
    * Adds a widget in the children vector
    * @param widget Pointer to the widget to add
    */
-  void add(Widget *widget);
+  virtual void add(Widget *widget);
   /**
    * Remove a widget from the children vector
    * @param widget Pointer to the widget to remove
    */
-  void remove(Widget *widget);
+  virtual void remove(Widget *widget);
   /**
    * Gets a copy of the children vector
    * @return The copied vector of children widgets

@@ -10,6 +10,22 @@ Widget::Widget(Container *parent, int x, int y, int width, int height)
   this->topWindow = pron::pronCreateWindow(Application::getInstance()->d, this->parent->getTopWindow(), this->x, this->y, this->width, this->height);
   // Maps the window
   pron::pronMapWindow(Application::getInstance()->d, this->topWindow);
+  // On s'ajoute au container s'il n'est pas NULL
+  if (parent != NULL) {
+    parent->add(this);
+  }
+}
+
+Widget::Widget(Container *parent)
+  : parent(parent) {
+  // Creates the window
+  this->topWindow = pron::pronCreateWindow(Application::getInstance()->d, this->parent->getTopWindow(), this->x, this->y, this->width, this->height);
+  // Maps the window
+  pron::pronMapWindow(Application::getInstance()->d, this->topWindow);
+  // On s'ajoute au container s'il n'est pas NULL
+  if (parent != NULL) {
+    parent->add(this);
+  }
 }
 
 Widget::Widget(int x, int y, int width, int height) 
@@ -17,6 +33,8 @@ Widget::Widget(int x, int y, int width, int height)
   this->parent = NULL;
   // Creates the window
   this->topWindow = pron::pronCreateWindow(Application::getInstance()->d, Application::getInstance()->d->rootWindow, this->x, this->y, this->width, this->height);
+  // Maps the window
+  pron::pronMapWindow(Application::getInstance()->d, this->topWindow);
 }
 
 Widget::~Widget() {

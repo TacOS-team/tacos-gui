@@ -51,6 +51,11 @@ class Widget {
    * @param height
    */
   Widget(Container *parent, int x, int y, int width, int height); 
+    /**
+   * Widget constructor. With given parent container
+   * @param parent The parent container
+   */
+  Widget(Container *parent);
   /**
    * Widget destructor. Destroys the pron top window
    */
