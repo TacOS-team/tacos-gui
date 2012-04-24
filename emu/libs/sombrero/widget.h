@@ -7,10 +7,9 @@
 
 #include "pronlib.h"
 
-class Application;
-class Container;
-
 namespace sombrero {
+
+class Container;
 
 /**
  * Widget class definition. A widget is something dealing with 
@@ -19,6 +18,7 @@ namespace sombrero {
 class Widget {
 
  private:
+  Container *parent; /**< The parent widget */
   int x; /**< x coordinate */
   int y; /**< y coordinate */
   int width; /**< Width */
@@ -33,12 +33,29 @@ class Widget {
 
  protected:
   /**
-   * Widget constructor. With given width and height
-   * Create the pron window
+   * Widget constructor. With given x, y, width and height
+   * Create the pron window. Pron root window is set as parent window
+   * @param x
+   * @param y
    * @param width
    * @param height
    */
   Widget(int x, int y, int width, int height); 
+  /**
+   * Widget constructor. With given parent container, x, y, width and height
+   * Create the pron window
+   * @param parent The parent container
+   * @param x
+   * @param y
+   * @param width
+   * @param height
+   */
+  Widget(Container *parent, int x, int y, int width, int height); 
+    /**
+   * Widget constructor. With given parent container
+   * @param parent The parent container
+   */
+  Widget(Container *parent);
   /**
    * Widget destructor. Destroys the pron top window
    */
@@ -117,6 +134,11 @@ class Widget {
    * Put here widgets drawing stuff
    */
   virtual void draw() = 0;
+  /**
+   * Gets parent container
+   * @return The parent Container
+   */
+  Container* getParent();
 
 };
 

@@ -5,9 +5,12 @@
  * Main sombrero header
  */
 
-#include "application.h"
 #include "widget.h"
+#include "container.h"
 #include "window.h"
+#include "application.h"
+#include "bin.h"
+#include "canvas.h"
 
 /**
  * Sombrero library namespace
