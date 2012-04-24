@@ -68,12 +68,21 @@ void Window::unmap() {
     return;
   }
 
+  this->mapped = false;
+
   // Unmap all children
   for (Window *child = this->firstChild; child != NULL; child = child->nextSibling) {
     child->unmap();
   }
 
-  this->mapped = false;
+  // TODO: check if we were clipwin/mousewin/focuswin
+  if (this->getScreen()->getClipWin() == this) {
+    this->getScreen()->setClipWin(NULL);
+  }
+
+  if (this->getScreen()->getMouseWin() == this) {
+    Mouse::getInstance()->updateMouseWin();
+  }
 
   if (this->parent->mapped) {
     // Clear the area of the parent window occupied by this window and send exposure event
@@ -86,29 +95,22 @@ void Window::unmap() {
       }
     }
   }
-
-  // TODO: check if we were clipwin/mousewin/focuswin
-  if (this->getScreen()->getClipWin() == this) {
-    this->getScreen()->setClipWin(NULL);
-  }
-
-  if (this->getScreen()->getMouseWin() == this) {
-    Mouse::getInstance()->updateMouseWin();
-  }
 }
 
 void Window::map() {
   this->mapped = true;
 
+  // TODO: update clipwin/mousewin/focuswin
+
   // Clear the window and send exposure event
   //this->clear();
+  EventExpose expose(this->getId(), 0, 0, this->getWidth(), this->getHeight());
+  this->deliverEvent(&expose, sizeof(expose));
 
   // Map all children
   for (Window *child = this->firstChild; child != NULL; child = child->nextSibling) {
     child->map();
   }
-
-  // TODO: update clipwin/mousewin/focuswin
 }
 
 void Window::drawPoint(int x, int y) {
