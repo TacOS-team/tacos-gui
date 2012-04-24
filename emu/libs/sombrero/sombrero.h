@@ -18,6 +18,11 @@
 namespace sombrero {
 
 /**
+ * Prints the sombrero ascii art welcome message
+ */
+void sombrero_ascii_art();
+
+/**
  * Initializes sombrero, connecting to pron getting a display.
  * Exits the program if it fails to connect to pron.
  */

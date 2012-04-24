@@ -19,9 +19,7 @@ class Window;
 class Application {
 
  private:
-  pron::Display *d; /**< Pron display */
   static Application *instance; /**< Singleton instance of Application */
-  vector<Window*> windows; /**< Application windows vector */
   /**
    * Private constructor (singleton)
    */
@@ -32,6 +30,7 @@ class Application {
   ~Application();
 
  public:
+  pron::Display *d; /**< Pron display */
   /**
    * Get the static instance
    * Creates it if it's NULL
@@ -39,14 +38,13 @@ class Application {
    */
   static Application* getInstance();
   /**
+   * Initialize Sombrero
+   */
+  void init();
+  /**
    * Lanches the application sombrero
    */
-  void run();
- /**
-   * Allows only the Widget class
-   * to read my private attributes and methods
-   */
-  friend class Widget;
+  void sombrerun();
 };
 
 } // namespace sombrero

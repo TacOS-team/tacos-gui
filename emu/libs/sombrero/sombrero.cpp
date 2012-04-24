@@ -4,12 +4,12 @@
 #include "pronlib.h"
 #include "application.h"
 
-namespace sombrero{
+namespace sombrero {
 
 /**
  * Prints the sombrero logo
  */
-void sombrero_ascii_art(){
+void sombrero_ascii_art() {
   printf("\n"
     " (       )    *         (       (       )   " "\n"
     " )\\ ) ( /(  (  `     (  )\\ )    )\\ ) ( /(   " "\n"
@@ -20,11 +20,6 @@ void sombrero_ascii_art(){
     "\\__ \\| (_) | |\\/| || _ \\   / _||   /| (_) | " "\n"
     "|___/ \\___/|_|  |_||___/_|_\\___|_|_\\ \\___/  " "\n"
   );
-}
-
-void init() {
-  sombrero_ascii_art();
-  sombrero::Application::getInstance();
 }
 
 } // namespace sombrero

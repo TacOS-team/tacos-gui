@@ -25,20 +25,8 @@ class Container : public Widget {
   /**
    * Container constructor
    * @param parent The parent container
-   * @param x
-   * @param y
-   * @param width
-   * @param height
    */
-  Container(Container *parent, int x, int y, int width, int height);
-  /**
-   * Container constructor
-   * @param x
-   * @param y
-   * @param width
-   * @param height
-   */
-  Container(int x, int y, int width, int height);
+  Container(Container *parent);
   /**
    * Container destructor
    */
@@ -55,6 +43,14 @@ class Container : public Widget {
    * @param widget Pointer to the widget to remove
    */
   virtual void remove(Widget *widget);
+  /**
+   * Draw children widgets
+   */
+  void drawChildren();
+  /**
+   * Draws the window
+   */
+  void draw();
   /**
    * Gets a copy of the children vector
    * @return The copied vector of children widgets

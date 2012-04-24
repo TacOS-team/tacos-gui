@@ -7,7 +7,8 @@
 
 #include "widget.h"
 
-class Widget;
+#define SOMBRERO_CANVAS_DEPTH 24
+
 class Container;
 
 namespace sombrero {
@@ -19,7 +20,7 @@ namespace sombrero {
 class Canvas : public Widget {
   
  private:
-  
+  pron::Pixmap pixmap; /**< Pron pixmap : where to draw */
  public:
   /**
    * Canvas constructor

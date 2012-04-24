@@ -2,9 +2,9 @@
 #include "unistd.h"
 
 int main() {
-  sombrero::init();
+  sombrero::Application::getInstance()->init();
   sombrero::Window w(0, 0, 50, 50);
   sombrero::Canvas c(&w);
-  sleep(10);
+  sombrero::Application::getInstance()->sombrerun();
   return 0;
 }

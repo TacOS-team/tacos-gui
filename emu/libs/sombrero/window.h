@@ -35,10 +35,10 @@ class Window : public Bin {
    */
   ~Window();
   /**
-   * Draws the window
+   * Adds a widget in the children vector
+   * @param widget Pointer to the widget to add
    */
-  void draw();
-  
+  void add(Widget *widget);
 };
  
 } // namespace sombrero

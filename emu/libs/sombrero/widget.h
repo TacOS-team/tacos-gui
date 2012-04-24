@@ -25,33 +25,14 @@ class Widget {
   int height; /**< Height */
   bool active; /**< Dealing with activable widgets */
   bool visible; /**< The widget has to be shown */
+
+ protected:
   /**
    * The to window of the widget. Has to be reparented 
    * when the widget is.
    */
   pron::Window topWindow; 
-
- protected:
   /**
-   * Widget constructor. With given x, y, width and height
-   * Create the pron window. Pron root window is set as parent window
-   * @param x
-   * @param y
-   * @param width
-   * @param height
-   */
-  Widget(int x, int y, int width, int height); 
-  /**
-   * Widget constructor. With given parent container, x, y, width and height
-   * Create the pron window
-   * @param parent The parent container
-   * @param x
-   * @param y
-   * @param width
-   * @param height
-   */
-  Widget(Container *parent, int x, int y, int width, int height); 
-    /**
    * Widget constructor. With given parent container
    * @param parent The parent container
    */
@@ -60,12 +41,6 @@ class Widget {
    * Widget destructor. Destroys the pron top window
    */
   ~Widget(); 
-  /**
-   * Gets the top window of the widget
-   * @see topWindow
-   * @return The pron window
-   */
-  pron::Window getTopWindow();
   // Getters and setters
   /**
    * Gets x

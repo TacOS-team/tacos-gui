@@ -1,19 +1,15 @@
 #include "container.h"
 #include "widget.h"
 #include <vector>
+#include <algorithm>
 
 namespace sombrero {
 
-Container::Container(Container *parent, int x, int y, int width, int height) 
-  : Widget (parent, x, y, width, height) {
-}
-
-Container::Container(int x, int y, int width, int height) 
-  : Widget (x, y, width, height) {
+Container::Container(Container *parent)
+  : Widget (parent) {
 }
 
 Container::~Container() {
-  
 }
 
 void Container::add(Widget *widget) {
@@ -21,12 +17,18 @@ void Container::add(Widget *widget) {
 }
 
 void Container::remove(Widget *widget) {
+  this->children.erase(std::find(this->children.begin(), this->children.end(), widget));
+}
+
+void Container::drawChildren() {
   vector<Widget*>::iterator it;
-  for (it = this->children.begin(); it < this->children.end(); it++) {
-    if (*it == widget) {
-      this->children.erase(it, it);
-    }
-  }    
+  for (it = this->children.begin(); it < this->children.end(); ++it) {
+    (*it)->draw();
+  }
+}
+
+void Container::draw() {
+  this->drawChildren();
 }
 
 std::vector<Widget*> Container::getChildren() {

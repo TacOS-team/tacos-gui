@@ -25,20 +25,8 @@ class Bin : public Container {
   /**
    * Bin constructor
    * @param parent The parent container
-   * @param x
-   * @param y
-   * @param width
-   * @param height
    */
-  Bin(Container *parent, int x, int y, int width, int height);
-  /**
-   * Bin constructor
-   * @param x
-   * @param y
-   * @param width
-   * @param height
-   */
-  Bin(int x, int y, int width, int height);
+  Bin(Container *parent);
   /**
    * Bin destructor
    */
@@ -49,12 +37,12 @@ class Bin : public Container {
    * Adds a widget in the children vector
    * @param widget Pointer to the widget to add
    */
-  void add(Widget *widget);
+  virtual void add(Widget *widget);
   /**
    * Remove a widget from the children vector
    * @param widget Pointer to the widget to remove
    */
-  void remove(Widget *widget);
+  virtual void remove(Widget *widget);
 
 };
 

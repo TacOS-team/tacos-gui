@@ -4,45 +4,22 @@
 
 namespace sombrero {
 
-Widget::Widget(Container *parent, int x, int y, int width, int height) 
-  : parent(parent), x(x), y(y), width(width), height(height) {
-  // Creates the window
-  this->topWindow = pron::pronCreateWindow(Application::getInstance()->d, this->parent->getTopWindow(), this->x, this->y, this->width, this->height);
-  // Maps the window
-  pron::pronMapWindow(Application::getInstance()->d, this->topWindow);
-  // On s'ajoute au container s'il n'est pas NULL
-  if (parent != NULL) {
-    parent->add(this);
-  }
-}
-
 Widget::Widget(Container *parent)
   : parent(parent) {
-  // Creates the window
-  this->topWindow = pron::pronCreateWindow(Application::getInstance()->d, this->parent->getTopWindow(), this->x, this->y, this->width, this->height);
-  // Maps the window
-  pron::pronMapWindow(Application::getInstance()->d, this->topWindow);
-  // On s'ajoute au container s'il n'est pas NULL
   if (parent != NULL) {
+    // On s'ajoute au container s'il n'est pas NULL
     parent->add(this);
+    // Creates the window
+    this->topWindow = pron::pronCreateWindow(Application::getInstance()->d, this->parent->topWindow, this->x, this->y, this->width, this->height);
+    // Maps the window
+    pron::pronMapWindow(Application::getInstance()->d, this->topWindow);
+    // Select events
+    pron::pronSelectInput(Application::getInstance()->d, this->topWindow, PRON_EVENTMASK(pron::EV_EXPOSE));
   }
-}
-
-Widget::Widget(int x, int y, int width, int height) 
-  : x(x), y(y), width(width), height(height) {
-  this->parent = NULL;
-  // Creates the window
-  this->topWindow = pron::pronCreateWindow(Application::getInstance()->d, Application::getInstance()->d->rootWindow, this->x, this->y, this->width, this->height);
-  // Maps the window
-  pron::pronMapWindow(Application::getInstance()->d, this->topWindow);
 }
 
 Widget::~Widget() {
   pron::pronDestroyWindow(Application::getInstance()->d, this->topWindow);
-}
-
-pron::Window Widget::getTopWindow() {
-  return this->topWindow;
 }
 
 int Widget::getWidth() {
