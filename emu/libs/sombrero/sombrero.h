@@ -11,6 +11,7 @@
 #include "application.h"
 #include "bin.h"
 #include "canvas.h"
+#include "timer.h"
 
 /**
  * Sombrero library namespace
