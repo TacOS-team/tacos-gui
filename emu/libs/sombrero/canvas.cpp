@@ -1,5 +1,6 @@
 #include "canvas.h"
 #include "application.h"
+#include "pronlib.h"
 
 namespace sombrero {
 
@@ -14,6 +15,22 @@ Canvas::~Canvas() {
 
 void Canvas::drawLine(int x1, int y1, int x2, int y2) {
   pronDrawLine(Application::getInstance()->d, this->pixmap, Application::getInstance()->d->defaultGC, x1, y1, x2, y2);
+}
+
+void Canvas::drawRectangle(int x, int y, int width, int height) {
+  pronFillRectangle(Application::getInstance()->d, this->pixmap, Application::getInstance()->d->defaultGC, x, y, width, height);
+}
+
+void Canvas::fillRectangle(int x, int y, int width, int height) {
+  pronFillRectangle(Application::getInstance()->d, this->pixmap, Application::getInstance()->d->defaultGC, x, y, width, height);
+}
+
+void Canvas::drawCircle(int x, int y, int radius) {
+  pronDrawCircle(Application::getInstance()->d, this->pixmap, Application::getInstance()->d->defaultGC, x, y, radius);
+}
+
+void Canvas::fillCircle(int x, int y, int radius) {
+  pronFillCircle(Application::getInstance()->d, this->pixmap, Application::getInstance()->d->defaultGC, x, y, radius);
 }
 
 void Canvas::draw() {
