@@ -1,4 +1,5 @@
 #include <vector>
+#include <errno.h>
 #include "sombrero.h"
 
 namespace sombrero {
@@ -33,7 +34,8 @@ void Application::sombrerun() {
   pron::PronEvent *e = pron::getPronEvent();
   while (1) {
     if (!pron::pronNextEvent(this->d, e)) {
-      fprintf(stderr, "pron has closed the connection.\n");
+      if (errno == EINTR) continue;
+      fprintf(stderr, "lol pron has closed the connection.\n");
       exit(1);
     }
     switch (e->type) {

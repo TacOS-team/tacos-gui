@@ -12,6 +12,10 @@ Canvas::Canvas(Container *parent)
 Canvas::~Canvas() {
   pronFreePixmap(Application::getInstance()->d, this->pixmap);
 }
+  
+void Canvas::clear() {
+  pronClearWindow(Application::getInstance()->d, this->pixmap);
+}
 
 void Canvas::drawLine(int x1, int y1, int x2, int y2) {
   pronDrawLine(Application::getInstance()->d, this->pixmap, Application::getInstance()->d->defaultGC, x1, y1, x2, y2);
