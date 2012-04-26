@@ -5,6 +5,7 @@
  * Application class definition
  */
 #include <vector>
+#include <map>
 #include "pronlib.h"
 
 namespace sombrero {
@@ -31,6 +32,8 @@ class Application {
 
  public:
   pron::Display *d; /**< Pron display */
+  std::map<pron::Window, Widget*> widgets; /**< A map with every pron::Window associated to a widget */
+  
   /**
    * Get the static instance
    * Creates it if it's NULL

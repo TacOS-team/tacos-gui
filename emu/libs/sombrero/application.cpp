@@ -37,8 +37,13 @@ void Application::sombrerun() {
       exit(1);
     }
     switch (e->type) {
-      case pron::EV_EXPOSE:
+      case pron::EV_EXPOSE: {
+	Widget *w = Application::getInstance()->widgets[e->window];
+	if (w != NULL) {
+	  w->draw();
+	}
 	break;
+      }
       case pron::EV_DESTROY_WINDOW:
 	exit(1);
 	break;

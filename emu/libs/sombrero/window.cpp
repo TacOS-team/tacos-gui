@@ -12,10 +12,13 @@ Window::Window(int x, int y, int width, int height)
   this->setHeight(height);
   // Creates the window
   this->topWindow = pron::pronCreateWindow(Application::getInstance()->d, Application::getInstance()->d->rootWindow, this->getX(), this->getY(), this->getWidth(), this->getHeight());
+  // Associates the pron::window to the widget
+  Application::getInstance()->widgets[this->topWindow] = this;
   // Maps the window
   pron::pronMapWindow(Application::getInstance()->d, this->topWindow);
   // Select events
   pron::pronSelectInput(Application::getInstance()->d, this->topWindow, PRON_EVENTMASK(pron::EV_EXPOSE) | PRON_EVENTMASK(pron::EV_DESTROY_WINDOW));
+  
 }
 
 Window::~Window() {

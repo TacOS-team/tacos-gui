@@ -11,6 +11,8 @@ Widget::Widget(Container *parent)
     parent->add(this);
     // Creates the window
     this->topWindow = pron::pronCreateWindow(Application::getInstance()->d, this->parent->topWindow, this->x, this->y, this->width, this->height);
+    // Associates the pron::window to the widget
+    Application::getInstance()->widgets[this->topWindow] = this;
     // Maps the window
     pron::pronMapWindow(Application::getInstance()->d, this->topWindow);
     // Select events
