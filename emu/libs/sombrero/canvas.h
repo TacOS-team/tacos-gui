@@ -27,10 +27,17 @@ class Canvas : public Widget {
    * @param parent
    */
   Canvas(Container *parent);
+
   /**
    * Canvas destructor
    */
   ~Canvas();
+
+  /**
+   * Clears the canvas.
+   */
+  void clear();
+
   /**
    * Draws a ligne
    * @param x1
@@ -39,11 +46,11 @@ class Canvas : public Widget {
    * @param y2
    */
   void drawLine(int x1, int y1, int x2, int y2);
+
   /**
    * Drawing stuff
    */
   void draw();
-
 };
 
 } //namespace sombrero
