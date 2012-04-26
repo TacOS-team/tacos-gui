@@ -338,14 +338,15 @@ bool Screen::prepareDrawing(Drawable *d, GC *gc) {
 }
 
 void traceWindowsRec(Window *w, string prefix) {
-  printf("%s%d (p: %d, fc: %d, lc: %d, ps: %d, ns: %d)\n",
+  printf("%s%x (p: %x, fc: %x, lc: %x, ps: %x, ns: %x, mapped: %s)\n",
         prefix.c_str(),
         w->getId(),
         w->parent == NULL ? 0 : w->parent->getId(),
         w->firstChild == NULL ? 0 : w->firstChild->getId(),
         w->lastChild == NULL ? 0 : w->lastChild->getId(),
         w->prevSibling == NULL ? 0 : w->prevSibling->getId(),
-        w->nextSibling == NULL ? 0 : w->nextSibling->getId());
+        w->nextSibling == NULL ? 0 : w->nextSibling->getId(),
+        w->mapped ? "yes" : "no");
   for (Window *currentChild = w->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
     traceWindowsRec(currentChild, prefix + "--");
   }

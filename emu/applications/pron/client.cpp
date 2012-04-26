@@ -204,12 +204,12 @@ void Client::handle() {
       break;
     }
     case RQ_DESTROY_WINDOW: {
-      screen->traceWindows();
       RqDestroyWindow *rq = (RqDestroyWindow*) Client::recvBuf;
       Window *w = (Window*) screen->getDrawable(rq->window, D_WINDOW);
       if (w != NULL) {
         w->destroy();  
       }
+      screen->traceWindows();
       break;
     }
     case RQ_MOVE_WINDOW: {
