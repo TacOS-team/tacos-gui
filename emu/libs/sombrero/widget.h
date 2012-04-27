@@ -41,6 +41,8 @@ class Widget {
    * Widget destructor. Destroys the pron top window
    */
   ~Widget(); 
+  
+ public:
   // Getters and setters
   /**
    * Gets x
@@ -62,9 +64,6 @@ class Widget {
    * @param y
    */
   void setY(int y);
-  
- public:
-  // Getters and setters
   /**
    * Gets the width
    * @return width

@@ -6,7 +6,7 @@ namespace sombrero {
 
 Canvas::Canvas(Container *parent)
   : Widget(parent) {
-  this->pixmap = pronCreatePixmap(Application::getInstance()->d, this->getHeight(), this->getHeight(), SOMBRERO_CANVAS_DEPTH);
+  this->pixmap = pronCreatePixmap(Application::getInstance()->d, this->getWidth(), this->getHeight(), SOMBRERO_CANVAS_DEPTH);
 }
 
 Canvas::~Canvas() {

@@ -26,6 +26,8 @@ Window::~Window() {
 }
 
 void Window::add(Widget *widget) {
+  widget->setX(0);
+  widget->setY(0);
   widget->setWidth(this->getWidth());
   widget->setHeight(this->getHeight());
   Bin::add(widget);
