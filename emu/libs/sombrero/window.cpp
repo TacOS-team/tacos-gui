@@ -5,7 +5,7 @@
 namespace sombrero {
 
 Window::Window(int x, int y, int width, int height) 
-  : Bin(NULL) {
+    : Bin() {
   this->setX(x);
   this->setY(y);
   this->setWidth(width);
@@ -18,11 +18,9 @@ Window::Window(int x, int y, int width, int height)
   pron::pronMapWindow(Application::getInstance()->d, this->topWindow);
   // Select events
   pron::pronSelectInput(Application::getInstance()->d, this->topWindow, PRON_EVENTMASK(pron::EV_EXPOSE) | PRON_EVENTMASK(pron::EV_DESTROY_WINDOW));
-  
 }
 
 Window::~Window() {
-  
 }
 
 void Window::add(Widget *widget) {
@@ -34,4 +32,3 @@ void Window::add(Widget *widget) {
 }
 
 } // namespace sombrero
-

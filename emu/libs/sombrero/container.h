@@ -23,6 +23,10 @@ class Container : public Widget {
   
  protected:
   /**
+   * Container default constructor that does nothing.
+   */
+  Container();
+  /**
    * Container constructor
    * @param parent The parent container
    */

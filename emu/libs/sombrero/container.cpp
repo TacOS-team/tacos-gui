@@ -5,8 +5,10 @@
 
 namespace sombrero {
 
+Container::Container() {}
+
 Container::Container(Container *parent)
-  : Widget (parent) {
+    : Widget(parent) {
 }
 
 Container::~Container() {

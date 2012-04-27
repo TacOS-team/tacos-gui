@@ -4,20 +4,20 @@
 
 namespace sombrero {
 
+Widget::Widget() {}
+
 Widget::Widget(Container *parent)
-  : parent(parent) {
-  if (parent != NULL) {
-    // On s'ajoute au container s'il n'est pas NULL
-    parent->add(this);
-    // Creates the window
-    this->topWindow = pron::pronCreateWindow(Application::getInstance()->d, this->parent->topWindow, this->x, this->y, this->width, this->height);
-    // Associates the pron::window to the widget
-    Application::getInstance()->widgets[this->topWindow] = this;
-    // Maps the window
-    pron::pronMapWindow(Application::getInstance()->d, this->topWindow);
-    // Select events
-    pron::pronSelectInput(Application::getInstance()->d, this->topWindow, PRON_EVENTMASK(pron::EV_EXPOSE));
-  }
+    : parent(parent) {
+  // On s'ajoute au container s'il n'est pas NULL
+  parent->add(this);
+  // Creates the window
+  this->topWindow = pron::pronCreateWindow(Application::getInstance()->d, this->parent->topWindow, this->x, this->y, this->width, this->height);
+  // Associates the pron::window to the widget
+  Application::getInstance()->widgets[this->topWindow] = this;
+  // Maps the window
+  pron::pronMapWindow(Application::getInstance()->d, this->topWindow);
+  // Select events
+  pron::pronSelectInput(Application::getInstance()->d, this->topWindow, PRON_EVENTMASK(pron::EV_EXPOSE));
 }
 
 Widget::~Widget() {

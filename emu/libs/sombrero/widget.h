@@ -31,7 +31,11 @@ class Widget {
    * The to window of the widget. Has to be reparented 
    * when the widget is.
    */
-  pron::Window topWindow; 
+  pron::Window topWindow;
+  /**
+   * Widget default constructor that does nothing.
+   */
+  Widget();
   /**
    * Widget constructor. With given parent container
    * @param parent The parent container

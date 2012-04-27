@@ -3,8 +3,10 @@
 
 namespace sombrero {
 
+Bin::Bin() {}
+
 Bin::Bin(Container *parent)
-  : Container(parent) {
+    : Container(parent) {
   this->full = 0;
 }
 

@@ -23,6 +23,10 @@ class Bin : public Container {
   
  protected:
   /**
+   * Bin default constructor that does nothing.
+   */
+  Bin();
+  /**
    * Bin constructor
    * @param parent The parent container
    */
