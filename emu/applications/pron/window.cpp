@@ -394,29 +394,18 @@ void Window::destroy() {
 }
 
 void Window::move(int dx, int dy) {
-  // TODO Gestion sous-filles + clean
   this->unmap();
-  this->x += dx;
-  this->y += dy;
-  for (Window *currentChild = this->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
-    currentChild->x += dx;
-    currentChild->y += dy;
+
+  for (WindowsTree::IteratorBFS it = this->getScreen()->tree->beginBFS(this); it != this->getScreen()->tree->endBFS(); it++) {
+    it->x += dx;
+    it->y += dy;
   }
+
   this->map();
 }
 
 void Window::moveTo(int x, int y) {
-  // TODO Gestion sous-filles + clean
-  this->unmap();
-  int xMove = x - this->x;
-  int yMove = y - this->y;
-  this->x = x;
-  this->y = y;
-  for (Window *currentChild = this->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
-    currentChild->x += xMove;
-    currentChild->y += yMove;
-  }
-  this->map();
+  this->move(x - this->x, y - this->y);
 }
 
 void Window::resize(int width, int height) {
