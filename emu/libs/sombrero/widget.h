@@ -6,6 +6,9 @@
  */
 
 #include "pronlib.h"
+#include "sigslot.h"
+
+using namespace sigslot;
 
 namespace sombrero {
 
@@ -47,6 +50,8 @@ class Widget {
   ~Widget(); 
   
  public:
+  // Signals
+  signal0<> clicked;
   // Getters and setters
   /**
    * Gets x

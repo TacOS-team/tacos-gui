@@ -38,11 +38,18 @@ void Application::sombrerun() {
       fprintf(stderr, "lol pron has closed the connection.\n");
       exit(1);
     }
+    // Gets the widget
+    Widget *w = Application::getInstance()->widgets[e->window];
     switch (e->type) {
       case pron::EV_EXPOSE: {
-	Widget *w = Application::getInstance()->widgets[e->window];
 	if (w != NULL) {
 	  w->draw();
+	}
+	break;
+      }
+      case pron::EV_MOUSE_BUTTON: {
+	if (w != NULL && ((pron::EventMouseButton *)e)->b1) {
+	  w->clicked();
 	}
 	break;
       }
