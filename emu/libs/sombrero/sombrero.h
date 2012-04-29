@@ -11,6 +11,7 @@
 #include "application.h"
 #include "bin.h"
 #include "canvas.h"
+#include "button.h"
 #include "timer.h"
 
 /**
