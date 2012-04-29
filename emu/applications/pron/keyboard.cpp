@@ -21,14 +21,15 @@ void Keyboard::checkEvents() {
   memset(&state, 0, sizeof(kbdstate_t));
 
   if (read(this->fd, &state, 0) > 0) {
-    // TODO: compute real source window
-    Window *src = (Window *) screen->getDrawable(0, D_WINDOW);
-    if (state.state == PRON_RELEASED) {
-      EventKeyReleased keyReleased(src->getId(), src->getId(), 0, 0, 0, 0, state.keysym, state.modifiers);
-      src->deliverDeviceEvent(&keyReleased, sizeof(keyReleased));
-    } else if (state.state == PRON_PRESSED) {
-      EventKeyPressed keyPressed(src->getId(), src->getId(), 0, 0, 0, 0, state.keysym, state.modifiers);
-      src->deliverDeviceEvent(&keyPressed, sizeof(keyPressed));
+    Window *src = (Window *) screen->getFocusWin();
+    if (src != NULL) {
+      if (state.state == PRON_RELEASED) {
+        EventKeyReleased keyReleased(src->getId(), src->getId(), 0, 0, 0, 0, state.keysym, state.modifiers);
+        src->deliverDeviceEvent(&keyReleased, sizeof(keyReleased));
+      } else if (state.state == PRON_PRESSED) {
+        EventKeyPressed keyPressed(src->getId(), src->getId(), 0, 0, 0, 0, state.keysym, state.modifiers);
+        src->deliverDeviceEvent(&keyPressed, sizeof(keyPressed));
+      }
     }
   }
 }

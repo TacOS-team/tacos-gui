@@ -258,6 +258,20 @@ void Window::selectInput(Client *client, unsigned int mask) {
   }
 }
 
+bool Window::acceptsEvents(int eventMask) {
+  if (this->eventMask & eventMask) {
+    return true;
+  }
+
+  for (unsigned int i = 0; i < this->otherClients.size(); i++) {
+    if (this->otherClients[i].mask & eventMask) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 void Window::deliverEvent(PronEvent *e, unsigned int size) {
   unsigned int eventMask = PRON_EVENTMASK(e->type);
   

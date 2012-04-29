@@ -21,9 +21,10 @@ private:
   Screen(int width, int height, int bitsPerPixel);
   static Screen *instance;
   vector<Font*> fonts;
-  Window *clipWin; /*< Window for which the clipping zone is set */
-  ClipZone *clipZone; /*< Rectangles where we are allowed to draw */
-  Window *mouseWin; // First window containing the mouse pointer
+  Window *clipWin; /**< Window for which the clipping zone is set */
+  ClipZone *clipZone; /**< Rectangles where we are allowed to draw */
+  Window *mouseWin; /**< Window containing the mouse pointer */
+  Window *focusWin; /**< Window having the focus */
 
   void drawHorizLine(int x, int y, int width, bool check = true);
   void drawVertLine(int x, int y, int height, bool check = true);
@@ -69,6 +70,17 @@ public: // XXX: bourrin
 
   Window* getMouseWin();
   void setMouseWin(Window *mouseWin);
+
+  /**
+   * Returns the window that has the focus.
+   * @return the window that has the focus.
+   */
+  Window* getFocusWin();
+
+  /**
+   * Sets the window that has the focus.
+   */
+  void setFocusWin(Window *focusWin);
 
   Window* getRoot();
   void setRoot(Window *root);

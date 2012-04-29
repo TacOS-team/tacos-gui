@@ -41,9 +41,13 @@ public:
 
   void checkEvents();
   /**
-   * Update mouseWin
+   * Updates mouseWin
    */
   void updateMouseWin();
+  /**
+   * Updates focusWin
+   */
+  void updateFocusWin();
   /**
    * Restore the mouse pointer
    */
