@@ -75,4 +75,24 @@ Container* Widget::getParent() {
   return this->parent;
 }
 
+void Widget::handleEvent(pron::PronEvent *e) {
+  switch (e->type) {
+    case pron::EV_EXPOSE: {
+      this->draw();
+      break;
+    }
+    case pron::EV_MOUSE_BUTTON: {
+      if (((pron::EventMouseButton *)e)->b1) {
+        this->clicked();
+      }
+      break;
+    }
+    case pron::EV_DESTROY_WINDOW:
+      exit(1);
+      break;
+    default:
+      break; 
+  }
+}
+
 } // namespace sombrero

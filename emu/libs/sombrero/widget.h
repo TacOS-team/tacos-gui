@@ -118,6 +118,12 @@ class Widget {
    */
   virtual void draw() = 0;
   /**
+   * Event handler.
+   * @param e The event to handle
+   * @todo Pure virtual?
+   */
+  virtual void handleEvent(pron::PronEvent *e);
+  /**
    * Gets parent container
    * @return The parent Container
    */
