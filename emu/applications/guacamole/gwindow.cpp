@@ -144,6 +144,14 @@ void GWindow::decorate() {
     // Barre du haut
     pronFillRectangle(display, this->parent, this->backgroundParentGC, 0,0,
       this->parentAttributes.width - 2* buttonSize, buttonSize);
+    
+    char windowTitle[255];
+    sprintf(windowTitle, "Window %x", this->window);
+    int width, height;
+    pronTextSize(display, display->defaultGC, windowTitle, strlen(windowTitle), &width, &height);
+    printf("Writing %s (size %d %d)...\n", windowTitle, width, height);
+    pronDrawText(display, this->parent, display->defaultGC, 2, 12, windowTitle, strlen(windowTitle));
+
     // Barre de gauche
     pronFillRectangle(display, this->parent, this->backgroundParentGC, 0,buttonSize,
       buttonSize, this->parentAttributes.height-buttonSize);
