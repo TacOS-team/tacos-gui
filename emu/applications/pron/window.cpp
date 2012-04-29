@@ -141,7 +141,7 @@ void Window::fillCircle(int x, int y, int radius) {
   this->getScreen()->fillCircle(this->x + x, this->y + y, radius); 
 }
 
-void Window::clear(int x, int y, int width, int height) {
+void Window::clear(int x, int y, int width, int height, bool sendExposureEvent) {
   this->reduce(x, y, width, height);
 
   color_t oldFg = this->getScreen()->gc->fg;
@@ -165,13 +165,23 @@ void Window::clear(int x, int y, int width, int height) {
   }
   this->getScreen()->gc->fg = oldFg;
 
-  // Send exposure event
-  EventExpose expose(this->getId(), x, y, width, height);
-  this->deliverEvent(&expose, sizeof(expose));
+  if (sendExposureEvent) {
+    // Send exposure event
+    EventExpose expose(this->getId(), x, y, width, height);
+    this->deliverEvent(&expose, sizeof(expose));
+  }
+}
+
+void Window::clear(bool sendExposureEvent) {
+  this->clear(0, 0, this->getWidth(), this->getHeight(), sendExposureEvent);
+}
+
+void Window::clear(int x, int y, int width, int height) {
+  this->clear(x, y, width, height, true);
 }
 
 void Window::clear() {
-  this->clear(0, 0, this->getWidth(), this->getHeight());
+  this->clear(0, 0, this->getWidth(), this->getHeight(), true); 
 }
 
 PronWindowAttributes Window::getAttributes() {

@@ -68,6 +68,10 @@ public: //XXX: bourrin
 
   void clear(int x, int y, int width, int height);
 
+  void clear(bool sendExposureEvent);
+
+  void clear(int x, int y, int width, int height, bool sendExposureEvent);
+
   int getPixel(int x, int y);
 
   void setPixel(int x, int y, int pixel);
