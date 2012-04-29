@@ -427,3 +427,7 @@ void Window::copyArea(int dstX, int dstY, Drawable *d, int srcX, int srcY, int w
     }
   }
 }
+
+void Window::drawText(int x, int y, const char *text, int length) {
+  this->getScreen()->drawText(this->x + x, this->y + y, text, length);
+}

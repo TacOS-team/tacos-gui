@@ -343,4 +343,10 @@ void pronCopyArea(Display *d, Drawable src, Drawable dest, GC gc,
   tsock_write(d->fd, &rq, sizeof(rq));
 }
 
+void pronDrawText(Display *d, Window w, GC gc, int x, int y,
+    const char *text, int length) {
+  RqDrawText rq(gc, w, x, y, text, length);
+  tsock_write(d->fd, &rq, sizeof(rq));
+}
+
 } // namespace pron

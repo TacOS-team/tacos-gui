@@ -1,6 +1,8 @@
 #ifndef __PRONPROTO_REQUESTS_H__
 #define __PRONPROTO_REQUESTS_H__
 
+#include <string.h>
+
 #include <proto/base.h>
 #include <proto/bits/attributes.h>
 #include <proto/bits/gc.h>
@@ -722,6 +724,38 @@ struct RqCopyArea : public PronRequest {
   int height; /**< Height to copy */
   int destX; /**< Destination top-left corner x-coordinate */
   int destY; /**< Destination top-left corner y-coordinate */
+};
+
+/**
+ * DrawText request.
+ * Sent by a client to draw a text.
+ */
+struct RqDrawText : public PronRequest {
+  /**
+   * Constructor.
+   * @param gc The graphics context to use
+   * @param window The window in which to draw the text
+   * @param x The x-coordinate of the origin of the first character
+   * @param y The y-coordinate of the origin of the first character
+   * @param text The text to draw
+   * @param length The length of the text
+   */
+  RqDrawText(unsigned int gc, unsigned int window, int x, int y, const char *text, int length)
+      : PronRequest(RQ_DRAW_TEXT) {
+    this->gc = gc;
+    this->window = window;
+    this->x = x;
+    this->y = y;
+    memcpy(this->text, text, length);
+    this->length = length;
+  }
+
+  unsigned int gc; /**< Id of the graphics context to use */
+  unsigned int window; /**< Id of the window in which to draw */
+  int x; /**< X-coordinate of the origin of the first character */
+  int y; /**< Y-coordinate of the origin of the first character */
+  char text[512]; /**< Text to draw */
+  int length; /**< Length of the text */
 };
 
 } // namespace pron

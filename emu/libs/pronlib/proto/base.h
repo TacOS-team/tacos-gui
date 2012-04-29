@@ -44,6 +44,7 @@ enum MessageType {
   RQ_CREATE_PIXMAP            = (RQ_PREFIX | 28),
   RQ_FREE_PIXMAP              = (RQ_PREFIX | 29),
   RQ_COPY_AREA                = (RQ_PREFIX | 30),
+  RQ_DRAW_TEXT                = (RQ_PREFIX | 31),
 
   /* Responses */
   RS_WELCOME                  = (RS_PREFIX |  1),

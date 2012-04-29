@@ -149,6 +149,15 @@ public: //XXX: bourrin
    */
   void copyArea(int dstX, int dstY, Drawable *d, int srcX, int srcY, int width, int height);
 
+  /**
+   * Draws the given text.
+   * @param x The x-coordinate of the origin of the first character
+   * @param y The y-coordinate of the origin of the first character
+   * @param text The text to draw
+   * @param length The length of the text
+   */
+  void drawText(int x, int y, const char *text, int length);
+
 private:
   
   bool overlaps(Window *w);

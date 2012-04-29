@@ -194,6 +194,15 @@ void Client::handle() {
       }
       break;
     }
+    case RQ_DRAW_TEXT: {
+      RqDrawText *rq = (RqDrawText*) Client::recvBuf;
+      Window *w = (Window*) screen->getDrawable(rq->window, D_WINDOW);
+      GC *gc = GC::getGC(rq->gc);
+      if (w != NULL && screen->prepareDrawing(w, gc)) {
+        w->drawText(rq->x, rq->y, rq->text, rq->length);
+      }
+      break;
+    }
     case RQ_REPARENT: {
       RqReparent *rq = (RqReparent*) Client::recvBuf;
       Window *child = (Window*) screen->getDrawable(rq->window, D_WINDOW);
