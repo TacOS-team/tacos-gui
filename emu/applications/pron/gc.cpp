@@ -39,6 +39,7 @@ PronGCValues GC::getValues() {
   PronGCValues values;
   values.fg = this->fg;
   values.bg = this->bg;
+  values.font_num = this->font_num;
 
   return values; 
 }
@@ -49,6 +50,9 @@ void GC::setValues(const PronGCValues &values, unsigned int mask) {
   }
   if (mask & GC_VAL_BG) {
     this->bg = values.bg;
+  }
+  if (mask & GC_VAL_FONTNUM) {
+    this->font_num = values.font_num;
   }
 }
 

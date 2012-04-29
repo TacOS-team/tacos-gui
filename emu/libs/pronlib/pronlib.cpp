@@ -25,7 +25,8 @@ Display::Display(int fd, RespWelcome *welcome) {
   COLOR(values.bg, 24).r = 0;
   COLOR(values.bg, 24).g = 0;
   COLOR(values.bg, 24).b = 0;
-  this->defaultGC = pronCreateGC(this, values, GC_VAL_FG | GC_VAL_BG);
+  values.font_num = 0;
+  this->defaultGC = pronCreateGC(this, values, GC_VAL_FG | GC_VAL_BG | GC_VAL_FONTNUM);
 }
 
 int Display::newResourceId() {
