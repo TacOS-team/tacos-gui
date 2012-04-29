@@ -74,6 +74,26 @@ struct RespGCValues : public PronResponse {
   PronGCValues values; /**< Values of the requested graphics context */
 };
 
+/**
+ * TextSize response.
+ * Sent by the server in response to a TextSize request.
+ */
+struct RespTextSize : public PronResponse {
+  /**
+   * Constructor.
+   * @param width The width of the text
+   * @param height The height of the text
+   */
+  RespTextSize(int &width, int &height)
+      : PronResponse(RS_TEXT_SIZE) {
+    this->width = width;
+    this->height = height;
+  }
+
+  int width; /**< Text width */
+  int height; /**< Text height */
+};
+
 } // namespace pron
 
 #endif // __PRONPROTO_RESPONSES_H__

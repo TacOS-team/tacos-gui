@@ -382,3 +382,7 @@ void Screen::reparent (Window * child, Window * newParent) {
   this->setClipWin(NULL);
   this->traceWindows();
 }
+
+Font* Screen::getFont(int id) {
+  return this->fonts[id];
+}

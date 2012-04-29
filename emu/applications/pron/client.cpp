@@ -203,6 +203,16 @@ void Client::handle() {
       }
       break;
     }
+    case RQ_TEXT_SIZE: {
+      RqTextSize *rq = (RqTextSize*) Client::recvBuf;
+      GC *gc = GC::getGC(rq->gc);
+      Font *font = screen->getFont(gc->font_num);
+      int width, height;
+      font->textSize(rq->text, rq->length, &width, &height);
+      RespTextSize resp(width, height);
+      this->send(&resp, sizeof(resp));
+      break;
+    }
     case RQ_REPARENT: {
       RqReparent *rq = (RqReparent*) Client::recvBuf;
       Window *child = (Window*) screen->getDrawable(rq->window, D_WINDOW);

@@ -11,6 +11,7 @@ public:
 	};
 
 	Font(char *name, int height, glyph_t glyphs[256]);
+  void textSize(const char *text, int length, int *width, int *height);
 	void drawChar(int x, int y, unsigned char car);
 	void drawText(int x, int y, const char *text, int length);
 	void printInfo();

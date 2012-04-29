@@ -86,6 +86,12 @@ public: // XXX: bourrin
 
   void drawText(int x, int y, const char *text, int length);
 
+  /**
+   * Gets the requested font.
+   * @param id The font id
+   * @return The requested font
+   */
+  Font* getFont(int id);
 };
 
 #endif

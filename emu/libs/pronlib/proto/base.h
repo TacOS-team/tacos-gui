@@ -45,11 +45,14 @@ enum MessageType {
   RQ_FREE_PIXMAP              = (RQ_PREFIX | 29),
   RQ_COPY_AREA                = (RQ_PREFIX | 30),
   RQ_DRAW_TEXT                = (RQ_PREFIX | 31),
+  RQ_TEXT_SIZE                = (RQ_PREFIX | 32),
 
   /* Responses */
   RS_WELCOME                  = (RS_PREFIX |  1),
   RS_WINDOW_ATTRIBUTES        = (RS_PREFIX |  2),
   RS_GC_VALUES                = (RS_PREFIX |  3),
+  RS_TEXT_SIZE                = (RS_PREFIX |  4),
+
   /* Events */
   EV_WINDOW_CREATED           = (EV_PREFIX |  1),
   EV_POINTER_MOVED            = (EV_PREFIX |  2),

@@ -758,6 +758,29 @@ struct RqDrawText : public PronRequest {
   int length; /**< Length of the text */
 };
 
+/**
+ * TextSize request.
+ * Sent by a client to get the width and the height of a string.
+ */
+struct RqTextSize : public PronRequest {
+  /**
+   * Constructor.
+   * @param gc The graphics context to use
+   * @param text The text to get the size
+   * @param length The length of the text
+   */
+  RqTextSize(unsigned int gc, const char *text, int length)
+      : PronRequest(RQ_TEXT_SIZE) {
+    this->gc = gc;
+    memcpy(this->text, text, length);
+    this->length = length;
+  }
+
+  unsigned int gc; /**< Id of the graphics context to use */
+  char text[512]; /**< Text to get the size */
+  int length; /**< Length of the text */
+};
+
 } // namespace pron
 
 #endif // __PRONPROTO_REQUESTS_H__

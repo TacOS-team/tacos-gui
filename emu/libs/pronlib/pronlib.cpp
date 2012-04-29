@@ -349,4 +349,13 @@ void pronDrawText(Display *d, Window w, GC gc, int x, int y,
   tsock_write(d->fd, &rq, sizeof(rq));
 }
 
+void pronTextSize(Display *d, GC gc, const char *text, int length, int *width, int *height) {
+  RqTextSize rq(gc, text, length);
+  tsock_write(d->fd, &rq, sizeof(rq));
+  RespTextSize res(*width, *height);
+  d->read(RS_TEXT_SIZE, &res, sizeof(res));
+  *width = res.width;
+  *height = res.height;
+}
+
 } // namespace pron
