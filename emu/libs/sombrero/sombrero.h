@@ -14,6 +14,7 @@
 #include "button.h"
 #include "timer.h"
 #include "textbox.h"
+#include "checkbox.h"
 #include "label.h"
 
 /**

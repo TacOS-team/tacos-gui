@@ -1,4 +1,4 @@
-APPS = cube_graph cube_graph_mouse zen_graph pong snake_graph pouet clock_graph pron_cube pron_pong pron_cube_mouse pron_snake pron_cube_tuning sombrero_cube sombrero_textbox sombrero_button
+APPS = cube_graph cube_graph_mouse zen_graph pong snake_graph pouet clock_graph pron_cube pron_pong pron_cube_mouse pron_snake pron_cube_tuning sombrero_cube sombrero_textbox sombrero_button sombrero_checkbox
 
 SUBDIRS = guacamole pron pron_danny
 
@@ -13,15 +13,6 @@ $(BUILDDIRAPPS)/%: %.c
 	$(CC) -o $@ $< $(LIBTACOS) $(CFLAGS) $(INCLUDES)
 
 $(BUILDDIRAPPS)/%: %.cpp
-	$(CXX) -o $@ $< $(LIBTACOS) $(PRONLIB) $(LIBTSOCK) $(CFLAGS) $(INCLUDES)
-
-$(BUILDDIRAPPS)/sombrero_cube : sombrero_cube.cpp
-	$(CXX) -o $@ $< $(LIBTACOS) $(SOMBRERO) $(CFLAGS) $(INCLUDES)
-
-$(BUILDDIRAPPS)/sombrero_textbox : sombrero_textbox.cpp
-	$(CXX) -o $@ $< $(LIBTACOS) $(SOMBRERO) $(CFLAGS) $(INCLUDES)
-
-$(BUILDDIRAPPS)/sombrero_button : sombrero_button.cpp
-	$(CXX) -o $@ $< $(LIBTACOS) $(SOMBRERO) $(CFLAGS) $(INCLUDES)
+	$(CXX) -o $@ $< $(LIBTACOS) $(SOMBRERO) $(PRONLIB) $(LIBTSOCK) $(CFLAGS) $(INCLUDES)
 
 .PHONY: clean $(SUBDIRS)
