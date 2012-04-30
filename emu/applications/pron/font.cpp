@@ -1,5 +1,4 @@
 #include <font.h>
-#include <screen.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -20,22 +19,22 @@ void Font::textSize(const char *text, int length, int *width, int *height) {
   }
 }
 
-void Font::drawChar(int x, int y, unsigned char car) {
+void Font::drawChar(Drawable *d, int x, int y, unsigned char car) {
   for (int l = 0; l < this->height; l++) {
     for (int c = 0; c < this->glyphs[car].width; c++) {
       int ci = 16 - 1 - c;
       if (this->glyphs[car].bitmap[l] & (1 << ci)) {
-        Screen::getInstance()->getRoot()->drawPoint(x + c, y + l);
+        d->drawPoint(x + c, y + l);
       }
     }
   }
 }
 
-void Font::drawText(int x, int y, const char *text, int length) {
+void Font::drawText(Drawable *d, int x, int y, const char *text, int length) {
   y -= (this->height - 1);
   for (int i = 0; i < length; i++) {
     unsigned char car = text[i];
-    this->drawChar(x, y, car);
+    this->drawChar(d, x, y, car);
     x += this->glyphs[car].width;
   }
 }

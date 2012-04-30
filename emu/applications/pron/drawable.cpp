@@ -238,3 +238,8 @@ void Drawable::putImage(PronImage *image, int x, int y) {
     }
   }
 }
+
+void Drawable::drawText(int x, int y, const char *text, int length) {
+  Font *font = this->getScreen()->getFont(this->getScreen()->gc->font_num);
+  font->drawText(this, x, y, text, length);
+}

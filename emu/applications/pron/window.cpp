@@ -453,11 +453,6 @@ bool Window::realized() {
   return this->mapped && this->unmappedParents == 0;
 }
 
-void Window::drawText(int x, int y, const char *text, int length) {
-  Font *font = this->getScreen()->getFont(this->getScreen()->gc->font_num);
-  font->drawText(this->x + x, this->y + y, text, length);
-}
-
 inline bool Window::isValid(int x, int y) {
   return this->getScreen()->isValid(this->x + x, this->y + y);
 }

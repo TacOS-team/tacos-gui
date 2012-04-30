@@ -193,7 +193,16 @@ class Drawable {
    * @param y The destination top-left corner y-coordinate
    */
   void putImage(PronImage *image, int x, int y);
- 
+
+  /**
+   * Draws the given text.
+   * @param x The x-coordinate of the origin of the first character
+   * @param y The y-coordinate of the origin of the first character
+   * @param text The text to draw
+   * @param length The length of the text
+   */
+  void drawText(int x, int y, const char *text, int length);
+
   /**
    * Gets the pixel at (x, y).
    * @param x The x-coordinate of the pixel to get
