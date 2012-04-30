@@ -33,7 +33,7 @@ Screen* Drawable::getScreen() {
   return this->screen;
 }
 
-unsigned int Drawable::getId() {
+unsigned int Drawable::getId() const {
   return this->id;
 }
 

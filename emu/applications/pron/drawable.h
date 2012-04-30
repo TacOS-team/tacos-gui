@@ -36,7 +36,7 @@ public:
    */
   int getType();
   Screen* getScreen();
-  unsigned int getId();
+  unsigned int getId() const;
   Client* getCreator();
   int getWidth();
   void setWidth(int width);

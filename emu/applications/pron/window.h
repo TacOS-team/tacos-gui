@@ -37,7 +37,7 @@ public: //XXX: bourrin
   int maxHeight;
   int minWidth;
   int minHeight;
-
+  
   Window *parent;
   Window *prevSibling, *nextSibling;
   Window *firstChild, *lastChild;
@@ -45,6 +45,18 @@ public: //XXX: bourrin
   Window(Screen *screen, int id, Client *creator, Window *parent, int x, int y, int width, int height);
 
   ~Window();
+
+  /**
+   * Operator ==.
+   * @return true if the windows are the same
+   */
+  bool operator==(const Window &w) const;
+  
+  /**
+   * Operator !=.
+   * @return true if the windows are the different
+   */
+  bool operator!=(const Window &w) const;
 
   void map();
 
@@ -126,6 +138,12 @@ public: //XXX: bourrin
   bool contains(int x, int y);
 
   /**
+   * Returns true when window and all its parents are mapped.
+   * @return true if the window and all its parent are mapped.
+   */
+  bool realized();
+
+  /**
    * Getters and setters
    */
 
@@ -171,7 +189,10 @@ public: //XXX: bourrin
 
 private:
   
+  int unmappedParents; /**< Number of unmapped parents. */
+
   bool overlaps(Window *w);
+
 };
 
 #endif
