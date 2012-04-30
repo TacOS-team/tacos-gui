@@ -13,6 +13,7 @@
 #include "canvas.h"
 #include "button.h"
 #include "timer.h"
+#include "textbox.h"
 
 /**
  * Sombrero library namespace

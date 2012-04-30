@@ -1,4 +1,4 @@
-OBJS = sombrero.o application.o widget.o window.o container.o bin.o canvas.o timer.o button.o
+OBJS = sombrero.o application.o widget.o window.o container.o bin.o canvas.o timer.o button.o textbox.o
 
 all: $(SOMBRERO)
 

@@ -136,7 +136,7 @@ void Client::handle() {
       RqClearWindow *rq = (RqClearWindow*) Client::recvBuf;
       Window *w = (Window*) screen->getDrawable(rq->window);
       if (w != NULL && screen->prepareDrawing(w)) {
-        w->clear();
+        w->clear(false);
       }
       break;
     }

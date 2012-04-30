@@ -68,6 +68,10 @@ public: //XXX: bourrin
 
   void clear(int x, int y, int width, int height);
 
+  void clear(bool sendExposureEvent);
+
+  void clear(int x, int y, int width, int height, bool sendExposureEvent);
+
   int getPixel(int x, int y);
 
   void setPixel(int x, int y, int pixel);
@@ -157,6 +161,13 @@ public: //XXX: bourrin
    * @param length The length of the text
    */
   void drawText(int x, int y, const char *text, int length);
+
+  /**
+   * Return true if the window accepts at least one of the given events
+   * @param eventMask The event mask to check
+   * @return true if the window accepts one of the events
+   */
+  bool acceptsEvents(int eventMask);
 
 private:
   

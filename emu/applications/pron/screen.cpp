@@ -48,6 +48,7 @@ Screen::Screen(int width, int height, int bitsPerPixel) {
   this->gc = &this->defaultGC;
 
   this->mouseWin = NULL;
+  this->focusWin = NULL;
 
   this->tree = new WindowsTree();
 }
@@ -284,6 +285,14 @@ Window* Screen::getMouseWin() {
 
 void Screen::setMouseWin(Window *mouseWin) {
   this->mouseWin = mouseWin;
+}
+
+Window* Screen::getFocusWin() {
+  return this->focusWin;
+}
+
+void Screen::setFocusWin(Window *focusWin) {
+  this->focusWin = focusWin;
 }
 
 Window* Screen::getRoot() {
