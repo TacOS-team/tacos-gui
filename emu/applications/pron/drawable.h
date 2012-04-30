@@ -28,6 +28,13 @@ protected:
   Drawable(int type, Screen *screen, int id, Client *creator, int width, int height);
   ~Drawable(); 
 
+  /**
+   * Reduces the given rectangle so that it fits into the drawable.
+   * @param x The top-left x-coordinate of the rectangle, relative to this drawable
+   * @param y The top-left y-coordinate of the rectangle, relative to this drawable
+   * @param width The width of the rectangle
+   * @param height The height of the rectangle
+   */
   void reduce(int &x, int &y, int &width, int &height);
 public: 
 
