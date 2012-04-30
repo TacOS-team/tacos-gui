@@ -1,4 +1,3 @@
-#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,7 +21,7 @@ Drawable::Drawable(int type, Screen *screen, int id, Client *creator, int width,
 
 Drawable::~Drawable() {
   // Destruction
-  this->getScreen()->drawables.erase(std::find(this->getScreen()->drawables.begin(), this->getScreen()->drawables.end(), (Drawable*) this));
+  this->getScreen()->removeDrawable(this);
 }
 
 int Drawable::getType() {
@@ -79,7 +78,7 @@ void Drawable::reduce(int &x, int &y, int &width, int &height) {
 
 void Drawable::drawPoint(int x, int y) {
   if (this->isValid(x, y)) {
-    memcpy(this->pixelAddr(x, y), &COLOR(this->getScreen()->gc->fg, 24), sizeof(COLOR(this->getScreen()->gc->fg, 24)));
+    memcpy(this->pixelAddr(x, y), &COLOR(this->getScreen()->getGC()->fg, 24), sizeof(COLOR(this->getScreen()->getGC()->fg, 24)));
   }
 }
 
@@ -249,6 +248,6 @@ void Drawable::copyArea(int dstX, int dstY, Drawable *d, int srcX, int srcY, int
 }
 
 void Drawable::drawText(int x, int y, const char *text, int length) {
-  Font *font = this->getScreen()->getFont(this->getScreen()->gc->font_num);
+  Font *font = this->getScreen()->getFont(this->getScreen()->getGC()->font_num);
   font->drawText(this, x, y, text, length);
 }

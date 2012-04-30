@@ -23,6 +23,11 @@ class Screen {
   ClipZone *clipZone; /**< Rectangles where we are allowed to draw */
   Window *mouseWin; /**< Window containing the mouse pointer */
   Window *focusWin; /**< Window having the focus */
+  GC defaultGC; /**< Default graphics context for this screen */
+  char *videoBuffer; /**< Video memory */
+  GC *gc; /**< Current graphics context */
+  vector<Drawable*> drawables; /**< Drawables belonging to this screen, XXX: ABR ? Rouge/noir ? B-Arbre ? */
+  int vesa_fd; /**< File descriptor used to communicate with the vesa driver */
   
   /**
    * Constructor.
@@ -37,12 +42,7 @@ class Screen {
   int height; /**< Height of the screen */
   int bitsPerPixel; /**< Bits per pixel (8, 16, 24, 32) */
   int bytesPerPixel; /**< Bytes per pixel (1, 2, 3, 4) */
-  int vesa_fd; /**< File descriptor used to communicate with the vesa driver */
-  vector<Drawable*> drawables; /**< Drawables belonging to this screen, XXX: ABR ? Rouge/noir ? B-Arbre ? */
   WindowsTree *tree; /**< Tree of windows belonging to this screen */
-  GC defaultGC; /**< Default graphics context for this screen */
-  GC *gc; /**< Current graphics context */
-  char *videoBuffer; /**< Video memory */
 
   /**
    * Returns the unique Screen instance (singleton). Creates it if necessary.
@@ -100,6 +100,12 @@ class Screen {
    * @param d The drawable to add
    */
   void addDrawable(Drawable *d);
+
+  /**
+   * Removes the given drawable from the drawable list.
+   * @param d The drawable to remove
+   */
+  void removeDrawable(Drawable *d);
 
   /**
    * Returns the window for which the clipping is currently set.

@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <dirent.h>
 #include <fcntl.h>
 //#include <math.h>
@@ -92,6 +93,10 @@ Drawable* Screen::getDrawable(unsigned int id) {
 
 void Screen::addDrawable(Drawable *d) {
   this->drawables.push_back(d);
+}
+
+void Screen::removeDrawable(Drawable *d) {
+  this->drawables.erase(std::find(this->drawables.begin(), this->drawables.end(), d));
 }
 
 Window* Screen::getMouseWin() {
