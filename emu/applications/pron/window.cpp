@@ -105,12 +105,21 @@ void Window::unmap() {
 
   if (this->parent->realized()) {
     // Clear the area of the parent window occupied by this window and send exposure event
-    this->parent->clear(this->x, this->y, this->getWidth(), this->getHeight());
+    if (this->parent == this->getScreen()->getRoot()) {
+      this->parent->clear(this->x - parent->x, this->y - parent->y, this->getWidth(), this->getHeight());
+    } else {
+      // Test: only send exposure event to improve performances
+      EventExpose expose(this->parent->getId(), this->x - parent->x, this->y - parent->y, this->getWidth(), this->getHeight());
+      this->parent->deliverEvent(&expose, sizeof(expose));
+    }
 
     // Redraw covered lower siblings
     for (Window *sib = this->prevSibling; sib != NULL; sib = sib->prevSibling) {
       if (this->overlaps(sib)) {
-        sib->clear(this->x - sib->x, this->y - sib->y, this->getWidth(), this->getHeight());
+        //sib->clear(this->x - sib->x, this->y - sib->y, this->getWidth(), this->getHeight());
+        // Test: only send exposure event to improve performances
+        EventExpose expose(sib->getId(), this->x - sib->x, this->y - sib->y, this->getWidth(), this->getHeight());
+        sib->deliverEvent(&expose, sizeof(expose));
       }
     }
   }
@@ -123,6 +132,7 @@ void Window::map() {
 
   // Clear the window and send exposure event
   //this->clear();
+  // Test: only send exposure event to improve performances
   EventExpose expose(this->getId(), 0, 0, this->getWidth(), this->getHeight());
   this->deliverEvent(&expose, sizeof(expose));
 
@@ -135,32 +145,8 @@ void Window::map() {
   }
 }
 
-void Window::drawPoint(int x, int y) {
-  this->getScreen()->drawPoint(this->x + x, this->y + y);
-}
-
-void Window::drawLine(int x1, int y1, int x2, int y2) {
-  this->getScreen()->drawLine(this->x + x1, this->y + y1, this->x + x2, this->y + y2);
-}
-
-void Window::drawRect(int x1, int y1, int width, int height) {
-  this->getScreen()->drawRect(this->x + x1, this->y + y1, width, height);
-}
-
-void Window::fillRectangle(int x1, int y1, int width, int height) {
-  this->getScreen()->fillRectangle(this->x + x1, this->y + y1, width, height);
-}
-
-void Window::putImage(PronImage *image, int x, int y) {
-  this->getScreen()->putImage(image, this->x + x, this->y + y);
-}
-
-void Window::drawCircle(int x, int y, int radius) {
-  this->getScreen()->drawCircle(this->x + x, this->y + y, radius); 
-}
-
-void Window::fillCircle(int x, int y, int radius) {
-  this->getScreen()->fillCircle(this->x + x, this->y + y, radius); 
+void* Window::pixelAddr(int x, int y) {
+  return this->getScreen()->pixelAddr(this->x + x, this->y + y);
 }
 
 void Window::clear(int x, int y, int width, int height, bool sendExposureEvent) {
@@ -171,7 +157,7 @@ void Window::clear(int x, int y, int width, int height, bool sendExposureEvent) 
   COLOR(this->getScreen()->gc->fg, 24).g = COLOR(this->bgColor, 24).g;
   COLOR(this->getScreen()->gc->fg, 24).b = COLOR(this->bgColor, 24).b;
   this->getScreen()->setClipWin(this);
-  this->getScreen()->fillRectangle(this->x + x, this->y + y, width, height);
+  this->fillRectangle(x, y, width, height);
   // If it is the root window, we print a grid (provisoire !!!!!! TODO)
   if (this->getId() == 0) {
     COLOR(this->getScreen()->gc->fg, 24).r = 255;
@@ -179,10 +165,10 @@ void Window::clear(int x, int y, int width, int height, bool sendExposureEvent) 
     COLOR(this->getScreen()->gc->fg, 24).b = 0;
     int step = 50;
     for (int i = step; i < this->getWidth(); i += step) {
-      this->getScreen()->drawLine(i, 0, i, this->getHeight());
+      this->drawLine(i, 0, i, this->getHeight());
     }
     for (int i = step; i < this->getHeight(); i += step) {
-      this->getScreen()->drawLine(0, i, this->getWidth(), i);
+      this->drawLine(0, i, this->getWidth(), i);
     }
   }
   this->getScreen()->gc->fg = oldFg;
@@ -196,14 +182,6 @@ void Window::clear(int x, int y, int width, int height, bool sendExposureEvent) 
 
 void Window::clear(bool sendExposureEvent) {
   this->clear(0, 0, this->getWidth(), this->getHeight(), sendExposureEvent);
-}
-
-void Window::clear(int x, int y, int width, int height) {
-  this->clear(x, y, width, height, true);
-}
-
-void Window::clear() {
-  this->clear(0, 0, this->getWidth(), this->getHeight(), true); 
 }
 
 PronWindowAttributes Window::getAttributes() {
@@ -220,14 +198,6 @@ PronWindowAttributes Window::getAttributes() {
   attr.minHeight = this->minHeight;
 
   return attr;
-}
-
-int Window::getPixel(int x, int y) {
-  return this->getScreen()->getPixel(this->x + x, this->y + y);
-}
-
-void Window::setPixel(int x, int y, int pixel) {
-  this->getScreen()->setPixel(this->x + x, this->y + y, pixel);
 }
 
 void Window::setAttributes(PronWindowAttributes *newAttr, unsigned int mask) {
@@ -361,11 +331,14 @@ void Window::raise() {
 }
 
 bool Window::overlaps(Window *w) {
-  return !(w->x > this->x + this->getWidth() || w->y > this->y + this->getHeight() || w->x + w->getWidth() < this->x || w->y + w->getHeight() < this->y);
+  return !(w->x >= this->x + this->getWidth() || w->y >= this->y + this->getHeight() || w->x + w->getWidth() <= this->x || w->y + w->getHeight() <= this->y);
 }
 
 void Window::exposeArea(int x, int y, int width, int height) {
-  this->clear(x, y, width, height);
+  //this->clear(x, y, width, height);
+  // Test: only send exposure event to improve performances
+  EventExpose expose(this->getId(), x, y, width, height);
+  this->deliverEvent(&expose, sizeof(expose));
 
   for (Window *child = this->firstChild; child != NULL; child = child->nextSibling) {
     child->exposeArea(x - child->x, y - child->y, this->getWidth(), this->getHeight());
@@ -481,5 +454,10 @@ bool Window::realized() {
 }
 
 void Window::drawText(int x, int y, const char *text, int length) {
-  this->getScreen()->drawText(this->x + x, this->y + y, text, length);
+  Font *font = this->getScreen()->getFont(this->getScreen()->gc->font_num);
+  font->drawText(this->x + x, this->y + y, text, length);
+}
+
+inline bool Window::isValid(int x, int y) {
+  return this->getScreen()->isValid(this->x + x, this->y + y);
 }

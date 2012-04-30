@@ -49,7 +49,7 @@ void PronInit() {
   tsock_set_nonblocking(clientsFd);
 
   string welcome = "Welcome to pron!";
-  screen->drawText(10, 20, welcome.c_str(), welcome.length());
+  screen->getRoot()->drawText(10, 20, welcome.c_str(), welcome.length());
 }
 
 void PronAcceptClient() {

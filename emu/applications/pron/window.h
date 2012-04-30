@@ -45,6 +45,8 @@ public: //XXX: bourrin
   Window(Screen *screen, int id, Client *creator, Window *parent, int x, int y, int width, int height);
 
   ~Window();
+  
+  void* pixelAddr(int x, int y);
 
   /**
    * Operator ==.
@@ -62,31 +64,9 @@ public: //XXX: bourrin
 
   void unmap();
 
-  void drawPoint(int x, int y);
+  void clear(bool sendExposureEvent = true);
 
-  void drawLine(int x1, int y1, int x2, int y2);
-
-  void drawRect(int x1, int y1, int width, int height);
-  
-  void fillRectangle(int x, int y, int width, int height);
-
-  void putImage(PronImage *image, int x, int y);
-  
-  void drawCircle(int x, int y, int radius);
-
-  void fillCircle(int x, int y, int radius);
-
-  void clear();
-
-  void clear(int x, int y, int width, int height);
-
-  void clear(bool sendExposureEvent);
-
-  void clear(int x, int y, int width, int height, bool sendExposureEvent);
-
-  int getPixel(int x, int y);
-
-  void setPixel(int x, int y, int pixel);
+  void clear(int x, int y, int width, int height, bool sendExposureEvent = true);
 
   PronWindowAttributes getAttributes();
 
@@ -186,6 +166,8 @@ public: //XXX: bourrin
    * @return true if the window accepts one of the events
    */
   bool acceptsEvents(int eventMask);
+  
+  bool isValid(int x, int y);
 
 private:
   

@@ -33,24 +33,15 @@ public:
   /**
    * Graphic methods
    */
-  void drawPoint(int x, int y);
-  void drawLine(int x1, int y1, int x2, int y2);
-  void drawRect(int x1, int y1, int width, int height);
-  void fillRectangle(int x, int y, int width, int height);
-  void putImage(PronImage *image, int x, int y);
-  void drawCircle(int x, int y, int radius);
-  void fillCircle(int x, int y, int radius);
-  int getPixel(int x, int y);
-  void setPixel(int x, int y, int pixel);
+  void* pixelAddr(int x, int y);
+
+  bool isValid(int x, int y);
 
 private:
   // Image buffer
   char *buf;
   // Deth of the pixmap
   int depth;
-
-  void drawHorizLine(int x, int y, int width);
-  void drawVertLine(int x, int y, int height);
 };
 
 #endif

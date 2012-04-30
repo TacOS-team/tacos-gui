@@ -25,7 +25,7 @@ void Font::drawChar(int x, int y, unsigned char car) {
     for (int c = 0; c < this->glyphs[car].width; c++) {
       int ci = 16 - 1 - c;
       if (this->glyphs[car].bitmap[l] & (1 << ci)) {
-        Screen::getInstance()->drawPoint(x + c, y + l);
+        Screen::getInstance()->getRoot()->drawPoint(x + c, y + l);
       }
     }
   }
