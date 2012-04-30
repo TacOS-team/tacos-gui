@@ -361,7 +361,7 @@ void Window::raise() {
 }
 
 bool Window::overlaps(Window *w) {
-  return !(w->x > this->x + this->getWidth() || w->y > this->y + this->getHeight() || w->x + w->getWidth() < this->x || w->y + w->getHeight() < this->y);
+  return !(w->x >= this->x + this->getWidth() || w->y >= this->y + this->getHeight() || w->x + w->getWidth() <= this->x || w->y + w->getHeight() <= this->y);
 }
 
 void Window::exposeArea(int x, int y, int width, int height) {
