@@ -137,11 +137,8 @@ void Window::map() {
   this->deliverEvent(&expose, sizeof(expose));
 
   // Update all children
-  for (WindowsTree::IteratorBFS it = this->getScreen()->tree->beginBFS(this); it != this->getScreen()->tree->endBFS(); it++) {
-    // XXX: niconoob
-    if (*it != *this) {
-      it->unmappedParents--;
-    }
+  for (WindowsTree::IteratorBFS it = ++(this->getScreen()->tree->beginBFS(this)); it != this->getScreen()->tree->endBFS(); it++) {
+    it->unmappedParents--;
   }
 }
 
