@@ -119,6 +119,12 @@ GWindow::GWindow (Window w, const PronWindowAttributes & attributes, bool decora
     GWindowsManager::getInstance()->initWindowPosition(this);
     pronMoveWindow(display, this->parent, this->parentAttributes.x, this->parentAttributes.y);
 
+    // Map all windows
+    pronMapWindow(display, this->parent);
+    pronMapWindow(display, this->closeButton);
+    pronMapWindow(display, this->resizeButton);
+    pronMapWindow(display, this->maximiseButton);
+
     GWindowsManager::getInstance()->addGWindow(this);
     this->decorate();
   }
