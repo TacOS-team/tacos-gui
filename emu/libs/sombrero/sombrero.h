@@ -14,6 +14,7 @@
 #include "button.h"
 #include "timer.h"
 #include "textbox.h"
+#include "label.h"
 
 /**
  * Sombrero library namespace

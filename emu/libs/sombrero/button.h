@@ -13,9 +13,7 @@ class Container;
 
 /**
  * Button class definition
- * @brief The window widget
- * Creates a window which can be decorated 
- * by guacamole
+ * @brief The Button widget
  */ 
 class Button : public Widget {
 
