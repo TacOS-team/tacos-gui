@@ -114,10 +114,6 @@ Window* Screen::getRoot() {
   return this->tree->getRoot();
 }
 
-void Screen::setRoot(Window *newRoot) {
-  this->tree->setRoot(newRoot);
-}
-
 Window* Screen::getClipWin() {
   return this->clipWin;
 }
