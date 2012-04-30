@@ -184,33 +184,33 @@ void pronRaiseWindow(Display *d, Window w) {
   tsock_write(d->fd, &rq, sizeof(rq));
 }
 
-int pronDrawPoint(Display *d, Window w, GC gc, int x, int y) {
-  RqDrawPoint rq(gc, w, x, y);
+int pronDrawPoint(Display *d, Drawable dr, GC gc, int x, int y) {
+  RqDrawPoint rq(gc, dr, x, y);
   return (tsock_write(d->fd, &rq, sizeof(rq)) > 0);
 }
 
-int pronDrawLine(Display *d, Window w, GC gc, int x1, int y1, int x2, int y2) {
-  RqDrawLine rq(gc, w, x1, y1, x2, y2);
+int pronDrawLine(Display *d, Drawable dr, GC gc, int x1, int y1, int x2, int y2) {
+  RqDrawLine rq(gc, dr, x1, y1, x2, y2);
   return (tsock_write(d->fd, &rq, sizeof(rq)) > 0);
 }
 
-int pronDrawRect(Display *d, Window w, GC gc, int x, int y, int width, int height) {
-  RqDrawRect rq(gc, w, x, y, width, height);
+int pronDrawRect(Display *d, Drawable dr, GC gc, int x, int y, int width, int height) {
+  RqDrawRect rq(gc, dr, x, y, width, height);
   return (tsock_write(d->fd, &rq, sizeof(rq)) > 0);
 }
 
-int pronFillRectangle(Display *d, Window w, GC gc, int x, int y, int width, int height) {
-  RqFillRectangle rq(gc, w, x, y, width, height);
+int pronFillRectangle(Display *d, Drawable dr, GC gc, int x, int y, int width, int height) {
+  RqFillRectangle rq(gc, dr, x, y, width, height);
   return (tsock_write(d->fd, &rq, sizeof(rq)) > 0);
 }
 
-int pronDrawCircle(Display *d, Window w, GC gc, int x, int y, int radius) {
-  RqDrawCircle rq (gc, w, x, y, radius);
+int pronDrawCircle(Display *d, Drawable dr, GC gc, int x, int y, int radius) {
+  RqDrawCircle rq (gc, dr, x, y, radius);
   return (tsock_write(d->fd,&rq,sizeof(rq)) > 0);
 }
 
-int pronFillCircle(Display *d, Window w, GC gc, int x, int y, int radius){
-  RqFillCircle rq (gc, w, x, y, radius);
+int pronFillCircle(Display *d, Drawable dr, GC gc, int x, int y, int radius){
+  RqFillCircle rq (gc, dr, x, y, radius);
   return (tsock_write(d->fd,&rq,sizeof(rq)) > 0);
 }
 
@@ -275,9 +275,9 @@ void pronMoveWindowTo(Display *d, unsigned int w, int x, int y) {
   tsock_write(d->fd, &rq, sizeof(rq));
 }
 
-void pronPutImage(Display *d, Window w, GC __attribute__((unused)) gc, PronImage *image,
+void pronPutImage(Display *d, Drawable dr, GC __attribute__((unused)) gc, PronImage *image,
     int srcX, int srcY, int width, int height, int destX, int destY) {
-  // TODO: use GC?
+  /** @todo use GC? */
   // We have to check if the rectangle the client wants to send enters 
   // in the source image
   if((srcX + width > image->width) || (srcY + height > image->height)) {
@@ -294,7 +294,7 @@ void pronPutImage(Display *d, Window w, GC __attribute__((unused)) gc, PronImage
   // We allocate the image request buffer
   char *buf = (char*) malloc(bufferSize);
   // Creation of the request object
-  RqPutImage rq(w, destX, destY, width, height, image->format, image->depth, image->bytesPerPixel);
+  RqPutImage rq(dr, destX, destY, width, height, image->format, image->depth, image->bytesPerPixel);
   // Copy of the request object in the send buffer
   memcpy(buf, &rq, sizeof(rq));
   // Now we have to copy the subimage we have to send

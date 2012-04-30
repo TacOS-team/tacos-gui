@@ -41,7 +41,7 @@ void Client::handle() {
     case RQ_CREATE_WINDOW: {
       RqCreateWindow *rq = (RqCreateWindow*) Client::recvBuf;
       new Window(screen, rq->id, this, (Window*) screen->getDrawable(rq->parent, D_WINDOW),
-        rq->x, rq->y, rq->width, rq->height);
+          rq->x, rq->y, rq->width, rq->height);
       screen->traceWindows();
       break;
     }
@@ -196,10 +196,10 @@ void Client::handle() {
     }
     case RQ_DRAW_TEXT: {
       RqDrawText *rq = (RqDrawText*) Client::recvBuf;
-      Window *w = (Window*) screen->getDrawable(rq->window, D_WINDOW);
+      Drawable *d = screen->getDrawable(rq->drawable);
       GC *gc = GC::getGC(rq->gc);
-      if (w != NULL && screen->prepareDrawing(w, gc)) {
-        w->drawText(rq->x, rq->y, rq->text, rq->length);
+      if (d != NULL && screen->prepareDrawing(d, gc)) {
+        d->drawText(rq->x, rq->y, rq->text, rq->length);
       }
       break;
     }
@@ -249,11 +249,11 @@ void Client::handle() {
     }
     case RQ_PUT_IMAGE: {
       RqPutImage *rq = (RqPutImage*) Client::recvBuf;
-      Window *w = (Window*) screen->getDrawable(rq->window);
-      if (w != NULL) {
+      Drawable *d = screen->getDrawable(rq->drawable);
+      if (d != NULL) {
       	char *image_buf = ((char*) rq) + sizeof(RqPutImage);
         PronImage image(rq->width, rq->height, rq->format, image_buf, rq->depth, rq->bytesPerPixel, false);
-        w->putImage(&image, rq->x, rq->y);
+        d->putImage(&image, rq->x, rq->y);
       }
       break;
     }
@@ -278,11 +278,11 @@ void Client::handle() {
     }
     case RQ_COPY_AREA: {
       RqCopyArea *rq = (RqCopyArea*) Client::recvBuf;
-      Pixmap *p = (Pixmap*) screen->getDrawable(rq->src, D_PIXMAP);
-      Window *w = (Window*) screen->getDrawable(rq->dest, D_WINDOW);
+      Drawable *src = screen->getDrawable(rq->src);
+      Drawable *dst = screen->getDrawable(rq->dest);
       GC *gc = GC::getGC(rq->gc);
-      if (p != NULL && w != NULL && screen->prepareDrawing(w, gc)) {
-        w->copyArea(rq->destX, rq->destY, p, rq->srcX, rq->srcY, rq->width, rq->height);
+      if (src != NULL && dst != NULL && screen->prepareDrawing(dst, gc)) {
+        dst->copyArea(rq->destX, rq->destY, src, rq->srcX, rq->srcY, rq->width, rq->height);
       }
       break;
     }
