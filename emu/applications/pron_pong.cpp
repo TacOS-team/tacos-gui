@@ -130,7 +130,7 @@ int main() {
     }
 
     pronClearWindow(d, w);  
-    // TODO: draw ball and racket
+    /** @todo draw ball and racket */
     moveBall(&ballX,&ballY,&velX,&velY,racketY);
     // draw the ball
     pronFillRectangle(d, w, gc, ballX, ballY, BALL_SIZE, BALL_SIZE);

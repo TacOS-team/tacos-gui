@@ -14,6 +14,7 @@ class Window;
 
 /**
  * Screen.
+ * @todo XXX public members bourrin
  */
 class Screen {
  private:
@@ -26,8 +27,8 @@ class Screen {
   GC defaultGC; /**< Default graphics context for this screen */
   char *videoBuffer; /**< Video memory */
   GC *gc; /**< Current graphics context */
-  vector<Drawable*> drawables; /**< Drawables belonging to this screen, XXX: ABR ? Rouge/noir ? B-Arbre ? */
   int vesa_fd; /**< File descriptor used to communicate with the vesa driver */
+  vector<Drawable*> drawables; /**< Drawables belonging to this screen @todo XXX ABR ? Rouge/noir ? B-Arbre ? */
   
   /**
    * Constructor.
@@ -37,7 +38,7 @@ class Screen {
    */
   Screen(int width, int height, int bitsPerPixel);
 
- public: // XXX: bourrin
+ public:
   int width; /**< Width of the screen */
   int height; /**< Height of the screen */
   int bitsPerPixel; /**< Bits per pixel (8, 16, 24, 32) */

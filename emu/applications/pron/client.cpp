@@ -24,7 +24,6 @@ void Client::handle() {
   int reqType = *((int*) Client::recvBuf);
   Screen *screen = Screen::getInstance();
 
-  // TODO: refactor when we have exceptions? :)
   switch (reqType) { 
     case RQ_HELLO: {
       // Identifiers: 16 upper bits for client id, 16 lower bits for resource id

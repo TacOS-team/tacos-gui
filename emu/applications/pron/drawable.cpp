@@ -239,7 +239,7 @@ void Drawable::putImage(PronImage *image, int x, int y) {
 }
 
 void Drawable::copyArea(int dstX, int dstY, Drawable *d, int srcX, int srcY, int width, int height) {
-  // XXX : Bourrin à revoir (problème de depth et de byte per pixel de la pixmap et de l'écran)
+  /** @todo XXX Bourrin à revoir (problème de depth et de byte per pixel de la pixmap et de l'écran) */
   for (int y = 0; y < height; y++) {
     for (int x = 0; x < width; x++) {
       this->setPixel(x + dstX, y + dstY, d->getPixel(x + srcX, y + srcY));

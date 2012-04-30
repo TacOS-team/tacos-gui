@@ -37,13 +37,13 @@ int Display::read(PronMessage *msg, size_t len) {
   int sizeRead = tsock_read(this->fd, msg, len);
 
   if (sizeRead < 0) {
-    // TODO: handle read error?
+    /** @todo handle read error? */
     //perror("Failed to read from server");
   } else if (sizeRead == 0) {
-    // TODO: handle server disconnection
+    /** @todo handle server disconnection */
     fprintf(stderr, "Server has closed the connection\n");
   } else if ((msg->type & ER_PREFIX) == ER_PREFIX) {
-    // TODO: trigger error handler
+    /** @todo trigger error handler */
     fprintf(stderr, "Received error message from server: %x\n", msg->type);
   }
 

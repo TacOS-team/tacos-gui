@@ -128,7 +128,7 @@ void Window::unmap() {
 void Window::map() {
   this->mapped = true;
 
-  // TODO: update clipwin/mousewin/focuswin
+  /** @todo update clipwin/mousewin/focuswin */
 
   // Clear the window and send exposure event
   //this->clear();
@@ -155,7 +155,7 @@ void Window::clear(int x, int y, int width, int height, bool sendExposureEvent) 
   COLOR(this->getScreen()->getGC()->fg, 24).b = COLOR(this->bgColor, 24).b;
   this->getScreen()->setClipWin(this);
   this->fillRectangle(x, y, width, height);
-  // If it is the root window, we print a grid (provisoire !!!!!! TODO)
+  /** @todo XXX If it is the root window, we print a grid (provisoire) */
   if (this->getId() == 0) {
     COLOR(this->getScreen()->getGC()->fg, 24).r = 255;
     COLOR(this->getScreen()->getGC()->fg, 24).g = 0;

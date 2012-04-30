@@ -32,9 +32,10 @@ struct OtherClient {
 
 /**
  * Window (drawable displayed on the screen).
+ * @todo XXX public members bourrin
  */
 class Window : public Drawable {
- public: // XXX: bourrin
+ public:
   int eventMask; /**< Events selected by the creator of the window */
   int dontPropagateMask; /**< Events that the window must not propagate */
   

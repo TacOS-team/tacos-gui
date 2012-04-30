@@ -36,7 +36,6 @@ GWindow* GWindowsManager::getGWindow(Window w) {
       return this->windowsList[i];
     }
   }
-  // TODO throw exception if not found
   return NULL;
 }
 

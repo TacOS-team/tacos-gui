@@ -77,7 +77,8 @@ struct EventExpose : public PronEvent {
 /**
  * PointerMoved event.
  * Sent by the server when the pointer has moved.
- * @todo subwindow (@see https://www.etud.insa-toulouse.fr/redmine/projects/tacos-gui/wiki/%C3%89v%C3%A9nements_souris)
+ * @todo subwindow
+ * @see https://www.etud.insa-toulouse.fr/redmine/projects/tacos-gui/wiki/%C3%89v%C3%A9nements_souris
  */
 struct EventPointerMoved : public PronEvent {
   /**
@@ -105,7 +106,8 @@ struct EventPointerMoved : public PronEvent {
 /**
  * MouseButton event.
  * Sent by the server when a mouse button has changed state.
- * @todo subwindow (@see https://www.etud.insa-toulouse.fr/redmine/projects/tacos-gui/wiki/%C3%89v%C3%A9nements_souris)
+ * @todo subwindow
+ * @see https://www.etud.insa-toulouse.fr/redmine/projects/tacos-gui/wiki/%C3%89v%C3%A9nements_souris
  */
 struct EventMouseButton : public PronEvent {
   /**

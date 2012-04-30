@@ -21,7 +21,7 @@ void clear_buffer(char* buffer)
 void init()
 {
 		clear_buffer(buffer);
-		//XXX: disable_cursor(1);
+		/** @todo XXX disable_cursor(1); */
 }
 
 void put_pixel(char c, int x, int y, char* buffer)
