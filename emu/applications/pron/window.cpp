@@ -458,23 +458,6 @@ void Window::drawText(int x, int y, const char *text, int length) {
   font->drawText(this->x + x, this->y + y, text, length);
 }
 
-void Window::putImage(PronImage *image, int x, int y) {
-  // We have to test if the image and the screen have the same depth
-  if (image->depth == this->getScreen()->bitsPerPixel) {
-    // Copy the image in the video memory
-    for (int srcY = 0; srcY < image->height; srcY++) {
-      for (int srcX = 0; srcX < image->width; srcX++) {
-        if (this->isValid(srcX + x, srcY + y)) {
-          // Computing the buffer pointers
-          void *src = image->data + (srcX + srcY * image->width) * image->bytesPerPixel;
-          void *dest = this->pixelAddr(x + srcX, y + srcY);
-          memcpy(dest, src, image->bytesPerPixel);
-        }
-      }
-    }
-  }
-}
-
 inline bool Window::isValid(int x, int y) {
   return this->getScreen()->isValid(this->x + x, this->y + y);
 }

@@ -65,8 +65,7 @@ public:
   void drawCircle(int x, int y, int radius);
   void fillRectangle(int x, int y, int width, int height);
   void fillCircle(int x, int y, int radius);
-
-  virtual void putImage(PronImage *image, int x, int y) = 0;
+  void putImage(PronImage *image, int x, int y);
   
   int getPixel(int x, int y);
   void setPixel(int x, int y, int pixel);

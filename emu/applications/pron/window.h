@@ -151,8 +151,6 @@ public: //XXX: bourrin
    */
   void copyArea(int dstX, int dstY, Drawable *d, int srcX, int srcY, int width, int height);
 
-  void putImage(PronImage *image, int x, int y);
-
   /**
    * Draws the given text.
    * @param x The x-coordinate of the origin of the first character

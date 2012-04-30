@@ -25,21 +25,3 @@ void* Pixmap::pixelAddr(int x, int y) {
 bool Pixmap::isValid(int x, int y) {
   return (x >= 0 && x < this->getWidth() && y >= 0 && y < this->getHeight());
 }
-
-void Pixmap::putImage(PronImage *image, int x, int y){
-  // We have to test if the image and the pixmap have the same depth
-  if(image->depth == PIXMAP_DEPTH){
-    // Copy the image in the video memory
-    for (int srcY = 0; srcY < image->height; srcY++) {
-      for (int srcX = 0; srcX < image->width; srcX++) {
-        if (srcX + x < this->getWidth() && srcY + y < this->getHeight() &&
-            x >= 0 && y >= 0) {
-          // Computing the buffer pointers
-          void *src = image->data + (srcX + srcY * image->width) * image->bytesPerPixel;
-          void *dest = this->buf + ( x + y * this->getWidth() + srcX + srcY * this->getWidth() ) * image->bytesPerPixel;
-          memcpy(dest, src, image->bytesPerPixel);
-        }
-      }
-    }
-  }
-}

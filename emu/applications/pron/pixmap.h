@@ -35,8 +35,6 @@ public:
    */
   void* pixelAddr(int x, int y);
 
-  void putImage(PronImage *image, int x, int y);
-
   bool isValid(int x, int y);
 
 private:

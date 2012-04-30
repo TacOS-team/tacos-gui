@@ -221,3 +221,20 @@ void Drawable::setPixel(int x, int y, int pixel) {
     memcpy(this->pixelAddr(x, y), &pixel, this->getScreen()->bytesPerPixel);
   }
 }
+
+void Drawable::putImage(PronImage *image, int x, int y) {
+  // We have to test if the image and the drawable have the same depth
+  if (image->depth == this->getScreen()->bitsPerPixel) {
+    // Copy the image in the video memory
+    for (int srcY = 0; srcY < image->height; srcY++) {
+      for (int srcX = 0; srcX < image->width; srcX++) {
+        if (this->isValid(srcX + x, srcY + y)) {
+          // Computing the buffer pointers
+          void *src = image->data + (srcX + srcY * image->width) * image->bytesPerPixel;
+          void *dest = this->pixelAddr(x + srcX, y + srcY);
+          memcpy(dest, src, image->bytesPerPixel);
+        }
+      }
+    }
+  }
+}
