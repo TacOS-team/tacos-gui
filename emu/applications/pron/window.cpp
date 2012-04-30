@@ -62,6 +62,14 @@ Window::~Window() {
   }
 }
 
+bool Window::operator==(const Window &w) const {
+  return this->getId() == w.getId();
+}
+
+bool Window::operator!=(const Window &w) const {
+  return !(*this == w);
+}
+
 void Window::unmap() {
   // Can't unmap root window
   if (this->parent == NULL) {

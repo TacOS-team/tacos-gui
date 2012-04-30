@@ -46,6 +46,18 @@ public: //XXX: bourrin
 
   ~Window();
 
+  /**
+   * Operator ==.
+   * @return true if the windows are the same
+   */
+  bool operator==(const Window &w) const;
+  
+  /**
+   * Operator !=.
+   * @return true if the windows are the different
+   */
+  bool operator!=(const Window &w) const;
+
   void map();
 
   void unmap();
