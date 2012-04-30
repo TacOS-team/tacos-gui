@@ -1,11 +1,12 @@
 #include "sombrero.h"
 #include "unistd.h"
 #include <cstdio>
+#include <cstdlib>
 
 class MouseClicked : public has_slots<> {
   public:
     void doClick() {
-      printf("Clicked noob lolilol!\n");
+      system("gksu halt");
     }
 };
 
@@ -17,7 +18,6 @@ int main() {
 
   // Clicked signatl handler
   MouseClicked mc;
-  mc.doClick();
   
   // Connection
   b.clicked.connect(&mc, &MouseClicked::doClick);
