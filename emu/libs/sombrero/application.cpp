@@ -38,20 +38,10 @@ void Application::sombrerun() {
       fprintf(stderr, "lol pron has closed the connection.\n");
       exit(1);
     }
-    switch (e->type) {
-      case pron::EV_EXPOSE: {
-	Widget *w = Application::getInstance()->widgets[e->window];
-	if (w != NULL) {
-	  w->draw();
-	}
-	break;
-      }
-      case pron::EV_DESTROY_WINDOW:
-	exit(1);
-	break;
-      default:
-	break; 
-    }
+
+    // Dispatch the event to the target widget
+    Widget *w = Application::getInstance()->widgets[e->window];
+    w->handleEvent(e);
   }
 }
 

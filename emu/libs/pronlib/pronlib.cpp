@@ -25,7 +25,8 @@ Display::Display(int fd, RespWelcome *welcome) {
   COLOR(values.bg, 24).r = 0;
   COLOR(values.bg, 24).g = 0;
   COLOR(values.bg, 24).b = 0;
-  this->defaultGC = pronCreateGC(this, values, GC_VAL_FG | GC_VAL_BG);
+  values.font_num = 0;
+  this->defaultGC = pronCreateGC(this, values, GC_VAL_FG | GC_VAL_BG | GC_VAL_FONTNUM);
 }
 
 int Display::newResourceId() {
@@ -341,6 +342,21 @@ void pronCopyArea(Display *d, Drawable src, Drawable dest, GC gc,
     unsigned int height, int destX, int destY) {
   RqCopyArea rq(src, dest, gc, srcX, srcY, width, height, destX, destY);
   tsock_write(d->fd, &rq, sizeof(rq));
+}
+
+void pronDrawText(Display *d, Window w, GC gc, int x, int y,
+    const char *text, int length) {
+  RqDrawText rq(gc, w, x, y, text, length);
+  tsock_write(d->fd, &rq, sizeof(rq));
+}
+
+void pronTextSize(Display *d, GC gc, const char *text, int length, int *width, int *height) {
+  RqTextSize rq(gc, text, length);
+  tsock_write(d->fd, &rq, sizeof(rq));
+  RespTextSize res(*width, *height);
+  d->read(RS_TEXT_SIZE, &res, sizeof(res));
+  *width = res.width;
+  *height = res.height;
 }
 
 } // namespace pron

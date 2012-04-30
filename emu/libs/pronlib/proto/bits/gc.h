@@ -11,6 +11,7 @@ namespace pron {
 enum GCValueField {
   GC_VAL_FG        = (1 << 0), 
   GC_VAL_BG        = (1 << 1),
+  GC_VAL_FONTNUM   = (1 << 2),
 };
 
 /**
@@ -19,6 +20,7 @@ enum GCValueField {
 struct PronGCValues {
   color_t fg; /**< Foreground color */
   color_t bg; /**< Background color */
+  int font_num; /**< Font number */
 };
 
 } // namespace pron

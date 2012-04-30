@@ -136,7 +136,7 @@ void Client::handle() {
       RqClearWindow *rq = (RqClearWindow*) Client::recvBuf;
       Window *w = (Window*) screen->getDrawable(rq->window);
       if (w != NULL && screen->prepareDrawing(w)) {
-        w->clear();
+        w->clear(false);
       }
       break;
     }
@@ -192,6 +192,25 @@ void Client::handle() {
       if (d != NULL && screen->prepareDrawing(d, gc)) {
         d->fillRectangle(rq->x, rq->y, rq->width, rq->height);
       }
+      break;
+    }
+    case RQ_DRAW_TEXT: {
+      RqDrawText *rq = (RqDrawText*) Client::recvBuf;
+      Window *w = (Window*) screen->getDrawable(rq->window, D_WINDOW);
+      GC *gc = GC::getGC(rq->gc);
+      if (w != NULL && screen->prepareDrawing(w, gc)) {
+        w->drawText(rq->x, rq->y, rq->text, rq->length);
+      }
+      break;
+    }
+    case RQ_TEXT_SIZE: {
+      RqTextSize *rq = (RqTextSize*) Client::recvBuf;
+      GC *gc = GC::getGC(rq->gc);
+      Font *font = screen->getFont(gc->font_num);
+      int width, height;
+      font->textSize(rq->text, rq->length, &width, &height);
+      RespTextSize resp(width, height);
+      this->send(&resp, sizeof(resp));
       break;
     }
     case RQ_REPARENT: {

@@ -163,7 +163,7 @@ void Window::fillCircle(int x, int y, int radius) {
   this->getScreen()->fillCircle(this->x + x, this->y + y, radius); 
 }
 
-void Window::clear(int x, int y, int width, int height) {
+void Window::clear(int x, int y, int width, int height, bool sendExposureEvent) {
   this->reduce(x, y, width, height);
 
   color_t oldFg = this->getScreen()->gc->fg;
@@ -187,13 +187,23 @@ void Window::clear(int x, int y, int width, int height) {
   }
   this->getScreen()->gc->fg = oldFg;
 
-  // Send exposure event
-  EventExpose expose(this->getId(), x, y, width, height);
-  this->deliverEvent(&expose, sizeof(expose));
+  if (sendExposureEvent) {
+    // Send exposure event
+    EventExpose expose(this->getId(), x, y, width, height);
+    this->deliverEvent(&expose, sizeof(expose));
+  }
+}
+
+void Window::clear(bool sendExposureEvent) {
+  this->clear(0, 0, this->getWidth(), this->getHeight(), sendExposureEvent);
+}
+
+void Window::clear(int x, int y, int width, int height) {
+  this->clear(x, y, width, height, true);
 }
 
 void Window::clear() {
-  this->clear(0, 0, this->getWidth(), this->getHeight());
+  this->clear(0, 0, this->getWidth(), this->getHeight(), true); 
 }
 
 PronWindowAttributes Window::getAttributes() {
@@ -268,6 +278,20 @@ void Window::selectInput(Client *client, unsigned int mask) {
       this->otherClients.push_back(OtherClient(client, mask));
     }
   }
+}
+
+bool Window::acceptsEvents(int eventMask) {
+  if (this->eventMask & eventMask) {
+    return true;
+  }
+
+  for (unsigned int i = 0; i < this->otherClients.size(); i++) {
+    if (this->otherClients[i].mask & eventMask) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 void Window::deliverEvent(PronEvent *e, unsigned int size) {
@@ -454,4 +478,8 @@ void Window::copyArea(int dstX, int dstY, Drawable *d, int srcX, int srcY, int w
 
 bool Window::realized() {
   return this->mapped && this->unmappedParents == 0;
+}
+
+void Window::drawText(int x, int y, const char *text, int length) {
+  this->getScreen()->drawText(this->x + x, this->y + y, text, length);
 }

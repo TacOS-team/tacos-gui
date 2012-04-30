@@ -57,6 +57,7 @@ void Mouse::handleMotion(mousestate_t *state) {
 
     // We have to recompute the mouseWin
     this->updateMouseWin();
+    this->updateFocusWin();
   }
 
   if (this->lastSentX != this->mouseX || this->lastSentY != this->mouseY) {
@@ -139,6 +140,26 @@ void Mouse::updateMouseWin() {
 
   // MouseWin is computed we can store it in the screen to increzse performances
   screen->setMouseWin(currentWin);
+}
+
+void Mouse::updateFocusWin() {
+  Screen *screen = Screen::getInstance();
+  Window *newFocusWin = NULL;
+  unsigned int eventMask = PRON_EVENTMASK(EV_KEY_PRESSED);
+
+  Window *w = screen->getMouseWin();
+  while (w != NULL) {
+    if (w->acceptsEvents(eventMask)) {
+      newFocusWin = w;
+      break;
+    } else if (w == screen->getRoot() || (w->dontPropagateMask & eventMask)) {
+      newFocusWin = screen->getRoot();
+      break;
+    }
+    w = w->parent;
+  }
+
+  screen->setFocusWin(newFocusWin);
 }
 
 void Mouse::restorePointerBackground() {

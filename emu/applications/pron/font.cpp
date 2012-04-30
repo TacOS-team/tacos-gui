@@ -11,6 +11,15 @@ Font::Font(char *name, int height, glyph_t glyphs[256]) {
   //this->printInfo();
 }
 
+void Font::textSize(const char *text, int length, int *width, int *height) {
+  *height = this->height;
+  *width = 0;
+  for (int i = 0; i < length; i++) {
+    unsigned char car = text[i];
+    *width += this->glyphs[car].width;
+  }
+}
+
 void Font::drawChar(int x, int y, unsigned char car) {
   for (int l = 0; l < this->height; l++) {
     for (int c = 0; c < this->glyphs[car].width; c++) {

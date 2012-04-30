@@ -385,6 +385,30 @@ void pronCopyArea(Display *d, Drawable src, Drawable dest, GC gc,
     int srcX, int srcY, unsigned int width, unsigned int height, int destX, int destY);
 
 /**
+ * Draws a text.
+ * @param d The connection to pron
+ * @param gc The graphics context to use
+ * @param window The window in which to draw the text
+ * @param x The x-coordinate of the origin of the first character
+ * @param y The y-coordinate of the origin of the first character
+ * @param text The text to draw
+ * @param length The length of the text
+ */
+void pronDrawText(Display *d, Window w, GC gc, int x, int y,
+    const char *text, int length);
+
+/**
+ * Gets the width and the height of a string.
+ * @param d The connection to pron
+ * @param gc The graphics context to use
+ * @param text The text to get the size
+ * @param length The length of the text
+ * @param width The width of the text (output)
+ * @param height The height of the text (output)
+ */
+void pronTextSize(Display *d, GC gc, const char *text, int length, int *width, int *height);
+
+/**
  * Allocates memory needed to receive a pron event.
  * @return Pointer to the allocated PronEvent
  */

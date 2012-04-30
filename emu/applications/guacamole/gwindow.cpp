@@ -150,6 +150,14 @@ void GWindow::decorate() {
     // Barre du haut
     pronFillRectangle(display, this->parent, this->backgroundParentGC, 0,0,
       this->parentAttributes.width - 2* buttonSize, buttonSize);
+    
+    char windowTitle[255];
+    sprintf(windowTitle, "Window %x", this->window);
+    int width, height;
+    pronTextSize(display, display->defaultGC, windowTitle, strlen(windowTitle), &width, &height);
+    printf("Writing %s (size %d %d)...\n", windowTitle, width, height);
+    pronDrawText(display, this->parent, display->defaultGC, 2, 12, windowTitle, strlen(windowTitle));
+
     // Barre de gauche
     pronFillRectangle(display, this->parent, this->backgroundParentGC, 0,buttonSize,
       buttonSize, this->parentAttributes.height-buttonSize);
@@ -238,7 +246,7 @@ void GWindow::decorate() {
 
 
 void GWindow::resize(int width, int height) {
-  // We first retrieve the attributes of the window that has to be resize
+  // We first retrieve the attributes of the window that has to be resized
   // so that we can know if the window is resizable
   PronWindowAttributes attr;
   pronGetWindowAttributes(this->display, this->window, &attr);
@@ -287,11 +295,11 @@ void GWindow::move(int xMove, int yMove) {
 
 
 void GWindow::maximise() {
-  // We first retrieve the attributes of the window that has to be resize
+  // We first retrieve the attributes of the window that has to be resized
   // so that we can know if the window is resizable
   PronWindowAttributes windowAttributes;
   pronGetWindowAttributes(this->display, this->window, &windowAttributes);
-  if (windowAttributes.isResizable){
+  if (windowAttributes.isResizable && windowAttributes.maxHeight == -1 && windowAttributes.maxWidth == -1){
     if (!this->isMaximised) {
       // On en profite pour mettre tous les attributs à jour
       this->attributes = windowAttributes;

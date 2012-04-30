@@ -11,7 +11,10 @@
 #include "application.h"
 #include "bin.h"
 #include "canvas.h"
+#include "button.h"
 #include "timer.h"
+#include "textbox.h"
+#include "label.h"
 
 /**
  * Sombrero library namespace

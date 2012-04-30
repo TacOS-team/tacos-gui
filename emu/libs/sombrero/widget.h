@@ -6,6 +6,9 @@
  */
 
 #include "pronlib.h"
+#include "sigslot.h"
+
+using namespace sigslot;
 
 namespace sombrero {
 
@@ -47,6 +50,8 @@ class Widget {
   ~Widget(); 
   
  public:
+  // Signals
+  signal0<> clicked;
   // Getters and setters
   /**
    * Gets x
@@ -112,6 +117,12 @@ class Widget {
    * Put here widgets drawing stuff
    */
   virtual void draw() = 0;
+  /**
+   * Event handler.
+   * @param e The event to handle
+   * @todo Pure virtual?
+   */
+  virtual void handleEvent(pron::PronEvent *e);
   /**
    * Gets parent container
    * @return The parent Container
