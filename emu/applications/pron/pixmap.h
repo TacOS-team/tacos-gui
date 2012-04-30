@@ -1,47 +1,48 @@
 #ifndef _PIXMAP_H_
 #define _PIXMAP_H_
+
 #include <pixmap.h>
 #include <drawable.h>
 #include <screen.h>
-
-#define PIXMAP_BYTES_PER_PIXEL 3
-#define PIXMAP_DEPTH 24
-
-/**
- * Macro to draw a pixel using the screen
- * and the graphic context
- */
-#define PIXMAP_DRAW_POINT(X, Y) \
-    if ((X) < this->getWidth() && (Y) < this->getHeight() && \
-        (X) >= 0 && (Y) >= 0) { \
-      memcpy(this->buf + ((Y) * this->getWidth() + (X) )* PIXMAP_BYTES_PER_PIXEL, \
-          &COLOR(this->getScreen()->getGC()->fg, PIXMAP_DEPTH), \
-          sizeof(COLOR(this->getScreen()->getGC()->fg, PIXMAP_DEPTH))); \
-    }
 
 class Drawable;
 class Screen;
 
 class Pixmap : public Drawable {
-public:
+ public:
   /**
-  * Constructors
-  */
+   * Constructor.
+   * @param screen The screen the drawable belongs to
+   * @param id The id of the drawable
+   * @param creator The client who has created the drawable
+   * @param width The width of the drawable
+   * @param height The height of the drawable
+   * @param depth The depth of the pixmap
+   */
   Pixmap(Screen *screen, int id, Client *creator, int width, int height, int depth);
+
+  /**
+   * Destructor.
+   */
   ~Pixmap();
 
+ protected:
   /**
-   * Graphic methods
-   */
+   * Gets the address of the pixel (x, y) in memory.
+   * @param x The x-coordinate of the pixel
+   * @param y The y-coordinate of the pixel
+   */ 
   void* pixelAddr(int x, int y);
 
+  /**
+   * Returns true if we can draw at position (x, y).
+   * @return true if we can draw at position (x, y)
+   */
   bool isValid(int x, int y);
 
-private:
-  // Image buffer
-  char *buf;
-  // Deth of the pixmap
-  int depth;
+ private:
+  char *buf; /**< Pixmap buffer */
+  int depth; /**< Pixmap depth */
 };
 
 #endif

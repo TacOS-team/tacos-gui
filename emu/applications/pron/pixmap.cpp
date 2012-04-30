@@ -1,5 +1,4 @@
 #include <algorithm>
-//#include <math.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -10,7 +9,7 @@ using namespace std;
 
 Pixmap::Pixmap(Screen *screen, int id, Client *creator, int width, int height, int depth) 
     : Drawable(D_PIXMAP, screen, id, creator, width, height) {
-  this->buf = (char*) malloc(PIXMAP_BYTES_PER_PIXEL * width * height);
+  this->buf = (char*) malloc(this->getScreen()->bytesPerPixel * width * height);
   this->depth = depth;
 }
 
@@ -19,7 +18,7 @@ Pixmap::~Pixmap() {
 }
 
 void* Pixmap::pixelAddr(int x, int y) {
-  return this->buf + (y * this->getWidth() + x) * PIXMAP_BYTES_PER_PIXEL;
+  return this->buf + (y * this->getWidth() + x) * this->getScreen()->bytesPerPixel;
 }
 
 bool Pixmap::isValid(int x, int y) {
