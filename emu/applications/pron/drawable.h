@@ -68,8 +68,8 @@ public:
 
   virtual void putImage(PronImage *image, int x, int y) = 0;
   
-  virtual int getPixel(int x, int y) = 0;
-  virtual void setPixel(int x, int y, int pixel) = 0;
+  int getPixel(int x, int y);
+  void setPixel(int x, int y, int pixel);
 
 private:
 

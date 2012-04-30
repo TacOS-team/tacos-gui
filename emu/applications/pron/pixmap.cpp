@@ -43,19 +43,3 @@ void Pixmap::putImage(PronImage *image, int x, int y){
     }
   }
 }
-
-
-int Pixmap::getPixel(int x, int y) {
-  if (x < this->getWidth() && y < this->getHeight() && x >= 0 && y >= 0) {
-    int ret = 0;
-    memcpy(&ret, this->buf + (y * this->getWidth() + x) * PIXMAP_BYTES_PER_PIXEL, PIXMAP_BYTES_PER_PIXEL);
-    return ret; 
-  }
-  return -1;
-}
-
-void Pixmap::setPixel(int x, int y, int pixel) {
-  if (x < this->getWidth() && y < this->getHeight() && x >= 0 && y >= 0) {
-    memcpy(this->buf + (y * this->getWidth() + x) * PIXMAP_BYTES_PER_PIXEL, &pixel, PIXMAP_BYTES_PER_PIXEL);
-  }
-}

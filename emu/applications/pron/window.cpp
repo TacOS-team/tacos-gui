@@ -478,18 +478,3 @@ void Window::putImage(PronImage *image, int x, int y) {
 inline bool Window::isValid(int x, int y) {
   return this->getScreen()->isValid(this->x + x, this->y + y);
 }
-
-int Window::getPixel(int x, int y) {
-  if (this->isValid(x, y)) {
-    int ret;
-    memcpy(&ret, this->pixelAddr(x, y), this->getScreen()->bytesPerPixel);
-    return ret;
-  }
-  return -1;
-}
-
-void Window::setPixel(int x, int y, int pixel) {
-  if (this->isValid(x, y)) {
-    memcpy(this->pixelAddr(x, y), &pixel, this->getScreen()->bytesPerPixel);
-  }
-}
