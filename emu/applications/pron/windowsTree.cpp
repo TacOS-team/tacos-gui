@@ -59,15 +59,8 @@ WindowsTree::IteratorBFS::IteratorBFS(Window * localRoot) {
   }
 }
 
-/**
- * @TODO: Implement me!
- */
 WindowsTree::IteratorBFS WindowsTree::IteratorBFS::operator++() {
-  return *this;
-}
-
-WindowsTree::IteratorBFS WindowsTree::IteratorBFS::operator++(int) {
-  /* 
+    /* 
   Breadth First Search algorithm
   We only push the first child of a window because we can access all the other childs by using nextSibling.
   */
@@ -88,6 +81,12 @@ WindowsTree::IteratorBFS WindowsTree::IteratorBFS::operator++(int) {
       this->winQueue.push(this->currentWindow->firstChild);
   }
   return *this;
+}
+
+WindowsTree::IteratorBFS WindowsTree::IteratorBFS::operator++(int) {
+  IteratorBFS tmp = *this;
+  this->operator++();
+  return tmp;
 }
 
 Window & WindowsTree::IteratorBFS::operator*() {
@@ -115,16 +114,8 @@ WindowsTree::IteratorDFS::IteratorDFS(Window * localRoot) {
   this->currentWindow = this->localRoot = localRoot;
 }
 
-/**
- * @TODO: Implement me!
- */
 WindowsTree::IteratorDFS WindowsTree::IteratorDFS::operator++() {
-  return *this;
-}
-
-WindowsTree::IteratorDFS WindowsTree::IteratorDFS::operator++(int) {
   /* Depth first Search algorithm */
-
   // go down the tree while you can
   if (this->currentWindow->firstChild != NULL) {
     this->currentWindow = this->currentWindow->firstChild;
@@ -144,6 +135,12 @@ WindowsTree::IteratorDFS WindowsTree::IteratorDFS::operator++(int) {
     }
   }
   return *this;
+}
+
+WindowsTree::IteratorDFS WindowsTree::IteratorDFS::operator++(int) {
+  IteratorDFS tmp = *this;
+  this->operator++();
+  return tmp;
 }
 
 Window & WindowsTree::IteratorDFS::operator*() {

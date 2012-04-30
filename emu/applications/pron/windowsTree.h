@@ -13,7 +13,6 @@ class WindowsTree {
       public:
       IteratorBFS(Window * win);
       // pre incrementation 
-      // TODO : implement this
       IteratorBFS operator++(); 
       // post incrementation
       IteratorBFS operator++(int junk);
@@ -40,7 +39,6 @@ class WindowsTree {
       public:
       IteratorDFS(Window * win);
       // pre incrementation 
-      // TODO : implement this
       IteratorDFS operator++(); 
       // post incrementation
       IteratorDFS operator++(int junk);
