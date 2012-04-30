@@ -205,8 +205,8 @@ void Mouse::drawPointer() {
   screen->setClipWin(NULL);
   
   // We can draw the new pointer
-  screen->drawLine(this->mouseX,this->mouseY, this->mouseX, this->mouseY + PRON_MOUSE_POINTER_HEIGHT - 1);
-  screen->drawLine(this->mouseX,this->mouseY, this->mouseX + PRON_MOUSE_POINTER_WIDTH - 1, this->mouseY);
+  screen->getRoot()->drawLine(this->mouseX,this->mouseY, this->mouseX, this->mouseY + PRON_MOUSE_POINTER_HEIGHT - 1);
+  screen->getRoot()->drawLine(this->mouseX,this->mouseY, this->mouseX + PRON_MOUSE_POINTER_WIDTH - 1, this->mouseY);
 }
 
 int Mouse::getPointerBackupX(){

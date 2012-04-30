@@ -18,80 +18,12 @@ Pixmap::~Pixmap() {
   free(this->buf);
 }
 
-void Pixmap::drawPoint(int x, int y) {
-  PIXMAP_DRAW_POINT(x, y);// Cf pixmap.h
+void* Pixmap::pixelAddr(int x, int y) {
+  return this->buf + (y * this->getWidth() + x) * PIXMAP_BYTES_PER_PIXEL;
 }
 
-void Pixmap::drawHorizLine(int x, int y, int width) {
-  for (int c = 0; c < width; c++) {
-    PIXMAP_DRAW_POINT(x + c, y);
-  }
-}
-
-void Pixmap::drawVertLine(int x, int y, int height) {
-  for (int l = 0; l < height; l++) {
-    PIXMAP_DRAW_POINT(x, y + l);
-  }
-}
-
-void Pixmap::drawLine(int x1, int y1, int x2, int y2) {
-  if (x1 == x2) {
-  // Vertical line
-    this->drawVertLine(x1, y1, (y2 - y1 + 1));
-  } else if (y1 == y2) {
-    // Horizontal line
-    this->drawHorizLine(x1, y1, (x2 - x1 + 1));
-  } else {
-    int i, dx, dy, sdx, sdy, dxabs, dyabs, x, y, px, py;
-
-    dx = x2 - x1; 
-    dy = y2 - y1;
-    dxabs = (dx >= 0 ? dx : -dx);
-    dyabs = (dy >= 0 ? dy : -dy);
-    sdx = (dx >= 0 ? 1 : -1);
-    sdy = (dy >= 0 ? 1 : -1);
-    x = dyabs >> 1;
-    y = dxabs >> 1;
-    px = x1;
-    py = y1;
-
-    PIXMAP_DRAW_POINT(px, py);
-
-    if (dxabs >= dyabs) {
-      for (i = 0; i < dxabs; i++) {
-        y += dyabs;
-        if (y >= dxabs) {
-          y -= dxabs;
-          py += sdy;
-        }
-        px += sdx;
-        PIXMAP_DRAW_POINT(px, py);
-      }
-    } else { 
-      for (i = 0; i < dyabs; i++) {
-        x += dxabs;
-        if (x >= dyabs) {
-          x -= dyabs;
-          px += sdx;
-        }
-        py += sdy;
-        PIXMAP_DRAW_POINT(px, py);
-      }
-    }
-  }
-}
-
-void Pixmap::drawRect(int x, int y, int width, int height){
-  drawHorizLine(x, y, width);
-  drawHorizLine(x, y + height - 1, width);
-  drawVertLine(x, y + 1, height - 2);
-  drawVertLine(x + width - 1, y + 1, height - 2);
-}
-
-void Pixmap::fillRectangle(int x, int y, int width, int height){
-  for (int l = 0; l < height; l++) {
-    drawHorizLine(x, y + l, width);
-  }
+bool Pixmap::isValid(int x, int y) {
+  return (x >= 0 && x < this->getWidth() && y >= 0 && y < this->getHeight());
 }
 
 void Pixmap::putImage(PronImage *image, int x, int y){
@@ -112,57 +44,6 @@ void Pixmap::putImage(PronImage *image, int x, int y){
   }
 }
 
-void Pixmap::drawCircle(int n_cx, int n_cy, int radius){
-  double error = (double) -radius;
-  double x = (double) radius - 0.5;
-  double y = (double) 0.5;
-  double cx = n_cx - 0.5;
-  double cy = n_cy - 0.5;
-
-  while (x >= y) {
-    PIXMAP_DRAW_POINT((int)(cx + x), (int)(cy + y));
-    this->drawPoint((int)(cx + y), (int)(cy + x));
-
-    if (x != 0) {
-      PIXMAP_DRAW_POINT((int)(cx - x), (int)(cy + y));
-      PIXMAP_DRAW_POINT((int)(cx + y), (int)(cy - x));
-
-      if (y != 0) {
-        PIXMAP_DRAW_POINT((int)(cx + x), (int)(cy - y));
-        PIXMAP_DRAW_POINT((int)(cx - y), (int)(cy + x));
-      }
-
-      if (x != 0 && y != 0) {
-        PIXMAP_DRAW_POINT((int)(cx - x), (int)(cy - y));
-        PIXMAP_DRAW_POINT((int)(cx - y), (int)(cy - x));
-      }
-
-      error += y;
-      ++y;
-      error += y;
-
-      if (error >= 0) {
-        --x;
-        error -= x;
-        error -= x;
-      }
-    }
-  }
-}
-
-void Pixmap::fillCircle(int cx __attribute__((unused)), int cy __attribute__((unused)), int radius __attribute__((unused))){
-  /*double r = (double) radius;
-
-  for (double dy = 1; dy <= r; dy += 1.0) {
-    double dx = floor(sqrt((2.0 * r * dy) - (dy * dy)));
-    int x = cx - dx;
-
-    for (; x <= cx + dx; x++) {
-      PIXMAP_DRAW_POINT(x, (int)(cy + r - dy));
-      PIXMAP_DRAW_POINT(x, (int)(cy - r + dy));
-    }
-  }*/
-}
 
 int Pixmap::getPixel(int x, int y) {
   if (x < this->getWidth() && y < this->getHeight() && x >= 0 && y >= 0) {

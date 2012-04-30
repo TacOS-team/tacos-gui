@@ -145,32 +145,8 @@ void Window::map() {
   }
 }
 
-void Window::drawPoint(int x, int y) {
-  this->getScreen()->drawPoint(this->x + x, this->y + y);
-}
-
-void Window::drawLine(int x1, int y1, int x2, int y2) {
-  this->getScreen()->drawLine(this->x + x1, this->y + y1, this->x + x2, this->y + y2);
-}
-
-void Window::drawRect(int x1, int y1, int width, int height) {
-  this->getScreen()->drawRect(this->x + x1, this->y + y1, width, height);
-}
-
-void Window::fillRectangle(int x1, int y1, int width, int height) {
-  this->getScreen()->fillRectangle(this->x + x1, this->y + y1, width, height);
-}
-
-void Window::putImage(PronImage *image, int x, int y) {
-  this->getScreen()->putImage(image, this->x + x, this->y + y);
-}
-
-void Window::drawCircle(int x, int y, int radius) {
-  this->getScreen()->drawCircle(this->x + x, this->y + y, radius); 
-}
-
-void Window::fillCircle(int x, int y, int radius) {
-  this->getScreen()->fillCircle(this->x + x, this->y + y, radius); 
+void* Window::pixelAddr(int x, int y) {
+  return this->getScreen()->pixelAddr(this->x + x, this->y + y);
 }
 
 void Window::clear(int x, int y, int width, int height, bool sendExposureEvent) {
@@ -181,7 +157,7 @@ void Window::clear(int x, int y, int width, int height, bool sendExposureEvent) 
   COLOR(this->getScreen()->gc->fg, 24).g = COLOR(this->bgColor, 24).g;
   COLOR(this->getScreen()->gc->fg, 24).b = COLOR(this->bgColor, 24).b;
   this->getScreen()->setClipWin(this);
-  this->getScreen()->fillRectangle(this->x + x, this->y + y, width, height);
+  this->fillRectangle(x, y, width, height);
   // If it is the root window, we print a grid (provisoire !!!!!! TODO)
   if (this->getId() == 0) {
     COLOR(this->getScreen()->gc->fg, 24).r = 255;
@@ -189,10 +165,10 @@ void Window::clear(int x, int y, int width, int height, bool sendExposureEvent) 
     COLOR(this->getScreen()->gc->fg, 24).b = 0;
     int step = 50;
     for (int i = step; i < this->getWidth(); i += step) {
-      this->getScreen()->drawLine(i, 0, i, this->getHeight());
+      this->drawLine(i, 0, i, this->getHeight());
     }
     for (int i = step; i < this->getHeight(); i += step) {
-      this->getScreen()->drawLine(0, i, this->getWidth(), i);
+      this->drawLine(0, i, this->getWidth(), i);
     }
   }
   this->getScreen()->gc->fg = oldFg;
@@ -206,14 +182,6 @@ void Window::clear(int x, int y, int width, int height, bool sendExposureEvent) 
 
 void Window::clear(bool sendExposureEvent) {
   this->clear(0, 0, this->getWidth(), this->getHeight(), sendExposureEvent);
-}
-
-void Window::clear(int x, int y, int width, int height) {
-  this->clear(x, y, width, height, true);
-}
-
-void Window::clear() {
-  this->clear(0, 0, this->getWidth(), this->getHeight(), true); 
 }
 
 PronWindowAttributes Window::getAttributes() {
@@ -230,14 +198,6 @@ PronWindowAttributes Window::getAttributes() {
   attr.minHeight = this->minHeight;
 
   return attr;
-}
-
-int Window::getPixel(int x, int y) {
-  return this->getScreen()->getPixel(this->x + x, this->y + y);
-}
-
-void Window::setPixel(int x, int y, int pixel) {
-  this->getScreen()->setPixel(this->x + x, this->y + y, pixel);
 }
 
 void Window::setAttributes(PronWindowAttributes *newAttr, unsigned int mask) {
@@ -494,5 +454,42 @@ bool Window::realized() {
 }
 
 void Window::drawText(int x, int y, const char *text, int length) {
-  this->getScreen()->drawText(this->x + x, this->y + y, text, length);
+  Font *font = this->getScreen()->getFont(this->getScreen()->gc->font_num);
+  font->drawText(this->x + x, this->y + y, text, length);
+}
+
+void Window::putImage(PronImage *image, int x, int y) {
+  // We have to test if the image and the screen have the same depth
+  if (image->depth == this->getScreen()->bitsPerPixel) {
+    // Copy the image in the video memory
+    for (int srcY = 0; srcY < image->height; srcY++) {
+      for (int srcX = 0; srcX < image->width; srcX++) {
+        if (this->isValid(srcX + x, srcY + y)) {
+          // Computing the buffer pointers
+          void *src = image->data + (srcX + srcY * image->width) * image->bytesPerPixel;
+          void *dest = this->pixelAddr(x + srcX, y + srcY);
+          memcpy(dest, src, image->bytesPerPixel);
+        }
+      }
+    }
+  }
+}
+
+inline bool Window::isValid(int x, int y) {
+  return this->getScreen()->isValid(this->x + x, this->y + y);
+}
+
+int Window::getPixel(int x, int y) {
+  if (this->isValid(x, y)) {
+    int ret;
+    memcpy(&ret, this->pixelAddr(x, y), this->getScreen()->bytesPerPixel);
+    return ret;
+  }
+  return -1;
+}
+
+void Window::setPixel(int x, int y, int pixel) {
+  if (this->isValid(x, y)) {
+    memcpy(this->pixelAddr(x, y), &pixel, this->getScreen()->bytesPerPixel);
+  }
 }
