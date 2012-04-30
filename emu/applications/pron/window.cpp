@@ -105,7 +105,7 @@ void Window::unmap() {
 
   if (this->parent->realized()) {
     // Clear the area of the parent window occupied by this window and send exposure event
-    this->parent->clear(this->x, this->y, this->getWidth(), this->getHeight());
+    this->parent->clear(this->x - parent->x, this->y - parent->y, this->getWidth(), this->getHeight());
 
     // Redraw covered lower siblings
     for (Window *sib = this->prevSibling; sib != NULL; sib = sib->prevSibling) {
