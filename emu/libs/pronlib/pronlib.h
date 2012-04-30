@@ -309,11 +309,11 @@ void pronDestroyWindow(Display *d, unsigned int w);
 void pronMoveWindow(Display *d, unsigned int w, int x, int y);
 
 /**
- * Moves a window at (x,y) position.
+ * Moves a window at (x,y) position, relative to its parent.
  * @param d The connection to pron
  * @param w The window to move
- * @param x The new x-coordinate
- * @param y The new y-coordinate
+ * @param x The new x-coordinate, relative to the parent window
+ * @param y The new y-coordinate, relative to the parent window
  */
 void pronMoveWindowTo(Display *d, unsigned int w, int x, int y);
 

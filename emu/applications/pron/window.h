@@ -157,10 +157,9 @@ class Window : public Drawable {
   void move(int dx, int dy);
 
   /**
-   * Moves this window at (x,y) position.
-   * @todo Relative to the parent position?
-   * @param x The new x-coordinate
-   * @param y The new y-coordinate
+   * Moves this window at (x,y) position, relative to its parent.
+   * @param x The new x-coordinate, relative to the parent window
+   * @param y The new y-coordinate, relative to the parent window
    */
   void moveTo(int x, int y);
 

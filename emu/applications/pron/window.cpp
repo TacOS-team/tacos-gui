@@ -422,7 +422,7 @@ void Window::move(int dx, int dy) {
 }
 
 void Window::moveTo(int x, int y) {
-  this->move(x - this->x, y - this->y);
+  this->move(this->parent->x + x - this->x, this->parent->y + y - this->y);
 }
 
 void Window::resize(int width, int height) {
