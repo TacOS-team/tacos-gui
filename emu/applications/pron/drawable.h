@@ -7,25 +7,41 @@ using namespace std;
 using namespace pron;
 
 class Window;
-//class PixMap;
 class Screen;
 class Client;
 
 /**
- * Drawable type
+ * Drawable types.
  */
 enum DrawableType {
-  D_WINDOW = 0x0000, 
-  D_PIXMAP = 0x0001,
+  D_WINDOW, /**< Window (displayed on screen) */
+  D_PIXMAP, /**< Pixmap (stored in memory) */
 };
 
 class Drawable {
+ private:
+  unsigned int type; /**< Drawable type (D_WINDOW or D_PIXMAP) */
+  Screen *screen; /**< Screen the drawable belongs to */
+  unsigned int id; /**< Drawable id */
+  Client *creator; /**< Client who has created the drawable */
+  int width; /**< Drawable width */
+  int height; /**< Drawable height */
 
-protected: 
+ protected: 
   /**
-  * Constructors
-  */
+   * Constructor.
+   * @param type The type of the drawable (D_WINDOW or D_PIXMAP)
+   * @param screen The screen the drawable belongs to
+   * @param id The id of the drawable
+   * @param creator The client who has created the drawable
+   * @param width The width of the drawable
+   * @param height The height of the drawable
+   */
   Drawable(int type, Screen *screen, int id, Client *creator, int width, int height);
+
+  /**
+   * Destructor.
+   */
   ~Drawable(); 
 
   /**
@@ -36,50 +52,163 @@ protected:
    * @param height The height of the rectangle
    */
   void reduce(int &x, int &y, int &width, int &height);
-public: 
+ 
+  /**
+   * Gets the address of the pixel (x, y) in memory.
+   * @param x The x-coordinate of the pixel
+   * @param y The y-coordinate of the pixel
+   */ 
+  virtual void* pixelAddr(int x, int y) = 0;
 
   /**
-   * Getters and setters
+   * Returns true if we can draw at position (x, y).
+   * @return true if we can draw at position (x, y)
+   */
+  virtual bool isValid(int x, int y) = 0;
+
+  /**
+   * Draws an horizontal line between (x, y) and (x + width, y), using
+   * the current graphics context.
+   * @param x The x-coordinate of the first point of the line
+   * @param y The y-coordinate of the first point of the line
+   * @param width The width of the line
+   */
+  void drawHorizLine(int x, int y, int width);
+  
+  /**
+   * Draws a vertical line between (x, y) and (x, y + height), using
+   * the current graphics context.
+   * @param x The x-coordinate of the first point of the line
+   * @param y The y-coordinate of the first point of the line
+   * @param height The height of the line
+   */
+  void drawVertLine(int x, int y, int height);
+
+ public: 
+  /**
+   * Returns the type of the drawable (window or pixmap).
+   * @return the type of the drawable
    */
   int getType();
+
+  /**
+   * Returns the screen the drawable belongs to.
+   * @return the screen the drawable belongs to
+   */
   Screen* getScreen();
+
+  /**
+   * Returns the id of the drawable.
+   * @return the id of the drawable
+   */
   unsigned int getId() const;
+
+  /**
+   * Returns the creator of the drawable.
+   * @return the creator of the drawable
+   */
   Client* getCreator();
+
+  /**
+   * Returns the width of the drawable.
+   * @return the width of the drawable
+   */
   int getWidth();
+
+  /**
+   * Sets the width of the drawable.
+   */
   void setWidth(int width);
+
+  /**
+   * Returns the height of the drawable.
+   * @return the height of the drawable
+   */
   int getHeight();
+
+  /**
+   * Sets the height of the drawable.
+   */
   void setHeight(int height);
 
   /**
-   * Graphic methods
+   * Draws a point at (x, y), using the current graphics context.
+   * @param x The x-coordinate of the point
+   * @param y The y-coordinate of the point
    */
-  virtual void* pixelAddr(int x, int y) = 0;
-  virtual bool isValid(int x, int y) = 0;
-
-  void drawHorizLine(int x, int y, int width);
-  void drawVertLine(int x, int y, int height);
-
   void drawPoint(int x, int y);
+
+  /**
+   * Draws a line between (x1, y1) and (x2, y2), using the current
+   * graphics context.
+   * @param x1 The x-coordinate of the first point to join
+   * @param y1 The y-coordinate of the first point to join
+   * @param x2 The x-coordinate of the second point to join
+   * @param y2 The y-coordinate of the second point to join
+   */
   void drawLine(int x1, int y1, int x2, int y2);
-  void drawRect(int x1, int y1, int width, int height);
+
+  /**
+   * Draws a rectangle at (x,y) width height sized, using the current
+   * graphics context.
+   * @param x The x-coordinate of the top-left corner of the rectangle
+   * @param y The y-coordinate of the top-left corner of the rectangle
+   * @param width The width of the rectangle
+   * @param height The height of the rectangle
+   */
+  void drawRect(int x, int y, int width, int height);
+
+  /**
+   * Draws a circle with given center (x,y) and radius, using the current
+   * graphics context.
+   * @param x The x-coordinate of the top-left corner of the circle
+   * @param y The y-coordinate of the top-left corner of the circle
+   * @param radius The radius of the circle
+   */
   void drawCircle(int x, int y, int radius);
+
+  /**
+   * Draws a filled rectangle at (x,y) width height sized, using the current
+   * graphics context.
+   * @param x The x-coordinate of the top-left corner of the rectangle
+   * @param y The y-coordinate of the top-left corner of the rectangle
+   * @param width The width of the rectangle
+   * @param height The height of the rectangle
+   */
   void fillRectangle(int x, int y, int width, int height);
-  void fillCircle(int x, int y, int radius);
-  void putImage(PronImage *image, int x, int y);
   
+  /**
+   * Draws a filled circle with given center (x,y) and radius, using the
+   * current graphics context.
+   * @param x The x-coordinate of the top-left corner of the circle
+   * @param y The y-coordinate of the top-left corner of the circle
+   * @param radius The radius of the circle
+   */
+  void fillCircle(int x, int y, int radius);
+
+  /**
+   * Puts an image into the drawable.
+   * @param image The PronImage to put
+   * @param x The destination top-left corner x-coordinate
+   * @param y The destination top-left corner y-coordinate
+   */
+  void putImage(PronImage *image, int x, int y);
+ 
+  /**
+   * Gets the pixel at (x, y).
+   * @param x The x-coordinate of the pixel to get
+   * @param y The y-coordinate of the pixel to get
+   * @return the value (color) of the pixel at (x, y)
+   */ 
   int getPixel(int x, int y);
+
+  /**
+   * Sets the pixel at (x, y).
+   * @param x The x-coordinate of the pixel to set
+   * @param y The y-coordinate of the pixel to set
+   * @param pixel The value (color) to set
+   */
   void setPixel(int x, int y, int pixel);
-
-private:
-
-  // Which kind of drawable is
-  unsigned int type;
-  // Drawable attributes
-  Screen *screen;
-  unsigned int id;
-  Client *creator;
-  int width, height;
-
 };
 
 #endif
