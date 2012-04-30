@@ -322,8 +322,8 @@ bool Screen::prepareDrawing(Drawable *d, GC *gc) {
   if (d->getType() == D_WINDOW) {
     Window *w = (Window*) d;
 
-    if (!w->mapped) {
-      // Can't draw in unmapped window
+    if (!w->realized()) {
+      // Can't draw in unrealized window
       return false;
     }
 
@@ -338,7 +338,7 @@ bool Screen::prepareDrawing(Drawable *d, GC *gc) {
 }
 
 void traceWindowsRec(Window *w, string prefix) {
-  printf("%s%x (p: %x, fc: %x, lc: %x, ps: %x, ns: %x, mapped: %s)\n",
+  printf("%s%x (p: %x, fc: %x, lc: %x, ps: %x, ns: %x, m: %s, r: %s)\n",
         prefix.c_str(),
         w->getId(),
         w->parent == NULL ? 0 : w->parent->getId(),
@@ -346,7 +346,8 @@ void traceWindowsRec(Window *w, string prefix) {
         w->lastChild == NULL ? 0 : w->lastChild->getId(),
         w->prevSibling == NULL ? 0 : w->prevSibling->getId(),
         w->nextSibling == NULL ? 0 : w->nextSibling->getId(),
-        w->mapped ? "yes" : "no");
+        w->mapped ? "yes" : "no",
+        w->realized() ? "yes" : "no");
   for (Window *currentChild = w->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
     traceWindowsRec(currentChild, prefix + "--");
   }

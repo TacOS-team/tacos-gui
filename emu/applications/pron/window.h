@@ -37,7 +37,7 @@ public: //XXX: bourrin
   int maxHeight;
   int minWidth;
   int minHeight;
-
+  
   Window *parent;
   Window *prevSibling, *nextSibling;
   Window *firstChild, *lastChild;
@@ -134,6 +134,12 @@ public: //XXX: bourrin
   bool contains(int x, int y);
 
   /**
+   * Returns true when window and all its parents are mapped.
+   * @return true if the window and all its parent are mapped.
+   */
+  bool realized();
+
+  /**
    * Getters and setters
    */
 
@@ -163,7 +169,10 @@ public: //XXX: bourrin
 
 private:
   
+  int unmappedParents; /**< Number of unmapped parents. */
+
   bool overlaps(Window *w);
+
 };
 
 #endif

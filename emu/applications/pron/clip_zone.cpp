@@ -53,7 +53,7 @@ ClipZone::ClipZone(Window *w) {
       sibling = w->nextSibling;
       
       for (; sibling != NULL; sibling = sibling->nextSibling) {
-        if (sibling->mapped) {
+        if (sibling->realized()) {
           ClipRect obscurer(sibling);
           vector<ClipRect*> oldClipRects = this->clipRects;
           this->clipRects.clear();

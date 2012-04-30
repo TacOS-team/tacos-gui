@@ -26,6 +26,12 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
   this->minWidth = -1;
   this->minHeight = -1;
 
+  if (parent != NULL) {
+    this->unmappedParents = (parent->mapped ? 0 : 1) + parent->unmappedParents;
+  } else {
+    this->unmappedParents = 0;
+  }
+
   // Père
   this->parent = parent;
   // Fils
@@ -78,21 +84,26 @@ void Window::unmap() {
 
   this->mapped = false;
 
-  // Unmap all children
-  for (Window *child = this->firstChild; child != NULL; child = child->nextSibling) {
-    child->unmap();
+  Window *mouseWin = this->getScreen()->getClipWin();
+  Window *clipWin = this->getScreen()->getClipWin();
+
+  for (WindowsTree::IteratorBFS it = this->getScreen()->tree->beginBFS(this); it != this->getScreen()->tree->endBFS(); it++) {
+    // Update clipWin/mouseWin/focusWin
+    if (clipWin != NULL && *clipWin == *it) {
+      this->getScreen()->setClipWin(NULL);
+    }
+
+    if (mouseWin != NULL && *mouseWin == *it) {
+      Mouse::getInstance()->updateMouseWin();
+    }
+
+    // Update all children
+    if (*it != *this) {
+      it->unmappedParents++;
+    }
   }
 
-  // TODO: check if we were clipwin/mousewin/focuswin
-  if (this->getScreen()->getClipWin() == this) {
-    this->getScreen()->setClipWin(NULL);
-  }
-
-  if (this->getScreen()->getMouseWin() == this) {
-    Mouse::getInstance()->updateMouseWin();
-  }
-
-  if (this->parent->mapped) {
+  if (this->parent->realized()) {
     // Clear the area of the parent window occupied by this window and send exposure event
     this->parent->clear(this->x, this->y, this->getWidth(), this->getHeight());
 
@@ -115,9 +126,12 @@ void Window::map() {
   EventExpose expose(this->getId(), 0, 0, this->getWidth(), this->getHeight());
   this->deliverEvent(&expose, sizeof(expose));
 
-  // Map all children
-  for (Window *child = this->firstChild; child != NULL; child = child->nextSibling) {
-    child->map();
+  // Update all children
+  for (WindowsTree::IteratorBFS it = this->getScreen()->tree->beginBFS(this); it != this->getScreen()->tree->endBFS(); it++) {
+    // XXX: niconoob
+    if (*it != *this) {
+      it->unmappedParents--;
+    }
   }
 }
 
@@ -381,6 +395,8 @@ void Window::reparent(Window *w) {
   this->nextSibling = NULL;
   
   this->parent = w;
+
+  this->unmappedParents = (parent->mapped ? 0 : 1) + parent->unmappedParents;
 }
 
 void Window::destroy() {
@@ -434,4 +450,8 @@ void Window::copyArea(int dstX, int dstY, Drawable *d, int srcX, int srcY, int w
       this->setPixel(x + dstX, y + dstY, d->getPixel(x + srcX, y + srcY));
     }
   }
+}
+
+bool Window::realized() {
+  return this->mapped && this->unmappedParents == 0;
 }
