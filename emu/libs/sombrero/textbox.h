@@ -14,40 +14,37 @@ using namespace std;
 
 namespace sombrero {
 
-class Textbox : public Widget {
- private:
-  string text; /**< Text buffer */
-  unsigned int display; /**< Position of the first displayed character */
-  unsigned int cursor; /**< Cursor position in the buffer */
+  class Textbox : public Widget {
+    private:
+      string text; /**< Text buffer */
+      unsigned int display; /**< Position of the first displayed character */
+      unsigned int cursor; /**< Cursor position in the buffer */
 
- public:
-  /**
-  * Constructor.
-  * @param parent The parent widget, must be a container.
-  */
-  Textbox(Container *parent);
+    public:
+      /**
+       * Constructor.
+       * @param parent The parent widget, must be a container.
+       */
+      Textbox(Container *parent);
 
-  /**
-  * Destructor.
-  */
-  ~Textbox();
+      /**
+       * Destructor.
+       */
+      ~Textbox();
 
-  /**
-  * Event handler.
-  * @param e The event to handle
-  */
-  void handleEvent(pron::PronEvent *e);
+      void handleEventExpose() ;
+      void handleEventKeyPressed(pron::PronEvent *e) ;
 
-  /**
-  * Draws the textbox.
-  */
-  void draw();
+      /**
+       * Draws the textbox.
+       */
+      void draw();
 
-  static const int MARGIN_TOP = 4;
-  static const int MARGIN_RIGHT = 4;
-  static const int MARGIN_BOTTOM = 4;
-  static const int MARGIN_LEFT = 4;
-};
+      static const int MARGIN_TOP = 4;
+      static const int MARGIN_RIGHT = 4;
+      static const int MARGIN_BOTTOM = 4;
+      static const int MARGIN_LEFT = 4;
+  };
 
 } // namespace sombrero
 
