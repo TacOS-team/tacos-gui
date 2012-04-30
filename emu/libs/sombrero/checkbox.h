@@ -18,12 +18,12 @@ namespace sombrero {
    */ 
   class Checkbox : public Widget {
     private:
-      bool state; // The state of the box (true if checked)
-      pron::GC gc; // specific GC for displaying red or green regarding to the state
-      pron::PronGCValues gcValues;
-      void handleEvent(pron::PronEvent *e);
-      
+      bool state; /**< The state of the box (true if checked) */
+      pron::GC gc; /**< specific GC for displaying red or green regarding to the state */
+      pron::PronGCValues gcValues; /**< values of the gc */
 
+      
+      
     public:
       /**
        * The checkbox constructor 
@@ -34,6 +34,9 @@ namespace sombrero {
        * checkbox destructor
        */
       ~Checkbox();
+
+      void handleEventMouseButton(pron::PronEvent *e) ;
+
       /**
        * checkbox drawing stuff
        */

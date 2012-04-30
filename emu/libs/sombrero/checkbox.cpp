@@ -15,26 +15,11 @@ namespace sombrero {
 
   Checkbox::~Checkbox() {}
 
-
-  void Checkbox::handleEvent(pron::PronEvent *e) {
-    switch (e->type) {
-      case pron::EV_EXPOSE: 
-        this->draw();
-        break;
-
-      case pron::EV_MOUSE_BUTTON: 
-        if (((pron::EventMouseButton *)e)->b1) {
-          this->clicked(); // If user wants to know the button state has changed
-          this->state = !this->state;
-          this->draw(); // redraw the window/widget
-        }
-        break;
-
-      case pron::EV_DESTROY_WINDOW:
-        exit(1);
-        break;
-      default:
-        break; 
+  void Checkbox::handleEventMouseButton(pron::PronEvent *e) {
+    if ( ((pron::EventMouseButton *) e)->b1) {
+      this->clicked();
+      this->state = !this->state;
+      this->draw();
     }
   }
 
@@ -43,7 +28,6 @@ namespace sombrero {
   }
 
   void Checkbox::draw() {
-    printf("ubeognz\n");
     if (state == true) {
       COLOR(this->gcValues.fg, 24).r = 0;
       COLOR(this->gcValues.fg, 24).g = 255;

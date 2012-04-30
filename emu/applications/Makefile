@@ -13,6 +13,18 @@ $(BUILDDIRAPPS)/%: %.c
 	$(CC) -o $@ $< $(LIBTACOS) $(CFLAGS) $(INCLUDES)
 
 $(BUILDDIRAPPS)/%: %.cpp
-	$(CXX) -o $@ $< $(LIBTACOS) $(SOMBRERO) $(PRONLIB) $(LIBTSOCK) $(CFLAGS) $(INCLUDES)
+	$(CXX) -o $@ $< $(LIBTACOS) $(PRONLIB) $(LIBTSOCK) $(CFLAGS) $(INCLUDES)
+		
+$(BUILDDIRAPPS)/sombrero_cube : sombrero_cube.cpp	
+	$(CXX) -o $@ $< $(LIBTACOS) $(SOMBRERO) $(CFLAGS) $(INCLUDES)
+
+$(BUILDDIRAPPS)/sombrero_button : sombrero_button.cpp	
+	$(CXX) -o $@ $< $(LIBTACOS) $(SOMBRERO) $(CFLAGS) $(INCLUDES)
+
+$(BUILDDIRAPPS)/sombrero_textbox : sombrero_textbox.cpp	
+	$(CXX) -o $@ $< $(LIBTACOS) $(SOMBRERO) $(CFLAGS) $(INCLUDES)
+	
+$(BUILDDIRAPPS)/sombrero_checkbox : sombrero_checkbox.cpp	
+	$(CXX) -o $@ $< $(LIBTACOS) $(SOMBRERO) $(CFLAGS) $(INCLUDES)
 
 .PHONY: clean $(SUBDIRS)
