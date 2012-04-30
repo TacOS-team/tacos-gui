@@ -105,12 +105,21 @@ void Window::unmap() {
 
   if (this->parent->realized()) {
     // Clear the area of the parent window occupied by this window and send exposure event
-    this->parent->clear(this->x - parent->x, this->y - parent->y, this->getWidth(), this->getHeight());
+    if (this->parent == this->getScreen()->getRoot()) {
+      this->parent->clear(this->x - parent->x, this->y - parent->y, this->getWidth(), this->getHeight());
+    } else {
+      // Test: only send exposure event to improve performances
+      EventExpose expose(this->parent->getId(), this->x - parent->x, this->y - parent->y, this->getWidth(), this->getHeight());
+      this->parent->deliverEvent(&expose, sizeof(expose));
+    }
 
     // Redraw covered lower siblings
     for (Window *sib = this->prevSibling; sib != NULL; sib = sib->prevSibling) {
       if (this->overlaps(sib)) {
-        sib->clear(this->x - sib->x, this->y - sib->y, this->getWidth(), this->getHeight());
+        //sib->clear(this->x - sib->x, this->y - sib->y, this->getWidth(), this->getHeight());
+        // Test: only send exposure event to improve performances
+        EventExpose expose(sib->getId(), this->x - sib->x, this->y - sib->y, this->getWidth(), this->getHeight());
+        sib->deliverEvent(&expose, sizeof(expose));
       }
     }
   }
@@ -123,6 +132,7 @@ void Window::map() {
 
   // Clear the window and send exposure event
   //this->clear();
+  // Test: only send exposure event to improve performances
   EventExpose expose(this->getId(), 0, 0, this->getWidth(), this->getHeight());
   this->deliverEvent(&expose, sizeof(expose));
 
@@ -365,7 +375,10 @@ bool Window::overlaps(Window *w) {
 }
 
 void Window::exposeArea(int x, int y, int width, int height) {
-  this->clear(x, y, width, height);
+  //this->clear(x, y, width, height);
+  // Test: only send exposure event to improve performances
+  EventExpose expose(this->getId(), x, y, width, height);
+  this->deliverEvent(&expose, sizeof(expose));
 
   for (Window *child = this->firstChild; child != NULL; child = child->nextSibling) {
     child->exposeArea(x - child->x, y - child->y, this->getWidth(), this->getHeight());
