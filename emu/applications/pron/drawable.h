@@ -18,6 +18,9 @@ enum DrawableType {
   D_PIXMAP, /**< Pixmap (stored in memory) */
 };
 
+/**
+ * Drawable (entity the user can draw into).
+ */
 class Drawable {
  private:
   unsigned int type; /**< Drawable type (D_WINDOW or D_PIXMAP) */
@@ -62,6 +65,8 @@ class Drawable {
 
   /**
    * Returns true if we can draw at position (x, y).
+   * @param x The x-coordinate of the point to check
+   * @param y The y-coordinate of the point to check
    * @return true if we can draw at position (x, y)
    */
   virtual bool isValid(int x, int y) = 0;
@@ -117,6 +122,7 @@ class Drawable {
 
   /**
    * Sets the width of the drawable.
+   * @param width The new width of the drawable
    */
   void setWidth(int width);
 
@@ -128,6 +134,7 @@ class Drawable {
 
   /**
    * Sets the height of the drawable.
+   * @param height The new height of the drawable
    */
   void setHeight(int height);
 

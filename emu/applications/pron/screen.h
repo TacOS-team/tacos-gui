@@ -12,6 +12,9 @@ using namespace std;
 
 class Window;
 
+/**
+ * Screen.
+ */
 class Screen {
  private:
   static Screen *instance; /**< Unique Screen instance (singleton) */
@@ -65,6 +68,8 @@ class Screen {
   
   /**
    * Returns true if we can draw at position (x, y).
+   * @param x The x-coordinate of the point to check
+   * @param y The y-coordinate of the point to check
    * @return true if we can draw at position (x, y)
    */
   bool isValid(int x, int y);
@@ -74,6 +79,7 @@ class Screen {
    * with the given graphics context.
    * @param d The drawable where to draw
    * @param gc The graphics context to draw with
+   * @return success
    */
   bool prepareDrawing(Drawable *d, GC *gc = NULL);
 

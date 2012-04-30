@@ -30,6 +30,9 @@ struct OtherClient {
   unsigned int mask; /**< Mask that specifies the selected events */
 };
 
+/**
+ * Window (drawable displayed on the screen).
+ */
 class Window : public Drawable {
  public: // XXX: bourrin
   int eventMask; /**< Events selected by the creator of the window */
@@ -46,6 +49,7 @@ class Window : public Drawable {
    * @param screen The screen the window belongs to
    * @param id The id of the window
    * @param creator The client who has created the window
+   * @param parent The parent window
    * @param x The x-coordinate of the top-left corner of the window
    * @param y The y-coordinate of the top-left corner of the window
    * @param width The width of the window
@@ -67,18 +71,22 @@ class Window : public Drawable {
   
   /**
    * Returns true if we can draw at position (x, y).
+   * @param x The x-coordinate of the point to check
+   * @param y The y-coordinate of the point to check
    * @return true if we can draw at position (x, y)
    */
   bool isValid(int x, int y);
 
   /**
    * Operator ==.
+   * @param w The window to compare with
    * @return true if the windows are the same
    */
   bool operator==(const Window &w) const;
   
   /**
    * Operator !=.
+   * @param w The window to compare with
    * @return true if the windows are the different
    */
   bool operator!=(const Window &w) const;
@@ -117,7 +125,7 @@ class Window : public Drawable {
 
   /**
    * Sets the attributes of this window.
-   * @param newAttrbibutes The new attributes structure
+   * @param newAttributes The new attributes structure
    * @param mask The mask that specifies the attributes to be set
    */
   void setAttributes(PronWindowAttributes *newAttributes, unsigned int mask);
@@ -125,8 +133,8 @@ class Window : public Drawable {
   /**
    * Subscribes to the events associated with the specified event mask
    * for the specified client.
-   * @param w The client who subscribes to the events
-   * @param eventMask The event mask
+   * @param client The client who subscribes to the events
+   * @param mask The event mask
    */
   void selectInput(Client *client, unsigned int mask);
 
@@ -157,8 +165,6 @@ class Window : public Drawable {
 
   /**
    * Resizes a window.
-   * @param d The connection to pron
-   * @param w The window to resize
    * @param width The new width
    * @param height The new height
    */
@@ -188,7 +194,10 @@ class Window : public Drawable {
   void deliverDeviceEvent(PronEvent *e, unsigned int size);
 
   /**
-   * Returns true when the window contains (x,y) 
+   * Returns true when the window contains (x,y)
+   * @param x The x-coordinate of the point to check
+   * @param y The y-coordinate of the point to check
+   * @return true when the window contains (x,y)
    */
   bool contains(int x, int y);
 
@@ -206,6 +215,7 @@ class Window : public Drawable {
 
   /**
    * Sets the x-coordinate of the top-left corner of the window.
+   * @param x The x-coordinate of the top-left corner of the window
    */
   void setX(int x);
 
@@ -217,6 +227,7 @@ class Window : public Drawable {
 
   /**
    * Sets the y-coordinate of the top-left corner of the window.
+   * @param y The y-coordinate of the top-left corner of the window
    */
   void setY(int y);
 
