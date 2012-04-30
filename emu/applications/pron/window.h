@@ -76,8 +76,6 @@ public: //XXX: bourrin
 
   void raise();
 
-  void exposeArea(int x, int y, int width, int height);
-
   void destroy();
 
   void move(int dx, int dy);

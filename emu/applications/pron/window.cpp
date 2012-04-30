@@ -326,23 +326,22 @@ void Window::raise() {
   this->parent->lastChild = this;
 
   if (overlap) {
-    this->exposeArea(0, 0, this->getWidth(), this->getHeight());
+    //this->clear(0, 0, this->getWidth(), this->getHeight());
+    // Test: only send exposure event to improve performances
+    EventExpose expose(this->getId(), 0, 0, this->getWidth(), this->getHeight());
+    this->deliverEvent(&expose, sizeof(expose));
+
+    for (WindowsTree::IteratorBFS it = ++(this->getScreen()->tree->beginBFS(this)); it != this->getScreen()->tree->endBFS(); it++) {
+      //it->clear(0 - it->x, 0 - it->y, this->getWidth(), this->getHeight());
+      // Test: only send exposure event to improve performances
+      EventExpose expose(it->getId(), 0 - it->x, 0 - it->y, this->getWidth(), this->getHeight());
+      it->deliverEvent(&expose, sizeof(expose));
+    }
   }
 }
 
 bool Window::overlaps(Window *w) {
   return !(w->x >= this->x + this->getWidth() || w->y >= this->y + this->getHeight() || w->x + w->getWidth() <= this->x || w->y + w->getHeight() <= this->y);
-}
-
-void Window::exposeArea(int x, int y, int width, int height) {
-  //this->clear(x, y, width, height);
-  // Test: only send exposure event to improve performances
-  EventExpose expose(this->getId(), x, y, width, height);
-  this->deliverEvent(&expose, sizeof(expose));
-
-  for (Window *child = this->firstChild; child != NULL; child = child->nextSibling) {
-    child->exposeArea(x - child->x, y - child->y, this->getWidth(), this->getHeight());
-  }
 }
 
 bool Window::contains(int x, int y) {
