@@ -21,6 +21,8 @@ class Canvas : public Widget {
   
  private:
   pron::Pixmap pixmap; /**< Pron pixmap : where to draw */
+  pron::GC bgGC; /**< GC to use when clearing the pixmap */
+
  public:
   /**
    * Canvas constructor

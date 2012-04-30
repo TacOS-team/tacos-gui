@@ -7,6 +7,13 @@ namespace sombrero {
 Canvas::Canvas(Container *parent)
     : Widget(parent) {
   this->pixmap = pronCreatePixmap(Application::getInstance()->d, this->getWidth(), this->getHeight(), SOMBRERO_CANVAS_DEPTH);
+  color_t bgColor;
+  COLOR(bgColor, 24).r = (this->pixmap >> 16) << 3;
+  COLOR(bgColor, 24).g = (this->pixmap >> 16) << 3;
+  COLOR(bgColor, 24).b = (this->pixmap >> 16) << 3;
+  pron::PronGCValues values;
+  values.fg = bgColor;
+  this->bgGC = pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG);
 }
 
 Canvas::~Canvas() {
@@ -14,7 +21,7 @@ Canvas::~Canvas() {
 }
   
 void Canvas::clear() {
-  pronClearWindow(Application::getInstance()->d, this->pixmap);
+  pronFillRectangle(Application::getInstance()->d, this->pixmap, this->bgGC, 0, 0, this->getWidth(), this->getHeight());
 }
 
 void Canvas::drawPoint(int x, int y){
