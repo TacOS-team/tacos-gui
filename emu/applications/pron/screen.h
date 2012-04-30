@@ -6,10 +6,7 @@
 #include <clip_zone.h>
 #include <gc.h>
 #include <windowsTree.h>
-
-extern "C" {
 #include <vesa_types.h>
-}
 
 using namespace std;
 
