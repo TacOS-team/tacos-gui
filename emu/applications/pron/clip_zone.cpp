@@ -21,25 +21,25 @@ ClipZone::ClipZone(Window *w) {
     parent = parent->parent;
 
     // X1
-    if (parent->x > clip->x) {
-      clip->width -= (parent->x - clip->x);
-      clip->x = parent->x;
+    if (parent->getX() > clip->x) {
+      clip->width -= (parent->getX() - clip->x);
+      clip->x = parent->getX();
     }
 
     // Y1
-    if (parent->y > clip->y) {
-      clip->height -= (parent->y - clip->y);
-      clip->y = parent->y;
+    if (parent->getY() > clip->y) {
+      clip->height -= (parent->getY() - clip->y);
+      clip->y = parent->getY();
     }
 
     // X2
-    if (parent->x + parent->getWidth() < clip->x + clip->width) {
-      clip->width -= (clip->x + clip->width - (parent->x + parent->getWidth()));
+    if (parent->getX() + parent->getWidth() < clip->x + clip->width) {
+      clip->width -= (clip->x + clip->width - (parent->getX() + parent->getWidth()));
     }
 
     // Y2
-    if (parent->y + parent->getHeight() < clip->y + clip->height) {
-      clip->height -= (clip->y + clip->height - (parent->y + parent->getHeight()));
+    if (parent->getY() + parent->getHeight() < clip->y + clip->height) {
+      clip->height -= (clip->y + clip->height - (parent->getY() + parent->getHeight()));
     }
   }
 

@@ -8,6 +8,9 @@
 class Drawable;
 class Screen;
 
+/**
+ * Pixmap (drawable stored in memory).
+ */
 class Pixmap : public Drawable {
  public:
   /**
@@ -36,6 +39,8 @@ class Pixmap : public Drawable {
 
   /**
    * Returns true if we can draw at position (x, y).
+   * @param x The x-coordinate of the point to check
+   * @param y The y-coordinate of the point to check
    * @return true if we can draw at position (x, y)
    */
   bool isValid(int x, int y);

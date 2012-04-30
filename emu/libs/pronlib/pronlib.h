@@ -163,21 +163,19 @@ void pronRaiseWindow(Display *d, Window w);
 
 /**
  * Draws a point at (x, y).
- * @todo Implement drawables instead of just windows
  * @param d The connection to pron
- * @param w The window in which to draw the line
+ * @param dr The drawable in which to draw the line
  * @param gc The graphics context to use
  * @param x The x-coordinate of the point
  * @param y The y-coordinate of the point
  * @return success
  */
-int pronDrawPoint(Display *d, Window w, GC gc, int x, int y);
+int pronDrawPoint(Display *d, Drawable dr, GC gc, int x, int y);
 
 /**
  * Draws a line between (x1, y1) and (x2, y2).
- * @todo Implement drawables instead of just windows
  * @param d The connection to pron
- * @param w The window in which to draw the line
+ * @param dr The drawable in which to draw the line
  * @param gc The graphics context to use
  * @param x1 The x-coordinate of the first point to join
  * @param y1 The y-coordinate of the first point to join
@@ -185,13 +183,12 @@ int pronDrawPoint(Display *d, Window w, GC gc, int x, int y);
  * @param y2 The y-coordinate of the second point to join
  * @return success
  */
-int pronDrawLine(Display *d, Window w, GC gc, int x1, int y1, int x2, int y2);
+int pronDrawLine(Display *d, Drawable dr, GC gc, int x1, int y1, int x2, int y2);
 
 /**
- * Sent by a client to draw a rectangle to (x,y) width height sized.
- * @todo Implement drawables instead of just windows
+ * Draws a rectangle to (x,y) width height sized.
  * @param d The connection to pron
- * @param w The window in which to draw the rectangle
+ * @param dr The drawable in which to draw the rectangle
  * @param gc The graphics context to use
  * @param x The x-coordinate of the top-left corner of the rectangle
  * @param y The y-coordinate of the top-left corner of the rectangle
@@ -199,13 +196,12 @@ int pronDrawLine(Display *d, Window w, GC gc, int x1, int y1, int x2, int y2);
  * @param height The height of the rectangle
  * @return success
  */
-int pronDrawRect(Display *d, Window w, GC gc, int x, int y, int width, int height);
+int pronDrawRect(Display *d, Drawable dr, GC gc, int x, int y, int width, int height);
 
 /**
- * Sent by a client to fill a rectangle to (x,y) width height sized.
- * @todo Implement drawables instead of just windows
+ * Draws a filled rectangle to (x,y) width height sized.
  * @param d The connection to pron
- * @param w The window in which to draw the rectangle
+ * @param dr The drawable in which to draw the rectangle
  * @param gc The graphics context to use
  * @param x The x-coordinate of the top-left corner of the rectangle
  * @param y The y-coordinate of the top-left corner of the rectangle
@@ -213,33 +209,31 @@ int pronDrawRect(Display *d, Window w, GC gc, int x, int y, int width, int heigh
  * @param height The height of the rectangle
  * @return success
  */
-int pronFillRectangle(Display *d, Window w, GC gc, int x, int y, int width, int height);
+int pronFillRectangle(Display *d, Drawable dr, GC gc, int x, int y, int width, int height);
 
 /**
- * Sent by a client to draw a circle with given center (x,y) and radius.
- * @todo Implement drawables instead of just windows
+ * Draws a circle with given center (x,y) and radius.
  * @param d The connection to pron
- * @param w The window in which to draw the line
+ * @param dr The drawable in which to draw the line
  * @param gc The graphics context to use
  * @param x The x-coordinate of the top-left corner of the circle
  * @param y The y-coordinate of the top-left corner of the circle
  * @param radius The radius of the circle
  * @return success
  */
-int pronDrawCircle(Display *d, Window w, GC gc, int x, int y, int radius);
+int pronDrawCircle(Display *d, Drawable dr, GC gc, int x, int y, int radius);
 
 /**
- * Sent by a client to draw a filled circle with given center (x,y) and radius.
- * @todo Implement drawables instead of just windows
+ * Draws a filled circle with given center (x,y) and radius.
  * @param d The connection to pron
- * @param w The window in which to draw the line
+ * @param dr The drawable in which to draw the line
  * @param gc The graphics context to use
  * @param x The x-coordinate of the top-left corner of the circle
  * @param y The y-coordinate of the top-left corner of the circle
  * @param radius The radius of the circle
  * @return success
  */
-int pronFillCircle(Display *d, Window w, GC gc, int x, int y, int radius);
+int pronFillCircle(Display *d, Drawable dr, GC gc, int x, int y, int radius);
 
 /**
  * Closes the connection to pron.
@@ -324,10 +318,9 @@ void pronMoveWindow(Display *d, unsigned int w, int x, int y);
 void pronMoveWindowTo(Display *d, unsigned int w, int x, int y);
 
 /**
- * Puts an image into a window.
- * @todo put on any drawable (pixmap & window)
+ * Puts an image into a drawable.
  * @param d The connection to pron
- * @param w The window in which to put the image
+ * @param dr The drawable in which to put the image
  * @param gc The graphics context to use
  * @param image The PronImage to put
  * @param srcX The x-coordinate of the top-left corner of the image area to put
@@ -337,7 +330,7 @@ void pronMoveWindowTo(Display *d, unsigned int w, int x, int y);
  * @param destX The destination top-left corner x-coordinate
  * @param destY The destination top-left corner y-coordinate
  */
-void pronPutImage(Display *d, Window w, GC __attribute__((unused)) gc, PronImage *image, 
+void pronPutImage(Display *d, Drawable dr, GC __attribute__((unused)) gc, PronImage *image, 
     int srcX, int srcY, int width, int height, int destX, int destY);  
 
 /**

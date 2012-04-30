@@ -8,8 +8,8 @@ ClipRect::ClipRect(int x, int y, int width, int height) {
 }
 
 ClipRect::ClipRect(Window *w) {
-  this->x = w->x;
-  this->y = w->y;
+  this->x = w->getX();
+  this->y = w->getY();
   this->width = w->getWidth();
   this->height = w->getHeight();
 }

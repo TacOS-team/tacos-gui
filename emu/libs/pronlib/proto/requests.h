@@ -584,7 +584,7 @@ struct RqMoveWindowTo : public PronRequest {
 struct RqPutImage : public PronRequest {
   /**
    * Constructor.
-   * @param window The window in which to put the image
+   * @param drawable The drawable in which to put the image
    * @param x The destination top-left corner x-coordinate
    * @param y The destination top-left corner y-coordinate
    * @param width The width of the image
@@ -593,9 +593,9 @@ struct RqPutImage : public PronRequest {
    * @param depth The depth of the image (8, 16 or 24 bits)
    * @param bytesPerPixel The bytes per pixel of the image (1, 2 or 3 bpp)
    */
-  RqPutImage(unsigned int window, int x, int y, int width, int height, int format, int depth, int bytesPerPixel)
+  RqPutImage(unsigned int drawable, int x, int y, int width, int height, int format, int depth, int bytesPerPixel)
       : PronRequest(RQ_PUT_IMAGE) {
-    this->window = window;
+    this->drawable = drawable;
     this->width = width; 
     this->height = height;
     this->x = x;
@@ -605,7 +605,7 @@ struct RqPutImage : public PronRequest {
     this->bytesPerPixel = bytesPerPixel;
   }
 
-  unsigned int window; /**< Id of the window in which to put the image */
+  unsigned int drawable; /**< Id of the drawable in which to put the image */
   int width; /**< Width of the image */
   int height; /**< Height of the image */
   int x; /**< Destination top-left corner x-coordinate */
@@ -734,16 +734,16 @@ struct RqDrawText : public PronRequest {
   /**
    * Constructor.
    * @param gc The graphics context to use
-   * @param window The window in which to draw the text
+   * @param drawable The drawable in which to draw the text
    * @param x The x-coordinate of the origin of the first character
    * @param y The y-coordinate of the origin of the first character
    * @param text The text to draw
    * @param length The length of the text
    */
-  RqDrawText(unsigned int gc, unsigned int window, int x, int y, const char *text, int length)
+  RqDrawText(unsigned int gc, unsigned int drawable, int x, int y, const char *text, int length)
       : PronRequest(RQ_DRAW_TEXT) {
     this->gc = gc;
-    this->window = window;
+    this->drawable = drawable;
     this->x = x;
     this->y = y;
     memcpy(this->text, text, length);
@@ -751,7 +751,7 @@ struct RqDrawText : public PronRequest {
   }
 
   unsigned int gc; /**< Id of the graphics context to use */
-  unsigned int window; /**< Id of the window in which to draw */
+  unsigned int drawable; /**< Id of the drawable in which to draw */
   int x; /**< X-coordinate of the origin of the first character */
   int y; /**< Y-coordinate of the origin of the first character */
   char text[512]; /**< Text to draw */

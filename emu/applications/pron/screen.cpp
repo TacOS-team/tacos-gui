@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <dirent.h>
 #include <fcntl.h>
 //#include <math.h>
@@ -94,6 +95,10 @@ void Screen::addDrawable(Drawable *d) {
   this->drawables.push_back(d);
 }
 
+void Screen::removeDrawable(Drawable *d) {
+  this->drawables.erase(std::find(this->drawables.begin(), this->drawables.end(), d));
+}
+
 Window* Screen::getMouseWin() {
   return this->mouseWin;
 }
@@ -112,10 +117,6 @@ void Screen::setFocusWin(Window *focusWin) {
 
 Window* Screen::getRoot() {
   return this->tree->getRoot();
-}
-
-void Screen::setRoot(Window *newRoot) {
-  this->tree->setRoot(newRoot);
 }
 
 Window* Screen::getClipWin() {
@@ -162,7 +163,7 @@ bool Screen::prepareDrawing(Drawable *d, GC *gc) {
 }
 
 void traceWindowsRec(Window *w, string prefix) {
-  printf("%s%x (p: %x, fc: %x, lc: %x, ps: %x, ns: %x, m: %s, r: %s)\n",
+  printf("%s%x (p: %x, fc: %x, lc: %x, ps: %x, ns: %x, r: %s)\n",
         prefix.c_str(),
         w->getId(),
         w->parent == NULL ? 0 : w->parent->getId(),
@@ -170,7 +171,6 @@ void traceWindowsRec(Window *w, string prefix) {
         w->lastChild == NULL ? 0 : w->lastChild->getId(),
         w->prevSibling == NULL ? 0 : w->prevSibling->getId(),
         w->nextSibling == NULL ? 0 : w->nextSibling->getId(),
-        w->mapped ? "yes" : "no",
         w->realized() ? "yes" : "no");
   for (Window *currentChild = w->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
     traceWindowsRec(currentChild, prefix + "--");

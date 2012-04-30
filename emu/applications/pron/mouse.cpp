@@ -104,8 +104,8 @@ void Mouse::handleButton(mousestate_t *state) {
     Window *mouseWin = screen->getMouseWin();
 
     // Computing the relative coordinates
-    int relX = state->x - mouseWin->x;
-    int relY = state->y - mouseWin->y;
+    int relX = state->x - mouseWin->getX();
+    int relY = state->y - mouseWin->getY();
 
     // delivers the event
     EventMouseButton mouseButton(mouseWin->getId(), state->b1, state->b2,
@@ -170,11 +170,10 @@ void Mouse::restorePointerBackground() {
     for (int pBackY = 0; pBackY < PRON_MOUSE_POINTER_HEIGHT; pBackY++) {
       for (int pBackX = 0; pBackX < PRON_MOUSE_POINTER_WIDTH; pBackX++) {
         // The pixel to restore is in  ((pointerBackupX plus old Y position in the screen) times screenWidth plus old X position in the screen ) time bytesPerPixel
-        int screenPos = ((pBackY + this->pointerBackupY) * screen->width + pBackX + this->pointerBackupX) * screen->bytesPerPixel;
         int pointerBackupPos = (pBackY * PRON_MOUSE_POINTER_WIDTH + pBackX) * screen->bytesPerPixel;
         //debug("screen [%d] pointerBackup[%d]\n", screenPos, pointerBackupPos);
-        char * destination = screen->videoBuffer + screenPos;
-        char * source = this->pointerBackup + pointerBackupPos;
+        void *destination = screen->getRoot()->pixelAddr(pBackX + this->pointerBackupX, pBackY + this->pointerBackupY);
+        void *source = this->pointerBackup + pointerBackupPos;
         memcpy(destination, source, screen->bytesPerPixel); 
       }
     }
@@ -191,11 +190,10 @@ void Mouse::drawPointer() {
   for (int pBackY = 0; pBackY < PRON_MOUSE_POINTER_HEIGHT; pBackY++) {
     for (int pBackX = 0; pBackX < PRON_MOUSE_POINTER_WIDTH; pBackX++) {
       // The pixel to restore is in  ((pointerBackupX plus old Y position in the screen) times screenWidth plus old X position in the screen ) time bytesPerPixel
-      int screenPos = ((pBackY + this->mouseY) * screen->width + pBackX + this->mouseX) * screen->bytesPerPixel;
       int pointerBackupPos = (pBackY * PRON_MOUSE_POINTER_WIDTH + pBackX) * screen->bytesPerPixel;
       //debug("screen [%d] pointerBackup[%d]\n", screenPos, pointerBackupPos);
-      char * destination = this->pointerBackup + pointerBackupPos;
-      char * source = screen->videoBuffer + screenPos;
+      void *destination = this->pointerBackup + pointerBackupPos;
+      void *source = screen->getRoot()->pixelAddr(pBackX + this->mouseX, pBackY + this->mouseY);
       memcpy(destination, source, screen->bytesPerPixel); 
     }
   }
