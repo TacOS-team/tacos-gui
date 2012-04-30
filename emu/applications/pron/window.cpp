@@ -439,15 +439,6 @@ void Window::resize(int width, int height) {
   this->deliverWindowEvent(&eventResizeWindow, sizeof(eventResizeWindow));
 }
 
-void Window::copyArea(int dstX, int dstY, Drawable *d, int srcX, int srcY, int width, int height) {
-  // XXX : Bourrin à revoir (problème de depth et de byte per pixel de la pixmap et de l'écran)
-  for (int y = 0; y < height; y++) {
-    for (int x = 0; x < width; x++) {
-      this->setPixel(x + dstX, y + dstY, d->getPixel(x + srcX, y + srcY));
-    }
-  }
-}
-
 bool Window::realized() {
   return this->mapped && this->unmappedParents == 0;
 }
