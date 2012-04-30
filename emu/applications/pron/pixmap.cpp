@@ -164,22 +164,6 @@ void Pixmap::fillCircle(int cx __attribute__((unused)), int cy __attribute__((un
   }*/
 }
 
-void Pixmap::clear(int x, int y, int width, int height){
-  this->reduce(x, y, width, height);
-
-  GC *gc = this->getScreen()->getGC();
-  color_t oldFg = gc->fg;
-  COLOR(gc->fg, 24).r = 255;
-  COLOR(gc->fg, 24).g = 255;
-  COLOR(gc->fg, 24).b = 255;
-  this->fillRectangle(x, y, width, height);
-  gc->fg = oldFg;
-}
-
-void Pixmap::clear(){
-  this->clear(0, 0, this->getWidth(), this->getHeight());
-}
-
 int Pixmap::getPixel(int x, int y) {
   if (x < this->getWidth() && y < this->getHeight() && x >= 0 && y >= 0) {
     int ret = 0;
