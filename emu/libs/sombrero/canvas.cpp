@@ -26,7 +26,7 @@ void Canvas::drawLine(int x1, int y1, int x2, int y2) {
 }
 
 void Canvas::drawRectangle(int x, int y, int width, int height) {
-  pronFillRectangle(Application::getInstance()->d, this->pixmap, Application::getInstance()->d->defaultGC, x, y, width, height);
+  pronDrawRect(Application::getInstance()->d, this->pixmap, Application::getInstance()->d->defaultGC, x, y, width, height);
 }
 
 void Canvas::fillRectangle(int x, int y, int width, int height) {
