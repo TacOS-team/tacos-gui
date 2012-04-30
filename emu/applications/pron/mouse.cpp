@@ -104,8 +104,8 @@ void Mouse::handleButton(mousestate_t *state) {
     Window *mouseWin = screen->getMouseWin();
 
     // Computing the relative coordinates
-    int relX = state->x - mouseWin->x;
-    int relY = state->y - mouseWin->y;
+    int relX = state->x - mouseWin->getX();
+    int relY = state->y - mouseWin->getY();
 
     // delivers the event
     EventMouseButton mouseButton(mouseWin->getId(), state->b1, state->b2,

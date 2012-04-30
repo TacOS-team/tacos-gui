@@ -32,18 +32,8 @@ struct OtherClient {
 
 class Window : public Drawable {
  public: // XXX: bourrin
-  int x; /**< Top-left corner x-coordinate */
-  int y; /**< Top-left corner y-coordinate */
-  color_t bgColor; /**< Background color */
   int eventMask; /**< Events selected by the creator of the window */
   int dontPropagateMask; /**< Events that the window must not propagate */
-  vector<OtherClient> otherClients; /**< Other clients who have selected events on this window */
-  bool mapped; /**< Whether the window is mapped (showable on the screen) or not */
-  bool isResizable; /**< Wheter the window is resizable or not */
-  int maxWidth; /**< Maximum width */
-  int maxHeight; /**< Maximum height */
-  int minWidth; /**< Minimum width */
-  int minHeight; /**< Minimum height */
   
   Window *parent; /**< Parent window */
   Window *prevSibling; /**< Previous sibling (linked list) */
@@ -244,7 +234,17 @@ class Window : public Drawable {
   bool acceptsEvents(int eventMask);
 
  private: 
+  int x; /**< Top-left corner x-coordinate */
+  int y; /**< Top-left corner y-coordinate */
+  color_t bgColor; /**< Background color */
+  bool isResizable; /**< Wheter the window is resizable or not */
+  int maxWidth; /**< Maximum width */
+  int maxHeight; /**< Maximum height */
+  int minWidth; /**< Minimum width */
+  int minHeight; /**< Minimum height */
+  bool mapped; /**< Whether the window is mapped (showable on the screen) or not */
   int unmappedParents; /**< Number of unmapped parents. */
+  vector<OtherClient> otherClients; /**< Other clients who have selected events on this window */
 
   /**
    * Returns true if w overlaps this window.
