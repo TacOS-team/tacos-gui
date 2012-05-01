@@ -35,12 +35,21 @@ namespace sombrero {
        */
       ~Checkbox();
 
+      /**
+       * Redefined method for handling a mouseButton event
+       * @param e A pointer to the event that occured
+       */
       void handleEventMouseButton(pron::PronEvent *e) ;
 
       /**
        * checkbox drawing stuff
        */
       void draw();
+      
+      /**
+       * Get the state of the checkbox, true if checked, else false
+       * @return the state of the checkbox
+       */
       bool isChecked();
 
   };
