@@ -37,11 +37,14 @@ public:
    * Splits the clip rectangle into new smallest rectangles that are not
    * obscured by the given rectangle
    * @param obscurer The rectangle that obscures the initial clip rectangle
+   * @return a new set of clip rectangles that are not obscured by obscurer
    */
   vector<ClipRect*> split(ClipRect *obscurer);
 
   /**
    * Returns true if the clip rectangle contains (x, y)
+   * @param x The x-coordinate of the point
+   * @param y The y-coordinate of the point
    * @return true if the clip rectangle contains (x, y)
    */
   bool contains(int x, int y);

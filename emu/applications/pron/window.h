@@ -259,6 +259,7 @@ class Window : public Drawable {
 
   /**
    * Returns true if w overlaps this window.
+   * @param w The window to check
    * @return true if w overlaps this window
    */
   bool overlaps(Window *w);

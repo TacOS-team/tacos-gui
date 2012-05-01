@@ -57,7 +57,7 @@ public:
   void print();
 
 private:
-  vector<ClipRect*> clipRects;
+  vector<ClipRect*> clipRects; /**< Set of rectangles composing the clipping zone */
 };
 
 #endif

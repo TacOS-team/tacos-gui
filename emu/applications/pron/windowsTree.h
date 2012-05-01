@@ -8,7 +8,7 @@
 
 #include <window.h>
 #include <queue>
-#define END_OF_TREE NULL
+#define END_OF_TREE NULL /**< Indicates that we have reached the end of the tree */
 
 using namespace std;
 
@@ -24,10 +24,9 @@ class WindowsTree {
      */
     class IteratorBFS {
       public:
-
         /**
          * IteratorBFS constructor
-         * @param The window from where we start discovering the windowsTree
+         * @param win The window from where we start discovering the windowsTree
          */
         IteratorBFS(Window * win);
 
@@ -41,7 +40,7 @@ class WindowsTree {
          * Post incrementation
          * @return The same Iterator, which will be incremented
          */
-        IteratorBFS operator++(int junk);
+        IteratorBFS operator++(int);
 
         /** 
          * Operator *
@@ -77,11 +76,15 @@ class WindowsTree {
         queue<Window *> winQueue; /**< The queue of the windows not yet covered (actually we only save the first child of their parent) */
     };
 
+    /**
+     * @brief IteratorDFS class definition. 
+     * Iterates on the windowsTree performing a Depth First Search algorithm
+     */
     class IteratorDFS {
       public:
         /**
          * IteratorDFS constructor
-         * @param The window from where we start discovering the windowsTree
+         * @param win The window from where we start discovering the windowsTree
          */
         IteratorDFS(Window * win);
 
@@ -95,7 +98,7 @@ class WindowsTree {
          * Post incrementation
          * @return The same Iterator which will be incremented
          */
-        IteratorDFS operator++(int junk);
+        IteratorDFS operator++(int);
 
         /** 
          * Operator *
@@ -130,7 +133,6 @@ class WindowsTree {
         Window * currentWindow; /**< The window that will be return by a call to *Iterator */
     };
 
-
     /**
      * Constructor of a WindowsTree
      */
@@ -144,7 +146,7 @@ class WindowsTree {
 
     /**
      * Set a new root window
-     * @param The new root window
+     * @param newRoot The new root window
      */
     void setRoot(Window * newRoot);
 
@@ -161,7 +163,8 @@ class WindowsTree {
      */ 
     IteratorBFS beginBFS(Window * root);
 
-    /** Get the end of the tree for a BFS iterator
+    /**
+     * Get the end of the tree for a BFS iterator
      * @return the IteratorBFS corresponding to the end of the tree
      */
     IteratorBFS endBFS();
@@ -179,15 +182,14 @@ class WindowsTree {
      */ 
     IteratorDFS beginDFS(Window * root);
 
-    /** Get the end of the tree for a DFS iterator
+    /**
+     * Get the end of the tree for a DFS iterator
      * @return the IteratorBFS corresponding to the end of the tree
      */
     IteratorDFS endDFS();
 
   private:
     Window * root; /**< The root window of the tree */
-
 };
-
 
 #endif
