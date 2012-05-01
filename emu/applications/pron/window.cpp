@@ -138,6 +138,8 @@ void Window::map() {
 
   // Update all children
   for (WindowsTree::IteratorBFS it = ++(this->getScreen()->tree->beginBFS(this)); it != this->getScreen()->tree->endBFS(); it++) {
+    EventExpose expose(it->getId(), 0, 0, it->getWidth(), it->getHeight());
+    it->deliverEvent(&expose, sizeof(expose));
     it->unmappedParents--;
   }
 }
