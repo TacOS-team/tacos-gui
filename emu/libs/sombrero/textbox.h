@@ -32,7 +32,15 @@ namespace sombrero {
        */
       ~Textbox();
 
+      /**
+       * The handle for an expose event
+       */
       void handleEventExpose() ;
+
+      /**
+       * The handle for a key pressed event
+       * @param e A pointer to the event (will give details of the key pressed)
+       */
       void handleEventKeyPressed(pron::PronEvent *e) ;
 
       /**
