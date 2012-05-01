@@ -119,15 +119,41 @@ namespace sombrero {
       virtual void draw() = 0;
 
 
+      /**
+       * Handle for a windowCreated event
+       */
       virtual void handleEventWindowCreated() ;
+      /**
+       * Handle for an expose event
+       */
       virtual void handleEventExpose() ;
+      /**
+       * Handle for a pointerMoved event
+       */
       virtual void handleEventPointerMoved() ;
+      /**
+       * Handle for a mouseButton event
+       * @param e A pointer to the event that accured
+       */
       virtual void handleEventMouseButton(pron::PronEvent * e __attribute__((unused))) ;
+      /**
+       * Handle for a keyPressed event
+       * @param e A pointer to the event that occured
+       */
       virtual void handleEventKeyPressed(pron::PronEvent * e __attribute__((unused))) ;
+      /**
+       * Handle for a keyReleased event
+       */
       virtual void handleEventKeyReleased() ;
+      /**
+       * Handle for a destroyWindow event
+       */
       virtual void handleEventDestroyWindow() ;
+      /**
+       * Handle for a resizeWindow event
+       */
       virtual void handleEventResizeWindow() ;
-
+      
       /**
        * Gets parent container
        * @return The parent Container
