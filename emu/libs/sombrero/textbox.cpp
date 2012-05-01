@@ -24,7 +24,7 @@ namespace sombrero {
   }
 
   void Textbox::handleEventExpose() {
-    printf("EXPOSE: draw\n");
+    this->draw();
   }
 
   void Textbox::draw() {
