@@ -3,97 +3,129 @@
 
 #include <mouse_types.h>
 
-#define PRON_MOUSE_POINTER_WIDTH 6
-#define PRON_MOUSE_POINTER_HEIGHT 6
+#define PRON_MOUSE_POINTER_WIDTH 6 /**< Width of the pointer */
+#define PRON_MOUSE_POINTER_HEIGHT 6 /**< Height of the pointer */
 
+/**
+ * Mouse.
+ */
 class Mouse {
-private:
+ private: 
+  static Mouse *instance; /**< Unique Mouse instance (singleton) */
+  int fd; /**< File descriptor used to communicate with the mouse driver */
   
-  static Mouse *instance;
-
-  // Pointer backup position
-  int pointerBackupX;
-  int pointerBackupY;
-  bool pointerBackuped;
-  // Pointer backup
-  char *pointerBackup;
-  // True if we have to restore pointer background
-  bool pointerBackupRestore;
-  
-  // Passage a un constructeur privé
-  Mouse();
-
-  int mouseX; // Mouse state
-  int mouseY;
-  bool mouseB1;
-  bool mouseB2;
-  bool mouseB3;
-  bool mouseB4;
-  bool mouseB5;
-  bool mouseB6;
+  int mouseX; /**< Mouse absolute x position */
+  int mouseY; /**< Mouse absolute y position */
+  bool mouseB1; /**< State of button 1 (left button) */
+  bool mouseB2; /**< State of button 2 (right button) */
+  bool mouseB3; /**< State of button 3 */
+  bool mouseB4; /**< State of button 4 */
+  bool mouseB5; /**< State of button 5 */
+  bool mouseB6; /**< State of button 6 */
 
   unsigned long lastMouseEvent; /**< Time of the last mouse event */
   int lastSentX; /**< Last sent mouse x position */
   int lastSentY; /**< Last sent mouse y position */
 
-public:
-  int fd;
-
-  void checkEvents();
+  bool pointerBackuped; /**< True if the area under the pointer has been backuped */
+  char *pointerBackup; /**< Backup of the area under the pointer */
+  int pointerBackupX; /**< Top-left corner x-coordinate of the backuped area */
+  int pointerBackupY; /**< Top-left corrner y-coordinate of the backuped area */
+  
   /**
-   * Updates mouseWin
+   * Constructor.
+   */
+  Mouse();
+
+ public:
+  /**
+   * Returns the unique Mouse instance (singleton). Creates it if necessary.
+   * @return the unique Mouse instance (singleton)
+   */
+  static Mouse* getInstance();
+
+  /**
+   * Reads events from the mouse and handles them.
+   */
+  void checkEvents();
+
+  /**
+   * Updates the window the mouse is currently in.
    */
   void updateMouseWin();
+
   /**
-   * Updates focusWin
+   * Updates the window that currently has the focus.
    */
   void updateFocusWin();
+
   /**
-   * Restore the mouse pointer
+   * Restores the area under the mouse pointer.
    */
   void restorePointerBackground();
+
   /**
-   * Backup and draw mouse pointer
+   * Draws the mouse pointer. The area under the pointer is backuped.
    */
   void drawPointer();
+
   /**
-   * Handle mouse motion events
+   * Handles mouse motion events.
    */
   void handleMotion(mousestate_t *state);
+
   /**
-   * Handle button motion events
+   * Handles mouse button events.
    */
   void handleButton(mousestate_t *state);
-  /**
-   * Getters and setters
-   */
-  int getPointerBackupX();
-  void setPointerBackupX(int pointerBackupX);
-  int getPointerBackupY();
-  void setPointerBackupY(int pointerBackupY);
-  int getPointerBackupWidth();
-  void setPointerBackupWidth(int pointerBackupWidth);
-  int getPointerBackupHeight();
-  void setPointerBackupHeight(int pointerBackupHeight);
-  char* getPointerBackup();  
-  void setMouseX(int mouseX);
-  int getMouseX();
-  void setMouseY(int mouseY);
-  int getMouseY();
-  void setMouseB1(bool mouseB1);
-  bool getMouseB1();
-  void setMouseB2(bool mouseB2);
-  bool getMouseB2();
-  void setMouseB3(bool mouseB3);
-  bool getMouseB3();
-  void setMouseB4(bool mouseB4);
-  bool getMouseB4();
-  void setMouseB5(bool mouseB5);
-  bool getMouseB5();
-  void setMouseB6(bool mouseB6);
-  bool getMouseB6();
 
-  static Mouse* getInstance();
+  /**
+   * Returns the x position of the mouse.
+   * @return the x position of the mouse
+   */
+  int getMouseX();
+
+  /**
+   * Returns the y position of the mouse.
+   * @return the y position of the mouse
+   */
+  int getMouseY();
+
+  /**
+   * Returns the state of button 1 (left button).
+   * @return the state of button 1 (left button)
+   */
+  bool getMouseB1();
+
+  /**
+   * Returns the state of button 2 (right button).
+   * @return the state of button 2 (right button)
+   */
+  bool getMouseB2();
+
+  /**
+   * Returns the state of button 3.
+   * @return the state of button 3
+   */
+  bool getMouseB3();
+
+  /**
+   * Returns the state of button 4.
+   * @return the state of button 4
+   */
+  bool getMouseB4();
+
+  /**
+   * Returns the state of button 5.
+   * @return the state of button 5
+   */
+  bool getMouseB5();
+
+  /**
+   * Returns the state of button 6.
+   * @return the state of button 6
+   */
+  bool getMouseB6();
 };
 
 #endif

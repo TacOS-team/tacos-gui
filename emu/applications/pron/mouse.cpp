@@ -207,26 +207,6 @@ void Mouse::drawPointer() {
   screen->getRoot()->drawLine(this->mouseX,this->mouseY, this->mouseX + PRON_MOUSE_POINTER_WIDTH - 1, this->mouseY);
 }
 
-int Mouse::getPointerBackupX(){
-  return this->pointerBackupX;
-}
-
-void Mouse::setPointerBackupX(int pointerBackupX){
-  this->pointerBackupX = pointerBackupX;
-}
-
-int Mouse::getPointerBackupY(){
-  return this->pointerBackupY;
-}
-
-void Mouse::setPointerBackupY(int pointerBackupY){
-  this->pointerBackupY = pointerBackupY;
-}
-
-char* Mouse::getPointerBackup(){
-  return this->pointerBackup;
-}
-
 Mouse* Mouse::getInstance(){
   if (Mouse::instance == NULL) {
     Mouse::instance = new Mouse();
@@ -238,60 +218,28 @@ int Mouse::getMouseX() {
   return this->mouseX;
 }
 
-void Mouse::setMouseX(int mouseX) {
-  this->mouseX = mouseX;
-}
-
 int Mouse::getMouseY() {
   return this->mouseY;
-}
-
-void Mouse::setMouseY(int mouseY) {
-  this->mouseY = mouseY;
-}
-
-void Mouse::setMouseB1(bool mouseB1) {
-  this->mouseB1 = mouseB1;
 }
 
 bool Mouse::getMouseB1() {
   return this->mouseB1;
 }
 
-void Mouse::setMouseB2(bool mouseB2) {
-  this->mouseB2 = mouseB2;
-}
-
 bool Mouse::getMouseB2() {
   return this->mouseB2;
-}
-
-void Mouse::setMouseB3(bool mouseB3) {
-  this->mouseB3 = mouseB3;
 }
 
 bool Mouse::getMouseB3() {
   return this->mouseB3;
 }
 
-void Mouse::setMouseB4(bool mouseB4) {
-  this->mouseB4 = mouseB4;
-}
-
 bool Mouse::getMouseB4() {
   return this->mouseB4;
 }
 
-void Mouse::setMouseB5(bool mouseB5) {
-  this->mouseB5 = mouseB5;
-}
-
 bool Mouse::getMouseB5() {
   return this->mouseB5;
-}
-
-void Mouse::setMouseB6(bool mouseB6) {
-  this->mouseB6 = mouseB6;
 }
 
 bool Mouse::getMouseB6() {
