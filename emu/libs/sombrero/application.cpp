@@ -30,6 +30,8 @@ namespace sombrero {
     return Application::instance;
   }
 
+  // Call every handleEvent*** method for the given events
+  // handleEvent*** can be redefined in the child classes
   void Application::sombrerun() {
     pron::PronEvent *e = pron::getPronEvent();
     while (1) {
