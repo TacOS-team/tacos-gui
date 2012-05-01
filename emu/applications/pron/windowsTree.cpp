@@ -1,3 +1,8 @@
+/**
+ * @file windowsTree.cpp
+ * WindowsTree class implementation.
+ */
+
 #include <stdio.h>
 
 #include <windowsTree.h>

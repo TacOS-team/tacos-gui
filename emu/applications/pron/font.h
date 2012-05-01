@@ -1,5 +1,10 @@
-#ifndef _FONT_H_
-#define _FONT_H_
+#ifndef __FONT_H__
+#define __FONT_H__
+
+/**
+ * @file font.h
+ * Font class definition.
+ */
 
 #include <drawable.h>
 

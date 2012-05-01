@@ -1,3 +1,8 @@
+/**
+ * @file client.cpp
+ * Client class implementation.
+ */
+
 #include <stdio.h>
 
 #include <client.h>

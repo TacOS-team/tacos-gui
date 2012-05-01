@@ -1,23 +1,36 @@
+/**
+ * @file pron.cpp
+ * Pron main file.
+ */ 
+
 #include <stdio.h>
 #include <string>
 #include <unistd.h>
 #include <vector>
 
+#include <client.h>
 #include <keyboard.h>
-#include <libtacos.h>
 #include <mouse.h>
-#include <pron.h>
+#include <screen.h>
+#include <window.h>
+
+#include <libtacos.h>
 #include <tsock.h>
 
 using namespace std;
 
-static Screen *screen;
-static Mouse *mouse;
-static Keyboard *keyboard;
-static vector<Client*> clients;
-int clientsFd, newClientFd;
-unsigned int newClientID; // Id given to the client that connects to pron
+static Screen *screen; /**< Screen instance */
+static Mouse *mouse; /**< Mouse instance  */
+static Keyboard *keyboard; /**< Keyboard instance */
+static vector<Client*> clients; /**< List of currently connected clients */
+int clientsFd; /**< File descriptor of the socket listening for new clients */
+unsigned int newClientID; /**< Id given to the last client who has connected to pron */
 
+/**
+ * Initialisation function.
+ * Creates the screen and the root window, initializes devices
+ * (keyboard and mouse) and listens for clients.
+ */
 void PronInit() {
   printf(                                             
     "                                             " "\n"
@@ -52,7 +65,11 @@ void PronInit() {
   screen->getRoot()->drawText(10, 20, welcome.c_str(), welcome.length());
 }
 
+/**
+ * Tries to accept a new client.
+ */
 void PronAcceptClient() {
+  int newClientFd;
   if ((newClientFd = tsock_accept(clientsFd)) > 0) {
     tsock_set_nonblocking(newClientFd);
     Client *newClient = new Client(++newClientID, newClientFd);
@@ -61,6 +78,10 @@ void PronAcceptClient() {
   }
 }
 
+/**
+ * Main iteration: reads all file descriptors to accept new clients,
+ * handle existing clients and read from devices (keyboard and mouse).
+ */
 void PronSelect() {
   // Try to accept new client
   PronAcceptClient();
@@ -97,6 +118,9 @@ void PronSelect() {
   mouse->drawPointer();
 }
 
+/**
+ * Pron main function.
+ */
 int main() {
   PronInit();
 

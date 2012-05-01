@@ -1,3 +1,8 @@
+/**
+ * @file keyboard.cpp
+ * Keyboard class implementation.
+ */
+
 #include <fcntl.h>
 #include <screen.h>
 #include <string.h>

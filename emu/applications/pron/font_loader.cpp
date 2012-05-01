@@ -1,3 +1,8 @@
+/**
+ * @file font_loader.cpp
+ * FontLoader class implementation.
+ */
+
 #include <font.h>
 #include <font_loader.h>
 #include <stdio.h>

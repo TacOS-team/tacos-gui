@@ -2,6 +2,11 @@
 #define __KEYBOARD_H__
 
 /**
+ * @file keyboard.h
+ * Keyboard class definition.
+ */
+
+/**
  * Keyboard.
  */
 class Keyboard {

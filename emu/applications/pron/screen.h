@@ -1,5 +1,10 @@
-#ifndef _SCREEN_H_
-#define _SCREEN_H_
+#ifndef __SCREEN_H__
+#define __SCREEN_H__
+
+/**
+ * @file screen.h
+ * Screen class definition.
+ */
 
 #include <font.h>
 #include <vector>

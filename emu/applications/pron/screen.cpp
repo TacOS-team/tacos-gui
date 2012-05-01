@@ -1,3 +1,8 @@
+/**
+ * @file screen.cpp
+ * Screen class implementation.
+ */
+
 #include <algorithm>
 #include <dirent.h>
 #include <fcntl.h>
@@ -162,6 +167,11 @@ bool Screen::prepareDrawing(Drawable *d, GC *gc) {
   return true;
 }
 
+/**
+ * Utility function used by Screen::traceWindows.
+ * @param w The current window to show
+ * @param prefix The current prefix to show
+ */
 void traceWindowsRec(Window *w, string prefix) {
   printf("%s%x (p: %x, fc: %x, lc: %x, ps: %x, ns: %x, r: %s)\n",
         prefix.c_str(),

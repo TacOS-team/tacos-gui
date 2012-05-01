@@ -1,6 +1,11 @@
 #ifndef __MOUSE_H__
 #define __MOUSE_H__
 
+/**
+ * @file mouse.h
+ * Mouse class definition.
+ */
+
 #include <mouse_types.h>
 
 #define PRON_MOUSE_POINTER_WIDTH 6 /**< Width of the pointer */

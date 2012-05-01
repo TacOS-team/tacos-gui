@@ -1,5 +1,10 @@
-#ifndef _WINDOW_H_
-#define _WINDOW_H_
+#ifndef __WINDOW_H__
+#define __WINDOW_H__
+
+/**
+ * @file window.h
+ * Window class definition.
+ */
 
 #include <proto/events.h>
 #include <vector>

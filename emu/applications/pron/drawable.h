@@ -1,5 +1,10 @@
-#ifndef _DRAWABLE_H_
-#define _DRAWABLE_H_
+#ifndef __DRAWABLE_H__
+#define __DRAWABLE_H__
+
+/**
+ * @file drawable.h
+ * Drawable class definition.
+ */
 
 #include <proto/bits/image.h>
 

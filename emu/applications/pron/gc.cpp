@@ -1,3 +1,8 @@
+/**
+ * @file gc.cpp
+ * GC class implementation.
+ */
+
 #include <algorithm>
 #include <gc.h>
 

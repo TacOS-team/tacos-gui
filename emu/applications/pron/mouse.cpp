@@ -1,3 +1,8 @@
+/**
+ * @file mouse.cpp
+ * Mouse class implementation.
+ */
+
 #include <fcntl.h>
 #include <string.h>
 #include <unistd.h>

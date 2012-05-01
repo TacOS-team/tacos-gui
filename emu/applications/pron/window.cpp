@@ -1,3 +1,8 @@
+/**
+ * @file window.cpp
+ * Window class implementation.
+ */
+
 #include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>

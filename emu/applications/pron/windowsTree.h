@@ -1,9 +1,9 @@
-#ifndef _WINDOWS_TREE_H_ 
-#define _WINDOWS_TREE_H_ 
+#ifndef __WINDOWS_TREE_H__
+#define __WINDOWS_TREE_H__ 
 
 /**
  * @file windowsTree.h
- * WindowsTree class definition
+ * WindowsTree class definition.
  */
 
 #include <window.h>

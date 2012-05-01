@@ -1,3 +1,8 @@
+/**
+ * @file pixmap.cpp
+ * Pixmap class implementation.
+ */
+
 #include <algorithm>
 #include <stdio.h>
 #include <string.h>

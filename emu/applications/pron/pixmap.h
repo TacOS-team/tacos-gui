@@ -1,5 +1,10 @@
-#ifndef _PIXMAP_H_
-#define _PIXMAP_H_
+#ifndef __PIXMAP_H__
+#define __PIXMAP_H__
+
+/**
+ * @file pixmap.h
+ * Pixmap class definition.
+ */
 
 #include <pixmap.h>
 #include <drawable.h>

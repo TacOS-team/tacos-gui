@@ -1,6 +1,11 @@
 #ifndef __CLIP_RECT_H__
 #define __CLIP_RECT_H__
 
+/**
+ * @file clip_rect.h
+ * ClipRect class definition.
+ */
+
 #include <vector>
 #include <window.h>
 

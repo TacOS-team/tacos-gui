@@ -1,5 +1,10 @@
-#ifndef _GC_H_
-#define _GC_H_
+#ifndef __GC_H__
+#define __GC_H__
+
+/**
+ * @file gc.h
+ * GC class definition.
+ */
 
 #include <proto/bits/gc.h>
 #include <vector>

@@ -1,3 +1,8 @@
+/**
+ * @file drawable.cpp
+ * Drawable class implementation.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

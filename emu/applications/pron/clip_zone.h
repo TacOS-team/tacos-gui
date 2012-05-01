@@ -1,6 +1,11 @@
 #ifndef __CLIP_ZONE_H__
 #define __CLIP_ZONE_H__
 
+/**
+ * @file clip_zone.h
+ * ClipZone class definition.
+ */
+
 #include <clip_rect.h>
 #include <vector>
 #include <window.h>

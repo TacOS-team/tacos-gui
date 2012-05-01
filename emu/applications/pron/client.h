@@ -1,6 +1,11 @@
 #ifndef __CLIENT_H__
 #define __CLIENT_H__
 
+/**
+ * @file client.h
+ * Client class definition.
+ */
+
 #define MAX_MSG_SIZE 1024 /**< Maximum message size (1Kio) */
 
 /**

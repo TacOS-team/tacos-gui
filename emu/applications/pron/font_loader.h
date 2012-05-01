@@ -1,5 +1,10 @@
-#ifndef _FONT_LOADER_H_
-#define _FONT_LOADER_H_
+#ifndef __FONT_LOADER_H__
+#define __FONT_LOADER_H__
+
+/**
+ * @file font_loader.h
+ * FontLoader class definition.
+ */
 
 #include <font.h>
 #include <stdio.h>

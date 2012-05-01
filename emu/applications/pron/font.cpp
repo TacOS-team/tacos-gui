@@ -1,3 +1,8 @@
+/**
+ * @file font.cpp
+ * Font class implementation.
+ */
+
 #include <font.h>
 #include <stdio.h>
 #include <string.h>

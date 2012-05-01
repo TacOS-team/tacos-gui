@@ -1,3 +1,8 @@
+/**
+ * @file clip_rect.cpp
+ * ClipRect class implementation.
+ */
+
 #include <clip_rect.h>
 
 ClipRect::ClipRect(int x, int y, int width, int height) {

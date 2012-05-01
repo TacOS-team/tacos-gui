@@ -1,3 +1,8 @@
+/**
+ * @file clip_zone.cpp
+ * ClipZone class implementation.
+ */
+
 #include <stdio.h>
 
 #include <clip_zone.h>
