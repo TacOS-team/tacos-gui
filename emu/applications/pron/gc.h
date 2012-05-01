@@ -56,7 +56,7 @@ class GC {
    */
   void destroy();
 
- private
+ private:
   static std::vector<GC*> gcs; /**< List of all graphics contexts */
 };
 

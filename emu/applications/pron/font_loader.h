@@ -44,7 +44,7 @@ private:
 	static Font::glyph_t fontGlyphs[256]; /**< Buffer used to store the glyphs read */
 	static int pixelSize; /**< Pixel size */
   static int fontAscent; /**< Font ascent (number of lines above baseline) */
-  static int fontDescent /**< Font descent (number of lines below baseline) */
+  static int fontDescent; /**< Font descent (number of lines below baseline) */
   static int fontHeight; /**< Font height */
   static int defaultChar; /**< Default character */
 };
