@@ -11,17 +11,17 @@ namespace sombrero {
       // On s'ajoute au container s'il n'est pas NULL
       parent->add(this);
       // Creates the window
-      this->topWindow = pron::pronCreateWindow(Application::getInstance()->d, this->parent->topWindow, this->x, this->y, this->width, this->height);
+      this->pronWindow = pron::pronCreateWindow(Application::getInstance()->d, this->parent->pronWindow, this->x, this->y, this->width, this->height);
       // Associates the pron::window to the widget
-      Application::getInstance()->widgets[this->topWindow] = this;
+      Application::getInstance()->widgets[this->pronWindow] = this;
       // Maps the window
-      pron::pronMapWindow(Application::getInstance()->d, this->topWindow);
+      pron::pronMapWindow(Application::getInstance()->d, this->pronWindow);
       // Select events
-      pron::pronSelectInput(Application::getInstance()->d, this->topWindow, PRON_EVENTMASK(pron::EV_EXPOSE));
+      pron::pronSelectInput(Application::getInstance()->d, this->pronWindow, PRON_EVENTMASK(pron::EV_EXPOSE));
     }
 
   Widget::~Widget() {
-    pron::pronDestroyWindow(Application::getInstance()->d, this->topWindow);
+    pron::pronDestroyWindow(Application::getInstance()->d, this->pronWindow);
   }
 
   int Widget::getWidth() {

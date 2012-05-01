@@ -31,10 +31,10 @@ namespace sombrero {
 
     protected:
       /**
-       * The to window of the widget. Has to be reparented 
-       * when the widget is.
+       * The pronWindow associated with the widget.
+       * Has to be reparented when the widget is reparented.
        */
-      pron::Window topWindow;
+      pron::Window pronWindow;
       /**
        * Widget default constructor that does nothing.
        */
@@ -127,7 +127,7 @@ namespace sombrero {
       virtual void handleEventKeyReleased() ;
       virtual void handleEventDestroyWindow() ;
       virtual void handleEventResizeWindow() ;
-           
+
       /**
        * Gets parent container
        * @return The parent Container
