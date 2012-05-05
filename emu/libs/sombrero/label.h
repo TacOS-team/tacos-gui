@@ -40,6 +40,6 @@ class Label : public Widget {
 
 };
 
-}
+} // namespace sombrero
 
 #endif//__LABEL_H__
