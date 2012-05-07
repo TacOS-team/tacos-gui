@@ -80,43 +80,67 @@ namespace sombrero {
         wrapper->x = x+this->widgetsTab[y][x]->width;
         wrapper->y = y;
         printf("%d, %d\n", wrapper->x, wrapper->y);
-        if(this->widgetsTab.size() < (size_t)wrapper->y + height) {
-          this->widgetsTab.resize(wrapper->y + height);
-        }
-        for(size_t currentY = wrapper->y; currentY < (size_t)wrapper->y + height; ++currentY) {
-          if(this->widgetsTab[currentY].size() < (size_t)wrapper->x + width) {
-            this->widgetsTab[currentY].resize(wrapper->x + width);
-          }
-          for(size_t currentX = (size_t)wrapper->x; currentX < (size_t)wrapper->x + width; ++currentX) {
-            this->widgetsTab[currentY][currentX] = wrapper;
-            // TODO if this->widgetsTab[currentY][currentX] != NULL ?????
-          }
-        }
         break;
        }
        case POS_BOTTOM: {
         wrapper->x = x;
         wrapper->y = y+this->widgetsTab[y][x]->height;
-        if(this->widgetsTab.size() < (size_t)wrapper->y + height) {
-          this->widgetsTab.resize(wrapper->y + height);
-        }
-        for(size_t currentY = wrapper->y; currentY < (size_t)wrapper->y + height; ++currentY) {
-          if(this->widgetsTab[currentY].size() < (size_t)wrapper->x + width) {
-            this->widgetsTab[currentY].resize(wrapper->x + width);
-          }
-          for(size_t currentX = wrapper->x; currentX < (size_t)wrapper->x + width; ++currentX) {
-            this->widgetsTab[currentY][currentX] = wrapper;
-            // TODO if this->widgetsTab[currentY][currentX] != NULL ?????
-          }
-        }
         break;
        }
        case POS_TOP: {
+        wrapper->x = x;
+        wrapper->y = y-height;
+        if(wrapper->y < 0) {
+          size_t yAbs = abs(wrapper->y);
+          for(int currentY = widgetsTab.size() - 1; currentY >= 0 ; --currentY) {
+            for(size_t currentX = 0; currentX < widgetsTab[currentY].size(); ++currentX) {
+              widgetWrapper *currentWrapper = widgetsTab[currentY][currentX];
+              if(currentWrapper != NULL && currentWrapper->x == (int)currentX && currentWrapper->y == (int)currentY) {
+                currentWrapper->y += yAbs;
+              }
+            }
+          }
+          this->widgetsTab.insert(this->widgetsTab.begin(),yAbs,line_t());
+          wrapper->y = 0;
+        }
         break;
        }
        case POS_LEFT: {
+        wrapper->x = x-width;
+        wrapper->y = y;
+        if(wrapper->x < 0) {
+          size_t xAbs = abs(wrapper->x);
+          for(int currentY = widgetsTab.size() - 1; currentY >= 0 ; --currentY) {
+            for(int currentX = widgetsTab[currentY].size()-1; currentX >= 0; --currentX) {
+              widgetWrapper *currentWrapper = widgetsTab[currentY][currentX];
+              if(currentWrapper != NULL && currentWrapper->x == (int)currentX && currentWrapper->y == (int)currentY) {
+                currentWrapper->x += xAbs;
+              }
+            }
+          }
+          for(size_t currentY = 0; currentY < this->widgetsTab.size(); ++currentY) {
+            this->widgetsTab[currentY].insert(this->widgetsTab[currentY].begin(),xAbs,NULL);
+          }
+          wrapper->x = 0;
+        }
         break;
        }
+      }
+      if(this->widgetsTab.size() < (size_t)wrapper->y + height) {
+        this->widgetsTab.resize(wrapper->y + height);
+      }
+          printf("\n\n");
+      for(size_t currentY = wrapper->y; currentY < (size_t)wrapper->y + height; ++currentY) {
+          printf("ok1\n");
+        if(this->widgetsTab[currentY].size() < (size_t)wrapper->x + width) {
+          this->widgetsTab[currentY].resize(wrapper->x + width);
+        }
+        for(size_t currentX = wrapper->x; currentX < (size_t)wrapper->x + width; ++currentX) {
+          printf("ok2\n");
+          this->widgetsTab[currentY][currentX] = wrapper;
+          // TODO if this->widgetsTab[currentY][currentX] != NULL ?????
+        }
+          printf("ok3\n");
       }
       nbColumns = max(nbColumns, this->widgetsTab[wrapper->y].size());
       child->setParent(this);

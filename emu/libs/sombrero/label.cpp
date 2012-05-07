@@ -31,7 +31,7 @@ namespace sombrero {
   Label::~Label() {}
 
   void Label::draw() {
-    printf("draw label (x, y, w, h) : %d, %d, %d, %d\n", this->getX(), this->getY(), this->getWidth(), this->getHeight());
+    //printf("draw label (x, y, w, h) : %d, %d, %d, %d\n", this->getX(), this->getY(), this->getWidth(), this->getHeight());
     // We can clear the window
     pron::pronClearWindow(Application::getInstance()->d, this->pronWindow);
     // Draws the background 

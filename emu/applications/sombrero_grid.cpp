@@ -21,11 +21,15 @@ int main() {
   //g.newLine();
 
   sombrero::Label l3("Label 3");
-  g.attachNextTo(&l3, &l2,sombrero::POS_RIGHT,3,2);
+  g.attachNextTo(&l3, &l1,sombrero::POS_TOP,2,1);
 
 
-  sombrero::Button b1("bouton 1");
-  g.attachNextTo(&b1, &l1,sombrero::POS_BOTTOM,2,1);
+  sombrero::Label l4("Label 4");
+  g.attachNextTo(&l4, &l1,sombrero::POS_BOTTOM,2,1);
+
+
+  sombrero::Label l5("Label 5");
+  g.attachNextTo(&l5, &l3,sombrero::POS_LEFT,1,3);
 
 
   sombrero::Application::getInstance()->sombrerun();
