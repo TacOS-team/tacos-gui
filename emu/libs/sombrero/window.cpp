@@ -11,13 +11,17 @@ namespace sombrero {
       this->setWidth(width);
       this->setHeight(height);
       // Creates the window
-      this->pronWindow = pron::pronCreateWindow(Application::getInstance()->d, Application::getInstance()->d->rootWindow, this->getX(), this->getY(), this->getWidth(), this->getHeight());
+      this->pronWindow = pron::pronCreateWindow(Application::getInstance()->d, Application::getInstance()->d->rootWindow,
+                                                this->getX(), this->getY(), this->getWidth(), this->getHeight());
+
       // Associates the pron::window to the widget
       Application::getInstance()->widgets[this->pronWindow] = this;
       // Maps the window
       pron::pronMapWindow(Application::getInstance()->d, this->pronWindow);
       // Select events
-      pron::pronSelectInput(Application::getInstance()->d, this->pronWindow, PRON_EVENTMASK(pron::EV_EXPOSE) | PRON_EVENTMASK(pron::EV_DESTROY_WINDOW));
+      pron::pronSelectInput(Application::getInstance()->d, this->pronWindow, PRON_EVENTMASK(pron::EV_EXPOSE)
+                                                                           | PRON_EVENTMASK(pron::EV_DESTROY_WINDOW)
+                                                                           | PRON_EVENTMASK(pron::EV_RESIZE_WINDOW));
     }
 
   Window::~Window() {

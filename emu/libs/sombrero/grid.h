@@ -18,7 +18,7 @@ namespace sombrero {
  * Grid class definition. A grid is a widget containing several other widgets
  *    as a grid.
  */
-class Grid : public Container {
+class Grid : public Container, public has_slots<> {
   
  protected:
   class widgetWrapper {
@@ -40,6 +40,8 @@ class Grid : public Container {
   unsigned short nbColumns;
 
   void update();
+
+  void parentResized();
 
  public:
   Grid(Container *parent);

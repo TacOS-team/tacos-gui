@@ -9,6 +9,7 @@ namespace sombrero {
     this->setHeight(parent->getHeight());
     this->setX(parent->getX());
     this->setY(parent->getY());
+    parent->resized.connect(this, &Grid::parentResized);
   }
 
   void Grid::add(Widget* widget) {
@@ -40,9 +41,19 @@ namespace sombrero {
           currentWrapper->widget->setHeight(lineHeight  * currentWrapper->height);
           currentWrapper->widget->setX (this->getX()+columnWidth*currentWrapper->x);
           currentWrapper->widget->setY (this->getY()+lineHeight*currentWrapper->y);
+          currentWrapper->widget->updatePronSize();
+          currentWrapper->widget->updatePronPosition();
         }
       }
     }
+  }
+
+  void Grid::parentResized() {
+    this->setWidth(this->getParent()->getWidth());
+    this->setHeight(this->getParent()->getHeight());
+    this->updatePronSize();
+    this->updatePronPosition();
+    this->update();
   }
 
   Grid::widgetWrapper::widgetWrapper(Widget* w) {
