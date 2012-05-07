@@ -33,6 +33,13 @@ void sombrero_ascii_art();
  */
 void init();
 
+enum PositionType {
+  POS_LEFT,
+  POS_RIGHT,
+  POS_TOP,
+  POS_BOTTOM,
+};
+
 } // namespace sombrero
 
 #endif//__SOMBRERO_H__
