@@ -4,12 +4,21 @@
 
 namespace sombrero {
 
-  Widget::Widget() {}
+  Widget::Widget() { this->parent = NULL; }
 
-  Widget::Widget(Container *parent)
-    : parent(parent) {
-      // On s'ajoute au container s'il n'est pas NULL
-      parent->add(this);
+  Widget::Widget(Container *parent) {
+    this->parent = NULL;
+    this->setParent(parent);
+  }
+
+  Widget::~Widget() {
+    pron::pronDestroyWindow(Application::getInstance()->d, this->pronWindow);
+  }
+
+  void Widget::setParent(Container *parent) {
+    // TODO à réfléchir si on supprime si ça vaut pas null etc.
+    if(this->parent == NULL) {
+      this->parent = parent;
       // Creates the window
       this->pronWindow = pron::pronCreateWindow(Application::getInstance()->d, this->parent->pronWindow, this->x, this->y, this->width, this->height);
       // Associates the pron::window to the widget
@@ -19,9 +28,6 @@ namespace sombrero {
       // Select events
       pron::pronSelectInput(Application::getInstance()->d, this->pronWindow, PRON_EVENTMASK(pron::EV_EXPOSE));
     }
-
-  Widget::~Widget() {
-    pron::pronDestroyWindow(Application::getInstance()->d, this->pronWindow);
   }
 
   int Widget::getWidth() {

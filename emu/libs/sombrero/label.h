@@ -27,8 +27,14 @@ class Label : public Widget {
   /**
    * The label constructor 
    * @param parent Parent Container
+   * @param text The text of the label
    */
   Label(Container *parent, char *text);
+  /**
+   * The label constructor
+   * @param text The text of the label
+   */
+  Label(char *text);
   /**
    * Label destructor
    */

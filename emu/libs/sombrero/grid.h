@@ -6,6 +6,7 @@
  */
 
 #include "container.h"
+#include "window.h"
 #include <algorithm>
 
 #define SOMBRERO_CANVAS_DEPTH 24
@@ -18,7 +19,7 @@ namespace sombrero {
  * Grid class definition. A grid is a widget containing several other widgets
  *    as a grid.
  */
-class Grid : public Container, public has_slots<> {
+class Grid : public Container {
   
  protected:
   class widgetWrapper {
@@ -39,21 +40,22 @@ class Grid : public Container, public has_slots<> {
 
   unsigned short nbColumns;
 
-  void update();
-
-  void parentResized();
+  void init();
 
  public:
-  Grid(Container *parent);
+  Grid(Window *parent);
+  Grid();
 
-  void add(Widget* widget);
+  void update();
+
+  virtual void add(Widget* widget);
 
   void newLine();
 
   /**
    * Drawing stuff
    */
-  void draw();
+  virtual void draw();
 };
 
 } //namespace sombrero

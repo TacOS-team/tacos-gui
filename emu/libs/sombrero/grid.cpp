@@ -2,14 +2,18 @@
 #include "application.h"
 
 namespace sombrero {
-  Grid::Grid(Container *parent) : Container(parent) {
+  Grid::Grid() {
+    this->init();
+  }
+
+  Grid::Grid(Window *parent) {
+    this->init();
+    parent->setLayout(this);
+  }
+
+  void Grid::init() {
     widgetsTab.resize(1);
     nbColumns = 0;
-    this->setWidth(parent->getWidth());
-    this->setHeight(parent->getHeight());
-    this->setX(parent->getX());
-    this->setY(parent->getY());
-    parent->resized.connect(this, &Grid::parentResized);
   }
 
   void Grid::add(Widget* widget) {
@@ -18,6 +22,7 @@ namespace sombrero {
     wrapper->y = widgetsTab.size()-1;
     widgetsTab[widgetsTab.size()-1].push_back(wrapper);
     nbColumns = std::max((int)nbColumns, (int)widgetsTab[widgetsTab.size()-1].size());
+    widget->setParent(this);
     this->update();
   }
 
@@ -26,11 +31,13 @@ namespace sombrero {
   }
 
   void Grid::draw() {
-    //printf("draw grid (x, y, w, h) : %d, %d, %d, %d\n", this->getX(), this->getY(), this->getWidth(), this->getHeight());
+    printf("draw grid (x, y, w, h) : %d, %d, %d, %d\n", this->getX(), this->getY(), this->getWidth(), this->getHeight());
     
   }
 
   void Grid::update() {
+    this->updatePronSize();
+    this->updatePronPosition();
     unsigned short columnWidth = this->getWidth()/nbColumns;
     unsigned short lineHeight  = this->getHeight()/widgetsTab.size();
     for(size_t currentY = 0; currentY < widgetsTab.size(); ++currentY) {
@@ -46,14 +53,6 @@ namespace sombrero {
         }
       }
     }
-  }
-
-  void Grid::parentResized() {
-    this->setWidth(this->getParent()->getWidth());
-    this->setHeight(this->getParent()->getHeight());
-    this->updatePronSize();
-    this->updatePronPosition();
-    this->update();
   }
 
   Grid::widgetWrapper::widgetWrapper(Widget* w) {

@@ -55,6 +55,11 @@ namespace sombrero {
       signal0<> resized;
       // Getters and setters
       /**
+       * Sets the parent container
+       * @param Pointer to the parent container
+       */
+      void setParent(Container *parent);
+      /**
        * Gets x
        * @return x
        */
