@@ -40,6 +40,10 @@ namespace sombrero {
     this->height = height;
   }
 
+  void Widget::updatePronSize() {
+    pronResizeWindow(Application::getInstance()->d, this->pronWindow, this->width, this->height);
+  }
+
   bool Widget::isActive() {
     return this->active;
   }
@@ -71,6 +75,10 @@ namespace sombrero {
     this->y = y;
   }
 
+  void Widget::updatePronPosition() {
+    pronMoveWindowTo(Application::getInstance()->d, this->pronWindow, this->x, this->y);
+  }
+
   Container* Widget::getParent() {
     return this->parent;
   }
@@ -93,7 +101,10 @@ namespace sombrero {
   void Widget::handleEventDestroyWindow ()  {
     exit(1);
   }
-  void Widget::handleEventResizeWindow () {
+  void Widget::handleEventResizeWindow (int width, int height) {
+    this->setWidth(width);
+    this->setHeight(height);
+    this->resized();
   }
 
 } // namespace sombrero
