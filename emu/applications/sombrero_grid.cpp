@@ -9,7 +9,7 @@ int main() {
   
   // Window button
 
-  sombrero::Window w(0, 0, 300, 100);
+  sombrero::Window w(0, 0, 300, 90);
   sombrero::Grid g(&w);
   sombrero::Label l1("Label 1");
 
@@ -18,15 +18,14 @@ int main() {
   sombrero::Label l2("Label 2");
   g.add(&l2);
 
-  g.newLine();
+  //g.newLine();
 
   sombrero::Label l3("Label 3");
-  g.add(&l3);
+  g.attachNextTo(&l3, &l2,sombrero::POS_RIGHT,3,2);
 
-  g.newLine();
 
   sombrero::Button b1("bouton 1");
-  g.add(&b1);
+  g.attachNextTo(&b1, &l1,sombrero::POS_BOTTOM,2,1);
 
 
   sombrero::Application::getInstance()->sombrerun();

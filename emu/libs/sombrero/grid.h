@@ -6,6 +6,7 @@
  */
 
 #include "container.h"
+ #include "sombrero.h"
 #include "window.h"
 #include <algorithm>
 
@@ -38,9 +39,11 @@ class Grid : public Container {
 
   column_t widgetsTab;
 
-  unsigned short nbColumns;
+  size_t nbColumns;
 
   void init();
+
+  bool find(Widget * w, size_t &x, size_t &y);
 
  public:
   Grid(Window *parent);
@@ -49,6 +52,8 @@ class Grid : public Container {
   void update();
 
   virtual void add(Widget* widget);
+
+  void attachNextTo (Widget *child, Widget *sibling, PositionType side, int width, int height);
 
   void newLine();
 
