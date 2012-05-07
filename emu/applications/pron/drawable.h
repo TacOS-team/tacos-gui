@@ -77,6 +77,25 @@ class Drawable {
   virtual bool isValid(int x, int y) = 0;
 
   /**
+   * Callback function called before drawing.
+   * @param x1 The minimum x-coordinate of the area where to draw
+   * @param y1 The minimum y-coordinate of the area where to fraw
+   * @param x2 The maximum x-coordinate of the area where to draw
+   * @param y2 The maximum y-coordinate of the area where to draw
+   * @return Whether the drawing can be done or not.
+   */
+  bool beforeDrawing(int x1, int y1, int x2, int y2);
+
+  /**
+   * Callback function called before drawing.
+   * @param x1 The minimum x-coordinate of the drawn area
+   * @param y1 The minimum y-coordinate of the drawn area
+   * @param x2 The maximum x-coordinate of the drawn area
+   * @param y2 The maximum y-coordinate of the drawn area
+   */
+  void afterDrawing(int x1, int y1, int x2, int y2);
+
+  /**
    * Draws an horizontal line between (x, y) and (x + width, y), using
    * the current graphics context.
    * @param x The x-coordinate of the first point of the line

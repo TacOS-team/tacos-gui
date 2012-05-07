@@ -29,6 +29,17 @@ Drawable::~Drawable() {
   this->getScreen()->removeDrawable(this);
 }
 
+bool Drawable::beforeDrawing(int x1 __attribute__((unused)),
+    int y1 __attribute__((unused)), int x2 __attribute__((unused)),
+    int y2 __attribute__((unused))) {
+  return true;
+}
+
+void Drawable::afterDrawing(int x1 __attribute__((unused)),
+    int y1 __attribute__((unused)), int x2 __attribute__((unused)),
+    int y2 __attribute__((unused))) {
+}
+
 int Drawable::getType() {
   return this->type;
 }
@@ -88,74 +99,94 @@ void Drawable::drawPoint(int x, int y) {
 }
 
 void Drawable::drawHorizLine(int x, int y, int width) {
-  for (int c = 0; c < width; c++) {
-    this->drawPoint(x + c, y);
+  if (this->beforeDrawing(x, y, x + width, y)) {
+    for (int c = 0; c < width; c++) {
+      this->drawPoint(x + c, y);
+    }
+
+    this->afterDrawing(x, y, x + width, y);
   }
 }
 
 void Drawable::drawVertLine(int x, int y, int height) {
-  for (int l = 0; l < height; l++) {
-    this->drawPoint(x, y + l);
+  if (this->beforeDrawing(x, y, x, y + height)) {
+    for (int l = 0; l < height; l++) {
+      this->drawPoint(x, y + l);
+    }
+
+    this->afterDrawing(x, y, x, y + height);
   }
 }
 
 void Drawable::drawLine(int x1, int y1, int x2, int y2) {
-  if (x1 == x2) {
-    // Vertical line
-    this->drawVertLine(x1, y1, (y2 - y1 + 1));
-  } else if (y1 == y2) {
-    // Horizontal line
-    this->drawHorizLine(x1, y1, (x2 - x1 + 1));
-  } else {
-    int i, dx, dy, sdx, sdy, dxabs, dyabs, x, y, px, py;
+  if (this->beforeDrawing(x1, y1, x2, y2)) {
+    if (x1 == x2) {
+      // Vertical line
+      this->drawVertLine(x1, y1, (y2 - y1 + 1));
+    } else if (y1 == y2) {
+      // Horizontal line
+      this->drawHorizLine(x1, y1, (x2 - x1 + 1));
+    } else {
+      int i, dx, dy, sdx, sdy, dxabs, dyabs, x, y, px, py;
 
-    dx = x2 - x1; 
-    dy = y2 - y1;
-    dxabs = (dx >= 0 ? dx : -dx);
-    dyabs = (dy >= 0 ? dy : -dy);
-    sdx = (dx >= 0 ? 1 : -1);
-    sdy = (dy >= 0 ? 1 : -1);
-    x = dyabs >> 1;
-    y = dxabs >> 1;
-    px = x1;
-    py = y1;
+      dx = x2 - x1; 
+      dy = y2 - y1;
+      dxabs = (dx >= 0 ? dx : -dx);
+      dyabs = (dy >= 0 ? dy : -dy);
+      sdx = (dx >= 0 ? 1 : -1);
+      sdy = (dy >= 0 ? 1 : -1);
+      x = dyabs >> 1;
+      y = dxabs >> 1;
+      px = x1;
+      py = y1;
 
-    this->drawPoint(px, py);
+      this->drawPoint(px, py);
 
-    if (dxabs >= dyabs) {
-      for (i = 0; i < dxabs; i++) {
-        y += dyabs;
-        if (y >= dxabs) {
-          y -= dxabs;
-          py += sdy;
-        }
-        px += sdx;
-        this->drawPoint(px, py);
-      }
-    } else { 
-      for (i = 0; i < dyabs; i++) {
-        x += dxabs;
-        if (x >= dyabs) {
-          x -= dyabs;
+      if (dxabs >= dyabs) {
+        for (i = 0; i < dxabs; i++) {
+          y += dyabs;
+          if (y >= dxabs) {
+            y -= dxabs;
+            py += sdy;
+          }
           px += sdx;
+          this->drawPoint(px, py);
         }
-        py += sdy;
-        this->drawPoint(px, py);
+      } else { 
+        for (i = 0; i < dyabs; i++) {
+          x += dxabs;
+          if (x >= dyabs) {
+            x -= dyabs;
+            px += sdx;
+          }
+          py += sdy;
+          this->drawPoint(px, py);
+        }
       }
     }
+
+    this->afterDrawing(x1, y1, x2, y2);
   }
 }
 
-void Drawable::drawRect(int x, int y, int width, int height){
-  drawHorizLine(x, y, width);
-  drawHorizLine(x, y + height - 1, width);
-  drawVertLine(x, y + 1, height - 2);
-  drawVertLine(x + width - 1, y + 1, height - 2);
+void Drawable::drawRect(int x, int y, int width, int height) {
+  if (this->beforeDrawing(x, y, x + width - 1, y + height - 1)) {
+    drawHorizLine(x, y, width);
+    drawHorizLine(x, y + height - 1, width);
+    drawVertLine(x, y + 1, height - 2);
+    drawVertLine(x + width - 1, y + 1, height - 2);
+
+    this->afterDrawing(x, y, x + width - 1, y + height - 1);
+  }
 }
 
-void Drawable::fillRectangle(int x, int y, int width, int height){
-  for (int l = 0; l < height; l++) {
-    drawHorizLine(x, y + l, width);
+void Drawable::fillRectangle(int x, int y, int width, int height) {
+  if (this->beforeDrawing(x, y, x + width - 1, y + height - 1)) {
+    for (int l = 0; l < height; l++) {
+      drawHorizLine(x, y + l, width);
+    }
+
+    this->afterDrawing(x, y, x + width - 1, y + height - 1);
   }
 }
 
