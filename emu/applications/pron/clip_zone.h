@@ -63,6 +63,8 @@ public:
 
 private:
   vector<ClipRect*> clipRects; /**< Set of rectangles composing the clipping zone */
+  ClipRect cache; /**< Cache rectangle for quicker checks */
+  bool cacheRes; /**< Cached result (whether points are plottable or not in the cache rectangle) */
 };
 
 #endif

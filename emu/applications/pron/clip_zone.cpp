@@ -5,16 +5,19 @@
 
 #include <stdio.h>
 
+#include <climits>
 #include <clip_zone.h>
 #include <screen.h>
 
-ClipZone::ClipZone(int x, int y, int width, int height) {
+ClipZone::ClipZone(int x, int y, int width, int height)
+    : cache(0, 0, 0, 0), cacheRes(false) /* empty cache */ {
   // Clipping zone containing only 1 rectangle
   ClipRect *clip = new ClipRect(x, y, width, height);
   this->clipRects.push_back(clip);
 }
 
-ClipZone::ClipZone(Window *w) {
+ClipZone::ClipZone(Window *w)
+    : cache(0, 0, 0, 0), cacheRes(false) /* empty cache */ {
   // Initial rectangle
   ClipRect *clip = new ClipRect(w);
   this->clipRects.push_back(clip);
@@ -75,9 +78,53 @@ ClipZone::ClipZone(Window *w) {
 
 bool ClipZone::contains(int x, int y) {
   bool inZone = false;
-  
-  for (unsigned int i = 0; i < this->clipRects.size() && !inZone; i++) {
-    inZone = inZone || this->clipRects[i]->contains(x, y);
+
+  // Check result in cache
+  if (x >= this->cache.x && y >= this->cache.y &&
+      x < this->cache.x + this->cache.width && y < this->cache.y + this->cache.height) {
+    inZone = this->cacheRes;
+  } else if (false) {
+    /**
+     * @todo optimization: points outside the screen => return false,
+     * cache => half-plane outside the screen
+     */
+  } else {
+    // Scan all clip rectangles
+    for (unsigned int i = 0; i < this->clipRects.size() && !inZone; i++) {
+      if (this->clipRects[i]->contains(x, y)) {
+        inZone = true;
+        this->cache = *(this->clipRects[i]);
+      }
+    }
+
+    if (!inZone) {
+      // Search the maximum non-visible rectangle containing this point
+      int cacheX1 = INT_MIN, cacheY1 = INT_MIN;
+      int cacheX2 = INT_MAX, cacheY2 = INT_MAX;
+
+      for (unsigned int i = 0; i < this->clipRects.size(); i++) {
+        ClipRect *rect = this->clipRects[i];
+        if (x < rect->x && rect->x < cacheX2) {
+          cacheX2 = rect->x - 1;
+        }
+        if (y < rect->y && rect->y < cacheY2) {
+          cacheY2 = rect->y - 1;
+        }
+        if (x >= rect->x + rect->width && rect->x + rect->width > cacheX1) {
+          cacheX1 = rect->x + rect->width;
+        }
+        if (y >= rect->y + rect->height && rect->y + rect->height > cacheY1) {
+          cacheY1 = rect->y + rect->height;
+        }
+      }
+
+      this->cache.x = cacheX1;
+      this->cache.y = cacheY1;
+      this->cache.width = cacheX2 - cacheX1 + 1;
+      this->cache.height = cacheY2 - cacheY1 + 1;
+    }
+
+    this->cacheRes = inZone;
   }
 
   return inZone; 
