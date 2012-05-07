@@ -50,6 +50,7 @@ Screen::Screen(int width, int height, int bitsPerPixel) {
 
   this->clipWin = NULL;
   this->clipZone = new ClipZone(0, 0, this->width, this->height);
+  this->clippingCheck = true;
 
   this->gc = &this->defaultGC;
 
@@ -70,8 +71,13 @@ Screen* Screen::getInstance() {
   return instance;
 }
 
+void Screen::setClippingCheck(bool clippingCheck) {
+  this->clippingCheck = clippingCheck;
+}
+
 bool Screen::isValid(int x, int y) {
-  return (x >= 0 && x < this->width && y >= 0 && y < this->height && this->clipZone->contains(x, y));
+  return (x >= 0 && x < this->width && y >= 0 && y < this->height &&
+      (!this->clippingCheck || this->clipZone->contains(x, y)));
 }
 
 void* Screen::pixelAddr(int x, int y) {
@@ -126,6 +132,10 @@ Window* Screen::getRoot() {
 
 Window* Screen::getClipWin() {
   return this->clipWin;
+}
+
+ClipZone* Screen::getClipZone() {
+  return this->clipZone;
 }
 
 void Screen::printClipZone() {

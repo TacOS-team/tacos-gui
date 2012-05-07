@@ -13,6 +13,15 @@
 using namespace std;
 
 /**
+ * States of an area regarding the clipping zone
+ */
+enum ClipState {
+  VISIBLE, /**< Totally visible */
+  INVISIBLE, /**< Totally invisible */
+  PARTIAL, /**< Possibly partially visible */
+};
+
+/**
  * Clipping zone.
  * Defines a set of rectangles we can draw into.
  * Any point that is not in the clipping zone won't be drawn.
@@ -45,16 +54,17 @@ public:
   bool contains(int x, int y);
 
   /**
-   * Returns true if the clipping zone contains the rectangle
-   * ((x1, y1), (x2, y2)).
-   * @param x1 The x-coordinate of the top-left corner of the rectangle
-   * @param y1 The y-coordinate of the top-left corner of the rectangle
-   * @param x2 The x-coordinate of the bottom-right corner of the rectangle
-   * @param y2 The y-coordinate of the bottom-right corner of the rectangle
-   * @return true if the clipping zone contains the rectangle
-   * ((x1, y1), (x2, y2))
+   * Checks a rectangular area against the clipping zone.
+   * The area can be totally visible, totally invisible or
+   * possibly partially visible.
+   * @param x1 The x-coordinate of the top-left corner of the area
+   * @param y1 The y-coordinate of the top-left corner of the area
+   * @param x2 The x-coordinate of the bottom-right corner of the area
+   * @param y2 The y-coordinate of the bottom-right corner of the area
+   * @return the state of the area (fully visible, fully invisible
+   * or partially visible)
    */
-  bool contains(int x1, int y1, int x2, int y2);
+  ClipState checkArea(int x1, int y1, int x2, int y2);
 
   /**
    * Prints the clipping zone (for debugging purposes).

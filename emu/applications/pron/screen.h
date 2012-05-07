@@ -27,6 +27,7 @@ class Screen {
   vector<Font*> fonts; /**< Fonts loaded on the server */
   Window *clipWin; /**< Window for which the clipping zone is set */
   ClipZone *clipZone; /**< Rectangles where we are allowed to draw */
+  bool clippingCheck; /**< Whether a check against the clipping zone is required or not before drawing */
   Window *mouseWin; /**< Window containing the mouse pointer */
   Window *focusWin; /**< Window having the focus */
   GC defaultGC; /**< Default graphics context for this screen */
@@ -117,6 +118,12 @@ class Screen {
   void removeDrawable(Drawable *d);
 
   /**
+   * Returns the area (list of rectangles) where we are allowed to draw
+   * @return the area (list of rectangles) where we are allowed to draw
+   */
+  ClipZone* getClipZone();
+
+  /**
    * Returns the window for which the clipping is currently set.
    * @return the window for which the clipping is currently set
    */
@@ -189,6 +196,11 @@ class Screen {
    * @return The requested font
    */
   Font* getFont(int id);
+
+  /**
+   * Enables or disables the check against the clipping before drawing.
+   */
+  void setClippingCheck(bool clippingCheck);
 
   /**
    * Prints the clipping zone (for debugging purposes).

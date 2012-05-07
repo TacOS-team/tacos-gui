@@ -450,3 +450,21 @@ bool Window::realized() {
 inline bool Window::isValid(int x, int y) {
   return this->getScreen()->isValid(this->x + x, this->y + y);
 }
+
+bool Window::beforeDrawing(int x1, int y1, int x2, int y2) {
+  bool canDraw = true;
+
+  switch (this->getScreen()->getClipZone()->checkArea(x1, y1, x2, y2)) {
+    case INVISIBLE:
+      canDraw = false;
+      break;
+    case PARTIAL:
+      this->getScreen()->setClippingCheck(true);
+      break;
+    case VISIBLE:
+      this->getScreen()->setClippingCheck(false);
+      break;
+  }
+
+  return canDraw;
+}

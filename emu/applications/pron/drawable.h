@@ -84,7 +84,7 @@ class Drawable {
    * @param y2 The maximum y-coordinate of the area where to draw
    * @return Whether the drawing can be done or not.
    */
-  bool beforeDrawing(int x1, int y1, int x2, int y2);
+  virtual bool beforeDrawing(int x1, int y1, int x2, int y2);
 
   /**
    * Callback function called before drawing.
@@ -93,7 +93,7 @@ class Drawable {
    * @param x2 The maximum x-coordinate of the drawn area
    * @param y2 The maximum y-coordinate of the drawn area
    */
-  void afterDrawing(int x1, int y1, int x2, int y2);
+  virtual void afterDrawing(int x1, int y1, int x2, int y2);
 
   /**
    * Draws an horizontal line between (x, y) and (x + width, y), using

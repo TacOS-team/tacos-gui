@@ -130,14 +130,16 @@ bool ClipZone::contains(int x, int y) {
   return inZone; 
 }
 
-bool ClipZone::contains(int x1, int y1, int x2, int y2) {
-  bool inZone = false;
-  
-  for (unsigned int i = 0; i < this->clipRects.size() && !inZone; i++) {
-    inZone = inZone || (this->clipRects[i]->contains(x1, y1) && this->clipRects[i]->contains(x2, y2));
+ClipState ClipZone::checkArea(int x1, int y1, int x2, int y2) {
+  ClipState state = INVISIBLE;
+
+  if (this->contains(x1, y1)) {
+    state = this->cache.contains(x2, y2) ? VISIBLE : PARTIAL;
+  } else {
+    state = this->cache.contains(x2, y2) ? INVISIBLE : PARTIAL;
   }
 
-  return inZone; 
+  return state;
 }
 
 void ClipZone::print() {
