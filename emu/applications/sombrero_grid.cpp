@@ -10,21 +10,23 @@ int main() {
   // Window button
 
   sombrero::Window w(0, 0, 300, 100);
-  char title1[]= "Label 1";
-  char title2[] = "Label 2";
-  char title3[] = "Label 3";
   sombrero::Grid g(&w);
-  sombrero::Label l1(title1);
+  sombrero::Label l1("Label 1");
 
   g.add(&l1);
 
-  sombrero::Label l2(title2);
+  sombrero::Label l2("Label 2");
   g.add(&l2);
 
   g.newLine();
 
-  sombrero::Label l3(title3);
+  sombrero::Label l3("Label 3");
   g.add(&l3);
+
+  g.newLine();
+
+  sombrero::Button b1("bouton 1");
+  g.add(&b1);
 
 
   sombrero::Application::getInstance()->sombrerun();

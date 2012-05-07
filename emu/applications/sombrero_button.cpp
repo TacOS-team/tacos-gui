@@ -24,12 +24,14 @@ int main() {
   sombrero::Window w(0, 0, 300, 20);
   char title[] = "Press me to change the label";
   char title2[] = "Hello I am the first label";
-  sombrero::Button b(&w, title);
+  sombrero::Button b(title);
+  w.add(&b);
 
   // Window label
 
   sombrero::Window w2(0, 0, 300, 20);
-  sombrero::Label l(&w2, title2);  
+  sombrero::Label l(title2);
+  w.add(&l);
 
   // Clicked signatl handler
   MouseClicked mc(&l);

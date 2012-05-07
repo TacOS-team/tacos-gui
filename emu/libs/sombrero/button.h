@@ -6,6 +6,7 @@
  */
 
 #include "widget.h"
+#include <string>
 
 namespace sombrero {
 
@@ -18,14 +19,22 @@ class Container;
 class Button : public Widget {
 
  private:
-  char *text;
+  unsigned char fontSize;
+  std::string text;
+
+  void init();
   
  public:
   /**
    * The button constructor 
    * @param parent Parent Container
    */
-  Button(Container *parent, char *text);
+  Button(const char *text);
+  /**
+   * The button constructor 
+   * @param parent Parent Container
+   */
+  Button(const  std::string text);
   /**
    * Button destructor
    */

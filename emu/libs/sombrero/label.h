@@ -6,6 +6,7 @@
  */
 
 #include "widget.h"
+#include <string>
 
 namespace sombrero {
 
@@ -15,7 +16,8 @@ namespace sombrero {
  */ 
 class Label : public Widget {
  private:
-  char *text;
+  unsigned char fontSize;
+  std::string text;
   
  public:
 
@@ -23,22 +25,42 @@ class Label : public Widget {
    * Set the label of the text
    * @param text the new text
    */
-  void setText(char *text);
+  void setText(const std::string text);
+  /**
+   * Set the label of the text
+   * @param text the new text
+   */
+  void setText(const char *text);
   /**
    * The label constructor 
    * @param parent Parent Container
    * @param text The text of the label
    */
-  Label(Container *parent, char *text);
+  Label(Container *parent, const char *text);
   /**
    * The label constructor
    * @param text The text of the label
    */
-  Label(char *text);
+  Label(const char *text);
+  /**
+   * The label constructor 
+   * @param parent Parent Container
+   * @param text The text of the label
+   */
+  Label(Container *parent, const std::string text);
+  /**
+   * The label constructor
+   * @param text The text of the label
+   */
+  Label(const std::string text);
   /**
    * Label destructor
    */
   ~Label();
+  /**
+   * Initialize the label
+   */
+  void init();
   /**
    * Label drawing stuff
    */
