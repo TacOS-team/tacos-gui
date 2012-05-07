@@ -440,6 +440,7 @@ void Window::resize(int width, int height) {
 
   // Send resize event
   EventResizeWindow eventResizeWindow(width, height);
+  eventResizeWindow.window = this->getId();
   this->deliverWindowEvent(&eventResizeWindow, sizeof(eventResizeWindow));
 }
 
