@@ -22,6 +22,11 @@ ClipRect::ClipRect(Window *w) {
 vector<ClipRect*> ClipRect::split(ClipRect *obscurer) {
   vector<ClipRect*> splittedRect;
 
+  bool visible_top = this->y < obscurer->y;
+  bool visible_bottom = this->y + this->height > obscurer->y + obscurer->height;
+  bool visible_left = this->x < obscurer->x;
+  bool visible_right = this->x + this->width > obscurer->x + obscurer->width;
+
   // No overlap
   if (this->x >= obscurer->x + obscurer->width ||
       this->y >= obscurer->y + obscurer->height ||
@@ -32,24 +37,40 @@ vector<ClipRect*> ClipRect::split(ClipRect *obscurer) {
   }
 
   // Determine the zones that are still visible
-  if (this->y < obscurer->y) {
+  if (visible_top) {
     // Visible zone on top
     splittedRect.push_back(new ClipRect(this->x, this->y, this->width, obscurer->y - this->y));
   }
 
-  if (this->y + this->height > obscurer->y + obscurer->height) {
+  if (visible_bottom) {
     // Visible zone at bottom
     splittedRect.push_back(new ClipRect(this->x, obscurer->y + obscurer->height, this->width, this->y + this->height - (obscurer->y + obscurer->height)));
   }
 
-  if (this->x < obscurer->x) {
+  if (visible_left) {
     // Visible zone at left
-    splittedRect.push_back(new ClipRect(this->x, this->y, obscurer->x - this->x, this->height));
+    if (visible_top && visible_bottom) {
+      splittedRect.push_back(new ClipRect(this->x, obscurer->y, obscurer->x - this->x, obscurer->height));
+    } else if (visible_top) {
+      splittedRect.push_back(new ClipRect(this->x, obscurer->y, obscurer->x - this->x, this->y + this->height - obscurer->y));
+    } else if (visible_bottom) {
+      splittedRect.push_back(new ClipRect(this->x, this->y, obscurer->x - this->x, obscurer->y + obscurer->height - this->y));
+    } else {
+      splittedRect.push_back(new ClipRect(this->x, this->y, obscurer->x - this->x, this->height));
+    }
   }
 
-  if (this->x + this->width > obscurer->x + obscurer->width) {
+  if (visible_right) {
     // Visible zone at right
-    splittedRect.push_back(new ClipRect(obscurer->x + obscurer->width, this->y, this->x + this->width - (obscurer->x + obscurer->width), this->height));
+    if (visible_top && visible_bottom) {
+      splittedRect.push_back(new ClipRect(obscurer->x + obscurer->width, obscurer->y, this->x + this->width - (obscurer->x + obscurer->width), obscurer->height));
+    } else if (visible_top) {
+      splittedRect.push_back(new ClipRect(obscurer->x + obscurer->width, obscurer->y, this->x + this->width - (obscurer->x + obscurer->width), this->y + this->height - obscurer->y));
+    } else if (visible_bottom) {
+      splittedRect.push_back(new ClipRect(obscurer->x + obscurer->width, this->y, this->x + this->width - (obscurer->x + obscurer->width), obscurer->y + obscurer->height - this->y));
+    } else {
+      splittedRect.push_back(new ClipRect(obscurer->x + obscurer->width, this->y, this->x + this->width - (obscurer->x + obscurer->width), this->height));
+    }
   }
 
   return splittedRect;
