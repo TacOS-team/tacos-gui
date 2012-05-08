@@ -454,7 +454,8 @@ inline bool Window::isValid(int x, int y) {
 bool Window::beforeDrawing(int x1, int y1, int x2, int y2) {
   bool canDraw = true;
 
-  switch (this->getScreen()->getClipZone()->checkArea(x1, y1, x2, y2)) {
+  switch (this->getScreen()->getClipZone()->checkArea(
+      this->x + x1, this->y + y1, this->x + x2, this->y + y2)) {
     case INVISIBLE:
       canDraw = false;
       break;

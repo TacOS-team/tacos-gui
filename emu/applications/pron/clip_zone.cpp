@@ -99,8 +99,8 @@ bool ClipZone::contains(int x, int y) {
 
     if (!inZone) {
       // Search the maximum non-visible rectangle containing this point
-      int cacheX1 = INT_MIN, cacheY1 = INT_MIN;
-      int cacheX2 = INT_MAX, cacheY2 = INT_MAX;
+      int cacheX1 = SHRT_MIN, cacheY1 = SHRT_MIN;
+      int cacheX2 = SHRT_MAX, cacheY2 = SHRT_MAX;
 
       for (unsigned int i = 0; i < this->clipRects.size(); i++) {
         ClipRect *rect = this->clipRects[i];
