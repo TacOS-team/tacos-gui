@@ -3,7 +3,9 @@
 
 namespace sombrero {
 
-Bin::Bin() {}
+Bin::Bin() {
+  this->full = 0;
+}
 
 Bin::Bin(Container *parent)
     : Container(parent) {
@@ -26,6 +28,5 @@ void Bin::remove(Widget *widget) {
     this->full = 0;
   }
 }
-  
 
 } // Namespace sombrero

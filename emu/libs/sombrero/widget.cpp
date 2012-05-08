@@ -4,11 +4,13 @@
 
 namespace sombrero {
 
-  Widget::Widget() { this->parent = NULL; }
+  Widget::Widget() {
+    this->parent = NULL;
+  }
 
   Widget::Widget(Container *parent) {
     this->parent = NULL;
-    this->setParent(parent);
+    parent->add(this);
   }
 
   Widget::~Widget() {
@@ -17,7 +19,7 @@ namespace sombrero {
 
   void Widget::setParent(Container *parent) {
     // TODO à réfléchir si on supprime si ça vaut pas null etc.
-    if(this->parent == NULL) {
+    if (this->parent == NULL) {
       this->parent = parent;
       // Creates the window
       this->pronWindow = pron::pronCreateWindow(Application::getInstance()->d, this->parent->pronWindow, this->x, this->y, this->width, this->height);
@@ -94,25 +96,31 @@ namespace sombrero {
     return this->parent;
   }
 
-  void Widget::handleEventWindowCreated () {
+  void Widget::handleEventWindowCreated() {
   }
-  void Widget::handleEventExpose () {
+
+  void Widget::handleEventExpose() {
     this->draw();
   }
-  void Widget::handleEventPointerMoved ()  {
+
+  void Widget::handleEventPointerMoved()  {
   }
-  void Widget::handleEventMouseButton (pron::PronEvent * e __attribute__((unused))) {
+
+  void Widget::handleEventMouseButton(pron::PronEvent *e __attribute__((unused))) {
     this->clicked();
   }
 
-  void Widget::handleEventKeyPressed(pron::PronEvent * e __attribute__((unused))) {
+  void Widget::handleEventKeyPressed(pron::PronEvent *e __attribute__((unused))) {
   }
-  void Widget::handleEventKeyReleased () {
+
+  void Widget::handleEventKeyReleased() {
   }
-  void Widget::handleEventDestroyWindow ()  {
+
+  void Widget::handleEventDestroyWindow() {
     exit(1);
   }
-  void Widget::handleEventResizeWindow (int width, int height) {
+
+  void Widget::handleEventResizeWindow(int width, int height) {
     this->setWidth(width);
     this->setHeight(height);
     this->resized();

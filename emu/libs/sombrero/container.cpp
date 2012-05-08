@@ -16,6 +16,7 @@ Container::~Container() {
 
 void Container::add(Widget *widget) {
   this->children.push_back(widget);
+  widget->setParent(this);
 }
 
 void Container::remove(Widget *widget) {

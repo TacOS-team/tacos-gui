@@ -22,6 +22,8 @@ namespace sombrero {
       pron::pronSelectInput(Application::getInstance()->d, this->pronWindow, PRON_EVENTMASK(pron::EV_EXPOSE)
                                                                            | PRON_EVENTMASK(pron::EV_DESTROY_WINDOW)
                                                                            | PRON_EVENTMASK(pron::EV_RESIZE_WINDOW));
+
+      this->layout = NULL;
   }
 
   Window::~Window() {
