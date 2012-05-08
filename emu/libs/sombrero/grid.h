@@ -6,7 +6,7 @@
  */
 
 #include "container.h"
- #include "sombrero.h"
+#include "sombrero.h"
 #include "window.h"
 #include <algorithm>
 
@@ -45,6 +45,8 @@ class Grid : public Container {
 
   bool find(Widget * w, size_t &x, size_t &y);
 
+  virtual void attach(widgetWrapper *wrapper);
+
  public:
   Grid(Window *parent);
   Grid();
@@ -52,10 +54,16 @@ class Grid : public Container {
   void update();
 
   virtual void add(Widget* widget);
-
-  void attachNextTo (Widget *child, Widget *sibling, PositionType side, int width, int height);
+  virtual void attach(Widget *child, int x, int y, int width, int height);
+  virtual void attachNextTo (Widget *child, Widget *sibling, PositionType side, int width, int height);
 
   void newLine();
+
+  void insertRow (int position);
+  void insertRows(int position, size_t nb);
+
+  void insertColumn (int position);
+  void insertColumns(int position, size_t nb);
 
   /**
    * Drawing stuff
