@@ -52,7 +52,13 @@ namespace sombrero {
     public:
       // Signals
       signal0<> clicked;
+      signal0<> resized;
       // Getters and setters
+      /**
+       * Sets the parent container
+       * @param Pointer to the parent container
+       */
+      void setParent(Container *parent);
       /**
        * Gets x
        * @return x
@@ -74,6 +80,10 @@ namespace sombrero {
        */
       void setY(int y);
       /**
+       * Sends the new position to pron
+       */
+      void updatePronPosition();
+      /**
        * Gets the width
        * @return width
        */
@@ -93,6 +103,10 @@ namespace sombrero {
        * @param height
        */
       void setHeight(int height);
+      /**
+       * Sends the new size to pron
+       */
+      void updatePronSize();
       /**
        * Gets active
        * @return active
@@ -152,7 +166,7 @@ namespace sombrero {
       /**
        * Handle for a resizeWindow event
        */
-      virtual void handleEventResizeWindow() ;
+      virtual void handleEventResizeWindow(int width, int height) ;
       
       /**
        * Gets parent container

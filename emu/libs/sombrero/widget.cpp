@@ -4,12 +4,21 @@
 
 namespace sombrero {
 
-  Widget::Widget() {}
+  Widget::Widget() { this->parent = NULL; }
 
-  Widget::Widget(Container *parent)
-    : parent(parent) {
-      // On s'ajoute au container s'il n'est pas NULL
-      parent->add(this);
+  Widget::Widget(Container *parent) {
+    this->parent = NULL;
+    this->setParent(parent);
+  }
+
+  Widget::~Widget() {
+    pron::pronDestroyWindow(Application::getInstance()->d, this->pronWindow);
+  }
+
+  void Widget::setParent(Container *parent) {
+    // TODO à réfléchir si on supprime si ça vaut pas null etc.
+    if(this->parent == NULL) {
+      this->parent = parent;
       // Creates the window
       this->pronWindow = pron::pronCreateWindow(Application::getInstance()->d, this->parent->pronWindow, this->x, this->y, this->width, this->height);
       // Associates the pron::window to the widget
@@ -19,9 +28,6 @@ namespace sombrero {
       // Select events
       pron::pronSelectInput(Application::getInstance()->d, this->pronWindow, PRON_EVENTMASK(pron::EV_EXPOSE));
     }
-
-  Widget::~Widget() {
-    pron::pronDestroyWindow(Application::getInstance()->d, this->pronWindow);
   }
 
   int Widget::getWidth() {
@@ -38,6 +44,10 @@ namespace sombrero {
 
   void Widget::setHeight(int height) {
     this->height = height;
+  }
+
+  void Widget::updatePronSize() {
+    pronResizeWindow(Application::getInstance()->d, this->pronWindow, this->width, this->height);
   }
 
   bool Widget::isActive() {
@@ -71,6 +81,10 @@ namespace sombrero {
     this->y = y;
   }
 
+  void Widget::updatePronPosition() {
+    pronMoveWindowTo(Application::getInstance()->d, this->pronWindow, this->x, this->y);
+  }
+
   Container* Widget::getParent() {
     return this->parent;
   }
@@ -93,7 +107,10 @@ namespace sombrero {
   void Widget::handleEventDestroyWindow ()  {
     exit(1);
   }
-  void Widget::handleEventResizeWindow () {
+  void Widget::handleEventResizeWindow (int width, int height) {
+    this->setWidth(width);
+    this->setHeight(height);
+    this->resized();
   }
 
 } // namespace sombrero

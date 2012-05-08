@@ -52,9 +52,13 @@ class Container : public Widget {
    */
   void drawChildren();
   /**
+   * Updates the container and its contents
+   */
+  virtual void update();
+  /**
    * Draws the window
    */
-  void draw();
+  virtual void draw();
   /**
    * Gets a copy of the children vector
    * @return The copied vector of children widgets

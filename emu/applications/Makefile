@@ -1,5 +1,5 @@
 SRCS = *.c *.cpp
-APPS = cube_graph cube_graph_mouse zen_graph pong snake_graph pouet clock_graph pron_cube pron_pong pron_cube_mouse pron_snake pron_cube_tuning sombrero_cube sombrero_textbox sombrero_button sombrero_checkbox
+APPS = cube_graph cube_graph_mouse zen_graph pong snake_graph pouet clock_graph pron_cube pron_pong pron_cube_mouse pron_snake pron_cube_tuning sombrero_cube sombrero_textbox sombrero_button sombrero_checkbox sombrero_grid
 
 SUBDIRS = guacamole pron pron_danny
 
@@ -26,6 +26,9 @@ $(BUILDDIRAPPS)/sombrero_textbox : sombrero_textbox.cpp
 	$(CXX) -o $@ $< $(LIBTACOS) $(SOMBRERO) $(CFLAGS) $(INCLUDES)
 	
 $(BUILDDIRAPPS)/sombrero_checkbox : sombrero_checkbox.cpp	
+	$(CXX) -o $@ $< $(LIBTACOS) $(SOMBRERO) $(CFLAGS) $(INCLUDES)
+	
+$(BUILDDIRAPPS)/sombrero_grid : sombrero_grid.cpp	
 	$(CXX) -o $@ $< $(LIBTACOS) $(SOMBRERO) $(CFLAGS) $(INCLUDES)
 
 depend: $(SRCS)

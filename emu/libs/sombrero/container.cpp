@@ -33,6 +33,10 @@ void Container::draw() {
   this->drawChildren();
 }
 
+void Container::update() {
+  
+}
+
 std::vector<Widget*> Container::getChildren() {
   return this->children;
 }

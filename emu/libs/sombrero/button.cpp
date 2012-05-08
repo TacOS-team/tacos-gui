@@ -4,11 +4,19 @@
 
 namespace sombrero {
 
-  Button::Button(Container *parent, char *text) 
-    : Widget(parent), text(text){
-      // Select more events
-      pron::pronSelectInput(Application::getInstance()->d, this->pronWindow, PRON_EVENTMASK(pron::EV_EXPOSE) | PRON_EVENTMASK(pron::EV_MOUSE_BUTTON));
-    }
+  Button::Button(const char *text) : text(text) {
+    this->init();
+  }
+
+  Button::Button(const std::string text) : text(text) {
+    this->init();
+  }
+
+  void Button::init() {
+    // Select more events
+    pron::pronSelectInput(Application::getInstance()->d, this->pronWindow, PRON_EVENTMASK(pron::EV_EXPOSE) | PRON_EVENTMASK(pron::EV_MOUSE_BUTTON));
+    this->fontSize = 10;
+  }
 
   Button::~Button() {}
 
@@ -18,7 +26,8 @@ namespace sombrero {
     // Draws the background 
     pron::pronDrawRect(Application::getInstance()->d, this->pronWindow, Application::getInstance()->d->defaultGC, this->getX(), this->getY(), this->getWidth(), this->getHeight());
     // Draws the text
-    pron::pronDrawText(Application::getInstance()->d, this->pronWindow, Application::getInstance()->d->defaultGC, this->getWidth() / 2, this->getHeight() / 2, this->text, strlen(this->text));
+    pron::pronDrawText(Application::getInstance()->d, this->pronWindow, Application::getInstance()->d->defaultGC, this->getWidth() / 2 - this->text.length()/2 * this->fontSize/2,
+      this->getHeight() / 2 + this->fontSize/2, this->text.c_str(), this->text.length());
   }
 
 } // namespace sombrero
