@@ -305,9 +305,11 @@ void GWindow::maximise() {
       this->attributes = windowAttributes;
       pronGetWindowAttributes(display, this->parent, &this->parentAttributes);
       this->oldParentAttributes = this->parentAttributes;
+      pronUnmapWindow(display, this->parent);
       pronMoveWindowTo(display, this->parent, 0, 0);
       this->resize(GWindowsManager::getInstance()->getRootWindowAttributes().width,
         GWindowsManager::getInstance()->getRootWindowAttributes().height);
+      pronMapWindow(display, this->parent);
       /** @todo unmap de resizewindow */
       this->isMaximised = true;
     } else {
