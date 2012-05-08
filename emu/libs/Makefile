@@ -8,3 +8,12 @@ all:
 	done
 
 .PHONY: libtacos libtsock pronlib sombrero
+
+depend:
+	@for i in $(SUBDIRS); do \
+		printf "\033[1m>>> [$$i]\033[0m\n"; \
+		$(MAKE) -s -C $$i depend; \
+		printf "\033[1m<<< [$$i]\033[0m\n"; \
+	done
+
+-include .depend
