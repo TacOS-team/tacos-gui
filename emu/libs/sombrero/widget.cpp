@@ -85,6 +85,11 @@ namespace sombrero {
     pronMoveWindowTo(Application::getInstance()->d, this->pronWindow, this->x, this->y);
   }
 
+  void Widget::update() {
+    this->updatePronPosition();
+    this->updatePronSize();
+  }
+
   Container* Widget::getParent() {
     return this->parent;
   }

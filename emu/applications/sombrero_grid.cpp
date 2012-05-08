@@ -35,8 +35,23 @@ int main() {
   sombrero::Label l6("Label 6");
   g.attach(&l6,0,3,3,1);
 
-  g.insertRow(0);
-  g.insertColumn(0);
+  sombrero::Grid g2;
+
+  g.attachNextTo(&g2,NULL, sombrero::POS_LEFT,1,4);
+
+
+  sombrero::Label l7("Label 7");
+  g2.add(&l7);
+
+  g2.newLine();
+
+  sombrero::Label l8("Label 8");
+  g2.add(&l8);
+
+  g2.newLine();
+
+  sombrero::Label l9("Label 9");
+  g2.add(&l9);
 
   sombrero::Application::getInstance()->sombrerun();
 

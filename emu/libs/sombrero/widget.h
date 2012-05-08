@@ -108,6 +108,10 @@ namespace sombrero {
        */
       void updatePronSize();
       /**
+       * Updates the widgets to pron
+       */
+      virtual void update();
+      /**
        * Gets active
        * @return active
        */

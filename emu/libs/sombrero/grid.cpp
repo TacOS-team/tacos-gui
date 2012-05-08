@@ -38,8 +38,7 @@ namespace sombrero {
   void Grid::update() {
     // TODO meilleure gestion des calculs de position pour éviter les espaces entre widgets
     // Sends the new informations to pron
-    this->updatePronSize();
-    this->updatePronPosition();
+    Container::update();
     // Calculates the new colomns width and line height
     float columnWidth = (float)this->getWidth()/nbColumns;
     float lineHeight  = (float)this->getHeight()/widgetsTab.size();
@@ -54,8 +53,7 @@ namespace sombrero {
           currentWrapper->widget->setX (this->getX()+columnWidth*currentWrapper->x);
           currentWrapper->widget->setY (this->getY()+lineHeight*currentWrapper->y);
           // Sends the new informations to pron
-          currentWrapper->widget->updatePronSize();
-          currentWrapper->widget->updatePronPosition();
+          currentWrapper->widget->update();
         }
       }
     }

@@ -34,7 +34,7 @@ void Container::draw() {
 }
 
 void Container::update() {
-  
+  Widget::update();
 }
 
 std::vector<Widget*> Container::getChildren() {
