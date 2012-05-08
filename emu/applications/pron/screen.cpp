@@ -168,6 +168,7 @@ bool Screen::prepareDrawing(Drawable *d, GC *gc) {
     }
 
     this->setClipWin(w);
+    this->setClippingCheck(true);
   }
 
   if (gc != NULL) {
