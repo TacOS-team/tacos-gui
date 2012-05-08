@@ -94,6 +94,15 @@ class Window : public Drawable {
   bool beforeDrawing(int x1, int y1, int x2, int y2);
 
   /**
+   * Callback function called before drawing.
+   * @param x1 The minimum x-coordinate of the drawn area
+   * @param y1 The minimum y-coordinate of the drawn area
+   * @param x2 The maximum x-coordinate of the drawn area
+   * @param y2 The maximum y-coordinate of the drawn area
+   */
+  void afterDrawing(int x1, int y1, int x2, int y2);
+
+  /**
    * Operator ==.
    * @param w The window to compare with
    * @return true if the windows are the same

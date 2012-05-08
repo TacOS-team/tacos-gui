@@ -468,5 +468,16 @@ bool Window::beforeDrawing(int x1, int y1, int x2, int y2) {
       break;
   }
 
+  if (Mouse::getInstance()->overlapsPointer(this->x + x1, this->y + y1, this->x + x2, this->y + y2)) {
+    Mouse::getInstance()->hidePointer();
+  }
+
   return canDraw;
+}
+
+void Window::afterDrawing(int x1 __attribute__((unused)),
+    int y1 __attribute__((unused)), int x2 __attribute__((unused)),
+    int y2 __attribute__((unused))) {
+  // Will only show the pointer if it has been hidden
+  Mouse::getInstance()->showPointer();
 }

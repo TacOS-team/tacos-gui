@@ -7,6 +7,7 @@
  */
 
 #include <mouse_types.h>
+#include <pixmap.h>
 
 #define PRON_MOUSE_POINTER_WIDTH 6 /**< Width of the pointer */
 #define PRON_MOUSE_POINTER_HEIGHT 6 /**< Height of the pointer */
@@ -32,10 +33,11 @@ class Mouse {
   int lastSentX; /**< Last sent mouse x position */
   int lastSentY; /**< Last sent mouse y position */
 
-  bool pointerBackuped; /**< True if the area under the pointer has been backuped */
-  char *pointerBackup; /**< Backup of the area under the pointer */
+  bool pointerHidden; /**< True if the pointer has been hidden and the area under the pointer has been backuped */
+  Pixmap *pointer; /**< Pointer pixmap */
+  Pixmap *pointerBackup; /**< Backup of the area under the pointer */
   int pointerBackupX; /**< Top-left corner x-coordinate of the backuped area */
-  int pointerBackupY; /**< Top-left corrner y-coordinate of the backuped area */
+  int pointerBackupY; /**< Top-left corner y-coordinate of the backuped area */
   
   /**
    * Constructor.
@@ -65,14 +67,25 @@ class Mouse {
   void updateFocusWin();
 
   /**
-   * Restores the area under the mouse pointer.
+   * Returns whether a rectangular drawing area overlaps
+   * the pointer area or not.
+   * @param x1 The minimum x-coordinate of the area
+   * @param y1 The minimum y-coordinate of the area
+   * @param x2 The maximum x-coordinate of the area
+   * @param y2 The maximum y-coordinate of the area
+   * @return whether the area overlaps the pointer area or not.
    */
-  void restorePointerBackground();
+  bool overlapsPointer(int x1, int y1, int x2, int y2);
 
   /**
-   * Draws the mouse pointer. The area under the pointer is backuped.
+   * Hides the pointer by restoring the area under the mouse pointer.
    */
-  void drawPointer();
+  void hidePointer();
+
+  /**
+   * Shows the mouse pointer. The area under the pointer is backuped.
+   */
+  void showPointer();
 
   /**
    * Handles mouse motion events.

@@ -34,7 +34,6 @@ class Pixmap : public Drawable {
    */
   ~Pixmap();
 
- protected:
   /**
    * Gets the address of the pixel (x, y) in memory.
    * @param x The x-coordinate of the pixel
