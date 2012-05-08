@@ -418,14 +418,19 @@ void Window::destroy() {
 }
 
 void Window::move(int dx, int dy) {
-  this->unmap();
+  bool isMapped = this->realized();
+  if(isMapped) {
+    this->unmap();
+  }
 
   for (WindowsTree::IteratorBFS it = this->getScreen()->tree->beginBFS(this); it != this->getScreen()->tree->endBFS(); it++) {
     it->x += dx;
     it->y += dy;
   }
 
-  this->map();
+  if(isMapped) {
+    this->map();
+  }
 }
 
 void Window::moveTo(int x, int y) {
@@ -433,10 +438,15 @@ void Window::moveTo(int x, int y) {
 }
 
 void Window::resize(int width, int height) {
-  this->unmap();
+  bool isMapped = this->realized();
+  if(isMapped) {
+    this->unmap();
+  }
   this->setWidth(width);
   this->setHeight(height);
-  this->map();
+  if(isMapped) {
+    this->map();
+  }
 
   // Send resize event
   EventResizeWindow eventResizeWindow(width, height);

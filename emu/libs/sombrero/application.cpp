@@ -36,10 +36,10 @@ namespace sombrero {
   void Application::sombrerun() {
     pron::PronEvent *e = pron::getPronEvent();
 
-    printf("DEBUG éléments map application\n");
+    /*printf("DEBUG éléments map application\n");
     for(map<pron::Window, Widget*>::iterator it = Application::getInstance()->widgets.begin(); it != Application::getInstance()->widgets.end(); ++it) {
       printf("New element %d -> %p \n", it->first, it->second);
-    }
+    }*/
     while (1) {
       if (!pron::pronNextEvent(this->d, e)) {
         if (errno == EINTR) {
