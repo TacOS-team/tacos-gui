@@ -11,20 +11,30 @@
 using namespace std;
 using namespace pron;
 
+Display *display = NULL;
 GWindow *windowLeftButtonPressed   = NULL;
 GWindow *windowResizeButtonPressed = NULL;
 int mouseLastXPosition = -1;
 int mouseLastYPosition = -1;
 int mouseActualXPosition = -1;
 int mouseActualYPosition = -1;
+bool moving = false, resizing = false;
 
 void handleMouseMove() {
   int xMove = mouseLastXPosition - mouseActualXPosition;
   int yMove = mouseLastYPosition - mouseActualYPosition;
 
   if (windowLeftButtonPressed) {
+    if (!moving) {
+      moving = true;
+      pronUnmapWindow(display, windowLeftButtonPressed->window);
+    }
     windowLeftButtonPressed->move(xMove, yMove);
   } else if (windowResizeButtonPressed) {
+    if (!resizing) {
+      resizing = true;
+      pronUnmapWindow(display, windowResizeButtonPressed->window);
+    }
     windowResizeButtonPressed->resize(
         windowResizeButtonPressed->parentAttributes.width  + xMove,
         windowResizeButtonPressed->parentAttributes.height + yMove);
@@ -37,7 +47,7 @@ int main() {
   srand(time(NULL));
   
   // connection to pron
-  Display *display = pronConnect();
+  display = pronConnect();
   
   GWindowsManager::init(display->rootWindow);
   // Get the root window informations
@@ -125,6 +135,14 @@ int main() {
             gwin->raise();
           }
         } else {
+          if (moving) {
+            moving = false;
+            pronMapWindow(display, windowLeftButtonPressed->window);
+          }
+          if (resizing) {
+            resizing = false;
+            pronMapWindow(display, windowResizeButtonPressed->window);
+          }
           windowLeftButtonPressed   = NULL;
           windowResizeButtonPressed = NULL;
           // Unsubscribe of events of the root window to avoid useless events
