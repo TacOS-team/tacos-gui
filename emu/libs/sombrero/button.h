@@ -40,6 +40,11 @@ class Button : public Widget {
    */
   ~Button();
   /**
+   * Sets the parent container
+   * @param Pointer to the parent container
+   */
+  virtual void setParent(Container *parent);
+  /**
    * Button drawing stuff
    */
   void draw();

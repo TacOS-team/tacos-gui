@@ -13,12 +13,18 @@ namespace sombrero {
   }
 
   void Button::init() {
-    // Select more events
-    pron::pronSelectInput(Application::getInstance()->d, this->pronWindow, PRON_EVENTMASK(pron::EV_EXPOSE) | PRON_EVENTMASK(pron::EV_MOUSE_BUTTON));
     this->fontSize = 10;
   }
 
   Button::~Button() {}
+
+  void Button::setParent(Container *parent) {
+    Widget::setParent(parent);
+    // Select more events
+    pron::pronSelectInput(Application::getInstance()->d, this->pronWindow,
+              PRON_EVENTMASK(pron::EV_EXPOSE)
+            | PRON_EVENTMASK(pron::EV_MOUSE_BUTTON));
+  }
 
   void Button::draw() {
     // We can clear the window

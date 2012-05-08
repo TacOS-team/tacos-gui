@@ -4,14 +4,29 @@
 #include <cstdio>
 #include <cstdlib>
 
+sombrero::Label *pLabel;
+
+class MyWindow : public sombrero::Window, public has_slots<> {
+ public:
+  MyWindow(int x, int y, int width, int height)
+    : sombrero::Window(x, y, width, height) {
+
+  }
+  void changeLabel() {
+    pLabel->setText("Oh yeah !!!");
+    pLabel->update();
+  }
+};
+
 int main() {
   sombrero::Application::getInstance()->init();
   
   // Window button
 
-  sombrero::Window w(50, 50, 300, 90);
+  MyWindow w(50, 50, 300, 90);
   sombrero::Grid g(&w);
   sombrero::Label l1("Label 1");
+  pLabel = &l1;
 
   g.add(&l1);
 
@@ -52,6 +67,14 @@ int main() {
 
   sombrero::Label l9("Label 9");
   g2.add(&l9);
+
+  g2.newLine();
+
+  sombrero::Button b1("Bouton 1");
+  g.add(&b1);
+
+  b1.clicked.connect(&w, &MyWindow::changeLabel);
+
 
   sombrero::Application::getInstance()->sombrerun();
 

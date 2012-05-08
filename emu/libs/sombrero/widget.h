@@ -58,7 +58,7 @@ namespace sombrero {
        * Sets the parent container
        * @param Pointer to the parent container
        */
-      void setParent(Container *parent);
+      virtual void setParent(Container *parent);
       /**
        * Gets x
        * @return x
