@@ -37,18 +37,23 @@ namespace sombrero {
 
   void Grid::update() {
     // TODO meilleure gestion des calculs de position pour éviter les espaces entre widgets
+    // Sends the new informations to pron
     this->updatePronSize();
     this->updatePronPosition();
+    // Calculates the new colomns width and line height
     float columnWidth = (float)this->getWidth()/nbColumns;
     float lineHeight  = (float)this->getHeight()/widgetsTab.size();
     for(size_t currentY = 0; currentY < widgetsTab.size(); ++currentY) {
       for(size_t currentX = 0; currentX < widgetsTab[currentY].size(); ++currentX) {
         widgetWrapper *currentWrapper = widgetsTab[currentY][currentX];
-        if(currentWrapper != NULL && currentWrapper->x == (int)currentX && currentWrapper->y == (int)currentY) {
+        // We update the widget just once (the same wrapper can be in sevaral positions)
+        if(currentWrapper != NULL && currentWrapper->x == (int)currentX
+                                  && currentWrapper->y == (int)currentY) {
           currentWrapper->widget->setWidth (columnWidth * currentWrapper->width);
           currentWrapper->widget->setHeight(lineHeight  * currentWrapper->height);
           currentWrapper->widget->setX (this->getX()+columnWidth*currentWrapper->x);
           currentWrapper->widget->setY (this->getY()+lineHeight*currentWrapper->y);
+          // Sends the new informations to pron
           currentWrapper->widget->updatePronSize();
           currentWrapper->widget->updatePronPosition();
         }
@@ -60,10 +65,12 @@ namespace sombrero {
   }
 
   void Grid::insertRows(int position, size_t nb) {
-    // TODO voir ce qu'on fait quand
+    // TODO voir ce qu'on fait quand la ligne coupe un span
+    // Reverse order to avoid to update the same widget twice
     for(int currentY = widgetsTab.size() - 1; currentY >= 0 ; --currentY) {
       for(size_t currentX = 0; currentX < widgetsTab[currentY].size(); ++currentX) {
         widgetWrapper *currentWrapper = widgetsTab[currentY][currentX];
+        // We update the widget just once (the same wrapper can be in sevaral positions)
         if(currentWrapper != NULL && currentWrapper->x == (int)currentX && currentWrapper->y == (int)currentY) {
           currentWrapper->y += nb;
         }
@@ -78,9 +85,12 @@ namespace sombrero {
   }
 
   void Grid::insertColumns(int position, size_t nb) {
+    // TODO voir ce qu'on fait quand la colonne coupe un span
+    // Reverse order to avoid to update the same widget twice
     for(int currentY = widgetsTab.size() - 1; currentY >= 0 ; --currentY) {
       for(int currentX = widgetsTab[currentY].size() - 1; currentX >= 0; --currentX) {
         widgetWrapper *currentWrapper = widgetsTab[currentY][currentX];
+        // We update the widget just once (the same wrapper can be in sevaral positions)
         if(currentWrapper != NULL && currentWrapper->x == (int)currentX && currentWrapper->y == (int)currentY) {
           currentWrapper->x += nb;
         }
@@ -110,6 +120,7 @@ namespace sombrero {
     if(this->widgetsTab.size() < (size_t)wrapper->y + wrapper->height) {
       this->widgetsTab.resize(wrapper->y + wrapper->height);
     }
+    // Adds the wrapper in all the places it spans
     for(size_t currentY = wrapper->y; currentY < (size_t)wrapper->y + wrapper->height; ++currentY) {
       if(this->widgetsTab[currentY].size() < (size_t)wrapper->x + wrapper->width) {
         this->widgetsTab[currentY].resize(wrapper->x + wrapper->width);
@@ -125,6 +136,7 @@ namespace sombrero {
   }
 
   void Grid::attach(Widget *child, int x, int y, int width, int height) {
+    // Initialises the new wrapper
     widgetWrapper *wrapper = new widgetWrapper(child);
     wrapper->width  = width;
     wrapper->height = height;
@@ -135,16 +147,21 @@ namespace sombrero {
 
   void Grid::attachNextTo (Widget *child, Widget *sibling, PositionType side, int width, int height) {
     size_t x, y;
-    if(this->find(sibling, x, y)) {
+    // If sibling is NULL, it adds at the begining
+    if(sibling == NULL) {
+      x = 0;
+      y = 0;
+    }
+    if(sibling == NULL || this->find(sibling, x, y)) {
       widgetWrapper *wrapper = new widgetWrapper(child);
       wrapper->width  = width;
       wrapper->height = height;
 
+      // Initialises the wrapper depending to the side
       switch(side) {
        case POS_RIGHT: {
         wrapper->x = x+this->widgetsTab[y][x]->width;
         wrapper->y = y;
-        printf("%d, %d\n", wrapper->x, wrapper->y);
         break;
        }
        case POS_BOTTOM: {
@@ -172,7 +189,7 @@ namespace sombrero {
        }
       }
       this->attach(wrapper);
-    }// else exception
+    }// TODO else exception
   }
 
   Grid::widgetWrapper::widgetWrapper(Widget* w) {
