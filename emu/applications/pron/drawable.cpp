@@ -190,56 +190,76 @@ void Drawable::fillRectangle(int x, int y, int width, int height) {
   }
 }
 
-void Drawable::drawCircle(int n_cx, int n_cy, int radius){
-  double error = (double) -radius;
-  double x = (double) radius - 0.5;
-  double y = (double) 0.5;
-  double cx = n_cx - 0.5;
-  double cy = n_cy - 0.5;
+void Drawable::drawEllipse(int x0, int y0, int a, int b) {
+  int x = 0, y = b;
+  long aSquared = a * a, twoAsquared = 2 * aSquared;
+  long bSquared = b * b, twoBsquared = 2 * bSquared;
+  long d = bSquared - aSquared * b + aSquared / 4L;
+  long dx = 0, dy = twoAsquared * b;
 
-  while (x >= y) {
-    this->drawPoint((int)(cx + x), (int)(cy + y));
-    this->drawPoint((int)(cx + y), (int)(cy + x));
-
-    if (x != 0) {
-      this->drawPoint((int)(cx - x), (int)(cy + y));
-      this->drawPoint((int)(cx + y), (int)(cy - x));
-
-      if (y != 0) {
-        this->drawPoint((int)(cx + x), (int)(cy - y));
-        this->drawPoint((int)(cx - y), (int)(cy + x));
-      }
-
-      if (x != 0 && y != 0) {
-        this->drawPoint((int)(cx - x), (int)(cy - y));
-        this->drawPoint((int)(cx - y), (int)(cy - x));
-      }
-
-      error += y;
-      ++y;
-      error += y;
-
-      if (error >= 0) {
-        --x;
-        error -= x;
-        error -= x;
-      }
+  while (dx < dy) {
+    this->drawPoint(x0 + x, y0 + y);
+    this->drawPoint(x0 + x, y0 - y);
+    this->drawPoint(x0 - x, y0 + y);
+    this->drawPoint(x0 - x, y0 - y);
+    if (d > 0) {
+      --y;
+      dy -= twoAsquared;
+      d -= dy;
     }
+    ++x;
+    dx += twoBsquared;
+    d += bSquared + dx;
+  }
+  d += (3L * (aSquared - bSquared) / 2L - (dx + dy)) / 2L;
+  while (y >= 0) {
+    this->drawPoint(x0 + x, y0 + y);
+    this->drawPoint(x0 + x, y0 - y);
+    this->drawPoint(x0 - x, y0 + y);
+    this->drawPoint(x0 - x, y0 - y);
+    if (d < 0) {
+      ++x;
+      dx += twoBsquared;
+      d += dx;
+    }
+    --y;
+    dy -= twoAsquared;
+    d += aSquared - dy;
   }
 }
 
-void Drawable::fillCircle(int cx __attribute__((unused)), int cy __attribute__((unused)), int radius __attribute__((unused))){
-  /*double r = (double) radius;
+void Drawable::fillEllipse(int x0, int y0, int a, int b) {
+  int x = 0, y = b;
+  long aSquared = a * a, twoAsquared = 2 * aSquared;
+  long bSquared = b * b, twoBsquared = 2 * bSquared;
+  long d = bSquared - aSquared * b + aSquared / 4L;
+  long dx = 0, dy = twoAsquared * b;
 
-  for (double dy = 1; dy <= r; dy += 1.0) {
-    double dx = floor(sqrt((2.0 * r * dy) - (dy * dy)));
-    int x = cx - dx;
-
-    for (; x <= cx + dx; x++) {
-      this->drawPoint(x, (int)(cy + r - dy));
-      this->drawPoint(x, (int)(cy - r + dy));
+  while (dx < dy) {
+    this->drawHorizLine(x0 - x, y0 + y, 2 * x + 1);
+    this->drawHorizLine(x0 - x, y0 - y, 2 * x + 1);
+    if (d > 0) {
+      --y;
+      dy -= twoAsquared;
+      d -= dy;
     }
-  }*/
+    ++x;
+    dx += twoBsquared;
+    d += bSquared + dx;
+  }
+  d += (3L * (aSquared - bSquared) / 2L - (dx + dy)) / 2L;
+  while (y >= 0) {
+    this->drawHorizLine(x0 - x, y0 + y, 2 * x + 1);
+    this->drawHorizLine(x0 - x, y0 - y, 2 * x + 1);
+    if (d < 0) {
+      ++x;
+      dx += twoBsquared;
+      d += dx;
+    }
+    --y;
+    dy -= twoAsquared;
+    d += aSquared - dy;
+  }
 }
 
 int Drawable::getPixel(int x, int y) {

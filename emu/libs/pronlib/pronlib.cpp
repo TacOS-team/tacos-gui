@@ -204,14 +204,14 @@ int pronFillRectangle(Display *d, Drawable dr, GC gc, int x, int y, int width, i
   return (tsock_write(d->fd, &rq, sizeof(rq)) > 0);
 }
 
-int pronDrawCircle(Display *d, Drawable dr, GC gc, int x, int y, int radius) {
-  RqDrawCircle rq (gc, dr, x, y, radius);
-  return (tsock_write(d->fd,&rq,sizeof(rq)) > 0);
+int pronDrawEllipse(Display *d, Drawable dr, GC gc, int x0, int y0, int a, int b) {
+  RqDrawEllipse rq (gc, dr, x0, y0, a, b);
+  return (tsock_write(d->fd, &rq, sizeof(rq)) > 0);
 }
 
-int pronFillCircle(Display *d, Drawable dr, GC gc, int x, int y, int radius){
-  RqFillCircle rq (gc, dr, x, y, radius);
-  return (tsock_write(d->fd,&rq,sizeof(rq)) > 0);
+int pronFillEllipse(Display *d, Drawable dr, GC gc, int x0, int y0, int a, int b) {
+  RqFillEllipse rq (gc, dr, x0, y0, a, b);
+  return (tsock_write(d->fd, &rq, sizeof(rq)) > 0);
 }
 
 void pronGetWindowAttributes(Display *d, Window w, PronWindowAttributes *attr) {

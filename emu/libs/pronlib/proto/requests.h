@@ -354,61 +354,71 @@ struct RqFillRectangle : public PronRequest {
 };
 
 /**
- * DrawCircle request.
- * Sent by a client to draw a circle with given center (x,y) and radius
+ * DrawEllipse request.
+ * Sent by a client to draw an ellipse with given center (x0,y0)
+ * and radiuses a and b.
  */
-struct RqDrawCircle : public PronRequest {
+struct RqDrawEllipse : public PronRequest {
   /**
    * Constructor.
    * @param gc The graphics context to use
-   * @param drawable The drawable in which to draw the line
-   * @param x The x-coordinate of the top-left corner of the circle
-   * @param y The y-coordinate of the top-left corner of the circle
-   * @param radius The radius of the circle
+   * @param drawable The drawable in which to draw the ellipse
+   * @param x0 The x-coordinate of the center of the ellipse
+   * @param y0 The y-coordinate of the center of the ellipse
+   * @param a The longest radius of the ellipse
+   * @param b The shortest radius of the ellipse
    */
-  RqDrawCircle(unsigned int gc, unsigned int drawable, int x, int y, int radius)
-      : PronRequest(RQ_DRAW_CIRCLE) {
+  RqDrawEllipse(unsigned int gc, unsigned int drawable, int x0, int y0,
+      int a, int b)
+      : PronRequest(RQ_DRAW_ELLIPSE) {
     this->gc = gc;
     this->drawable = drawable;
-    this->x = x;
-    this->y = y;
-    this->radius = radius;
+    this->x0 = x0;
+    this->y0 = y0;
+    this->a = a;
+    this->b = b;
   }
 
   unsigned int gc; /**< Id of the graphics context to use */
   unsigned int drawable; /**< Id of the drawable in which to draw */
-  int x; /**< X-coordinate of the top-left corner of the circle */
-  int y; /**< X-coordinate of the top-left corner of the circle */
-  int radius; /**< Radius of the circle */
+  int x0; /**< X-coordinate of the center of the ellipse */
+  int y0; /**< X-coordinate of the center of the ellipse */
+  int a; /**< Longest radius of the ellipse */
+  int b; /**< Shortest radius of the ellipse */
 };
 
 /**
- * FillCircle request.
- * Sent by a client to draw a filled circle with given center (x,y) and radius.
+ * FillEllipse request.
+ * Sent by a client to draw a filled ellipse with given center (x0,y0)
+ * and radiuses a and b.
  */
-struct RqFillCircle : public PronRequest {
+struct RqFillEllipse : public PronRequest {
   /**
    * Constructor.
    * @param gc The graphics context to use
-   * @param drawable The drawable in which to draw the line
-   * @param x The x-coordinate of the top-left corner of the circle
-   * @param y The y-coordinate of the top-left corner of the circle
-   * @param radius The radius of the circle
+   * @param drawable The drawable in which to draw the ellipse
+   * @param x0 The x-coordinate of the center of the ellipse
+   * @param y0 The y-coordinate of the center of the ellipse
+   * @param a The longest radius of the ellipse
+   * @param b The shortest radius of the ellipse
    */
-  RqFillCircle(unsigned int gc, unsigned int drawable, int x, int y, int radius)
-      : PronRequest(RQ_FILL_CIRCLE) {
+  RqFillEllipse(unsigned int gc, unsigned int drawable, int x0, int y0,
+      int a, int b)
+      : PronRequest(RQ_FILL_ELLIPSE) {
     this->gc = gc;
     this->drawable = drawable;
-    this->x = x;
-    this->y = y;
-    this->radius = radius;
+    this->x0 = x0;
+    this->y0 = y0;
+    this->a = a;
+    this->b = b;
   }
 
   unsigned int gc; /**< Id of the graphics context to use */
   unsigned int drawable; /**< Id of the drawable in which to draw */
-  int x; /**< X-coordinate of the top-left corner of the circle */
-  int y; /**< X-coordinate of the top-left corner of the circle */
-  int radius; /**< Radius of the circle */
+  int x0; /**< X-coordinate of the center of the ellipse */
+  int y0; /**< X-coordinate of the center of the ellipse */
+  int a; /**< Longest radius of the ellipse */
+  int b; /**< Shortest radius of the ellipse */
 };
 
 /**

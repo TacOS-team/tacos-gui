@@ -212,28 +212,30 @@ int pronDrawRect(Display *d, Drawable dr, GC gc, int x, int y, int width, int he
 int pronFillRectangle(Display *d, Drawable dr, GC gc, int x, int y, int width, int height);
 
 /**
- * Draws a circle with given center (x,y) and radius.
+ * Draws an ellipse with given center (x0,y0) and radiuses a and b.
  * @param d The connection to pron
  * @param dr The drawable in which to draw the line
  * @param gc The graphics context to use
- * @param x The x-coordinate of the top-left corner of the circle
- * @param y The y-coordinate of the top-left corner of the circle
- * @param radius The radius of the circle
+ * @param x0 The x-coordinate of the center of the ellipse
+ * @param y0 The y-coordinate of the center of the ellipse
+ * @param a The longest radius of the ellipse
+ * @param b The shortest radius of the ellipse
  * @return success
  */
-int pronDrawCircle(Display *d, Drawable dr, GC gc, int x, int y, int radius);
+int pronDrawEllipse(Display *d, Drawable dr, GC gc, int x0, int y0, int a, int b);
 
 /**
- * Draws a filled circle with given center (x,y) and radius.
+ * Draws a filled ellipse with given center (x0,y0) and radiuses a and b.
  * @param d The connection to pron
  * @param dr The drawable in which to draw the line
  * @param gc The graphics context to use
- * @param x The x-coordinate of the top-left corner of the circle
- * @param y The y-coordinate of the top-left corner of the circle
- * @param radius The radius of the circle
+ * @param x0 The x-coordinate of the center of the ellipse
+ * @param y0 The y-coordinate of the center of the ellipse
+ * @param a The longest radius of the ellipse
+ * @param b The shortest radius of the ellipse
  * @return success
  */
-int pronFillCircle(Display *d, Drawable dr, GC gc, int x, int y, int radius);
+int pronFillEllipse(Display *d, Drawable dr, GC gc, int x0, int y0, int a, int b);
 
 /**
  * Closes the connection to pron.

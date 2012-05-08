@@ -190,13 +190,14 @@ class Drawable {
   void drawRect(int x, int y, int width, int height);
 
   /**
-   * Draws a circle with given center (x,y) and radius, using the current
-   * graphics context.
-   * @param x The x-coordinate of the top-left corner of the circle
-   * @param y The y-coordinate of the top-left corner of the circle
-   * @param radius The radius of the circle
+   * Draws an ellipse with given center (x0,y0) and radiuses a and b,
+   * using the current graphics context.
+   * @param x0 The x-coordinate of the center of the ellipse
+   * @param y0 The y-coordinate of the center of the ellipse
+   * @param a The longest radius of the ellipse
+   * @param b The shortest radius of the ellipse
    */
-  void drawCircle(int x, int y, int radius);
+  void drawEllipse(int x0, int y0, int a, int b);
 
   /**
    * Draws a filled rectangle at (x,y) width height sized, using the current
@@ -209,13 +210,14 @@ class Drawable {
   void fillRectangle(int x, int y, int width, int height);
   
   /**
-   * Draws a filled circle with given center (x,y) and radius, using the
-   * current graphics context.
-   * @param x The x-coordinate of the top-left corner of the circle
-   * @param y The y-coordinate of the top-left corner of the circle
-   * @param radius The radius of the circle
+   * Draws a filled ellipse with given center (x0,y0) and radiuses a and b,
+   * using the current graphics context.
+   * @param x0 The x-coordinate of the center of the ellipse
+   * @param y0 The y-coordinate of the center of the ellipse
+   * @param a The longest radius of the ellipse
+   * @param b The shortest radius of the ellipse
    */
-  void fillCircle(int x, int y, int radius);
+  void fillEllipse(int x0, int y0, int a, int b);
 
   /**
    * Puts an image into the drawable.

@@ -5,16 +5,16 @@
 namespace sombrero {
 
   Canvas::Canvas(Container *parent)
-    : Widget(parent) {
-      this->pixmap = pronCreatePixmap(Application::getInstance()->d, this->getWidth(), this->getHeight(), SOMBRERO_CANVAS_DEPTH);
-      color_t bgColor;
-      COLOR(bgColor, 24).r = (this->pixmap >> 16) << 3;
-      COLOR(bgColor, 24).g = (this->pixmap >> 16) << 3;
-      COLOR(bgColor, 24).b = (this->pixmap >> 16) << 3;
-      pron::PronGCValues values;
-      values.fg = bgColor;
-      this->bgGC = pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG);
-    }
+      : Widget(parent) {
+    this->pixmap = pronCreatePixmap(Application::getInstance()->d, this->getWidth(), this->getHeight(), SOMBRERO_CANVAS_DEPTH);
+    color_t bgColor;
+    COLOR(bgColor, 24).r = (this->pixmap >> 16) << 3;
+    COLOR(bgColor, 24).g = (this->pixmap >> 16) << 3;
+    COLOR(bgColor, 24).b = (this->pixmap >> 16) << 3;
+    pron::PronGCValues values;
+    values.fg = bgColor;
+    this->bgGC = pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG);
+  }
 
   Canvas::~Canvas() {
     pronFreePixmap(Application::getInstance()->d, this->pixmap);
@@ -40,12 +40,12 @@ namespace sombrero {
     pronFillRectangle(Application::getInstance()->d, this->pixmap, Application::getInstance()->d->defaultGC, x, y, width, height);
   }
 
-  void Canvas::drawCircle(int x, int y, int radius) {
-    pronDrawCircle(Application::getInstance()->d, this->pixmap, Application::getInstance()->d->defaultGC, x, y, radius);
+  void Canvas::drawEllipse(int x0, int y0, int a, int b) {
+    pronDrawEllipse(Application::getInstance()->d, this->pixmap, Application::getInstance()->d->defaultGC, x0, y0, a, b);
   }
 
-  void Canvas::fillCircle(int x, int y, int radius) {
-    pronFillCircle(Application::getInstance()->d, this->pixmap, Application::getInstance()->d->defaultGC, x, y, radius);
+  void Canvas::fillEllipse(int x0, int y0, int a, int b) {
+    pronFillEllipse(Application::getInstance()->d, this->pixmap, Application::getInstance()->d->defaultGC, x0, y0, a, b);
   }
 
   void Canvas::draw() {

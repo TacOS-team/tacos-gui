@@ -153,12 +153,12 @@ void Client::handle() {
       }
       break;
     }
-    case RQ_DRAW_CIRCLE: {
-      RqDrawCircle *rq = (RqDrawCircle*) Client::recvBuf;
+    case RQ_DRAW_ELLIPSE: {
+      RqDrawEllipse *rq = (RqDrawEllipse*) Client::recvBuf;
       Drawable *d = screen->getDrawable(rq->drawable);
       GC *gc = GC::getGC(rq->gc);
       if (d != NULL && screen->prepareDrawing(d, gc)) {
-        d->drawCircle(rq->x, rq->y, rq->radius);
+        d->drawEllipse(rq->x0, rq->y0, rq->a, rq->b);
       }
       break;
     }
@@ -180,12 +180,12 @@ void Client::handle() {
       }
       break;
     }
-    case RQ_FILL_CIRCLE: {
-      RqFillCircle *rq = (RqFillCircle*) Client::recvBuf;
+    case RQ_FILL_ELLIPSE: {
+      RqFillEllipse *rq = (RqFillEllipse*) Client::recvBuf;
       Drawable *d = screen->getDrawable(rq->drawable);
       GC *gc = GC::getGC(rq->gc);
       if (d != NULL && screen->prepareDrawing(d, gc)) {
-        d->fillCircle(rq->x, rq->y, rq->radius);
+        d->fillEllipse(rq->x0, rq->y0, rq->a, rq->b);
       }
       break;
     }

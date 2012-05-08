@@ -76,22 +76,22 @@ class Canvas : public Widget {
   void fillRectangle(int x, int y, int width, int height);
 
   /**
-   * Draws a circle with given center (x,y) and radius.
-   * @param x The x-coordinate of the top-left corner of the circle
-   * @param y The y-coordinate of the top-left corner of the circle
-   * @param radius The radius of the circle
-   * @return success
+   * Draws an ellipse with given center (x0,y0) and radiuses a and b.
+   * @param x0 The x-coordinate of the center of the ellipse
+   * @param y0 The y-coordinate of the center of the ellipse
+   * @param a The longest radius of the ellipse
+   * @param b The shortest radius of the ellipse
    */
-  void drawCircle(int x, int y, int radius);
+  void drawEllipse(int x0, int y0, int a, int b);
 
   /**
-   * Fills a circle with given center (x,y) and radius.
-   * @param x The x-coordinate of the top-left corner of the circle
-   * @param y The y-coordinate of the top-left corner of the circle
-   * @param radius The radius of the circle
-   * @return success
+   * Draws a filled ellipse with given center (x0,y0) and radiuses a and b.
+   * @param x0 The x-coordinate of the center of the ellipse
+   * @param y0 The y-coordinate of the center of the ellipse
+   * @param a The longest radius of the ellipse
+   * @param b The shortest radius of the ellipse
    */
-  void fillCircle(int x, int y, int radius);
+  void fillEllipse(int x0, int y0, int a, int b);
 
   /**
    * Drawing stuff
