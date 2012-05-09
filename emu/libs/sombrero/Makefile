@@ -1,5 +1,7 @@
 SRCS = *.cpp
-OBJS = sombrero.o application.o widget.o window.o container.o bin.o canvas.o timer.o button.o textbox.o label.o checkbox.o grid.o
+OBJS = sombrero.o application.o widget.o window.o container.o \
+				bin.o canvas.o timer.o button.o textbox.o label.o checkbox.o \
+				grid.o scrollpane.o scrollbar.o vscrollbar.o
 
 all: $(SOMBRERO)
 

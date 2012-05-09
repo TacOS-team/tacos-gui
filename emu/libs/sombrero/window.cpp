@@ -19,9 +19,9 @@ namespace sombrero {
       // Maps the window
       pron::pronMapWindow(Application::getInstance()->d, this->pronWindow);
       // Select events
-      pron::pronSelectInput(Application::getInstance()->d, this->pronWindow, PRON_EVENTMASK(pron::EV_EXPOSE)
-                                                                           | PRON_EVENTMASK(pron::EV_DESTROY_WINDOW)
-                                                                           | PRON_EVENTMASK(pron::EV_RESIZE_WINDOW));
+      this->subscribeEvent(pron::EV_EXPOSE);
+      this->subscribeEvent(pron::EV_DESTROY_WINDOW);
+      this->subscribeEvent(pron::EV_RESIZE_WINDOW);
 
       this->layout = NULL;
   }

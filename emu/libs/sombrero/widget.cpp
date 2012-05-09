@@ -5,11 +5,11 @@
 namespace sombrero {
 
   Widget::Widget() {
-    this->parent = NULL;
+    this->init();
   }
 
   Widget::Widget(Container *parent) {
-    this->parent = NULL;
+    this->init();
     parent->add(this);
   }
 
@@ -17,18 +17,38 @@ namespace sombrero {
     pron::pronDestroyWindow(Application::getInstance()->d, this->pronWindow);
   }
 
+  void Widget::init() {
+    this->parent    = NULL;
+    this->eventMask = 0;
+  }
+
+  void Widget::subscribeEvent(uint32_t eventMask) {
+    this->eventMask |= PRON_EVENTMASK(eventMask);
+    pron::pronSelectInput(Application::getInstance()->d, this->pronWindow,
+              this->eventMask);
+  }
+
+  void Widget::unsubscribeEvent(uint32_t eventMask) {
+    this->eventMask &= ~PRON_EVENTMASK(eventMask);
+    pron::pronSelectInput(Application::getInstance()->d, this->pronWindow,
+              this->eventMask);
+  }
+
   void Widget::setParent(Container *parent) {
     // TODO à réfléchir si on supprime si ça vaut pas null etc.
     if (this->parent == NULL) {
       this->parent = parent;
       // Creates the window
-      this->pronWindow = pron::pronCreateWindow(Application::getInstance()->d, this->parent->pronWindow, this->x, this->y, this->width, this->height);
+      this->pronWindow = pron::pronCreateWindow(Application::getInstance()->d,
+                                                this->parent->pronWindow,
+                                                this->x, this->y,
+                                                this->width, this->height);
       // Associates the pron::window to the widget
       Application::getInstance()->widgets[this->pronWindow] = this;
       // Maps the window
       pron::pronMapWindow(Application::getInstance()->d, this->pronWindow);
       // Select events
-      pron::pronSelectInput(Application::getInstance()->d, this->pronWindow, PRON_EVENTMASK(pron::EV_EXPOSE));
+      this->subscribeEvent(pron::EV_EXPOSE);
     }
   }
 
@@ -113,6 +133,7 @@ namespace sombrero {
   }
 
   void Widget::handleEventMouseButton(pron::PronEvent *e __attribute__((unused))) {
+    printf("handleEventMouseButton\n");
     this->clicked();
   }
 

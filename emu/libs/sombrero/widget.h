@@ -28,8 +28,19 @@ namespace sombrero {
       int height; /**< Height */
       bool active; /**< Dealing with activable widgets */
       bool visible; /**< The widget has to be shown */
+      uint32_t eventMask; /**< The event mask */
 
     protected:
+      /**
+       * Subscribes to new events
+       * @param eventMask The event mask to add
+       */
+      void subscribeEvent(uint32_t eventMask);
+      /**
+       * Unsubscribes to new events
+       * @param eventMask The event mask to add
+       */
+      void unsubscribeEvent(uint32_t eventMask);
       /**
        * The pronWindow associated with the widget.
        * Has to be reparented when the widget is reparented.
@@ -47,7 +58,11 @@ namespace sombrero {
       /**
        * Widget destructor. Destroys the pron top window
        */
-      ~Widget(); 
+      ~Widget();
+      /**
+       * initialize the widget
+       */
+      void init();
 
     public:
       // Signals

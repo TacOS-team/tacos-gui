@@ -21,9 +21,8 @@ namespace sombrero {
   void Button::setParent(Container *parent) {
     Widget::setParent(parent);
     // Select more events
-    pron::pronSelectInput(Application::getInstance()->d, this->pronWindow,
-              PRON_EVENTMASK(pron::EV_EXPOSE)
-            | PRON_EVENTMASK(pron::EV_MOUSE_BUTTON));
+    this->subscribeEvent(pron::EV_EXPOSE);
+    this->subscribeEvent(pron::EV_MOUSE_BUTTON);
   }
 
   void Button::draw() {
