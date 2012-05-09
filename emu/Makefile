@@ -15,7 +15,7 @@ export LD=@printf "\033[35m   LD\t$$@\033[0m\n" && ld
 # Compilation flags
 DEBUG=-DDEBUG
 CURRENTDIR=$(realpath .)
-export INCLUDES= -I. -I$(CURRENTDIR)/include/ -I$(CURRENTDIR)/drivers/include/ -I$(CURRENTDIR)/libs/libtacos/ -I$(CURRENTDIR)/libs/pronlib/ -I$(CURRENTDIR)/libs/libtsock/ -I$(CURRENTDIR)/libs/sombrero/ -I$(CURRENTDIR)/libs/sigslot/
+export INCLUDES= -I. -I$(CURRENTDIR)/include/ -I$(CURRENTDIR)/drivers/include/ -I$(CURRENTDIR)/libs/libtacos/ -I$(CURRENTDIR)/libs/pronlib/ -I$(CURRENTDIR)/libs/libtsock/ -I$(CURRENTDIR)/libs/sombrero/ -I$(CURRENTDIR)/libs/libcolor/ -I$(CURRENTDIR)/libs/sigslot/
 export CFLAGS=-W -Wall -g $(DEBUG)
 export CXXFLAGS=-W -Wall -g $(DEBUG)
 export MFLAGS=-s
@@ -31,6 +31,7 @@ export LIBTACOS=$(BUILDDIRLIBS)/libtacos.so
 export PRONLIB=$(BUILDDIRLIBS)/pronlib.so
 export LIBTSOCK=$(BUILDDIRLIBS)/libtsock.so
 export SOMBRERO=$(BUILDDIRLIBS)/sombrero.so
+export LIBCOLOR=$(BUILDDIRLIBS)/libcolor.so
 
 SUBDIRS = drivers libs applications
 
