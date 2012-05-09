@@ -32,12 +32,12 @@ namespace sombrero {
 
   void Grid::draw() {
     //printf("draw grid (x, y, w, h) : %d, %d, %d, %d\n", this->getX(), this->getY(), this->getWidth(), this->getHeight());
-    
   }
 
   void Grid::update() {
     // TODO meilleure gestion des calculs de position pour éviter les espaces entre widgets
     // Sends the new informations to pron
+    this->setVisible(false);
     Container::update();
     // Calculates the new colomns width and line height
     float columnWidth = (float)this->getWidth()/nbColumns;
@@ -57,7 +57,9 @@ namespace sombrero {
         }
       }
     }
+    this->setVisible(true);
   }
+
   void Grid::insertRow (int position) {
     this->insertRows(position, 1);
   }

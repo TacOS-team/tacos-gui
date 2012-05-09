@@ -59,11 +59,17 @@ namespace sombrero {
   void Widget::setActive(bool active) {
     this->active = active;
   }
+
   bool Widget::isVisible() {
     return this->visible;
   }
 
   void Widget::setVisible(bool visible) {
+    if (visible) {
+      pronMapWindow(Application::getInstance()->d, this->pronWindow);
+    } else {
+      pronUnmapWindow(Application::getInstance()->d, this->pronWindow);
+    }
     this->visible = visible;
   }
 
