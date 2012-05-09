@@ -120,7 +120,7 @@ void Window::unmap() {
 
     // Redraw covered lower siblings
     for (Window *sib = this->prevSibling; sib != NULL; sib = sib->prevSibling) {
-      if (this->overlaps(sib)) {
+      if (this->overlaps(sib) && sib->realized()) {
         //sib->clear(this->x - sib->x, this->y - sib->y, this->getWidth(), this->getHeight());
         // Test: only send exposure event to improve performances
         EventExpose expose(sib->getId(), this->x - sib->x, this->y - sib->y, this->getWidth(), this->getHeight());
@@ -138,14 +138,19 @@ void Window::map() {
   // Clear the window and send exposure event
   //this->clear();
   // Test: only send exposure event to improve performances
-  EventExpose expose(this->getId(), 0, 0, this->getWidth(), this->getHeight());
-  this->deliverEvent(&expose, sizeof(expose));
+  if (this->realized()) {
+    EventExpose expose(this->getId(), 0, 0, this->getWidth(), this->getHeight());
+    this->deliverEvent(&expose, sizeof(expose));
+  }
 
   // Update all children
   for (WindowsTree::IteratorBFS it = ++(this->getScreen()->tree->beginBFS(this)); it != this->getScreen()->tree->endBFS(); it++) {
-    EventExpose expose(it->getId(), 0, 0, it->getWidth(), it->getHeight());
-    it->deliverEvent(&expose, sizeof(expose));
     it->unmappedParents--;
+
+    if (it->realized()) {
+      EventExpose expose(it->getId(), 0, 0, it->getWidth(), it->getHeight());
+      it->deliverEvent(&expose, sizeof(expose));
+    }
   }
 }
 
@@ -177,7 +182,7 @@ void Window::clear(int x, int y, int width, int height, bool sendExposureEvent) 
   }
   this->getScreen()->getGC()->fg = oldFg;
 
-  if (sendExposureEvent) {
+  if (sendExposureEvent && this->realized()) {
     // Send exposure event
     EventExpose expose(this->getId(), x, y, width, height);
     this->deliverEvent(&expose, sizeof(expose));
@@ -329,7 +334,7 @@ void Window::raise() {
   this->parent->lastChild->nextSibling = this;
   this->parent->lastChild = this;
 
-  if (overlap) {
+  if (overlap && this->realized()) {
     //this->clear(0, 0, this->getWidth(), this->getHeight());
     // Test: only send exposure event to improve performances
     EventExpose expose(this->getId(), 0, 0, this->getWidth(), this->getHeight());
@@ -338,8 +343,10 @@ void Window::raise() {
     for (WindowsTree::IteratorBFS it = ++(this->getScreen()->tree->beginBFS(this)); it != this->getScreen()->tree->endBFS(); it++) {
       //it->clear(0 - it->x, 0 - it->y, this->getWidth(), this->getHeight());
       // Test: only send exposure event to improve performances
-      EventExpose expose(it->getId(), 0 - it->x, 0 - it->y, this->getWidth(), this->getHeight());
-      it->deliverEvent(&expose, sizeof(expose));
+      if (it->realized()) {
+        EventExpose expose(it->getId(), 0 - it->x, 0 - it->y, this->getWidth(), this->getHeight());
+        it->deliverEvent(&expose, sizeof(expose));
+      }
     }
   }
 }
@@ -419,7 +426,8 @@ void Window::destroy() {
 
 void Window::move(int dx, int dy) {
   bool isMapped = this->realized();
-  if(isMapped) {
+
+  if (isMapped) {
     this->unmap();
   }
 
@@ -428,7 +436,7 @@ void Window::move(int dx, int dy) {
     it->y += dy;
   }
 
-  if(isMapped) {
+  if (isMapped) {
     this->map();
   }
 }
@@ -439,12 +447,15 @@ void Window::moveTo(int x, int y) {
 
 void Window::resize(int width, int height) {
   bool isMapped = this->realized();
-  if(isMapped) {
+
+  if (isMapped) {
     this->unmap();
   }
+
   this->setWidth(width);
   this->setHeight(height);
-  if(isMapped) {
+
+  if (isMapped) {
     this->map();
   }
 
