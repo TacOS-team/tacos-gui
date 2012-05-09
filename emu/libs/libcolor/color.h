@@ -23,6 +23,13 @@ class Color {
    */
   Color(float r, float g, float b);
   /**
+   * Color RGB contructor
+   * @param r red component from 0 to 255
+   * @param g green component from 0 to 255
+   * @param b blue component from 0 to 255
+   */
+  Color(int r, int g, int b);
+  /**
    * Get red
    * @return component between 0. and 1.
    */
@@ -53,10 +60,16 @@ class Color {
    */
   void setB(float b);
   /**
-   * Get RGB
+   * Get RGB 24
    * @return The RGB pixel with 24 bits depth
    */
-  int getRGB();
+  int getRGB24();
+  /**
+   * Get RGB
+   * @param The pixel depth
+   * @return The RGB pixel with 24 bits depth
+   */
+  int getRGB(int depth);
 };
 
 #endif//__COLOR_H__

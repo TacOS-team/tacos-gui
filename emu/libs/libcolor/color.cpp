@@ -16,6 +16,12 @@ Color::Color(float r, float g, float b)
     : r(r), g(g), b(b){
 }
 
+Color::Color(int r, int g, int b) {
+  this->r = (float) r / 255.;
+  this->g = (float) g / 255.;
+  this->b = (float) b / 255.;
+}
+
 float Color::getR() {
   return this->r;
 }
@@ -40,7 +46,16 @@ void Color::setB(float b) {
   this->b = b;
 }
 
-int Color::getRGB() {
+int Color::getRGB(int depth) {
+  switch (depth) {
+    case 24:
+      return getRGB24();
+    default:
+      return getRGB24();
+  }
+}
+
+int Color::getRGB24() {
   int pixel = 0;
   // Red
   pixel |= (int)(this->r * 0xFF);
