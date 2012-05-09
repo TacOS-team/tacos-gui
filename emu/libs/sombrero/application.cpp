@@ -49,6 +49,8 @@ namespace sombrero {
         exit(1);
       }
 
+      printf("event received\n");
+
       map<pron::Window, Widget*>::iterator it = Application::getInstance()->widgets.find(e->window);
       if(it != Application::getInstance()->widgets.end()) {
         Widget *w = it->second;
