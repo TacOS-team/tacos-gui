@@ -210,9 +210,6 @@ void Mouse::showPointer() {
   if (this->pointerHidden) {
     Screen *screen = Screen::getInstance();
 
-    // Delete the obsolete clipZone
-    screen->setClipWin(NULL);
-
     // Save the pointer background and draw the pointer
     this->pointerBackupX = this->mouseX;
     this->pointerBackupY = this->mouseY;
