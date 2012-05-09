@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 
 #include <gwindows_manager.h>
 
@@ -126,7 +127,7 @@ GWindow::GWindow (Window w, const PronWindowAttributes & attributes, bool decora
     pronMapWindow(display, this->maximiseButton);
 
     GWindowsManager::getInstance()->addGWindow(this);
-    this->decorate();
+    //this->decorate();
   }
 }
 
@@ -309,13 +310,17 @@ void GWindow::maximise() {
       pronMoveWindowTo(display, this->parent, 0, 0);
       this->resize(GWindowsManager::getInstance()->getRootWindowAttributes().width,
         GWindowsManager::getInstance()->getRootWindowAttributes().height);
+      // Puts the window on foreground
+      this->raise();
       pronMapWindow(display, this->parent);
       /** @todo unmap de resizewindow */
       this->isMaximised = true;
     } else {
       this->isMaximised = false;
+      pronUnmapWindow(display, this->parent);
       this->resize(this->oldParentAttributes.width, this->oldParentAttributes.height);
       pronMoveWindowTo(display, this->parent, this->oldParentAttributes.x, this->oldParentAttributes.y);
+      pronMapWindow(display, this->parent);
       // On en profite pour mettre tous les attributs à jour
       this->attributes = windowAttributes;
       pronGetWindowAttributes(display, this->parent, &this->parentAttributes);

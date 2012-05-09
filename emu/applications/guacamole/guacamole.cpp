@@ -117,8 +117,6 @@ int main() {
             GWindowsManager::getInstance()->destroy(gwin->parent);
           } else if (mouseButtonEvent->window == gwin->maximiseButton) {
             gwin->maximise();
-            // Puts the window on foreground
-            gwin->raise();
           } else {
             if (mouseButtonEvent->window == gwin->resizeButton) {
               windowResizeButtonPressed = gwin;
