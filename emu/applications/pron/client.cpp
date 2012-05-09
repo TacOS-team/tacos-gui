@@ -55,6 +55,7 @@ void Client::handle() {
       if (w != NULL) {
         w->map();
       }
+      screen->traceWindows();
       break;
     }
     case RQ_UNMAP_WINDOW: {
@@ -241,6 +242,7 @@ void Client::handle() {
       if (w != NULL) {
         w->move(rq->x, rq->y);
       }
+      screen->traceWindows();
       break;
     }
     case RQ_MOVE_WINDOW_TO: { // TODO Faire une fonction générale pour les deux move

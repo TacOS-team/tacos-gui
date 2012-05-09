@@ -184,7 +184,7 @@ bool Screen::prepareDrawing(Drawable *d, GC *gc) {
  * @param prefix The current prefix to show
  */
 void traceWindowsRec(Window *w, string prefix) {
-  printf("%s%x (p: %x, fc: %x, lc: %x, ps: %x, ns: %x, r: %s)\n",
+  printf("%s%x (p: %x, fc: %x, lc: %x, ps: %x, ns: %x, x: %d, y; %d, w: %d, h: %d, r: %s)\n",
         prefix.c_str(),
         w->getId(),
         w->parent == NULL ? 0 : w->parent->getId(),
@@ -192,6 +192,10 @@ void traceWindowsRec(Window *w, string prefix) {
         w->lastChild == NULL ? 0 : w->lastChild->getId(),
         w->prevSibling == NULL ? 0 : w->prevSibling->getId(),
         w->nextSibling == NULL ? 0 : w->nextSibling->getId(),
+        w->getX(),
+        w->getY(),
+        w->getWidth(),
+        w->getHeight(),
         w->realized() ? "yes" : "no");
   for (Window *currentChild = w->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
     traceWindowsRec(currentChild, prefix + "--");
