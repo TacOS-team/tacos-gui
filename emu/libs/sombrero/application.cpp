@@ -38,7 +38,7 @@ namespace sombrero {
 
     /*printf("DEBUG éléments map application\n");
     for(map<pron::Window, Widget*>::iterator it = Application::getInstance()->widgets.begin(); it != Application::getInstance()->widgets.end(); ++it) {
-      printf("New element %d -> %p \n", it->first, it->second);
+      printf("New element %x -> %p \n", it->first, it->second);
     }*/
     while (1) {
       if (!pron::pronNextEvent(this->d, e)) {
@@ -49,7 +49,7 @@ namespace sombrero {
         exit(1);
       }
 
-      printf("event received\n");
+      //printf("event received\n");
 
       map<pron::Window, Widget*>::iterator it = Application::getInstance()->widgets.find(e->window);
       if(it != Application::getInstance()->widgets.end()) {
@@ -62,10 +62,10 @@ namespace sombrero {
             w->handleEventExpose();
             break;
           case pron::EV_POINTER_MOVED:
-            w->handleEventPointerMoved();
+            w->handleEventPointerMoved((pron::EventPointerMoved*) e);
             break;
           case pron::EV_MOUSE_BUTTON:
-            w->handleEventMouseButton(e);
+            w->handleEventMouseButton((pron::EventMouseButton*)e);
             break;
           case pron::EV_KEY_PRESSED:
             w->handleEventKeyPressed(e);

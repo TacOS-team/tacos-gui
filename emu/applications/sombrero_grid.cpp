@@ -1,5 +1,6 @@
 #include "sombrero.h"
 #include "grid.h"
+#include "vscrollbar.h"
 #include "unistd.h"
 #include <cstdio>
 #include <cstdlib>
@@ -16,6 +17,10 @@ class MyWindow : public sombrero::Window, public has_slots<> {
     pLabel->setText("Oh yeah !!!");
     pLabel->update();
   }
+
+  void newValue(int newVal) {
+    printf("New Value slot \\o/ : %d\n", newVal);
+  }
 };
 
 int main() {
@@ -25,7 +30,7 @@ int main() {
 
   MyWindow w(50, 50, 300, 90);
   sombrero::Grid g(&w);
-  sombrero::Label l1("Label 1");
+  /*sombrero::Label l1("Label 1");
   pLabel = &l1;
 
   g.add(&l1);
@@ -48,9 +53,9 @@ int main() {
 
 
   sombrero::Label l6("Label 6");
-  g.attach(&l6,0,3,3,1);
+  g.attach(&l6,0,3,3,1);*/
 
-  sombrero::Grid g2;
+  /*sombrero::Grid g2;
 
   g.attachNextTo(&g2,NULL, sombrero::POS_LEFT,1,4);
 
@@ -66,14 +71,20 @@ int main() {
   g2.newLine();
 
   sombrero::Label l9("Label 9");
-  g2.add(&l9);
+  g2.add(&l9);*/
 
-  g2.newLine();
+  /** /sombrero::Button b1("Bouton 1");
+  g.add(&b1);/**/
 
-  sombrero::Button b1("Bouton 1");
-  g.add(&b1);
+  //b1.clicked.connect(&w, &MyWindow::changeLabel);
 
-  b1.clicked.connect(&w, &MyWindow::changeLabel);
+  sombrero::VScrollBar vsb1;
+  g.attachNextTo(&vsb1,NULL, sombrero::POS_LEFT,1,4);
+  vsb1.newValue.connect(&w, &MyWindow::newValue);
+  vsb1.setRange(225,99999);
+
+  /*sombrero::Label l10("Label 10");
+  g.attachNextTo(&l10,NULL, sombrero::POS_LEFT,1,4);*/
 
 
   sombrero::Application::getInstance()->sombrerun();

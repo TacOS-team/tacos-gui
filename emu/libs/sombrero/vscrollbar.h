@@ -16,8 +16,16 @@ namespace sombrero {
 class VScrollBar : public ScrollBar {
 
  protected:
+  virtual int getMaxThumbLength();
+  virtual void setThumbPosition(unsigned short position);
  public:
   VScrollBar();
+  virtual void draw();
+  /**
+   * Updates the widgets to pron
+   */
+  virtual void update();
+  void handleMouseMove(int xMove, int yMove);
 };
 
 } // namespace sombrero

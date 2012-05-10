@@ -21,6 +21,8 @@ namespace sombrero {
   class Widget {
 
     private:
+      int mouseActualXPosition;
+      int mouseActualYPosition;
       Container *parent; /**< The parent widget */
       int x; /**< x coordinate */
       int y; /**< y coordinate */
@@ -31,16 +33,6 @@ namespace sombrero {
       uint32_t eventMask; /**< The event mask */
 
     protected:
-      /**
-       * Subscribes to new events
-       * @param eventMask The event mask to add
-       */
-      void subscribeEvent(uint32_t eventMask);
-      /**
-       * Unsubscribes to new events
-       * @param eventMask The event mask to add
-       */
-      void unsubscribeEvent(uint32_t eventMask);
       /**
        * The pronWindow associated with the widget.
        * Has to be reparented when the widget is reparented.
@@ -67,7 +59,19 @@ namespace sombrero {
     public:
       // Signals
       signal0<> clicked;
+      signal0<> released;
       signal0<> resized;
+      signal2<int, int> mouseDrag;
+      /**
+       * Subscribes to new events
+       * @param eventMask The event mask to add
+       */
+      void subscribeEvent(uint32_t eventMask);
+      /**
+       * Unsubscribes to new events
+       * @param eventMask The event mask to add
+       */
+      void unsubscribeEvent(uint32_t eventMask);
       // Getters and setters
       /**
        * Sets the parent container
@@ -163,12 +167,12 @@ namespace sombrero {
       /**
        * Handle for a pointerMoved event
        */
-      virtual void handleEventPointerMoved() ;
+      virtual void handleEventPointerMoved(pron::EventPointerMoved * e) ;
       /**
        * Handle for a mouseButton event
        * @param e A pointer to the event that accured
        */
-      virtual void handleEventMouseButton(pron::PronEvent * e __attribute__((unused))) ;
+      virtual void handleEventMouseButton(pron::EventMouseButton * e) ;
       /**
        * Handle for a keyPressed event
        * @param e A pointer to the event that occured

@@ -129,12 +129,24 @@ namespace sombrero {
     this->draw();
   }
 
-  void Widget::handleEventPointerMoved()  {
+  void Widget::handleEventPointerMoved(pron::EventPointerMoved *mousePointerEvent) {
+    if (mouseActualXPosition != -1) {
+      this->mouseDrag(mousePointerEvent->xRoot - mouseActualXPosition,
+                      mousePointerEvent->yRoot - mouseActualYPosition);
+    }
+    mouseActualXPosition = mousePointerEvent->xRoot;
+    mouseActualYPosition = mousePointerEvent->yRoot;
   }
 
-  void Widget::handleEventMouseButton(pron::PronEvent *e __attribute__((unused))) {
+  void Widget::handleEventMouseButton(pron::EventMouseButton *e) {
     printf("handleEventMouseButton\n");
-    this->clicked();
+    // TODO sauvegarder état bouton
+    if(e->b1) {
+      this->clicked();
+    } else {
+      this->released();
+    }
+    mouseActualXPosition = -1;
   }
 
   void Widget::handleEventKeyPressed(pron::PronEvent *e __attribute__((unused))) {

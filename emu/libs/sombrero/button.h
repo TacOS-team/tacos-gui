@@ -26,6 +26,10 @@ class Button : public Widget {
   
  public:
   /**
+   * The default button constructor
+   */
+  Button();
+  /**
    * The button constructor 
    * @param parent Parent Container
    */

@@ -4,6 +4,10 @@
 
 namespace sombrero {
 
+  Button::Button() : text("") {
+    this->init();
+  }
+
   Button::Button(const char *text) : text(text) {
     this->init();
   }
