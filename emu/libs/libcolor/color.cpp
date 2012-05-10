@@ -58,11 +58,11 @@ int Color::getRGB(int depth) {
 int Color::getRGB24() {
   int pixel = 0;
   // Red
-  pixel |= (int)(this->r * 0xFF);
+  pixel |= ((int)(this->r * 0xFF)) << 16;
   // Green
   pixel |= ((int)(this->g * 0xFF)) << 8;
   // Blue
-  pixel |= ((int)(this->b * 0xFF)) << 16;
+  pixel |= ((int)(this->b * 0xFF)) << 0;
   // The rest of the pixel
   pixel &= 0x00FFFFFF;
   return pixel;
