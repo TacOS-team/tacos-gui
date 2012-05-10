@@ -21,7 +21,7 @@ class Color {
    * @param g green component between 0. and 1.
    * @param b blue component between 0. and 1.
    */
-  Color(float r, float g, float b);
+  Color(float r = 0., float g = 0., float b = 0.);
   /**
    * Color RGB contructor
    * @param r red component from 0 to 255
