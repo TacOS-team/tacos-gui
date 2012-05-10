@@ -122,7 +122,7 @@ int main(int argc, char **argv){
   // On cree un énènement
   PronEvent *e = getPronEvent();
   while (1) {
-    //On récupère un évènement
+    // On récupère un évènement
     if (!pronNextEvent(d, e, true)) {
       if (errno != EAGAIN && errno != EWOULDBLOCK) {
         fprintf(stderr, "pron has closed the connection.\n");
@@ -131,18 +131,18 @@ int main(int argc, char **argv){
     } else {
       switch (e->type) {
         case EV_POINTER_MOVED: {
-                                 EventPointerMoved *pointerMoved = (EventPointerMoved*) e;
-                                 x = pointerMoved->x;
-                                 y = pointerMoved->y;
-                                 break;
-                               }
+	  EventPointerMoved *pointerMoved = (EventPointerMoved*) e;
+	  x = pointerMoved->x;
+	  y = pointerMoved->y;
+	  break;
+	}
         case EV_MOUSE_BUTTON : {
-                                 EventMouseButton *mouseButton = (EventMouseButton*) e;
-                                 buttonPressed = mouseButton->b1;
-                                 break;
-                               }
+	  EventMouseButton *mouseButton = (EventMouseButton*) e;
+	  buttonPressed = mouseButton->b1;
+	  break;
+	}
         default:
-                               break;
+	  break;
       }
     }
 
@@ -150,12 +150,11 @@ int main(int argc, char **argv){
       phi = (float)(x-prevx) * FRICTION;
       theta = (float)(y-prevy) * FRICTION;
     } else {
-      printf("appuyé\n");
       phi = FRICTION * phi;
       theta = FRICTION * theta;
     }
     for (i = 0; i < 8; i++) {
-      rotate_point(cube[i],theta,phi);
+      rotate_point(cube[i], theta, phi);
     }
 
     draw_cube(d, w, gc);
@@ -163,6 +162,6 @@ int main(int argc, char **argv){
     prevx = x;
     prevy = y;
 
-    usleep(10000);
+    usleep(50000);
   }
 }

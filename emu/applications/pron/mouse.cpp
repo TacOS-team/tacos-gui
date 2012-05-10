@@ -76,8 +76,10 @@ void Mouse::handleMotion(mousestate_t *state) {
     this->showPointer();
 
     // We have to recompute the mouseWin
-    this->updateMouseWin();
-    this->updateFocusWin();
+    if (screen->getGrabWin() == NULL) {
+      this->updateMouseWin();
+      this->updateFocusWin();
+    }
   }
 
   if (this->lastSentX != this->mouseX || this->lastSentY != this->mouseY) {
@@ -102,6 +104,23 @@ void Mouse::handleMotion(mousestate_t *state) {
 }
 
 void Mouse::handleButton(mousestate_t *state) {
+
+  Screen *screen = Screen::getInstance();
+
+  // We get the window which consairns the event
+  Window *mouseWin = screen->getMouseWin();
+
+  // Set the grabWin only when B1 has changed
+  if (this->mouseB1 != state->b1) {
+    if (state->b1 == true) {
+      screen->setGrabWin(mouseWin);
+    } else {
+      screen->setGrabWin(NULL);
+      this->updateMouseWin();
+      this->updateFocusWin();
+    }
+  }
+
   // We have to compare the state of each buttons and if one button has changed, send the event
   if (this->mouseB1 != state->b1 ||
       this->mouseB2 != state->b2 ||
@@ -110,7 +129,6 @@ void Mouse::handleButton(mousestate_t *state) {
       this->mouseB5 != state->b5 ||
       this->mouseB6 != state->b6 ) {
 
-    Screen *screen = Screen::getInstance();
     //debug("Mouse button state %d %d %d %d %d %d \n", state->b1, state->b2, state->b3, state->b4, state->b5, state->b6);
 
     this->mouseB1 = state->b1;
@@ -119,9 +137,6 @@ void Mouse::handleButton(mousestate_t *state) {
     this->mouseB4 = state->b4;
     this->mouseB5 = state->b5;
     this->mouseB6 = state->b6;
-
-    // We get the window which consairns the event
-    Window *mouseWin = screen->getMouseWin();
 
     // Computing the relative coordinates
     int relX = state->x - mouseWin->getX();

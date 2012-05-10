@@ -26,6 +26,7 @@ class Screen {
   static Screen *instance; /**< Unique Screen instance (singleton) */
   vector<Font*> fonts; /**< Fonts loaded on the server */
   Window *clipWin; /**< Window for which the clipping zone is set */
+  Window *grabWin; /**< Window grabbed */
   ClipZone *clipZone; /**< Rectangles where we are allowed to draw */
   bool clippingCheck; /**< Whether a check against the clipping zone is required or not before drawing */
   Window *mouseWin; /**< Window containing the mouse pointer */
@@ -146,6 +147,18 @@ class Screen {
    * @param mouseWin The window the mouse is currently in
    */
   void setMouseWin(Window *mouseWin);
+
+  /**
+   * Returns the window currently grabbed.
+   * @return the window currently grabbed
+   */
+  Window* getGrabWin();
+
+  /**
+   * Sets the window currently grabbed.
+   * @param mouseWin the window currently grabbed.
+   */
+  void setGrabWin(Window *grabWin);
 
   /**
    * Returns the window that currently has the focus.
