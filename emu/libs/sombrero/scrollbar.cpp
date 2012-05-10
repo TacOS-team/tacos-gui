@@ -14,10 +14,18 @@ ScrollBar::ScrollBar() : thumb("oh yeah !!!"), increaseButton("vvvvvv"), decreas
 
 void ScrollBar::setRatio(int ratio) {
   this->ratio = ratio;
+  if(this->ratio > this->max - this->min) {
+    this->ratio = this->max - this->min;
+  }
+  this->update();
 }
 
 void ScrollBar::setStep(unsigned int step) {
   this->step = step;
+  if(this->step > this->max - this->min) {
+    this->step = this->max - this->min;
+  }
+  this->update();
 }
 
 void ScrollBar::setRange(unsigned int min, unsigned int max) {
@@ -26,6 +34,11 @@ void ScrollBar::setRange(unsigned int min, unsigned int max) {
   }
   this->min = min;
   this->max = max;
+  this->value = min;
+  if(this->ratio > this->max - this->min) {
+    this->ratio = this->max - this->min;
+  }
+  this->update();
 }
 
 void ScrollBar::thumbClicked() {
@@ -63,10 +76,6 @@ void ScrollBar::setParent(Container *parent) {
   this->mouseDrag.connect(this, &ScrollBar::handleMouseMove);
 }
 
-int ScrollBar::getMinThumbPosition() {
-  return this->buttonSize + this->marginSize;
-}
-
 void ScrollBar::setValue(unsigned int value) {
   unsigned int oldVal = this->value;
   this->value = value;
@@ -80,8 +89,12 @@ void ScrollBar::setValue(unsigned int value) {
   }
 }
 
-int ScrollBar::getMaxThumbPosition() {
-  return this->getMaxThumbLength();
+int ScrollBar::getMinThumbPosition() {
+  return this->buttonSize + this->marginSize;
+}
+
+int ScrollBar::getMaxThumbPosition(unsigned int thumbLength) {
+  return this->getMaxThumbLength() + this->getMinThumbPosition() - thumbLength;
 }
 
 void ScrollBar::update() {
@@ -92,16 +105,19 @@ void ScrollBar::updateThumbPosition(int move) {
   unsigned short thumbLength;
   unsigned short thumbPosition;
   this->getCursorInformations(thumbPosition, thumbLength);
+  printf("Max pos : %d\n", this->getMaxThumbPosition(thumbLength));
+  printf("Min pos : %d\n", this->getMinThumbPosition());
   this->thumbPosition += move;
   if(this->thumbPosition < this->getMinThumbPosition()) {
     this->thumbPosition = this->getMinThumbPosition();
-  } else if(this->thumbPosition > this->getMaxThumbPosition()) {
-    this->thumbPosition = this->getMaxThumbPosition();
+  } else if(this->thumbPosition > this->getMaxThumbPosition(thumbLength)) {
+    this->thumbPosition = this->getMaxThumbPosition(thumbLength);
   }
   this->setThumbPosition(this->thumbPosition);
+  printf("thumbPosition : %d\n", this->thumbPosition);
   this->thumb.updatePronPosition();
   unsigned int newValue = (float)(this->thumbPosition - this->getMinThumbPosition())
-                / (this->getMaxThumbPosition() - this->getMinThumbPosition())
+                / (this->getMaxThumbPosition(thumbLength) - this->getMinThumbPosition())
                 *(this->max - this->min) + this->min;
   if(this->value != newValue) {
     this->setValue(newValue);
@@ -111,15 +127,16 @@ void ScrollBar::updateThumbPosition(int move) {
 void ScrollBar::getCursorInformations(unsigned short &thumbPosition,
                                       unsigned short &thumbLength) {
   unsigned int range = max - min;
-  if(range == 0 || range <= this->ratio) {
+  if(range == 0) {
     thumbPosition = 0;
-    thumbLength   = this->getMaxThumbLength();
+    thumbLength = this->getMaxThumbLength();
   } else {
-    thumbLength   = this->getMaxThumbLength() * ((float)this->ratio / range);
+    thumbLength = this->getMaxThumbLength() * (float)this->ratio / (range + 1);
+    thumbLength = (thumbLength < 15) ? 15 : thumbLength;
     thumbPosition = (float)(this->value - min) / range
-                    * (this->getMaxThumbPosition() - this->getMinThumbPosition());
+                    * (this->getMaxThumbPosition(thumbLength)-this->getMinThumbPosition());
   }
-  thumbLength = (thumbLength < 15) ? 15 : thumbLength;
+  thumbPosition += this->getMinThumbPosition();
 }
 
 }

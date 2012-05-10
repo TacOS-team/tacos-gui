@@ -30,7 +30,7 @@ class ScrollBar : public Container, public has_slots<> {
   unsigned short buttonSize;
   ScrollBar();
   int getMinThumbPosition();
-  int getMaxThumbPosition();
+  int getMaxThumbPosition(unsigned int thumbLength);
   virtual void setThumbPosition(unsigned short position) = 0;
   virtual int getMaxThumbLength() = 0;
   virtual void updateThumbPosition(int move);

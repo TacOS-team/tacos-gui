@@ -16,7 +16,7 @@ void VScrollBar::update() {
   unsigned short thumbPosition;
   this->getCursorInformations(thumbPosition, thumbLength);
   this->thumb.setX(this->marginSize);
-  this->thumbPosition = this->getMinThumbPosition() + thumbPosition;
+  this->thumbPosition = thumbPosition;
   this->thumb.setY(this->thumbPosition);
   this->thumb.setWidth (this->getWidth() - 2*this->marginSize);
   this->thumb.setHeight(thumbLength);
@@ -29,7 +29,8 @@ void VScrollBar::update() {
   this->decreaseButton.update();
 
   this->increaseButton.setX(this->marginSize);
-  this->increaseButton.setY(this->marginSize + this->buttonSize + this->getMaxThumbLength());
+  this->increaseButton.setY(this->marginSize + this->buttonSize
+                              + this->getMaxThumbLength());
   this->increaseButton.setWidth (this->getWidth() - 2*this->marginSize);
   this->increaseButton.setHeight(this->buttonSize);
   this->increaseButton.update();
@@ -38,8 +39,8 @@ void VScrollBar::update() {
 
 
 void VScrollBar::draw() {
-  /*printf("draw vscrollbar (x, y, w, h) : %d, %d, %d, %d\n", this->getX(), this->getY(),
-   this->getWidth(), this->getHeight());*/
+  /*printf("draw vscrollbar (x, y, w, h) : %d, %d, %d, %d\n", this->getX(),
+    this->getY(), this->getWidth(), this->getHeight());*/
   //pron::pronClearWindow(Application::getInstance()->d, this->pronWindow);
 }
 
