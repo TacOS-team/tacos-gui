@@ -271,7 +271,7 @@ class Window : public Drawable {
  private: 
   int x; /**< Top-left corner x-coordinate */
   int y; /**< Top-left corner y-coordinate */
-  color_t bgColor; /**< Background color */
+  Color bgColor; /**< Background color */
   bool isResizable; /**< Wheter the window is resizable or not */
   int maxWidth; /**< Maximum width */
   int maxHeight; /**< Maximum height */

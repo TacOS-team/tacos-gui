@@ -19,9 +19,7 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
   this->x = x;
   this->y = y;
   memset(&this->bgColor, 0, sizeof(this->bgColor));
-  COLOR(this->bgColor, 24).r = 0;
-  COLOR(this->bgColor, 24).g = 0;
-  COLOR(this->bgColor, 24).b = 0;
+  this->bgColor = Color(0, 0, 0);
   this->eventMask = 0;
   this->dontPropagateMask = 0;
   this->mapped = false;
@@ -161,17 +159,13 @@ void* Window::pixelAddr(int x, int y) {
 void Window::clear(int x, int y, int width, int height, bool sendExposureEvent) {
   this->reduce(x, y, width, height);
 
-  color_t oldFg = this->getScreen()->getGC()->fg;
-  COLOR(this->getScreen()->getGC()->fg, 24).r = COLOR(this->bgColor, 24).r;
-  COLOR(this->getScreen()->getGC()->fg, 24).g = COLOR(this->bgColor, 24).g;
-  COLOR(this->getScreen()->getGC()->fg, 24).b = COLOR(this->bgColor, 24).b;
+  Color oldFg = this->getScreen()->getGC()->getFg();
+  this->getScreen()->getGC()->setFg(this->bgColor);
   this->getScreen()->setClipWin(this);
   this->fillRectangle(x, y, width, height);
   /** @todo XXX If it is the root window, we print a grid (provisoire) */
   if (this->getId() == 0) {
-    COLOR(this->getScreen()->getGC()->fg, 24).r = 255;
-    COLOR(this->getScreen()->getGC()->fg, 24).g = 0;
-    COLOR(this->getScreen()->getGC()->fg, 24).b = 0;
+    this->getScreen()->getGC()->setFg(Color(255, 0, 0));
     int step = 50;
     for (int i = step; i < this->getWidth(); i += step) {
       this->drawLine(i, 0, i, this->getHeight());
@@ -180,7 +174,7 @@ void Window::clear(int x, int y, int width, int height, bool sendExposureEvent) 
       this->drawLine(0, i, this->getWidth(), i);
     }
   }
-  this->getScreen()->getGC()->fg = oldFg;
+  this->getScreen()->getGC()->setFg(oldFg);
 
   if (sendExposureEvent && this->realized()) {
     // Send exposure event

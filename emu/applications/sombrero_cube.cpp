@@ -1,6 +1,5 @@
 #include "sombrero.h"
 #include "unistd.h"
-#include <cstdio>
 
 class Cube : public has_slots<> {
   public:
@@ -24,6 +23,10 @@ class Cube : public has_slots<> {
             this->myPoints[lignes[ligne][1]][1]
         );
       }
+
+      this->canvas.drawEllipse(50, 50, 20, 10);
+
+      this->canvas.fillEllipse(150, 50, 10, 20);
 
       this->canvas.draw();
     }
@@ -103,8 +106,11 @@ int Cube::lignes[12][2] = {
 int main() {
   sombrero::Application::getInstance()->init();
   sombrero::Window w(0, 0, 200, 200);
+  printf("window = %p\n", &w);
   sombrero::Canvas c(&w);
+  printf("canvas = %p\n", &c);
   Cube cube(c);
+  printf("cube = %p\n", &cube);
   Timer t(50);
   t.signal.connect(&cube, &Cube::draw);
   t.start();

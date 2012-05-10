@@ -1,7 +1,7 @@
 #ifndef __PRONPROTO_GC_H__
 #define __PRONPROTO_GC_H__
 
-#include <vesa_types.h>
+#include <color.h>
 
 namespace pron {
 
@@ -18,8 +18,8 @@ enum GCValueField {
  * Graphics context values.
  */
 struct PronGCValues {
-  color_t fg; /**< Foreground color */
-  color_t bg; /**< Background color */
+  Color fg; /**< Foreground color */
+  Color bg; /**< Background color */
   int font_num; /**< Font number */
 };
 

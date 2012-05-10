@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <gc.h>
+#include <screen.h>
 
 std::vector<GC*> GC::gcs;
 
@@ -12,14 +13,16 @@ GC::GC() {
   this->id = 0;
 
   // Default foreground color
-  COLOR(this->fg, 24).r = 255;
-  COLOR(this->fg, 24).g = 255;
-  COLOR(this->fg, 24).b = 255;
+  //this->setFg(Color(255, 255, 255));
+  /** @todo xxx */
+  this->fg = Color(255, 255, 255);
+  this->fgValue = 0x00FFFFFF;
 
   // Default background color
-  COLOR(this->bg, 24).r = 0;
-  COLOR(this->bg, 24).g = 0;
-  COLOR(this->bg, 24).b = 0;
+  //this->setBg(Color(0, 0, 0));
+  /** @todo xxx */
+  this->bg = Color(0, 0, 0);
+  this->bgValue = 0x00000000;
 
   // Default font
   this->font_num = 0;
@@ -51,14 +54,32 @@ PronGCValues GC::getValues() {
 
 void GC::setValues(const PronGCValues &values, unsigned int mask) {
   if (mask & GC_VAL_FG) {
-    this->fg = values.fg;
+    this->setFg(values.fg);
   }
   if (mask & GC_VAL_BG) {
-    this->bg = values.bg;
+    this->setBg(values.bg);
   }
   if (mask & GC_VAL_FONTNUM) {
     this->font_num = values.font_num;
   }
+}
+
+void GC::setFg(Color c) {
+  this->fg = c;
+  this->fgValue = c.getRGB(Screen::getInstance()->bitsPerPixel);
+}
+
+void GC::setBg(Color c) {
+  this->bg = c;
+  this->bgValue = c.getRGB(Screen::getInstance()->bitsPerPixel);
+}
+
+Color GC::getFg() {
+  return this->fg;
+}
+
+Color GC::getBg() {
+  return this->bg;
 }
 
 void GC::destroy() {

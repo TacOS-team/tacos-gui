@@ -94,7 +94,7 @@ void Drawable::reduce(int &x, int &y, int &width, int &height) {
 
 void Drawable::drawPoint(int x, int y) {
   if (this->isValid(x, y)) {
-    memcpy(this->pixelAddr(x, y), &COLOR(this->getScreen()->getGC()->fg, 24), sizeof(COLOR(this->getScreen()->getGC()->fg, 24)));
+    memcpy(this->pixelAddr(x, y), &this->getScreen()->getGC()->fgValue, this->getScreen()->bytesPerPixel);
   }
 }
 

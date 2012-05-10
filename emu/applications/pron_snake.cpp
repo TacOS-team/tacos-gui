@@ -212,18 +212,7 @@ void game(int x, int y) {
 
   w = pronCreateWindow(d, d->rootWindow, x, y, 320, 200);
 
-  color_t bgColor, bleu, rose;
-  COLOR(bgColor, 24).r = (w >> 16) << 3;
-  COLOR(bgColor, 24).g = (w >> 16) << 3;
-  COLOR(bgColor, 24).b = (w >> 16) << 3;
-
-  COLOR(rose, 24).r = 255;
-  COLOR(rose, 24).g = 77;
-  COLOR(rose, 24).b = 182;
-
-  COLOR(bleu, 24).r = 77;
-  COLOR(bleu, 24).g = 182;
-  COLOR(bleu, 24).b = 255;
+  Color bgColor((int) ((w >> 16) << 3), (int) ((w >> 16) << 3), (int) ((w >> 16) << 3)), bleu(255, 77, 182), rose(77, 182, 255);
 
   PronGCValues values;
   values.fg = bgColor;

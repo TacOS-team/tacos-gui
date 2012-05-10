@@ -101,9 +101,7 @@ int main(int argc, char *argv[]) {
   pronSelectInput(d, w, PRON_EVENTMASK(EV_DESTROY_WINDOW) | PRON_EVENTMASK(EV_RESIZE_WINDOW));
 
   PronWindowAttributes newAttr;
-  COLOR(newAttr.bgColor, 24).r = (w >> 16) << 3;
-  COLOR(newAttr.bgColor, 24).g = (w >> 16) << 3;
-  COLOR(newAttr.bgColor, 24).b = (w >> 16) << 3;
+  newAttr.bgColor = Color((int) ((w >> 16) << 3), (int) ((w >> 16) << 3), (int) ((w >> 16) << 3));
   
   newAttr.maxWidth = 400;
   newAttr.minHeight = 100;

@@ -14,7 +14,7 @@ $(BUILDDIRAPPS)/%: %.c
 	$(CC) -o $@ $< $(LIBTACOS) $(CFLAGS) $(INCLUDES)
 
 $(BUILDDIRAPPS)/%: %.cpp
-	$(CXX) -o $@ $< $(LIBTACOS) $(PRONLIB) $(LIBTSOCK) $(CFLAGS) $(INCLUDES)
+	$(CXX) -o $@ $< $(LIBTACOS) $(PRONLIB) $(LIBCOLOR) $(CFLAGS) $(INCLUDES)
 		
 $(BUILDDIRAPPS)/sombrero_cube : sombrero_cube.cpp	
 	$(CXX) -o $@ $< $(LIBTACOS) $(SOMBRERO) $(CFLAGS) $(INCLUDES)

@@ -16,10 +16,14 @@ using namespace pron;
  * @todo XXX public members bourrin
  */
 class GC {
+ private:
+  Color bg; /**< Background color */
+  Color fg; /**< Foreground color */
+
  public:
   unsigned int id; /**< GC id */
-  color_t bg; /**< Background color */
-  color_t fg; /**< Foreground color */
+  unsigned int bgValue; /** Value of the background color for the screen depth */
+  unsigned int fgValue; /** Value of the foreground color for the screen depth */
   int font_num; /**< Id of the current font */
 
   /**
@@ -55,6 +59,32 @@ class GC {
    * @param mask The mask that specifies the values to be set
    */
   void setValues(const PronGCValues &values, unsigned int mask);
+
+  /**
+   * Sets the background color and computes its value
+   * according to the screen depth.
+   * @param c The color to set
+   */
+  void setBg(Color c);
+  
+  /**
+   * Sets the foreground color and computes its value
+   * according to the screen depth.
+   * @param c The color to set
+   */
+  void setFg(Color c);
+  
+  /**
+   * Returns the background color.
+   * @return The background color
+   */
+  Color getBg();
+  
+  /**
+   * Returns the foreground color.
+   * @return The foreground color
+   */
+  Color getFg();
 
   /**
    * Destroys the graphics context.

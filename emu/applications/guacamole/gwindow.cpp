@@ -29,9 +29,7 @@ GWindow::GWindow (Window w, const PronWindowAttributes & attributes, bool decora
     pronGetWindowAttributes(display, this->parent, &(this->parentAttributes));
 
     // Fond rouge à la fenêtre de déco provisoire
-    COLOR(this->parentAttributes.bgColor, 24).r = 255;
-    COLOR(this->parentAttributes.bgColor, 24).g = 0;
-    COLOR(this->parentAttributes.bgColor, 24).b = 0;
+    this->parentAttributes.bgColor = Color(255, 0, 0);
     pronSetWindowAttributes(display, this->parent, this->parentAttributes, WIN_ATTR_BG_COLOR);
     pronDontPropagateEvent(display,this->parent,PRON_EVENTMASK(EV_MOUSE_BUTTON));
 
@@ -40,56 +38,30 @@ GWindow::GWindow (Window w, const PronWindowAttributes & attributes, bool decora
       this->attributes.x + this->attributes.width, this->attributes.y - buttonSize,
       buttonSize, buttonSize);
     PronWindowAttributes closeButtonAttributes;
-    COLOR(closeButtonAttributes.bgColor, 24).r = 0;
-    COLOR(closeButtonAttributes.bgColor, 24).g = 255;
-    COLOR(closeButtonAttributes.bgColor, 24).b = 0;
+    closeButtonAttributes.bgColor = Color(0, 255, 0);
     pronSetWindowAttributes(display, this->closeButton, closeButtonAttributes, WIN_ATTR_BG_COLOR);
     pronSelectInput(display, this->closeButton, PRON_EVENTMASK(EV_MOUSE_BUTTON));
     pronDontPropagateEvent(display,this->closeButton,PRON_EVENTMASK(EV_MOUSE_BUTTON));
 
     PronGCValues values;
-    COLOR(values.fg, 24).r = 0;
-    COLOR(values.fg, 24).g = 0;
-    COLOR(values.fg, 24).b = 0;
-    COLOR(values.bg, 24).r = 0;
-    COLOR(values.bg, 24).g = 0;
-    COLOR(values.bg, 24).b = 0;
+    values.fg = Color(0, 0, 0);
+    values.bg = Color(0, 0, 0);
     this->closeButtonGC = pronCreateGC(this->display, values, GC_VAL_FG | GC_VAL_BG);
 
-
-    COLOR(values.fg, 24).r = 255;
-    COLOR(values.fg, 24).g = 0;
-    COLOR(values.fg, 24).b = 0;
-    COLOR(values.bg, 24).r = 0;
-    COLOR(values.bg, 24).g = 0;
-    COLOR(values.bg, 24).b = 0;
+    values.fg = Color(255, 0, 0);
+    values.bg = Color(0, 0, 0);
     this->backgroundParentGC = pronCreateGC(this->display, values, GC_VAL_FG | GC_VAL_BG);
 
-
-    COLOR(values.fg, 24).r = 0;
-    COLOR(values.fg, 24).g = 255;
-    COLOR(values.fg, 24).b = 0;
-    COLOR(values.bg, 24).r = 0;
-    COLOR(values.bg, 24).g = 0;
-    COLOR(values.bg, 24).b = 0;
+    values.fg = Color(0, 255, 0);
+    values.bg = Color(0, 0, 0);
     this->backgroundCloseButtonGC = pronCreateGC(this->display, values, GC_VAL_FG | GC_VAL_BG);
 
-
-    COLOR(values.fg, 24).r = 30;
-    COLOR(values.fg, 24).g = 190;
-    COLOR(values.fg, 24).b = 255;
-    COLOR(values.bg, 24).r = 0;
-    COLOR(values.bg, 24).g = 0;
-    COLOR(values.bg, 24).b = 0;
+    values.fg = Color(30, 190, 255);
+    values.bg = Color(0, 0, 0);
     this->backgroundMaximiseButtonGC = pronCreateGC(this->display, values, GC_VAL_FG | GC_VAL_BG);
 
-
-    COLOR(values.fg, 24).r = 0;
-    COLOR(values.fg, 24).g = 0;
-    COLOR(values.fg, 24).b = 200;
-    COLOR(values.bg, 24).r = 0;
-    COLOR(values.bg, 24).g = 0;
-    COLOR(values.bg, 24).b = 0;
+    values.fg = Color(0, 0, 200);
+    values.bg = Color(0, 0, 0);
     this->backgroundResizeButtonGC = pronCreateGC(this->display, values, GC_VAL_FG | GC_VAL_BG);
 
     // Adding the resize button
@@ -98,9 +70,7 @@ GWindow::GWindow (Window w, const PronWindowAttributes & attributes, bool decora
       this->attributes.y + this->attributes.height,
       buttonSize, buttonSize);
     PronWindowAttributes resizeButtonAttributes;
-    COLOR(closeButtonAttributes.bgColor, 24).r = 0;
-    COLOR(closeButtonAttributes.bgColor, 24).g = 0;
-    COLOR(closeButtonAttributes.bgColor, 24).b = 150;
+    closeButtonAttributes.bgColor = Color(0, 0, 150);
     pronSetWindowAttributes(display, this->resizeButton, resizeButtonAttributes, WIN_ATTR_BG_COLOR);
     pronSelectInput(display, this->resizeButton, PRON_EVENTMASK(EV_MOUSE_BUTTON));
     pronDontPropagateEvent(display,this->resizeButton,PRON_EVENTMASK(EV_MOUSE_BUTTON));
@@ -110,9 +80,7 @@ GWindow::GWindow (Window w, const PronWindowAttributes & attributes, bool decora
       this->attributes.x + this->attributes.width - buttonSize, this->attributes.y - buttonSize,
       buttonSize, buttonSize);
     PronWindowAttributes maximiseButtonAttributes;
-    COLOR(maximiseButtonAttributes.bgColor, 24).r = 30;
-    COLOR(maximiseButtonAttributes.bgColor, 24).g = 190;
-    COLOR(maximiseButtonAttributes.bgColor, 24).b = 255;
+    maximiseButtonAttributes.bgColor = Color(30, 190, 255);
     pronSetWindowAttributes(display, this->maximiseButton, maximiseButtonAttributes, WIN_ATTR_BG_COLOR);
     pronSelectInput(display, this->maximiseButton, PRON_EVENTMASK(EV_MOUSE_BUTTON));
     pronDontPropagateEvent(display,this->maximiseButton,PRON_EVENTMASK(EV_MOUSE_BUTTON));

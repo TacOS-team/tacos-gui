@@ -7,9 +7,7 @@ namespace sombrero {
     this->state = false; 
     // sign up to EV_MOUSE_BUTTON
     pron::pronSelectInput(Application::getInstance()->d,this->pronWindow,PRON_EVENTMASK(pron::EV_EXPOSE) | PRON_EVENTMASK(pron::EV_MOUSE_BUTTON));
-    COLOR(this->gcValues.fg, 24).r = 255;
-    COLOR(this->gcValues.fg, 24).g = 0;
-    COLOR(this->gcValues.fg, 24).b = 0;
+    this->gcValues.fg = Color(255, 0, 0);
     this->gc = pronCreateGC(Application::getInstance()->d,this->gcValues, pron::GC_VAL_FG);
   }
 
@@ -29,12 +27,10 @@ namespace sombrero {
 
   void Checkbox::draw() {
     if (state == true) {
-      COLOR(this->gcValues.fg, 24).r = 0;
-      COLOR(this->gcValues.fg, 24).g = 255;
+      this->gcValues.fg = Color(0, 255, 0);
     }
     else {
-      COLOR(this->gcValues.fg, 24).r = 255;
-      COLOR(this->gcValues.fg, 24).g = 0;
+      this->gcValues.fg = Color(255, 0, 0);
     }
     pron::pronChangeGC(Application::getInstance()->d,this->gc,this->gcValues, pron::GC_VAL_FG);
     pron::pronFillRectangle(Application::getInstance()->d,this->pronWindow,this->gc, this->getX(), this->getY(),this->getWidth(), this->getHeight());

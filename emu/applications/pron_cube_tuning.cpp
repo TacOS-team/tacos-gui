@@ -105,10 +105,7 @@ int main(int argc, char *argv[]) {
 
   Pixmap p = pronCreatePixmap(d, 1024, 768, 24);
 
-  color_t bgColor;
-  COLOR(bgColor, 24).r = (w >> 16) << 3;
-  COLOR(bgColor, 24).g = (w >> 16) << 3;
-  COLOR(bgColor, 24).b = (w >> 16) << 3;
+  Color bgColor = Color((int) ((w >> 16) << 3), (int) ((w >> 16) << 3), (int) ((w >> 16) << 3));
 
   PronGCValues values;
   values.fg = bgColor;

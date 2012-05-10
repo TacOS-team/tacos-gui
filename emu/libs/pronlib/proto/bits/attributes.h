@@ -1,7 +1,7 @@
 #ifndef __PRONPROTO_ATTRIBUTES_H__
 #define __PRONPROTO_ATTRIBUTES_H__
 
-#include <vesa_types.h>
+#include <color.h>
 
 namespace pron {
 
@@ -29,7 +29,7 @@ struct PronWindowAttributes {
   int y; /**< Y-coordinate of the top-left corner */
   int width; /**< Width */
   int height; /**< Height */
-  color_t bgColor; /**< Background color */
+  Color bgColor; /**< Background color */
   bool isResizable; /**< Whether the window is resizable or not */
   int maxWidth; /**< Maximum width */
   int maxHeight; /**< Maximum height */

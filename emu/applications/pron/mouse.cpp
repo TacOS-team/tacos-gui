@@ -38,14 +38,12 @@ Mouse::Mouse() {
   this->lastSentY = 0;
 
   /** @todo xxx red is transparent */
-  color_t oldFg = screen->getGC()->fg;
-  COLOR(screen->getGC()->fg, 24).r = 255;
-  COLOR(screen->getGC()->fg, 24).g = 0;
-  COLOR(screen->getGC()->fg, 24).b = 0;
+  Color oldFg = screen->getGC()->getFg();
+  screen->getGC()->setFg(Color(255, 0, 0));
 
   this->pointer->fillRectangle(0, 0, PRON_MOUSE_POINTER_WIDTH, PRON_MOUSE_POINTER_HEIGHT);
 
-  screen->getGC()->fg = oldFg;
+  screen->getGC()->setFg(oldFg);
 
   this->pointer->drawLine(0, 0, 0, PRON_MOUSE_POINTER_HEIGHT - 1);
   this->pointer->drawLine(0, 0, PRON_MOUSE_POINTER_WIDTH - 1, 0);

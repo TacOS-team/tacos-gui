@@ -2,6 +2,7 @@
  * @file pronlib.cpp
  * Implementation of the pronlib.
  */
+#include <color.h>
 #include <stdio.h>
 #include <unistd.h>
 
@@ -19,12 +20,8 @@ Display::Display(int fd, RespWelcome *welcome) {
   this->endId = welcome->endId;
   this->curId = this->startId;
   PronGCValues values;
-  COLOR(values.fg, 24).r = 255;
-  COLOR(values.fg, 24).g = 77;
-  COLOR(values.fg, 24).b = 182;
-  COLOR(values.bg, 24).r = 0;
-  COLOR(values.bg, 24).g = 0;
-  COLOR(values.bg, 24).b = 0;
+  values.fg = Color(255, 77, 182);
+  values.bg = Color(0, 0, 0);
   values.font_num = 0;
   this->defaultGC = pronCreateGC(this, values, GC_VAL_FG | GC_VAL_BG | GC_VAL_FONTNUM);
 }
