@@ -20,6 +20,7 @@ namespace sombrero {
   void Widget::init() {
     this->parent    = NULL;
     this->eventMask = 0;
+    this->mouseActualXPosition = -1;
   }
 
   void Widget::subscribeEvent(uint32_t eventMask) {
@@ -139,7 +140,7 @@ namespace sombrero {
   }
 
   void Widget::handleEventMouseButton(pron::EventMouseButton *e) {
-    printf("handleEventMouseButton\n");
+    //printf("handleEventMouseButton\n");
     // TODO sauvegarder état bouton
     if(e->b1) {
       this->clicked();

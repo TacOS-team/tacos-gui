@@ -2,7 +2,7 @@
 
 namespace sombrero {
 
-ScrollBar::ScrollBar() : thumb("oh yeah !!!") {
+ScrollBar::ScrollBar() : thumb("oh yeah !!!"), increaseButton("vvvvvv"), decreaseButton("^^^^^^") {
   this->ratio = 1;
   this->step  = 1;
   this->min   = 0;
@@ -16,7 +16,7 @@ void ScrollBar::setRatio(int ratio) {
   this->ratio = ratio;
 }
 
-void ScrollBar::setStep(int step) {
+void ScrollBar::setStep(unsigned int step) {
   this->step = step;
 }
 
@@ -29,7 +29,6 @@ void ScrollBar::setRange(unsigned int min, unsigned int max) {
 }
 
 void ScrollBar::thumbClicked() {
-  printf("thumbClicked\n");
   this->subscribeEvent(pron::EV_POINTER_MOVED);
 }
 
@@ -37,17 +36,48 @@ void ScrollBar::thumbReleased() {
   this->unsubscribeEvent(pron::EV_POINTER_MOVED);
 }
 
+void ScrollBar::increaseClicked() {
+  this->setValue(this->value + this->step);
+  this->update();
+}
+
+void ScrollBar::decreaseClicked() {
+  if((int)this->value - (int)this->step < 0) {
+    this->setValue(this->min);
+  } else {
+    this->setValue(this->value - this->step);
+  }
+  this->update();
+}
+
 
 void ScrollBar::setParent(Container *parent) {
   Widget::setParent(parent);
   this->thumb.setParent(this);
+  this->increaseButton.setParent(this);
+  this->decreaseButton.setParent(this);
   this->thumb.clicked.connect  (this, &ScrollBar::thumbClicked);
   this->thumb.released.connect (this, &ScrollBar::thumbReleased);
+  this->increaseButton.clicked.connect (this, &ScrollBar::increaseClicked);
+  this->decreaseButton.clicked.connect (this, &ScrollBar::decreaseClicked);
   this->mouseDrag.connect(this, &ScrollBar::handleMouseMove);
 }
 
 int ScrollBar::getMinThumbPosition() {
   return this->buttonSize + this->marginSize;
+}
+
+void ScrollBar::setValue(unsigned int value) {
+  unsigned int oldVal = this->value;
+  this->value = value;
+  if(this->value > this->max) {
+    this->value = this->max;
+  } else if(this->value < this->min) {
+    this->value = this->min;
+  }
+  if(oldVal != this->value) {
+    this->newValue(this->value);
+  }
 }
 
 int ScrollBar::getMaxThumbPosition() {
@@ -74,8 +104,7 @@ void ScrollBar::updateThumbPosition(int move) {
                 / (this->getMaxThumbPosition() - this->getMinThumbPosition())
                 *(this->max - this->min) + this->min;
   if(this->value != newValue) {
-    this->newValue(newValue);
-    this->value = newValue;
+    this->setValue(newValue);
   }
 }
 
@@ -87,7 +116,8 @@ void ScrollBar::getCursorInformations(unsigned short &thumbPosition,
     thumbLength   = this->getMaxThumbLength();
   } else {
     thumbLength   = this->getMaxThumbLength() * ((float)this->ratio / range);
-    thumbPosition = (float)(this->value - min) / range;
+    thumbPosition = (float)(this->value - min) / range
+                    * (this->getMaxThumbPosition() - this->getMinThumbPosition());
   }
   thumbLength = (thumbLength < 15) ? 15 : thumbLength;
 }

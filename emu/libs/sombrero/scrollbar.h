@@ -34,10 +34,16 @@ class ScrollBar : public Container, public has_slots<> {
   virtual void setThumbPosition(unsigned short position) = 0;
   virtual int getMaxThumbLength() = 0;
   virtual void updateThumbPosition(int move);
+  // Slots
+  void thumbClicked();
+  void thumbReleased();
+  void increaseClicked();
+  void decreaseClicked();
  public:
   signal1<int> newValue;
   void setRatio(int ratio);
-  void setStep (int step);
+  void setStep (unsigned int step);
+  void setValue(unsigned int value);
   void setRange(unsigned int min, unsigned int max);
   void getCursorInformations(unsigned short &position,
                              unsigned short &length);
@@ -46,8 +52,6 @@ class ScrollBar : public Container, public has_slots<> {
    * Updates the widgets to pron
    */
   virtual void update();
-  void thumbClicked();
-  void thumbReleased();
   virtual void handleMouseMove(int xMove, int yMove) = 0;
   virtual void draw()             = 0;
 };

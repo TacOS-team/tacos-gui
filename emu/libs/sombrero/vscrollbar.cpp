@@ -18,9 +18,21 @@ void VScrollBar::update() {
   this->thumb.setX(this->marginSize);
   this->thumbPosition = this->getMinThumbPosition() + thumbPosition;
   this->thumb.setY(this->thumbPosition);
-  this->thumb.setWidth (this->getWidth()  - 2*this->marginSize);
+  this->thumb.setWidth (this->getWidth() - 2*this->marginSize);
   this->thumb.setHeight(thumbLength);
   this->thumb.update();
+
+  this->decreaseButton.setX(this->marginSize);
+  this->decreaseButton.setY(this->marginSize);
+  this->decreaseButton.setWidth (this->getWidth() - 2*this->marginSize);
+  this->decreaseButton.setHeight(this->buttonSize);
+  this->decreaseButton.update();
+
+  this->increaseButton.setX(this->marginSize);
+  this->increaseButton.setY(this->marginSize + this->buttonSize + this->getMaxThumbLength());
+  this->increaseButton.setWidth (this->getWidth() - 2*this->marginSize);
+  this->increaseButton.setHeight(this->buttonSize);
+  this->increaseButton.update();
   ScrollBar::update();
 }
 

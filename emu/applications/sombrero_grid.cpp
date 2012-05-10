@@ -81,7 +81,7 @@ int main() {
   sombrero::VScrollBar vsb1;
   g.attachNextTo(&vsb1,NULL, sombrero::POS_LEFT,1,4);
   vsb1.newValue.connect(&w, &MyWindow::newValue);
-  vsb1.setRange(225,99999);
+  //vsb1.setRange(225,99999);
 
   /*sombrero::Label l10("Label 10");
   g.attachNextTo(&l10,NULL, sombrero::POS_LEFT,1,4);*/
