@@ -1,6 +1,7 @@
 #include "sombrero.h"
 #include "grid.h"
 #include "vscrollbar.h"
+#include "scrollpane.h"
 #include "unistd.h"
 #include <cstdio>
 #include <cstdlib>
@@ -28,7 +29,7 @@ int main() {
   
   // Window button
 
-  MyWindow w(50, 50, 300, 132);
+  MyWindow w(50, 50, 300, 100);
   sombrero::Grid g(&w);
   /*sombrero::Label l1("Label 1");
   pLabel = &l1;
@@ -78,13 +79,19 @@ int main() {
 
   //b1.clicked.connect(&w, &MyWindow::changeLabel);
 
-  sombrero::VScrollBar vsb1;
+  /*sombrero::VScrollBar vsb1;
   g.attachNextTo(&vsb1,NULL, sombrero::POS_LEFT,1,4);
-  vsb1.newValue.connect(&w, &MyWindow::newValue);
+  vsb1.newValue.connect(&w, &MyWindow::newValue);*/
   //vsb1.setRange(225,9999);
 
   /*sombrero::Label l10("Label 10");
   g.attachNextTo(&l10,NULL, sombrero::POS_LEFT,1,4);*/
+
+  sombrero::Label labelScrollPane("Oh yeah !!!!");
+  labelScrollPane.setHeight(150);
+
+  sombrero::ScrollPane scrollpane(&labelScrollPane);
+  g.add(&scrollpane);
 
 
   sombrero::Application::getInstance()->sombrerun();

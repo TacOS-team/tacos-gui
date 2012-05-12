@@ -14,12 +14,23 @@ namespace sombrero {
  * ScrollPane class definition
  * @brief The Scrollpane container
  */ 
-class ScrollPane : public Bin {
+class ScrollPane : public Bin, public has_slots<> {
 
  protected:
   VScrollBar scrollBar;
+  Widget *widget;
+  void init();
  public:
-  ScrollPane();
+  ScrollPane(Widget *widget);
+
+  /**
+   * Sets the parent container
+   * @param Pointer to the parent container
+   */
+  virtual void setParent(Container *parent);
+  virtual void update();
+  // Slots
+  void YMoved(int val);
 };
 
 } // namespace sombrero

@@ -2,7 +2,7 @@
 
 namespace sombrero {
 
-ScrollBar::ScrollBar() : thumb("oh yeah !!!"), increaseButton("vvvvvv"), decreaseButton("^^^^^^") {
+ScrollBar::ScrollBar() : thumb("o"), increaseButton("vv"), decreaseButton("^^") {
   this->ratio = 1;
   this->step  = 1;
   this->min   = 0;

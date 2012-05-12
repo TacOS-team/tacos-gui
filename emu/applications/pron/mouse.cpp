@@ -136,15 +136,15 @@ void Mouse::handleButton(mousestate_t *state) {
     this->mouseB5 = state->b5;
     this->mouseB6 = state->b6;
 
-    // Computing the relative coordinates
-    int relX = state->x - mouseWin->getX();
-    int relY = state->y - mouseWin->getY();
-
     Window *wToDeliverEvent = screen->getGrabWin();
 
     if(wToDeliverEvent == NULL) {
       wToDeliverEvent = mouseWin;
     }
+
+    // Computing the relative coordinates
+    int relX = state->x - wToDeliverEvent->getX();
+    int relY = state->y - wToDeliverEvent->getY();
 
     // delivers the event
     EventMouseButton mouseButton(wToDeliverEvent->getId(), state->b1, state->b2,

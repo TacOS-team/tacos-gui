@@ -19,7 +19,7 @@ namespace sombrero {
 class Bin : public Container {
   
  private:
-  int full;
+  bool isFull;
   
  protected:
   /**
@@ -47,6 +47,11 @@ class Bin : public Container {
    * @param widget Pointer to the widget to remove
    */
   virtual void remove(Widget *widget);
+  /**
+   * Gets the widget contained
+   * @return Returns the widget
+   */
+  Widget * getWidget();
 
 };
 

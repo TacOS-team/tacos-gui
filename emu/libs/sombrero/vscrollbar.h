@@ -19,7 +19,6 @@ class VScrollBar : public ScrollBar {
   virtual int getMaxThumbLength();
   virtual void setThumbPosition(unsigned short position);
  public:
-  VScrollBar();
   virtual void draw();
   /**
    * Updates the widgets to pron

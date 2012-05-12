@@ -4,29 +4,36 @@
 namespace sombrero {
 
 Bin::Bin() {
-  this->full = 0;
+  this->isFull = false;
 }
 
 Bin::Bin(Container *parent)
     : Container(parent) {
-  this->full = 0;
+  this->isFull = false;
 }
 
 Bin::~Bin() {
 }
 
 void Bin::add(Widget *widget) {
-  if (!this->full) {
+  if (!this->isFull) {
     Container::add(widget);
-    this->full = 1;
+    this->isFull = true;
   }
 }
 
 void Bin::remove(Widget *widget) {
-  if (this->full) {
+  if (this->isFull) {
     Container::remove(widget);
-    this->full = 0;
+    this->isFull = false;
   }
+}
+
+Widget * Bin::getWidget() {
+  if(this->isFull) {
+    return this->getChildren()[0];
+  }
+  return NULL;
 }
 
 } // Namespace sombrero

@@ -3,10 +3,6 @@
 
 namespace sombrero {
 
-VScrollBar::VScrollBar() {
-  
-}
-
 int VScrollBar::getMaxThumbLength() {
   return this->getHeight() - 2 * this->getMinThumbPosition();
 }
@@ -44,6 +40,9 @@ void VScrollBar::draw() {
   pron::pronFillRectangle(Application::getInstance()->d, this->pronWindow,
     Application::getInstance()->d->defaultGC, 0,this->getMinThumbPosition(),
     this->getWidth(), this->getMaxThumbLength());
+  pron::pronDrawRect(Application::getInstance()->d, this->pronWindow,
+    Application::getInstance()->d->defaultGC, 0,0,
+    this->getWidth(), this->getHeight());
 }
 
 void VScrollBar::handleEventPointerMoved(pron::EventPointerMoved *mousePointerEvent) {
