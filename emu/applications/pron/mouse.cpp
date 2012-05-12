@@ -92,9 +92,15 @@ void Mouse::handleMotion(mousestate_t *state) {
       
       int x = this->mouseX - this->lastSentX;
       int y = this->mouseY - this->lastSentY;
+
+      Window *wToDeliverEvent = screen->getGrabWin();
+
+      if(wToDeliverEvent == NULL) {
+        wToDeliverEvent = mouseWin;
+      }
       
-      EventPointerMoved pointerMoved(mouseWin->getId(), x, y, state->x, state->y);
-      mouseWin->deliverDeviceEvent(&pointerMoved, sizeof(pointerMoved));
+      EventPointerMoved pointerMoved(wToDeliverEvent->getId(), x, y, state->x, state->y);
+      wToDeliverEvent->deliverDeviceEvent(&pointerMoved, sizeof(pointerMoved));
 
       this->lastMouseEvent = now_ms;
       this->lastSentX = this->mouseX;
@@ -110,16 +116,7 @@ void Mouse::handleButton(mousestate_t *state) {
   // We get the window which consairns the event
   Window *mouseWin = screen->getMouseWin();
 
-  // Set the grabWin only when B1 has changed
-  if (this->mouseB1 != state->b1) {
-    if (state->b1 == true) {
-      screen->setGrabWin(mouseWin);
-    } else {
-      screen->setGrabWin(NULL);
-      this->updateMouseWin();
-      this->updateFocusWin();
-    }
-  }
+  bool updateGrabWin = this->mouseB1 != state->b1;
 
   // We have to compare the state of each buttons and if one button has changed, send the event
   if (this->mouseB1 != state->b1 ||
@@ -142,11 +139,28 @@ void Mouse::handleButton(mousestate_t *state) {
     int relX = state->x - mouseWin->getX();
     int relY = state->y - mouseWin->getY();
 
+    Window *wToDeliverEvent = screen->getGrabWin();
+
+    if(wToDeliverEvent == NULL) {
+      wToDeliverEvent = mouseWin;
+    }
+
     // delivers the event
-    EventMouseButton mouseButton(mouseWin->getId(), state->b1, state->b2,
+    EventMouseButton mouseButton(wToDeliverEvent->getId(), state->b1, state->b2,
                                  state->b3, state->b4, state->b5, state->b6,
                                  relX, relY, state->x, state->y);
-    mouseWin->deliverDeviceEvent(&mouseButton, sizeof(mouseButton));
+    wToDeliverEvent->deliverDeviceEvent(&mouseButton, sizeof(mouseButton));
+  }
+
+  // Set the grabWin only when B1 has changed
+  if (updateGrabWin) {
+    if (state->b1 == true) {
+      screen->setGrabWin(mouseWin);
+    } else {
+      screen->setGrabWin(NULL);
+      this->updateMouseWin();
+      this->updateFocusWin();
+    }
   }
 }
 

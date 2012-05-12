@@ -105,8 +105,6 @@ void ScrollBar::updateThumbPosition(int move) {
   unsigned short thumbLength;
   unsigned short thumbPosition;
   this->getCursorInformations(thumbPosition, thumbLength);
-  printf("Max pos : %d\n", this->getMaxThumbPosition(thumbLength));
-  printf("Min pos : %d\n", this->getMinThumbPosition());
   this->thumbPosition += move;
   if(this->thumbPosition < this->getMinThumbPosition()) {
     this->thumbPosition = this->getMinThumbPosition();
@@ -114,7 +112,6 @@ void ScrollBar::updateThumbPosition(int move) {
     this->thumbPosition = this->getMaxThumbPosition(thumbLength);
   }
   this->setThumbPosition(this->thumbPosition);
-  printf("thumbPosition : %d\n", this->thumbPosition);
   this->thumb.updatePronPosition();
   unsigned int newValue = (float)(this->thumbPosition - this->getMinThumbPosition())
                 / (this->getMaxThumbPosition(thumbLength) - this->getMinThumbPosition())
