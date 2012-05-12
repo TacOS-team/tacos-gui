@@ -24,12 +24,24 @@ void VScrollBar::update() {
 void VScrollBar::draw() {
   /*printf("draw vscrollbar (x, y, w, h) : %d, %d, %d, %d\n", this->getX(),
     this->getY(), this->getWidth(), this->getHeight());*/
+  pron::pronClearWindow(Application::getInstance()->d, this->pronWindow);
   pron::pronFillRectangle(Application::getInstance()->d, this->pronWindow,
     Application::getInstance()->d->defaultGC, 0,this->getMinThumbPosition(),
     this->getWidth(), this->getMaxThumbLength());
   pron::pronDrawRect(Application::getInstance()->d, this->pronWindow,
     Application::getInstance()->d->defaultGC, 0,0,
     this->getWidth(), this->getHeight());
+
+  int buttonCenter = this->getWidth()/2;
+
+  for(int i = 0; i < this->buttonSize - 3 && (i * 2 + 6 + this->marginSize) < this->getWidth(); ++i) {
+    pron::pronDrawLine(Application::getInstance()->d, this->pronWindow, Application::getInstance()->d->defaultGC,
+      buttonCenter - i, this->marginSize + 1 + i, 
+      buttonCenter + i, this->marginSize + 1 + i);
+    pron::pronDrawLine(Application::getInstance()->d, this->pronWindow, Application::getInstance()->d->defaultGC,
+      buttonCenter - i, this->getHeight() - this->marginSize - 1 - i, 
+      buttonCenter + i, this->getHeight() - this->marginSize - 1 - i);
+  }
 }
 
 void VScrollBar::handleEventPointerMoved(pron::EventPointerMoved *mousePointerEvent) {
