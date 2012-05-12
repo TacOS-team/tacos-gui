@@ -56,8 +56,6 @@ namespace sombrero {
 
     public:
       // Signals
-      signal0<> clicked;
-      signal0<> released;
       signal0<> resized;
       /**
        * Signal sent when the mouse moves.

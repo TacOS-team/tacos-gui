@@ -25,6 +25,9 @@ class Button : public Widget {
   void init();
   
  public:
+  // Signals
+  signal0<> clicked;
+  signal0<> released;
   /**
    * The default button constructor
    */
@@ -52,6 +55,11 @@ class Button : public Widget {
    * Button drawing stuff
    */
   void draw();
+  /**
+   * Handle for a mouseButton event
+   * @param e A pointer to the event that accured
+   */
+  virtual void handleEventMouseButton(pron::EventMouseButton * e); 
 
 };
 

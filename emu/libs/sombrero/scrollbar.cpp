@@ -73,7 +73,6 @@ void ScrollBar::setParent(Container *parent) {
   this->thumb.released.connect (this, &ScrollBar::thumbReleased);
   this->increaseButton.clicked.connect (this, &ScrollBar::increaseClicked);
   this->decreaseButton.clicked.connect (this, &ScrollBar::decreaseClicked);
-  this->mouseDrag.connect(this, &ScrollBar::handleMouseMove);
 }
 
 void ScrollBar::setValue(unsigned int value) {
@@ -119,6 +118,10 @@ void ScrollBar::updateThumbPosition(int move) {
   if(this->value != newValue) {
     this->setValue(newValue);
   }
+}
+
+void ScrollBar::handleEventPointerMoved(pron::EventPointerMoved *mousePointerEvent) {
+  Widget::handleEventPointerMoved(mousePointerEvent);
 }
 
 void ScrollBar::getCursorInformations(unsigned short &thumbPosition,

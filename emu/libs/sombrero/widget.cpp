@@ -136,12 +136,6 @@ namespace sombrero {
 
   void Widget::handleEventMouseButton(pron::EventMouseButton *e) {
     //printf("handleEventMouseButton\n");
-    // TODO sauvegarder état bouton
-    if(e->b1) {
-      this->clicked();
-    } else {
-      this->released();
-    }
   }
 
   void Widget::handleEventKeyPressed(pron::PronEvent *e __attribute__((unused))) {
@@ -151,6 +145,7 @@ namespace sombrero {
   }
 
   void Widget::handleEventDestroyWindow() {
+    // TODO : WTF ????
     exit(1);
   }
 

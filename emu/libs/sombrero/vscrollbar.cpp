@@ -46,18 +46,14 @@ void VScrollBar::draw() {
     this->getWidth(), this->getMaxThumbLength());
 }
 
-void VScrollBar::handleMouseMove(int xMove __attribute__((unused)), int yMove,
-                                 int relativeXPosition, int relativeYPosition) {
-  printf("relativeX, relativeY : %d, %d\n", relativeXPosition, relativeYPosition);
-  printf("thumbPosition : %d\n", this->thumbPosition);
-  printf("minPos, maxPos : %d, %d\n", this->getMinThumbPosition(),
-                        this->getMaxThumbPosition(this->thumb.getHeight()));
-  if((this->thumbPosition > this->getMinThumbPosition()
-          || relativeYPosition > this->thumb.getHeight()/2)
+void VScrollBar::handleEventPointerMoved(pron::EventPointerMoved *mousePointerEvent) {
+  ScrollBar::handleEventPointerMoved(mousePointerEvent);
+  /*if((this->thumbPosition > this->getMinThumbPosition()
+          || mousePointerEvent->y > this->thumb.getHeight()/2)
       && (this->thumbPosition < this->getMaxThumbPosition(this->thumb.getHeight())
-          || relativeYPosition <= this->thumb.getHeight()/2)) {
-    this->updateThumbPosition(yMove);
-  }
+          || mousePointerEvent->y <= this->thumb.getHeight()/2)) {*/
+    this->updateThumbPosition(mousePointerEvent->y - this->thumb.getHeight()/2);
+  //}
 }
 
 void VScrollBar::setThumbPosition(unsigned short position) {

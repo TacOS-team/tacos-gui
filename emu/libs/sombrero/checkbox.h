@@ -25,6 +25,8 @@ namespace sombrero {
       
       
     public:
+      // Signals
+      signal0<> clicked;
       /**
        * The checkbox constructor 
        * @param parent Parent Container

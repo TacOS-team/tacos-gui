@@ -46,7 +46,7 @@ all:
 debug:
 	$(MAKE) $(MAKEFILE) DEBUG="-DDEBUG"
 
-clean: depend
+clean:
 	rm -f $(BUILDDIROBJS)/* $(BUILDDIRLIBS)/* $(BUILDDIRAPPS)/*
 
 depend:

@@ -41,4 +41,14 @@ namespace sombrero {
       this->getHeight() / 2 + this->fontSize/2, this->text.c_str(), this->text.length());
   }
 
+  void Button::handleEventMouseButton(pron::EventMouseButton *e) {
+    //printf("handleEventMouseButton\n");
+    // TODO sauvegarder état bouton
+    if(e->b1) {
+      this->clicked();
+    } else {
+      this->released();
+    }
+  }
+
 } // namespace sombrero
