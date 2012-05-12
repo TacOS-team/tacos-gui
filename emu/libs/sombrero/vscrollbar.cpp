@@ -41,13 +41,23 @@ void VScrollBar::update() {
 void VScrollBar::draw() {
   /*printf("draw vscrollbar (x, y, w, h) : %d, %d, %d, %d\n", this->getX(),
     this->getY(), this->getWidth(), this->getHeight());*/
-  //pron::pronClearWindow(Application::getInstance()->d, this->pronWindow);
+  pron::pronFillRectangle(Application::getInstance()->d, this->pronWindow,
+    Application::getInstance()->d->defaultGC, 0,this->getMinThumbPosition(),
+    this->getWidth(), this->getMaxThumbLength());
 }
 
 void VScrollBar::handleMouseMove(int xMove __attribute__((unused)), int yMove,
                                  int relativeXPosition, int relativeYPosition) {
   printf("relativeX, relativeY : %d, %d\n", relativeXPosition, relativeYPosition);
-  this->updateThumbPosition(yMove);
+  printf("thumbPosition : %d\n", this->thumbPosition);
+  printf("minPos, maxPos : %d, %d\n", this->getMinThumbPosition(),
+                        this->getMaxThumbPosition(this->thumb.getHeight()));
+  if((this->thumbPosition > this->getMinThumbPosition()
+          || relativeYPosition > this->thumb.getHeight()/2)
+      && (this->thumbPosition < this->getMaxThumbPosition(this->thumb.getHeight())
+          || relativeYPosition <= this->thumb.getHeight()/2)) {
+    this->updateThumbPosition(yMove);
+  }
 }
 
 void VScrollBar::setThumbPosition(unsigned short position) {
