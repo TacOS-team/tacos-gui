@@ -25,7 +25,8 @@ class VScrollBar : public ScrollBar {
    * Updates the widgets to pron
    */
   virtual void update();
-  void handleMouseMove(int xMove, int yMove);
+  void handleMouseMove(int xMove, int yMove,
+                       int relativeXPosition, int relativeYPosition);
 };
 
 } // namespace sombrero

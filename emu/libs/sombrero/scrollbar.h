@@ -52,7 +52,8 @@ class ScrollBar : public Container, public has_slots<> {
    * Updates the widgets to pron
    */
   virtual void update();
-  virtual void handleMouseMove(int xMove, int yMove) = 0;
+  virtual void handleMouseMove(int xMove, int yMove,
+                               int relativeXPosition, int relativeYPosition) = 0;
   virtual void draw()             = 0;
 };
 

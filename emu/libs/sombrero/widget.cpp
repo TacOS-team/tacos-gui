@@ -20,7 +20,6 @@ namespace sombrero {
   void Widget::init() {
     this->parent    = NULL;
     this->eventMask = 0;
-    this->mouseActualXPosition = -1;
   }
 
   void Widget::subscribeEvent(uint32_t eventMask) {
@@ -131,12 +130,8 @@ namespace sombrero {
   }
 
   void Widget::handleEventPointerMoved(pron::EventPointerMoved *mousePointerEvent) {
-    if (mouseActualXPosition != -1) {
-      this->mouseDrag(mousePointerEvent->xRoot - mouseActualXPosition,
-                      mousePointerEvent->yRoot - mouseActualYPosition);
-    }
-    mouseActualXPosition = mousePointerEvent->xRoot;
-    mouseActualYPosition = mousePointerEvent->yRoot;
+    this->mouseDrag(mousePointerEvent->xMove, mousePointerEvent->yMove,
+                    mousePointerEvent->x, mousePointerEvent->y);
   }
 
   void Widget::handleEventMouseButton(pron::EventMouseButton *e) {
@@ -147,7 +142,6 @@ namespace sombrero {
     } else {
       this->released();
     }
-    mouseActualXPosition = -1;
   }
 
   void Widget::handleEventKeyPressed(pron::PronEvent *e __attribute__((unused))) {

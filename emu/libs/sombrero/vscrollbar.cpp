@@ -44,7 +44,9 @@ void VScrollBar::draw() {
   //pron::pronClearWindow(Application::getInstance()->d, this->pronWindow);
 }
 
-void VScrollBar::handleMouseMove(int xMove __attribute__((unused)), int yMove) {
+void VScrollBar::handleMouseMove(int xMove __attribute__((unused)), int yMove,
+                                 int relativeXPosition, int relativeYPosition) {
+  printf("relativeX, relativeY : %d, %d\n", relativeXPosition, relativeYPosition);
   this->updateThumbPosition(yMove);
 }
 

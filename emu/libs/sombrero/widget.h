@@ -21,8 +21,6 @@ namespace sombrero {
   class Widget {
 
     private:
-      int mouseActualXPosition;
-      int mouseActualYPosition;
       Container *parent; /**< The parent widget */
       int x; /**< x coordinate */
       int y; /**< y coordinate */
@@ -61,7 +59,11 @@ namespace sombrero {
       signal0<> clicked;
       signal0<> released;
       signal0<> resized;
-      signal2<int, int> mouseDrag;
+      /**
+       * Signal sent when the mouse moves.
+       * <xMove, yMove, relativeXPosition, relativeYPosition>
+       */
+      signal4<int, int, int, int> mouseDrag;
       /**
        * Subscribes to new events
        * @param eventMask The event mask to add
