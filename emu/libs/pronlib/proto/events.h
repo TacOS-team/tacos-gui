@@ -89,18 +89,22 @@ struct EventPointerMoved : public PronEvent {
    * @param xRoot The x-coordinate of the mouse (relative to the root window)
    * @param yRoot The y-coordinate of the mouse (relative to the root window)
    */
-  EventPointerMoved(unsigned int window, int x, int y, int xRoot, int yRoot)
+  EventPointerMoved(unsigned int window, int x, int y, int xRoot, int yRoot, int xMove, int yMove)
       : PronEvent(EV_POINTER_MOVED, window) {
     this->x = x;
     this->y = y;
     this->xRoot = xRoot;
     this->yRoot = yRoot;
+    this->xMove = xMove;
+    this->yMove = yMove;
   }
 
   int x; /**< Mouse x position (relative to window) */
   int y; /**< Mouse y position (relative to window) */
   int xRoot; /**< Mouse absolute x position */
   int yRoot; /**< Mouse absolute y position */
+  int xMove; /**< Mouse x movement */
+  int yMove; /**< Mouse y movement */
 };
 
 /**

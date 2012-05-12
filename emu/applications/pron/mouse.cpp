@@ -90,8 +90,8 @@ void Mouse::handleMotion(mousestate_t *state) {
       // Send the event to the current mouseWin
       Window *mouseWin = screen->getMouseWin();
       
-      int x = this->mouseX - this->lastSentX;
-      int y = this->mouseY - this->lastSentY;
+      int xMove = this->mouseX - this->lastSentX;
+      int yMove = this->mouseY - this->lastSentY;
 
       Window *wToDeliverEvent = screen->getGrabWin();
 
@@ -99,7 +99,8 @@ void Mouse::handleMotion(mousestate_t *state) {
         wToDeliverEvent = mouseWin;
       }
       
-      EventPointerMoved pointerMoved(wToDeliverEvent->getId(), x, y, state->x, state->y);
+      EventPointerMoved pointerMoved(wToDeliverEvent->getId(),
+            state->x - wToDeliverEvent->getX(), state->y - wToDeliverEvent->getY(), state->x, state->y, xMove, yMove);
       wToDeliverEvent->deliverDeviceEvent(&pointerMoved, sizeof(pointerMoved));
 
       this->lastMouseEvent = now_ms;
