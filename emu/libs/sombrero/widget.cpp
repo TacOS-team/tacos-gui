@@ -34,6 +34,18 @@ namespace sombrero {
               this->eventMask);
   }
 
+  void Widget::dontPropagateEvent(uint32_t eventMask) {
+    this->dontPropagateEventMask |= PRON_EVENTMASK(eventMask);
+    pron::pronDontPropagateEvent(Application::getInstance()->d, this->pronWindow,
+              this->dontPropagateEventMask);
+  }
+
+  void Widget::propagateEvent(uint32_t eventMask) {
+    this->dontPropagateEventMask &= ~PRON_EVENTMASK(eventMask);
+    pron::pronDontPropagateEvent(Application::getInstance()->d, this->pronWindow,
+              this->dontPropagateEventMask);
+  }
+
   void Widget::setParent(Container *parent) {
     // TODO à réfléchir si on supprime si ça vaut pas null etc.
     if (this->parent == NULL) {
@@ -134,7 +146,7 @@ namespace sombrero {
                     mousePointerEvent->x, mousePointerEvent->y);
   }
 
-  void Widget::handleEventMouseButton(pron::EventMouseButton *e) {
+  void Widget::handleEventMouseButton(pron::EventMouseButton *e __attribute__((unused))) {
     //printf("handleEventMouseButton\n");
   }
 
@@ -150,9 +162,13 @@ namespace sombrero {
   }
 
   void Widget::handleEventResizeWindow(int width, int height) {
+    printf("handleEventResizeWindow\n");
+    bool isResized = this->getWidth() != width || this->getHeight() != height;
     this->setWidth(width);
     this->setHeight(height);
-    this->resized();
+    if(isResized) {
+      this->resized();
+    }
   }
 
 } // namespace sombrero

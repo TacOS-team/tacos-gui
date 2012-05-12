@@ -18,8 +18,6 @@ class ScrollBar : public Container, public has_slots<> {
 
  protected:
   Button thumb;
-  Button increaseButton;
-  Button decreaseButton;
   int thumbPosition;
   unsigned int value;
   unsigned int min;
@@ -37,10 +35,9 @@ class ScrollBar : public Container, public has_slots<> {
   // Slots
   void thumbClicked();
   void thumbReleased();
-  void increaseClicked();
-  void decreaseClicked();
  public:
   signal1<int> newValue;
+  int getValue();
   void setRatio(int ratio);
   void setStep (unsigned int step);
   void setValue(unsigned int value);
@@ -55,7 +52,12 @@ class ScrollBar : public Container, public has_slots<> {
   /**
    * Handle for a pointerMoved event
    */
-  virtual void handleEventPointerMoved(pron::EventPointerMoved * e) ;
+  virtual void handleEventPointerMoved(pron::EventPointerMoved * e);
+  /**
+   * Handle for a mouseButton event
+   * @param e A pointer to the event that accured
+   */
+  virtual void handleEventMouseButton(pron::EventMouseButton * e);
   virtual void draw()             = 0;
 };
 

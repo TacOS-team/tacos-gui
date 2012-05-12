@@ -18,6 +18,16 @@ class MyWindow : public sombrero::Window, public has_slots<> {
     pLabel->setText("Oh yeah !!!");
     pLabel->update();
   }
+  void resize() {
+    pLabel->setHeight(pLabel->getHeight()+20);
+    pLabel->getParent()->update();
+    printf("New label size %d\n", pLabel->getHeight());
+  }
+  void resize2() {
+    pLabel->setHeight(pLabel->getHeight()-20);
+    pLabel->getParent()->update();
+    printf("New label size %d\n", pLabel->getHeight());
+  }
 
   void newValue(int newVal) {
     printf("New Value slot \\o/ : %d\n", newVal);
@@ -88,11 +98,20 @@ int main() {
   g.attachNextTo(&l10,NULL, sombrero::POS_LEFT,1,4);*/
 
   sombrero::Label labelScrollPane("Oh yeah !!!!");
+  pLabel = &labelScrollPane;
   labelScrollPane.setHeight(150);
 
   sombrero::ScrollPane scrollpane(&labelScrollPane);
-  g.add(&scrollpane);
+  g.attachNextTo(&scrollpane,NULL, sombrero::POS_LEFT,2,1);
 
+  sombrero::Button bResize("Augmenter taille");
+  g.newLine();
+  g.add(&bResize);
+  bResize.clicked.connect(&w, &MyWindow::resize);
+
+  sombrero::Button bResize2("Diminuer taille");
+  g.add(&bResize2);
+  bResize2.clicked.connect(&w, &MyWindow::resize2);
 
   sombrero::Application::getInstance()->sombrerun();
 

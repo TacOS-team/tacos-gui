@@ -29,6 +29,7 @@ namespace sombrero {
       bool active; /**< Dealing with activable widgets */
       bool visible; /**< The widget has to be shown */
       uint32_t eventMask; /**< The event mask */
+      uint32_t dontPropagateEventMask; /**< The event mask to don't propagate */
 
     protected:
       /**
@@ -63,15 +64,25 @@ namespace sombrero {
        */
       signal4<int, int, int, int> mouseDrag;
       /**
-       * Subscribes to new events
-       * @param eventMask The event mask to add
+       * Subscribes to new event
+       * @param eventMask The event mask to add (only one event at once)
        */
       void subscribeEvent(uint32_t eventMask);
       /**
-       * Unsubscribes to new events
-       * @param eventMask The event mask to add
+       * Unsubscribes to new event
+       * @param eventMask The event mask to add (only one event at once)
        */
       void unsubscribeEvent(uint32_t eventMask);
+      /**
+       * Don't propagate new event
+       * @param eventMask The event mask to propagate (only one event at once)
+       */
+      void dontPropagateEvent(uint32_t eventMask);
+      /**
+       * Propagates the event
+       * @param eventMask The event mask to propagate (only one event at once)
+       */
+      void propagateEvent(uint32_t eventMask);
       // Getters and setters
       /**
        * Sets the parent container
