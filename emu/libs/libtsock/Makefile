@@ -3,7 +3,7 @@ SRCS = *.c
 all: $(LIBTSOCK)
 
 $(LIBTSOCK): $(BUILDDIROBJS)/tsock.o
-	$(LD) -o $@ -shared $<
+	$(CC) -o $@ -shared $<
 
 $(BUILDDIROBJS)/%.o: %.c
 	$(CC) -o $@ -c $< $(CFLAGS) $(INCLUDES) -fPIC

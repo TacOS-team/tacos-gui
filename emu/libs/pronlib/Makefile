@@ -3,7 +3,7 @@ SRCS = *.cpp
 all: $(PRONLIB)
 
 $(PRONLIB): $(BUILDDIROBJS)/pronlib.o
-	$(LD) -o $@ -shared $< $(LIBTSOCK) $(LIBCOLOR)
+	$(CXX) -o $@ -shared $< $(LIBTSOCK) $(LIBCOLOR)
 
 $(BUILDDIROBJS)/%.o: %.cpp
 	$(CXX) -o $@ -c $< $(CFLAGS) $(INCLUDES) -fPIC
