@@ -281,33 +281,53 @@ void pronPutImage(Display *d, Drawable dr, GC __attribute__((unused)) gc, PronIm
     fprintf(stderr, "Subimage is too large\n");
     return;
   }
+  int offset = 0;
   // Compute the size of the needed send buffer
-  int bufferSize = sizeof(RqPutImage) + width * height * image->bytesPerPixel;
-  // Test if we can send the image 
-  if(! (bufferSize <= MAX_MSG_SIZE)) {
-    fprintf(stderr, "Message is to small\n");
-    return;
-  }
+  int imageSize = width * height * image->bytesPerPixel;
+  // Size max of an image segment
+  int segmentSize = MAX_MSG_SIZE - sizeof(RqPutImage);
   // We allocate the image request buffer
-  char *buf = (char*) malloc(bufferSize);
-  // Creation of the request object
-  RqPutImage rq(dr, destX, destY, width, height, image->format, image->depth, image->bytesPerPixel, 0, 0);
-  // Copy of the request object in the send buffer
-  memcpy(buf, &rq, sizeof(rq));
-  // Now we have to copy the subimage we have to send
-  for(int y = 0; y < height; y++){
-    for(int x = 0; x < width; x++){
+  char *buf = (char*) malloc(MAX_MSG_SIZE);
+  int x = 0, y = 0;
+  // If offset equals imageSize it terminated
+  while (offset < imageSize) {
+    // treat one segment
+    int currentOffset = 0;
+    while (1) {
+      // Image is all copied ?
+      if (offset == imageSize - 1) {
+        break;
+      // Segment is full ?
+      } else if ( currentOffset + image->bytesPerPixel > segmentSize) {
+        break;
+      }
       // Buffer destination
-      void * dest = buf + sizeof(rq) + (x + y * width) * image->bytesPerPixel ;
+      void * dest = buf + sizeof(RqPutImage) + (x + y * width) * image->bytesPerPixel - offset;
       // Image source
       void * src = image->data + (srcY * image->width + srcX + x + y * image->width) * image->bytesPerPixel;
       // Copy the pixel dude
-      //printf("Pixel colors {%d, %d, %d}\n", *((char*) dest) & ~(0xFFFFFF00), (*((char*) dest) >> 8 ) & ~(0xFFFFFF00), (*((char*) dest) >> 16) & ~(0xFFFFFF00));
+      // printf("Pixel colors {%d, %d, %d}\n", *((char*) dest) & ~(0xFFFFFF00), (*((char*) dest) >> 8 ) & ~(0xFFFFFF00), (*((char*) dest) >> 16) & ~(0xFFFFFF00));
       memcpy(dest, src, image->bytesPerPixel);
+      // Iterate on the image
+      if (x == width - 1) {
+        y++;
+        x = 0;
+      } else {
+        x++;
+      }
+      // increments the currentOffset
+      currentOffset += image->bytesPerPixel;
     }
+    // Creation of the request object
+    RqPutImage rq(dr, destX, destY, width, height, image->format, image->depth, image->bytesPerPixel, offset, currentOffset);
+    // Copy of the request object in the send buffer
+    memcpy(buf, &rq, sizeof(rq));
+    // We can send the buffer
+    tsock_write(d->fd, buf, currentOffset);
+    // increment offset
+    offset += currentOffset;
+    printf("Current Offset %d\n", offset);
   }
-  // We can send the buffer
-  tsock_write(d->fd, buf, bufferSize);
   // free the buffer
   free(buf);
   // That's all folks
