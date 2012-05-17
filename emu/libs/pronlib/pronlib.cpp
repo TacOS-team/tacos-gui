@@ -291,7 +291,7 @@ void pronPutImage(Display *d, Drawable dr, GC __attribute__((unused)) gc, PronIm
   // We allocate the image request buffer
   char *buf = (char*) malloc(bufferSize);
   // Creation of the request object
-  RqPutImage rq(dr, destX, destY, width, height, image->format, image->depth, image->bytesPerPixel);
+  RqPutImage rq(dr, destX, destY, width, height, image->format, image->depth, image->bytesPerPixel, 0, 0);
   // Copy of the request object in the send buffer
   memcpy(buf, &rq, sizeof(rq));
   // Now we have to copy the subimage we have to send

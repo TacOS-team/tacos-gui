@@ -603,7 +603,7 @@ struct RqPutImage : public PronRequest {
    * @param depth The depth of the image (8, 16 or 24 bits)
    * @param bytesPerPixel The bytes per pixel of the image (1, 2 or 3 bpp)
    */
-  RqPutImage(unsigned int drawable, int x, int y, int width, int height, int format, int depth, int bytesPerPixel)
+  RqPutImage(unsigned int drawable, int x, int y, int width, int height, int format, int depth, int bytesPerPixel, int offset, int size)
       : PronRequest(RQ_PUT_IMAGE) {
     this->drawable = drawable;
     this->width = width; 
@@ -613,6 +613,8 @@ struct RqPutImage : public PronRequest {
     this->depth = depth;
     this->format = format;
     this->bytesPerPixel = bytesPerPixel;
+    this->offset = offset;
+    this->size = size;
   }
 
   unsigned int drawable; /**< Id of the drawable in which to put the image */
@@ -623,6 +625,8 @@ struct RqPutImage : public PronRequest {
   int depth; /**< Depth of the image (8, 16, 24 bits) */
   int format; /**< Format of the image (XYBitmap, XYPixmap, ZPixmap) */
   int bytesPerPixel; /**< Bytes per pixel of the image (1, 2, 3 bpp) */
+  int offset; /**< The byte offset of the current part of the image */
+  int size; /**< The byte size of the current part of the image */
 };
 
 /**
