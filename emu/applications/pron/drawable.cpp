@@ -294,6 +294,41 @@ void Drawable::putImage(PronImage *image, int x, int y) {
   }
 }
 
+void Drawable::putImage(PronImage *image, int x, int y, int offset, int size) {
+  // We have to test if the image and the drawable have the same depth
+  if (image->depth == this->getScreen()->bitsPerPixel) {
+    // We compute using the offsets where we are in the image
+    int srcY = offset / (image->width * image->depth) ;
+    int srcX = offset - (srcY * image->width * image->depth);
+    printf("offset %d, size %d\n", offset, size);
+    printf("X %d, Y, %d\n", srcX, srcY);
+    printf("Décalage : %d\n", (srcX + srcY * image->width) * image->bytesPerPixel - offset);
+    int currentOffset = 0;
+    while (1) {
+      // On a fini de copier le segment de l'image
+      if (currentOffset >= size) {
+        break;
+      }
+      if (this->isValid(srcX + x, srcY + y)) {
+        // Computing the buffer pointers
+        void *src = image->data + (srcX + srcY * image->width) * image->bytesPerPixel - offset;
+        void *dest = this->pixelAddr(x + srcX, y + srcY);
+        memcpy(dest, src, image->bytesPerPixel);
+      }
+      // Iterate on the image
+      if (srcX == image->width - 1) {
+        srcY++;
+        srcX = 0;
+      } else {
+        srcX++;
+      }
+      // Inrement the current offset
+      currentOffset += image->bytesPerPixel;
+    }
+    printf("Current offset %d\n", currentOffset);
+  }
+}
+
 void Drawable::copyArea(int dstX, int dstY, Drawable *d, int srcX, int srcY, int width, int height) {
   /** @todo XXX Bourrin à revoir (problème de depth et de byte per pixel de la pixmap et de l'écran) */
   for (int y = 0; y < height; y++) {

@@ -226,6 +226,16 @@ class Drawable {
    * @param y The destination top-left corner y-coordinate
    */
   void putImage(PronImage *image, int x, int y);
+  
+  /**
+   * Puts a segment of an image into the drawable.
+   * @param image The PronImage to put
+   * @param x The destination top-left corner x-coordinate
+   * @param y The destination top-left corner y-coordinate
+   * @param offset The offset corresponding to the segment
+   * @param size The size of the image segment
+   */
+  void putImage(PronImage *image, int x, int y, int offset, int size);
 
   /**
    * Copies a Drawable area into this Drawable.

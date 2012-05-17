@@ -259,7 +259,7 @@ void Client::handle() {
       if (d != NULL) {
       	char *image_buf = ((char*) rq) + sizeof(RqPutImage);
         PronImage image(rq->width, rq->height, rq->format, image_buf, rq->depth, rq->bytesPerPixel, false);
-        d->putImage(&image, rq->x, rq->y);
+        d->putImage(&image, rq->x, rq->y, rq->offset, rq->size);
       }
       break;
     }
