@@ -98,15 +98,15 @@ int main() {
   PronEvent *e = getPronEvent();
 
   //On cree une fake image
-  int x = 1, y = 1, width = 6, height = 6, depth = 24, bytesPerPixel = 3;
-  char * image_data = (char *)malloc(width * width * depth);
-  memset(image_data, -1, width * width * depth);
+  int x = 20, y = 20, width = 40, height = 40, depth = 24, bytesPerPixel = 3;
+  char * image_data = (char *)malloc(width * height * bytesPerPixel);
+  memset(image_data, -1, width * height * bytesPerPixel);
   PronImage image(width, height, ZPixmap, image_data, depth, bytesPerPixel);
 
   Pixmap p = pronCreatePixmap(d, width, height, depth);
 
   //on envoie une sous image de l'image dans la fenetre
-  pronPutImage(d, p, gc, &image, x, y, width - 1, height - 1, 0, 0);
+  pronPutImage(d, p, gc, &image, x, y, 20, 20, 0, 0);
 
   while (1) {
 
@@ -138,7 +138,7 @@ int main() {
     pronFillRectangle(d, w, gc, 0, racketY, RACKET_WIDTH, RACKET_HEIGHT);
 
     //xopy the pixmap into the window
-    pronCopyArea(d, p, w, gc, 0, 0, width, height, ballX, 0);
+    pronCopyArea(d, p, w, gc, 0, 0, width - 20, height - 20, ballX, 0);
 
     usleep(10000);
   }

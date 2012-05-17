@@ -295,10 +295,10 @@ void pronPutImage(Display *d, Drawable dr, GC __attribute__((unused)) gc, PronIm
     int currentOffset = 0;
     while (1) {
       // Image is all copied ?
-      if (offset == imageSize - 1) {
+      if (offset + currentOffset >= imageSize - 1) {
         break;
       // Segment is full ?
-      } else if ( currentOffset + image->bytesPerPixel > segmentSize) {
+      } else if (currentOffset + image->bytesPerPixel > segmentSize) {
         break;
       }
       // Buffer destination
@@ -306,7 +306,6 @@ void pronPutImage(Display *d, Drawable dr, GC __attribute__((unused)) gc, PronIm
       // Image source
       void * src = image->data + (srcY * image->width + srcX + x + y * image->width) * image->bytesPerPixel;
       // Copy the pixel dude
-      // printf("Pixel colors {%d, %d, %d}\n", *((char*) dest) & ~(0xFFFFFF00), (*((char*) dest) >> 8 ) & ~(0xFFFFFF00), (*((char*) dest) >> 16) & ~(0xFFFFFF00));
       memcpy(dest, src, image->bytesPerPixel);
       // Iterate on the image
       if (x == width - 1) {
@@ -321,12 +320,11 @@ void pronPutImage(Display *d, Drawable dr, GC __attribute__((unused)) gc, PronIm
     // Creation of the request object
     RqPutImage rq(dr, destX, destY, width, height, image->format, image->depth, image->bytesPerPixel, offset, currentOffset);
     // Copy of the request object in the send buffer
-    memcpy(buf, &rq, sizeof(rq));
+    memcpy(buf, &rq, sizeof(RqPutImage));
     // We can send the buffer
-    tsock_write(d->fd, buf, currentOffset);
+    tsock_write(d->fd, buf, currentOffset + sizeof(RqPutImage));
     // increment offset
     offset += currentOffset;
-    printf("Current Offset %d\n", offset);
   }
   // free the buffer
   free(buf);

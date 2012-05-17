@@ -298,11 +298,8 @@ void Drawable::putImage(PronImage *image, int x, int y, int offset, int size) {
   // We have to test if the image and the drawable have the same depth
   if (image->depth == this->getScreen()->bitsPerPixel) {
     // We compute using the offsets where we are in the image
-    int srcY = offset / (image->width * image->depth) ;
-    int srcX = offset - (srcY * image->width * image->depth);
-    printf("offset %d, size %d\n", offset, size);
-    printf("X %d, Y, %d\n", srcX, srcY);
-    printf("Décalage : %d\n", (srcX + srcY * image->width) * image->bytesPerPixel - offset);
+    int srcY = offset / (image->width * image->bytesPerPixel) ;
+    int srcX = (offset - (srcY * image->width * image->bytesPerPixel)) / image->bytesPerPixel;
     int currentOffset = 0;
     while (1) {
       // On a fini de copier le segment de l'image
@@ -322,10 +319,9 @@ void Drawable::putImage(PronImage *image, int x, int y, int offset, int size) {
       } else {
         srcX++;
       }
-      // Inrement the current offset
+      // Increment the current offset
       currentOffset += image->bytesPerPixel;
     }
-    printf("Current offset %d\n", currentOffset);
   }
 }
 
