@@ -20,12 +20,13 @@ class MyWindow : public sombrero::Window, public has_slots<> {
   }
   void resize() {
     pLabel->setHeight(pLabel->getHeight()+20);
-    pLabel->getParent()->update();
+    pLabel->update();
+    //pLabel->getParent()->update();
     printf("New label size %d\n", pLabel->getHeight());
   }
   void resize2() {
     pLabel->setHeight(pLabel->getHeight()-20);
-    pLabel->getParent()->update();
+    pLabel->update();
     printf("New label size %d\n", pLabel->getHeight());
   }
 
