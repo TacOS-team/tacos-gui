@@ -5,7 +5,7 @@
 
 #include <stdio.h>
 
-#include <climits>
+#include <limits.h>
 #include <clip_zone.h>
 #include <screen.h>
 
