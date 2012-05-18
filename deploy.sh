@@ -5,7 +5,7 @@ tacos_appdir=../applications/gui
 tacos_gui_libdir=emu/libs
 tacos_libdir=../libs
 
-applications="pron guacamole pron_cube.cpp pron_cube_mouse.cpp pron_cube_tuning.cpp"
+applications="pron guacamole pron_cube.cpp pron_cube_mouse.cpp pron_cube_tuning.cpp jpegviewer.cpp"
 libs="pronlib libcolor"
 
 if [ -f $tacos_gui_appdir/Makefile.tacos ]; then
@@ -38,6 +38,10 @@ for app in $applications; do
   elif [ -f $tacos_gui_appdir/$app ]; then
     echo "Copying $tacos_gui_appdir/$app to $tacos_appdir/$app..."
     cp $tacos_gui_appdir/$app $tacos_appdir/$app
+
+    if [ $app = "jpegviewer" ]; then
+      cp $tacos_gui_appdir/../tacos.jpg $tacos_appdir/
+    fi
   else
     echo "Application $app does not exist."
   fi
