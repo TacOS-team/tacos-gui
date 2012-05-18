@@ -94,7 +94,11 @@ void Drawable::reduce(int &x, int &y, int &width, int &height) {
 
 void Drawable::drawPoint(int x, int y) {
   if (this->isValid(x, y)) {
+#ifdef FAST_BPP32
+    *((int*) this->pixelAddr(x, y)) = this->getScreen()->getGC()->fgValue;
+#else
     memcpy(this->pixelAddr(x, y), &this->getScreen()->getGC()->fgValue, this->getScreen()->bytesPerPixel);
+#endif
   }
 }
 
@@ -277,7 +281,11 @@ void Drawable::fillEllipse(int x0, int y0, int a, int b) {
 int Drawable::getPixel(int x, int y) {
   if (this->isValid(x, y)) {
     int ret = 0;
+#ifdef FAST_BPP32
+    ret = *((int*) this->pixelAddr(x, y));
+#else
     memcpy(&ret, this->pixelAddr(x, y), this->getScreen()->bytesPerPixel);
+#endif
     return ret;
   }
   return -1;
@@ -285,7 +293,11 @@ int Drawable::getPixel(int x, int y) {
 
 void Drawable::setPixel(int x, int y, int pixel) {
   if (this->isValid(x, y)) {
+#ifdef FAST_BPP32
+    *((int*) this->pixelAddr(x, y)) = pixel;
+#else
     memcpy(this->pixelAddr(x, y), &pixel, this->getScreen()->bytesPerPixel);
+#endif
   }
 }
 
@@ -300,7 +312,11 @@ void Drawable::putImage(PronImage *image, int x, int y) {
             // Computing the buffer pointers
             void *src = image->data + (srcX + srcY * image->width) * image->bytesPerPixel;
             void *dest = this->pixelAddr(x + srcX, y + srcY);
+#ifdef FAST_BPP32
+            *((int*) dest) = *((int*) src);
+#else
             memcpy(dest, src, image->bytesPerPixel);
+#endif
           }
         }
       }
@@ -327,7 +343,11 @@ void Drawable::putImage(PronImage *image, int x, int y, int offset, int size) {
           // Computing the buffer pointers
           void *src = image->data + (srcX + srcY * image->width) * image->bytesPerPixel - offset;
           void *dest = this->pixelAddr(x + srcX, y + srcY);
+#ifdef FAST_BPP32
+          *((int*) dest) = *((int*) src);
+#else
           memcpy(dest, src, image->bytesPerPixel);
+#endif
         }
         // Iterate on the image
         if (srcX == image->width - 1) {
