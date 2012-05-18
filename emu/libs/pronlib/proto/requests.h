@@ -595,6 +595,7 @@ struct RqPutImage : public PronRequest {
   /**
    * Constructor.
    * @param drawable The drawable in which to put the image
+   * @param gc The graphics context to use
    * @param x The destination top-left corner x-coordinate
    * @param y The destination top-left corner y-coordinate
    * @param width The width of the image
@@ -603,9 +604,12 @@ struct RqPutImage : public PronRequest {
    * @param depth The depth of the image (8, 16 or 24 bits)
    * @param bytesPerPixel The bytes per pixel of the image (1, 2 or 3 bpp)
    */
-  RqPutImage(unsigned int drawable, int x, int y, int width, int height, int format, int depth, int bytesPerPixel, int offset, int size)
+  RqPutImage(unsigned int drawable, unsigned int gc, int x, int y,
+      int width, int height, int format, int depth, int bytesPerPixel,
+      int offset, int size)
       : PronRequest(RQ_PUT_IMAGE) {
     this->drawable = drawable;
+    this->gc = gc;
     this->width = width; 
     this->height = height;
     this->x = x;
@@ -618,6 +622,7 @@ struct RqPutImage : public PronRequest {
   }
 
   unsigned int drawable; /**< Id of the drawable in which to put the image */
+  unsigned int gc; /**< Id of the graphics context to use */
   int width; /**< Width of the image */
   int height; /**< Height of the image */
   int x; /**< Destination top-left corner x-coordinate */

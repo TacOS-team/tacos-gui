@@ -272,9 +272,8 @@ void pronMoveWindowTo(Display *d, unsigned int w, int x, int y) {
   tsock_write(d->fd, &rq, sizeof(rq));
 }
 
-void pronPutImage(Display *d, Drawable dr, GC __attribute__((unused)) gc, PronImage *image,
+void pronPutImage(Display *d, Drawable dr, GC gc, PronImage *image,
     int srcX, int srcY, int width, int height, int destX, int destY) {
-  /** @todo use GC? */
   // We have to check if the rectangle the client wants to send enters 
   // in the source image
   if((srcX + width > image->width) || (srcY + height > image->height)) {
@@ -318,7 +317,7 @@ void pronPutImage(Display *d, Drawable dr, GC __attribute__((unused)) gc, PronIm
       currentOffset += image->bytesPerPixel;
     }
     // Creation of the request object
-    RqPutImage rq(dr, destX, destY, width, height, image->format, image->depth, image->bytesPerPixel, offset, currentOffset);
+    RqPutImage rq(dr, gc, destX, destY, width, height, image->format, image->depth, image->bytesPerPixel, offset, currentOffset);
     // Copy of the request object in the send buffer
     memcpy(buf, &rq, sizeof(RqPutImage));
     // We can send the buffer

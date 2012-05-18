@@ -256,7 +256,8 @@ void Client::handle() {
     case RQ_PUT_IMAGE: {
       RqPutImage *rq = (RqPutImage*) Client::recvBuf;
       Drawable *d = screen->getDrawable(rq->drawable);
-      if (d != NULL) {
+      GC *gc = GC::getGC(rq->gc);
+      if (d != NULL && screen->prepareDrawing(d, gc)) {
       	char *image_buf = ((char*) rq) + sizeof(RqPutImage);
         PronImage image(rq->width, rq->height, rq->format, image_buf, rq->depth, rq->bytesPerPixel, false);
         d->putImage(&image, rq->x, rq->y, rq->offset, rq->size);

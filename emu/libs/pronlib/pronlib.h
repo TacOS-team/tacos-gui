@@ -332,7 +332,7 @@ void pronMoveWindowTo(Display *d, unsigned int w, int x, int y);
  * @param destX The destination top-left corner x-coordinate
  * @param destY The destination top-left corner y-coordinate
  */
-void pronPutImage(Display *d, Drawable dr, GC __attribute__((unused)) gc, PronImage *image, 
+void pronPutImage(Display *d, Drawable dr, GC gc, PronImage *image, 
     int srcX, int srcY, int width, int height, int destX, int destY);  
 
 /**
