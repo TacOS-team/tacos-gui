@@ -264,7 +264,7 @@ void Drawable::fillEllipse(int x0, int y0, int a, int b) {
 
 int Drawable::getPixel(int x, int y) {
   if (this->isValid(x, y)) {
-    int ret;
+    int ret = 0;
     memcpy(&ret, this->pixelAddr(x, y), this->getScreen()->bytesPerPixel);
     return ret;
   }
