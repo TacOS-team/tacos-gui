@@ -31,6 +31,10 @@ for app in $applications; do
     else
       echo "No TacOS Makefile found for $app."
     fi
+
+    if [ $app = "pron" ]; then
+      cp -r $tacos_gui_appdir/../fonts $tacos_appdir/$app/
+    fi
   elif [ -f $tacos_gui_appdir/$app ]; then
     echo "Copying $tacos_gui_appdir/$app to $tacos_appdir/$app..."
     cp $tacos_gui_appdir/$app $tacos_appdir/$app
