@@ -22,8 +22,12 @@ namespace sombrero {
 
     private:
       Container *parent; /**< The parent widget */
+      int lastX; /**< last x coordinate received/sent from/to pron */
+      int lastY; /**< last y coordinate received/sent from/to pron */
       int x; /**< x coordinate */
       int y; /**< y coordinate */
+      int lastWidth; /**< last Width received/sent from/to pron */
+      int lastHeight; /**< last Height received/sent from/to pron */
       int width; /**< Width */
       int height; /**< Height */
       bool active; /**< Dealing with activable widgets */

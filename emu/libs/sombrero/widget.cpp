@@ -20,6 +20,10 @@ namespace sombrero {
   void Widget::init() {
     this->parent    = NULL;
     this->eventMask = 0;
+    this->lastX      = -1;
+    this->lastY      = -1;
+    this->lastWidth  = -1;
+    this->lastHeight = -1;
   }
 
   void Widget::subscribeEvent(uint32_t eventMask) {
@@ -81,7 +85,12 @@ namespace sombrero {
   }
 
   void Widget::updatePronSize() {
-    pronResizeWindow(Application::getInstance()->d, this->pronWindow, this->width, this->height);
+    if(this->lastWidth != this->width || this->lastHeight != this->height) {
+      this->lastWidth  = this->width;
+      this->lastHeight = this->height;
+      this->resized();
+      pronResizeWindow(Application::getInstance()->d, this->pronWindow, this->width, this->height);
+    }
   }
 
   bool Widget::isActive() {
@@ -122,7 +131,11 @@ namespace sombrero {
   }
 
   void Widget::updatePronPosition() {
-    pronMoveWindowTo(Application::getInstance()->d, this->pronWindow, this->x, this->y);
+    if(this->lastX != this->x || this->lastY != this->y) {
+      this->lastX = this->x;
+      this->lastY = this->y;
+      pronMoveWindowTo(Application::getInstance()->d, this->pronWindow, this->x, this->y);
+    }
   }
 
   void Widget::update() {
@@ -162,11 +175,13 @@ namespace sombrero {
   }
 
   void Widget::handleEventResizeWindow(int width, int height) {
-    printf("handleEventResizeWindow\n");
-    bool isResized = this->getWidth() != width || this->getHeight() != height;
-    this->setWidth(width);
-    this->setHeight(height);
+    //printf("handleEventResizeWindow\n");
+    bool isResized   = this->getWidth() != width || this->getHeight() != height;
+    this->lastHeight = height;
+    this->lastWidth  = width;
     if(isResized) {
+      this->setWidth(width);
+      this->setHeight(height);
       this->resized();
     }
   }
