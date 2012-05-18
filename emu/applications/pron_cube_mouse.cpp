@@ -124,7 +124,7 @@ int main(int argc, char **argv){
   while (1) {
     // On récupère un évènement
     if (!pronNextEvent(d, e, true)) {
-      if (errno != EAGAIN && errno != EWOULDBLOCK) {
+      if (errno != EAGAIN/* && errno != EWOULDBLOCK*/) {
         fprintf(stderr, "pron has closed the connection.\n");
         exit(1);
       }
