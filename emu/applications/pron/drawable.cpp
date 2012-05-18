@@ -278,50 +278,58 @@ void Drawable::setPixel(int x, int y, int pixel) {
 }
 
 void Drawable::putImage(PronImage *image, int x, int y) {
-  // We have to test if the image and the drawable have the same depth
-  if (image->depth == this->getScreen()->bitsPerPixel) {
-    // Copy the image in the video memory
-    for (int srcY = 0; srcY < image->height; srcY++) {
-      for (int srcX = 0; srcX < image->width; srcX++) {
-        if (this->isValid(srcX + x, srcY + y)) {
-          // Computing the buffer pointers
-          void *src = image->data + (srcX + srcY * image->width) * image->bytesPerPixel;
-          void *dest = this->pixelAddr(x + srcX, y + srcY);
-          memcpy(dest, src, image->bytesPerPixel);
+  if (this->beforeDrawing(x, y, x + image->width - 1, y + image->height - 1)) {
+    // We have to test if the image and the drawable have the same depth
+    if (image->depth == this->getScreen()->bitsPerPixel) {
+      // Copy the image in the video memory
+      for (int srcY = 0; srcY < image->height; srcY++) {
+        for (int srcX = 0; srcX < image->width; srcX++) {
+          if (this->isValid(srcX + x, srcY + y)) {
+            // Computing the buffer pointers
+            void *src = image->data + (srcX + srcY * image->width) * image->bytesPerPixel;
+            void *dest = this->pixelAddr(x + srcX, y + srcY);
+            memcpy(dest, src, image->bytesPerPixel);
+          }
         }
       }
     }
+    
+    this->afterDrawing(x, y, x + image->width - 1, y + image->height - 1);
   }
 }
 
 void Drawable::putImage(PronImage *image, int x, int y, int offset, int size) {
-  // We have to test if the image and the drawable have the same depth
-  if (image->depth == this->getScreen()->bitsPerPixel) {
-    // We compute using the offsets where we are in the image
-    int srcY = offset / (image->width * image->bytesPerPixel) ;
-    int srcX = (offset - (srcY * image->width * image->bytesPerPixel)) / image->bytesPerPixel;
-    int currentOffset = 0;
-    while (1) {
-      // On a fini de copier le segment de l'image
-      if (currentOffset >= size) {
-        break;
+  if (this->beforeDrawing(x, y, x + image->width - 1, y + image->height - 1)) {
+    // We have to test if the image and the drawable have the same depth
+    if (image->depth == this->getScreen()->bitsPerPixel) {
+      // We compute using the offsets where we are in the image
+      int srcY = offset / (image->width * image->bytesPerPixel) ;
+      int srcX = (offset - (srcY * image->width * image->bytesPerPixel)) / image->bytesPerPixel;
+      int currentOffset = 0;
+      while (1) {
+        // On a fini de copier le segment de l'image
+        if (currentOffset >= size) {
+          break;
+        }
+        if (this->isValid(srcX + x, srcY + y)) {
+          // Computing the buffer pointers
+          void *src = image->data + (srcX + srcY * image->width) * image->bytesPerPixel - offset;
+          void *dest = this->pixelAddr(x + srcX, y + srcY);
+          memcpy(dest, src, image->bytesPerPixel);
+        }
+        // Iterate on the image
+        if (srcX == image->width - 1) {
+          srcY++;
+          srcX = 0;
+        } else {
+          srcX++;
+        }
+        // Increment the current offset
+        currentOffset += image->bytesPerPixel;
       }
-      if (this->isValid(srcX + x, srcY + y)) {
-        // Computing the buffer pointers
-        void *src = image->data + (srcX + srcY * image->width) * image->bytesPerPixel - offset;
-        void *dest = this->pixelAddr(x + srcX, y + srcY);
-        memcpy(dest, src, image->bytesPerPixel);
-      }
-      // Iterate on the image
-      if (srcX == image->width - 1) {
-        srcY++;
-        srcX = 0;
-      } else {
-        srcX++;
-      }
-      // Increment the current offset
-      currentOffset += image->bytesPerPixel;
     }
+    
+    this->afterDrawing(x, y, x + image->width - 1, y + image->height - 1);
   }
 }
 
