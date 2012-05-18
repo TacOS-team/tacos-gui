@@ -100,39 +100,41 @@ void FontLoader::readChars(int nb) {
 }
 
 Font* FontLoader::load(char *fileName) {
-	fd = fopen(fileName, "r");
+  Font *font = NULL;
+	
+  fd = fopen(fileName, "r");
 	if (fd == NULL) {
-		perror("Unable to open file");
-		exit(1);
-	}
-
-	char version[10];
-	if (fscanf(fd, "STARTFONT %s", version) <= 0) {
-		fprintf(stderr, "Fatal: no STARTFONT found.");
-		exit(2);
+		fprintf(stderr, "Unable to open file.\n");
 	} else {
-		printf("Reading font v%s\n", version);
-		bool end = false;
-		while (!end) {
-			fscanf(fd, "%s", kw);
-			if (eq(kw, "FONT")) {
-				fscanf(fd, "%s", fontName);
-			} else if (eq(kw, "STARTPROPERTIES")) {
-				int nbProperties;
-				fscanf(fd, "%d", &nbProperties);
-				readProperties(nbProperties);
-			} else if (eq(kw, "CHARS")) {
-				int nbChars;
-				fscanf(fd, "%d", &nbChars);
-				readChars(nbChars);
-			} else if (eq(kw, "ENDFONT")) {
-				end = true;
-			} else {
-				//fprintf(stderr, "Ignored keyword: %s\n", kw);
-				while (fgetc(fd) != '\n');
-			}
-		}
+    char version[10];
+    if (fscanf(fd, "STARTFONT %s", version) <= 0) {
+      fprintf(stderr, "Fatal: no STARTFONT found.\n");
+    } else {
+      printf("Reading font v%s\n", version);
+      bool end = false;
+      while (!end) {
+        fscanf(fd, "%s", kw);
+        if (eq(kw, "FONT")) {
+          fscanf(fd, "%s", fontName);
+        } else if (eq(kw, "STARTPROPERTIES")) {
+          int nbProperties;
+          fscanf(fd, "%d", &nbProperties);
+          readProperties(nbProperties);
+        } else if (eq(kw, "CHARS")) {
+          int nbChars;
+          fscanf(fd, "%d", &nbChars);
+          readChars(nbChars);
+        } else if (eq(kw, "ENDFONT")) {
+          end = true;
+        } else {
+          //fprintf(stderr, "Ignored keyword: %s\n", kw);
+          while (fgetc(fd) != '\n');
+        }
+      }
 
-		return new Font(fontName, fontHeight, fontGlyphs);
-	}
+		  font = new Font(fontName, fontHeight, fontGlyphs);
+	  }
+  }
+
+  return font;
 }
