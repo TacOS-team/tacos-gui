@@ -6,7 +6,7 @@ tacos_gui_libdir=emu/libs
 tacos_libdir=../libs
 
 applications="pron guacamole pron_cube.cpp pron_cube_mouse.cpp pron_cube_tuning.cpp"
-libs="pronlib"
+libs="pronlib libcolor"
 
 if [ -f $tacos_gui_appdir/Makefile.tacos ]; then
   echo "Configuring Makefile for GUI applications..."
@@ -55,6 +55,8 @@ for lib in $libs; do
     else
       echo "No TacOS Makefile found."
     fi
+
+    echo '*' > $tacos_libdir/$lib/.gitignore
   else
     echo "Library $lib does not exist."
   fi
