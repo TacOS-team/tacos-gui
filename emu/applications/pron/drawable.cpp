@@ -105,12 +105,25 @@ void Drawable::drawPoint(int x, int y) {
 }
 
 void Drawable::drawHorizLine(int x, int y, int width) {
-  if (this->beforeDrawing(x, y, x + width, y)) {
-    for (int c = 0; c < width; c++) {
-      this->drawPoint(x + c, y);
+  switch (this->beforeDrawing(x, y, x + width, y)) {
+    case VISIBLE: {
+      int line[width];
+      for (int i = 0; i < width; i++) {
+        line[i] = this->getScreen()->getGC()->fgValue;
+      }
+      memcpy(this->pixelAddr(x, y), &line, sizeof(line));
+      this->afterDrawing(x, y, x + width, y);
     }
-
-    this->afterDrawing(x, y, x + width, y);
+    case PARTIAL: {
+      for (int c = 0; c < width; c++) {
+        this->drawPoint(x + c, y);
+      }
+      this->afterDrawing(x, y, x + width, y);
+      break;
+    }
+    case INVISIBLE: {
+      break;
+    }
   }
 }
 
