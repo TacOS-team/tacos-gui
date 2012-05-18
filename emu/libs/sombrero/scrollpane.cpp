@@ -30,15 +30,20 @@ void ScrollPane::update() {
   //printf("update scrollpane\n");
   this->scrollBar.setHeight(this->getHeight());
   this->scrollBar.setX(this->getWidth() - this->scrollBar.getWidth());
+  // If the widget has been set
   if(this->widget) {
     this->widget->setWidth(this->getWidth() - this->scrollBar.getWidth());
     this->widget->setX(0);
+    // If the widget is bigger than the scrollpane
     if(this->widget->getHeight() > this->getHeight()) {
+      // Sets the range. Is depends on the number of hidden pixels
       // Multiplied per factor to avoid strange behavior on the ratio of small values
       this->scrollBar.setRange(0, factor*(this->widget->getHeight() - this->getHeight()));
+      // The ratio depends on the ratio visible and hidden
       this->scrollBar.setRatio(factor*(this->widget->getHeight() - this->getHeight())
         * ((float)this->getHeight()/this->widget->getHeight()));
     } else {
+      // If the widget is smaller, the scrollbar cannot be moved
       this->scrollBar.setRange(0, 0);
     }
     this->widget->setY(this->scrollBar.getValue());
@@ -50,6 +55,7 @@ void ScrollPane::update() {
 void ScrollPane::setParent(Container *parent) {
   Container::setParent(parent);
   this->scrollBar.setParent(this);
+  // If the widget is set, we create it
   if(this->widget) {
     this->widget->setParent(this);
     this->widget->subscribeEvent(pron::EV_RESIZE_WINDOW);

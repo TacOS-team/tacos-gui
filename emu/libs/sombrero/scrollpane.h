@@ -17,10 +17,22 @@ namespace sombrero {
 class ScrollPane : public Container, public has_slots<> {
 
  protected:
+  /**
+   * The vertical scrollbar of the scrollpane
+   */
   VScrollBar scrollBar;
+  /**
+   * The widget inside the scrollpane
+   */
   Widget *widget;
+  /**
+   * Initialises the scrollpane
+   */
   void init();
  public:
+  /**
+   * Constructor
+   */
   ScrollPane(Widget *widget);
 
   /**
@@ -28,9 +40,12 @@ class ScrollPane : public Container, public has_slots<> {
    * @param Pointer to the parent container
    */
   virtual void setParent(Container *parent);
+  /**
+   * Updates the scrollbar etc.
+   */
   virtual void update();
   // Slots
-  void YMoved(int val);
+  void YMoved(int val);/** Slot called when the user moves the scrollbar */
 };
 
 } // namespace sombrero
