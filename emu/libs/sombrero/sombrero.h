@@ -16,6 +16,7 @@
 #include "textbox.h"
 #include "checkbox.h"
 #include "label.h"
+#include "image.h"
 
 /**
  * Sombrero library namespace
