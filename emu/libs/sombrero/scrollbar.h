@@ -37,8 +37,9 @@ class ScrollBar : public Container, public has_slots<> {
   void thumbReleased();
  public:
   signal1<int> newValue;
-  int getValue();
+  int  getValue();
   void setRatio(int ratio);
+  int  getRatio();
   void setStep (unsigned int step);
   void setValue(unsigned int value);
   void setRange(unsigned int min, unsigned int max);

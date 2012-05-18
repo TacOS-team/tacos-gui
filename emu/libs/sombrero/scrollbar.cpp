@@ -24,11 +24,12 @@ void ScrollBar::setRatio(int ratio) {
   this->update();
 }
 
+int ScrollBar::getRatio() {
+  return this->ratio;
+}
+
 void ScrollBar::setStep(unsigned int step) {
   this->step = step;
-  if(this->step > this->max - this->min) {
-    this->step = this->max - this->min;
-  }
 }
 
 void ScrollBar::setRange(unsigned int min, unsigned int max) {
@@ -52,6 +53,9 @@ void ScrollBar::setRange(unsigned int min, unsigned int max) {
 }
 
 void ScrollBar::thumbClicked() {
+  // TODO save position cursor on the thumb
+  //   to keep this position during the move avoiding
+  //   to center the mouse each time
   this->subscribeEvent(pron::EV_POINTER_MOVED);
 }
 
@@ -65,6 +69,7 @@ void ScrollBar::setParent(Container *parent) {
   this->thumb.setParent(this);
   this->thumb.clicked.connect  (this, &ScrollBar::thumbClicked);
   this->thumb.released.connect (this, &ScrollBar::thumbReleased);
+  this->thumb.dontPropagateEvent(pron::EV_MOUSE_BUTTON);
   //this->increaseButton.clicked.connect (this, &ScrollBar::increaseClicked);
   //this->decreaseButton.clicked.connect (this, &ScrollBar::decreaseClicked);
   this->subscribeEvent(pron::EV_MOUSE_BUTTON);
