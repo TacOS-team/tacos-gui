@@ -224,9 +224,12 @@ void Mouse::hidePointer() {
 
     for (int y = 0; y < PRON_MOUSE_POINTER_HEIGHT; y++) {
       for (int x = 0; x < PRON_MOUSE_POINTER_WIDTH; x++) {
-        void *destination = screen->getRoot()->pixelAddr(x + this->pointerBackupX, y + this->pointerBackupY);
-        void *source = this->pointerBackup->pixelAddr(x, y);
-        memcpy(destination, source, screen->bytesPerPixel); 
+        if (x + this->pointerBackupX >= 0 && x + this->pointerBackupX < screen->width &&
+            y + this->pointerBackupY >= 0 && y + this->pointerBackupY < screen->height) {
+          void *destination = screen->getRoot()->pixelAddr(x + this->pointerBackupX, y + this->pointerBackupY);
+          void *source = this->pointerBackup->pixelAddr(x, y);
+          memcpy(destination, source, screen->bytesPerPixel);
+        }
       }
     }
     
@@ -244,17 +247,20 @@ void Mouse::showPointer() {
 
     for (int y = 0; y < PRON_MOUSE_POINTER_HEIGHT; y++) {
       for (int x = 0; x < PRON_MOUSE_POINTER_WIDTH; x++) {
-        // Backup old pixel
-        void *destination = this->pointerBackup->pixelAddr(x, y);
-        void *source = screen->getRoot()->pixelAddr(x + this->mouseX, y + this->mouseY);
-        memcpy(destination, source, screen->bytesPerPixel);
-
-        // Draw new pixel
-        /** @todo xxx red is transparent haha degueu */
-        if (this->pointer->getPixel(x, y) != 0x00FF0000) {
-          destination = source;
-          source = this->pointer->pixelAddr(x, y);
+        if (x + this->mouseX >= 0 && x + this->mouseX < screen->width &&
+            y + this->mouseY >= 0 && y + this->mouseY < screen->height) {
+          // Backup old pixel
+          void *destination = this->pointerBackup->pixelAddr(x, y);
+          void *source = screen->getRoot()->pixelAddr(x + this->mouseX, y + this->mouseY);
           memcpy(destination, source, screen->bytesPerPixel);
+
+          // Draw new pixel
+          /** @todo xxx red is transparent haha degueu */
+          if (this->pointer->getPixel(x, y) != 0x00FF0000) {
+            destination = source;
+            source = this->pointer->pixelAddr(x, y);
+            memcpy(destination, source, screen->bytesPerPixel);
+          }
         }
       }
     }
