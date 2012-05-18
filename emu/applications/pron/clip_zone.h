@@ -72,6 +72,12 @@ public:
    */
   void print();
 
+  /**
+   * Returns the set of rectangles that composes the clipping zone.
+   * @return the set of rectangles that composes the clipping zone.
+   */
+  vector<ClipRect*>& getClipRects();
+
 private:
   vector<ClipRect*> clipRects; /**< Set of rectangles composing the clipping zone */
   ClipRect cache; /**< Cache rectangle for quicker checks */

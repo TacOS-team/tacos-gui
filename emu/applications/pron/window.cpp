@@ -157,12 +157,18 @@ void* Window::pixelAddr(int x, int y) {
 }
 
 void Window::clear(int x, int y, int width, int height, bool sendExposureEvent) {
-  this->reduce(x, y, width, height);
-
   Color oldFg = this->getScreen()->getGC()->getFg();
   this->getScreen()->getGC()->setFg(this->bgColor);
   this->getScreen()->setClipWin(this);
-  this->fillRectangle(x, y, width, height);
+  if (x == 0 && y == 0 && width == this->getWidth() && height == this->getHeight()) {
+    vector<ClipRect*> clipRects = this->getScreen()->getClipZone()->getClipRects();
+    for (unsigned int i = 0; i < clipRects.size(); i++) {
+      this->getScreen()->getRoot()->fillRectangle(clipRects[i]->x, clipRects[i]->y, clipRects[i]->width, clipRects[i]->height);
+    }
+  } else {
+    this->reduce(x, y, width, height);
+    this->fillRectangle(x, y, width, height);
+  }
   /** @todo XXX If it is the root window, we print a grid (provisoire) */
   if (this->getId() == 0) {
     this->getScreen()->getGC()->setFg(Color(255, 0, 0));
