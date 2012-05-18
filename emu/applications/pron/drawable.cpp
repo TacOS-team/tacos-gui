@@ -29,10 +29,10 @@ Drawable::~Drawable() {
   this->getScreen()->removeDrawable(this);
 }
 
-bool Drawable::beforeDrawing(int x1 __attribute__((unused)),
+ClipState Drawable::beforeDrawing(int x1 __attribute__((unused)),
     int y1 __attribute__((unused)), int x2 __attribute__((unused)),
     int y2 __attribute__((unused))) {
-  return true;
+  return VISIBLE;
 }
 
 void Drawable::afterDrawing(int x1 __attribute__((unused)),

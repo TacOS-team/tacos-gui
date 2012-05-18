@@ -7,6 +7,7 @@
  */
 
 #include <proto/bits/image.h>
+#include <clip_zone.h>
 
 using namespace std;
 using namespace pron;
@@ -82,9 +83,10 @@ class Drawable {
    * @param y1 The minimum y-coordinate of the area where to fraw
    * @param x2 The maximum x-coordinate of the area where to draw
    * @param y2 The maximum y-coordinate of the area where to draw
-   * @return Whether the drawing can be done or not.
+   * @return the state of the area (fully visible, fully invisible
+   * or partially visible)
    */
-  virtual bool beforeDrawing(int x1, int y1, int x2, int y2);
+  virtual ClipState beforeDrawing(int x1, int y1, int x2, int y2);
 
   /**
    * Callback function called before drawing.

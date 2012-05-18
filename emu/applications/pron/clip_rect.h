@@ -7,7 +7,8 @@
  */
 
 #include <vector>
-#include <window.h>
+
+class Window;
 
 using namespace std;
 

@@ -467,27 +467,21 @@ inline bool Window::isValid(int x, int y) {
   return this->getScreen()->isValid(this->x + x, this->y + y);
 }
 
-bool Window::beforeDrawing(int x1, int y1, int x2, int y2) {
-  bool canDraw = true;
+ClipState Window::beforeDrawing(int x1, int y1, int x2, int y2) {
+  ClipState state = this->getScreen()->getClipZone()->checkArea(
+      this->x + x1, this->y + y1, this->x + x2, this->y + y2);
 
-  switch (this->getScreen()->getClipZone()->checkArea(
-      this->x + x1, this->y + y1, this->x + x2, this->y + y2)) {
-    case INVISIBLE:
-      canDraw = false;
-      break;
-    case PARTIAL:
-      this->getScreen()->setClippingCheck(true);
-      break;
-    case VISIBLE:
-      this->getScreen()->setClippingCheck(false);
-      break;
+  if (state == VISIBLE) {
+    this->getScreen()->setClippingCheck(false);
+  } else {
+    this->getScreen()->setClippingCheck(true);
   }
 
   if (Mouse::getInstance()->overlapsPointer(this->x + x1, this->y + y1, this->x + x2, this->y + y2)) {
     Mouse::getInstance()->hidePointer();
   }
 
-  return canDraw;
+  return state;
 }
 
 void Window::afterDrawing(int x1 __attribute__((unused)),

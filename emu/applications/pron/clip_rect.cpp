@@ -4,6 +4,7 @@
  */
 
 #include <clip_rect.h>
+#include <window.h>
 
 ClipRect::ClipRect(int x, int y, int width, int height) {
   this->x = x;

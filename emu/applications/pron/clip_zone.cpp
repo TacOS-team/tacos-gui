@@ -8,6 +8,7 @@
 #include <limits.h>
 #include <clip_zone.h>
 #include <screen.h>
+#include <window.h>
 
 ClipZone::ClipZone(int x, int y, int width, int height)
     : cache(0, 0, 0, 0), cacheRes(false) /* empty cache */ {

@@ -8,7 +8,8 @@
 
 #include <clip_rect.h>
 #include <vector>
-#include <window.h>
+
+class Window;
 
 using namespace std;
 
@@ -16,9 +17,9 @@ using namespace std;
  * States of an area regarding the clipping zone
  */
 enum ClipState {
-  VISIBLE, /**< Totally visible */
   INVISIBLE, /**< Totally invisible */
   PARTIAL, /**< Possibly partially visible */
+  VISIBLE, /**< Totally visible */
 };
 
 /**
