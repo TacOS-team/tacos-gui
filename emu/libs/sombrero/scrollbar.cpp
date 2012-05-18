@@ -18,6 +18,7 @@ int ScrollBar::getValue() {
 
 void ScrollBar::setRatio(int ratio) {
   this->ratio = ratio;
+  // If the ration is too big, we set it at its maximum value
   if(this->ratio > this->max - this->min) {
     this->ratio = this->max - this->min;
   }
@@ -56,10 +57,13 @@ void ScrollBar::thumbClicked() {
   // TODO save position cursor on the thumb
   //   to keep this position during the move avoiding
   //   to center the mouse each time
+
+  // Subscribe to mouse events to move the thumb
   this->subscribeEvent(pron::EV_POINTER_MOVED);
 }
 
 void ScrollBar::thumbReleased() {
+  // Unsubscribe to mouse events because the thumb is released
   this->unsubscribeEvent(pron::EV_POINTER_MOVED);
 }
 
@@ -70,8 +74,6 @@ void ScrollBar::setParent(Container *parent) {
   this->thumb.clicked.connect  (this, &ScrollBar::thumbClicked);
   this->thumb.released.connect (this, &ScrollBar::thumbReleased);
   this->thumb.dontPropagateEvent(pron::EV_MOUSE_BUTTON);
-  //this->increaseButton.clicked.connect (this, &ScrollBar::increaseClicked);
-  //this->decreaseButton.clicked.connect (this, &ScrollBar::decreaseClicked);
   this->subscribeEvent(pron::EV_MOUSE_BUTTON);
 }
 
@@ -103,18 +105,25 @@ void ScrollBar::update() {
 void ScrollBar::updateThumbPosition(int move) {
   unsigned short thumbLength;
   unsigned short thumbPosition;
+  // Gets the current thumb informations
   this->getCursorInformations(thumbPosition, thumbLength);
+  // Adds the mouse move to the position
   this->thumbPosition += move;
+  // Check if the values are still valid
   if(this->thumbPosition < this->getMinThumbPosition()) {
     this->thumbPosition = this->getMinThumbPosition();
   } else if(this->thumbPosition > this->getMaxThumbPosition(thumbLength)) {
     this->thumbPosition = this->getMaxThumbPosition(thumbLength);
   }
+  // Sets the new position
   this->setThumbPosition(this->thumbPosition);
+  // Sends the new position to pron
   this->thumb.updatePronPosition();
+  // Compute the new current value
   unsigned int newValue = (float)(this->thumbPosition - this->getMinThumbPosition())
                 / (this->getMaxThumbPosition(thumbLength) - this->getMinThumbPosition())
                 *(this->max - this->min) + this->min;
+  // If the value changed, we send a signal
   if(this->value != newValue) {
     this->setValue(newValue);
   }
@@ -124,24 +133,6 @@ void ScrollBar::handleEventPointerMoved(pron::EventPointerMoved *mousePointerEve
   Widget::handleEventPointerMoved(mousePointerEvent);
 }
 
-void ScrollBar::handleEventMouseButton(pron::EventMouseButton * e) {
-  // TODO gestion propre click
-  //printf("ScrollBar::handleEventMouseButton\n");
-  if(e->b1) {
-    if(e->y < this->thumb.getY()) {
-      int newVal = (int)this->value - this->step;
-      if(newVal >= 0) {
-        this->setValue(this->value - this->step);
-      } else {
-        this->value = this->min;
-      }
-    } else if(e->y > this->thumb.getY() + this->thumb.getHeight()) {
-      this->setValue(this->value + this->step);
-    }
-    this->update();
-  }
-}
-
 void ScrollBar::getCursorInformations(unsigned short &thumbPosition,
                                       unsigned short &thumbLength) {
   unsigned int range = max - min;
@@ -149,8 +140,11 @@ void ScrollBar::getCursorInformations(unsigned short &thumbPosition,
     thumbPosition = 0;
     thumbLength = this->getMaxThumbLength();
   } else {
+    // Computes the thumb length depending to the ratio
     thumbLength = this->getMaxThumbLength() * (float)this->ratio / (range + 1);
+    // Sets a minimum length of the thumb
     thumbLength = (thumbLength < 15) ? 15 : thumbLength;
+    // Computes the position from the new length
     thumbPosition = (float)(this->value - min) / range
                     * (this->getMaxThumbPosition(thumbLength)-this->getMinThumbPosition());
   }

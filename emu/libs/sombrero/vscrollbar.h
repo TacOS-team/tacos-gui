@@ -16,9 +16,18 @@ namespace sombrero {
 class VScrollBar : public ScrollBar {
 
  protected:
+  /**
+   * Gets the max thumb length
+   */
   virtual int getMaxThumbLength();
+  /**
+   * Sets the position of the thumb (Y position for a vertical scrollbar)
+   */
   virtual void setThumbPosition(unsigned short position);
  public:
+  /**
+   * Draws the scrollbar
+   */
   virtual void draw();
   /**
    * Updates the widgets to pron
@@ -28,6 +37,11 @@ class VScrollBar : public ScrollBar {
    * Handle for a pointerMoved event
    */
   virtual void handleEventPointerMoved(pron::EventPointerMoved * e) ;
+  /**
+   * Handle for a mouseButton event
+   * @param e A pointer to the event that accured
+   */
+  virtual void handleEventMouseButton(pron::EventMouseButton * e);
 };
 
 } // namespace sombrero
