@@ -82,7 +82,7 @@ bool Screen::isValid(int x, int y) {
 }
 
 void* Screen::pixelAddr(int x, int y) {
-  return this->videoBuffer + (y * this->width + x) * 3;
+  return this->videoBuffer + (y * this->width + x) * this->bytesPerPixel;
 }
 
 Drawable* Screen::getDrawable(unsigned int id, int drawableType) {
