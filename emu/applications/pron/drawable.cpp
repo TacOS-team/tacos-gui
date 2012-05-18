@@ -12,6 +12,8 @@
 #include <screen.h>
 #include <window.h>
 
+#define FAST_BPP32
+
 Drawable::Drawable(int type, Screen *screen, int id, Client *creator, int width, int height) {
   this->type = type;
   this->screen = screen;
