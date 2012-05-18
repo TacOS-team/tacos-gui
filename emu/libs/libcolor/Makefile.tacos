@@ -2,9 +2,9 @@ INCLUDES = -I../../include/ -I../../libc/include/ -I../libcolor/ -I../stl/ -I../
 CXXFLAGS = -W -Wall -g -nostdlib -nostdinc -nostartfiles -nodefaultlibs -fno-builtin -I`pwd` -m32 -fpermissive -fno-rtti -fno-exceptions
 SRCS = *.cpp
 
-all: pronlib
+all: libcolor
 
-pronlib: pronlib.o
+libcolor: color.o
 	$(AR) r ../../lib/$@.a $^
 
 %.o: %.cpp
@@ -14,7 +14,7 @@ clean:
 	rm -f *.o .depend
 
 mrproper: clean
-	@rm ../../lib/pronlib.a
+	@rm ../../lib/libcolor.a
 
 -include .depend
 
