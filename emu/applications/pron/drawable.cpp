@@ -122,9 +122,21 @@ void Drawable::drawLine(int x1, int y1, int x2, int y2) {
   if (this->beforeDrawing(x1, y1, x2, y2)) {
     if (x1 == x2) {
       // Vertical line
+      if (y1 > y2) {
+        int tmp;
+        tmp = y1;
+        y1 = y2;
+        y2 = tmp;
+      }
       this->drawVertLine(x1, y1, (y2 - y1 + 1));
     } else if (y1 == y2) {
       // Horizontal line
+      if (x1 > x2) {
+        int tmp;
+        tmp = x1;
+        x1 = x2;
+        x2 = tmp;
+      }
       this->drawHorizLine(x1, y1, (x2 - x1 + 1));
     } else {
       int i, dx, dy, sdx, sdy, dxabs, dyabs, x, y, px, py;
