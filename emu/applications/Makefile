@@ -1,5 +1,5 @@
 SRCS = *.c *.cpp
-APPS = cube_graph cube_graph_mouse zen_graph pong snake_graph pouet clock_graph pron_cube pron_pong pron_cube_mouse pron_snake pron_cube_tuning sombrero_cube sombrero_textbox sombrero_button sombrero_checkbox sombrero_grid
+APPS = cube_graph cube_graph_mouse zen_graph pong snake_graph pouet clock_graph pron_cube pron_pong pron_cube_mouse pron_snake pron_cube_tuning sombrero_cube sombrero_textbox sombrero_button sombrero_checkbox sombrero_grid jpegviewer
 
 SUBDIRS = guacamole pron pron_danny
 
@@ -15,6 +15,9 @@ $(BUILDDIRAPPS)/%: %.c
 
 $(BUILDDIRAPPS)/%: %.cpp
 	$(CXX) -o $@ $< $(LIBTACOS) $(PRONLIB) $(LIBCOLOR) $(CFLAGS) $(INCLUDES)
+
+$(BUILDDIRAPPS)/jpegviewer : jpegviewer.cpp	
+	$(CXX) -o $@ $< $(LIBTACOS) $(PRONLIB) -ljpeg $(CFLAGS) $(INCLUDES)
 		
 $(BUILDDIRAPPS)/sombrero_cube : sombrero_cube.cpp	
 	$(CXX) -o $@ $< $(LIBTACOS) $(SOMBRERO) $(CFLAGS) $(INCLUDES)
