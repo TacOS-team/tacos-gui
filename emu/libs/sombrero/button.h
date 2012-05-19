@@ -52,9 +52,17 @@ class Button : public Widget {
    */
   virtual void setParent(Container *parent);
   /**
+   * Gets the text of the button
+   */
+  virtual std::string getText();
+  /**
+   * Sets the text of the button
+   */
+  void setText(std::string text);
+  /**
    * Button drawing stuff
    */
-  void draw();
+  virtual void draw();
   /**
    * Handle for a mouseButton event
    * @param e A pointer to the event that accured

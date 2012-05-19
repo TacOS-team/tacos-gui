@@ -10,7 +10,7 @@
 
 namespace sombrero {
 
-class widget;
+class Widget;
 class Window;
 
 /**
