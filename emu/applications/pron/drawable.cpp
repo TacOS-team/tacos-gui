@@ -391,5 +391,12 @@ void Drawable::copyArea(int dstX, int dstY, Drawable *d, int srcX, int srcY, int
 
 void Drawable::drawText(int x, int y, const char *text, int length) {
   Font *font = this->getScreen()->getFont(this->getScreen()->getGC()->font_num);
-  font->drawText(this, x, y, text, length);
+  
+  int textWidth, textHeight;
+  font->textSize(text, length, &textWidth, &textHeight);
+
+  if (this->beforeDrawing(x, y, x + textWidth - 1, y + textHeight - 1)) {
+    font->drawText(this, x, y, text, length);
+    this->afterDrawing(x, y, x + textWidth - 1, y + textHeight - 1);
+  }
 }
