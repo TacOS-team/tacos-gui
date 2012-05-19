@@ -1,10 +1,10 @@
 SRCS = *.c
-OBJS = vgadrv.o mousedrv.o vesadrv.o kbddrv.o
+OBJS = libtacos.o vgadrv.o mousedrv.o vesadrv.o kbddrv.o
 
 all: $(LIBTACOS)
 
-$(LIBTACOS): $(BUILDDIROBJS)/libtacos.o
-	$(CC) -o $@ -shared $< $(addprefix $(BUILDDIROBJS)/, $(OBJS)) -lSDL -ldl -lc
+$(LIBTACOS): $(addprefix $(BUILDDIROBJS)/, $(OBJS))
+	$(CC) -o $@ -shared $^ -lSDL -ldl -lc
 
 $(BUILDDIROBJS)/%.o: %.c
 	$(CC) -o $@ -c $< $(CFLAGS) $(INCLUDES) -fPIC

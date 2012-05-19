@@ -10,32 +10,17 @@ all: $(addprefix $(BUILDDIRAPPS)/, $(APPS))
 		if [ $$? = 0 ]; then printf "\033[1m   <<< [$$i] [\033[32mOK\033[0m\033[1m]\033[0m\n"; else printf "\033[31m\033[1m   <<< [$$i] [FAIL]\033[0m\n"; exit 1; fi; \
 	done
 
-$(BUILDDIRAPPS)/%: %.c
-	$(CC) -o $@ $< $(LIBTACOS) $(CFLAGS) $(INCLUDES)
-
-$(BUILDDIRAPPS)/%: %.cpp
-	$(CXX) -o $@ $< $(LIBTACOS) $(PRONLIB) $(LIBCOLOR) $(CFLAGS) $(INCLUDES)
-
-$(BUILDDIRAPPS)/jpegviewer : jpegviewer.cpp	
-	$(CXX) -o $@ $< $(LIBTACOS) $(PRONLIB) -ljpeg $(CFLAGS) $(INCLUDES)
+$(BUILDDIRAPPS)/jpegviewer : jpegviewer.cpp	$(LIBTACOS) $(PRONLIB) 
+	$(CXX) -o $@ $^ -ljpeg $(CFLAGS) $(INCLUDES)
 	
-$(BUILDDIRAPPS)/sombrero_image : sombrero_image.cpp	
-	$(CXX) -o $@ $< $(LIBTACOS) $(SOMBRERO) $(CFLAGS) $(INCLUDES)
+$(BUILDDIRAPPS)/sombrero_% : sombrero_%.cpp	$(LIBTACOS) $(SOMBRERO)
+	$(CXX) -o $@ $^ $(CFLAGS) $(INCLUDES)
 
-$(BUILDDIRAPPS)/sombrero_cube : sombrero_cube.cpp	
-	$(CXX) -o $@ $< $(LIBTACOS) $(SOMBRERO) $(CFLAGS) $(INCLUDES)
+$(BUILDDIRAPPS)/%: %.c $(LIBTACOS) 
+	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES)
 
-$(BUILDDIRAPPS)/sombrero_button : sombrero_button.cpp	
-	$(CXX) -o $@ $< $(LIBTACOS) $(SOMBRERO) $(CFLAGS) $(INCLUDES)
-
-$(BUILDDIRAPPS)/sombrero_textbox : sombrero_textbox.cpp	
-	$(CXX) -o $@ $< $(LIBTACOS) $(SOMBRERO) $(CFLAGS) $(INCLUDES)
-	
-$(BUILDDIRAPPS)/sombrero_checkbox : sombrero_checkbox.cpp	
-	$(CXX) -o $@ $< $(LIBTACOS) $(SOMBRERO) $(CFLAGS) $(INCLUDES)
-	
-$(BUILDDIRAPPS)/sombrero_grid : sombrero_grid.cpp	
-	$(CXX) -o $@ $< $(LIBTACOS) $(SOMBRERO) $(CFLAGS) $(INCLUDES)
+$(BUILDDIRAPPS)/%: %.cpp $(LIBTACOS) $(PRONLIB) $(LIBCOLOR) 
+	$(CXX) -o $@ $^ $(CFLAGS) $(INCLUDES)
 
 depend: $(SRCS)
 	$(CXX) -MM $(CFLAGS) $(INCLUDES) $^ > .depend.tmp

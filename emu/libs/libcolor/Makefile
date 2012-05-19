@@ -4,7 +4,7 @@ OBJS = color.o
 all: $(LIBCOLOR)
 
 $(LIBCOLOR): $(addprefix $(BUILDDIROBJS)/libcolor_, $(OBJS))
-	$(CXX) -o $@ -shared $(addprefix $(BUILDDIROBJS)/libcolor_, $(OBJS))
+	$(CXX) -o $@ -shared $^
 
 $(BUILDDIROBJS)/libcolor_%.o: %.cpp
 	$(CXX) -o $@ -c $< $(CFLAGS) $(INCLUDES) -fPIC
