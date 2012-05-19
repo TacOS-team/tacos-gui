@@ -47,6 +47,8 @@ void FontLoader::readProperties(int nb) {
 }
 
 void FontLoader::readChars(int nb) {
+	memset(fontGlyphs, 0, sizeof(fontGlyphs));
+
 	for (int i = 0; i < nb; i++) {
 		char glyphName[100];
 		fscanf(fd, "%s %s", kw, glyphName);
@@ -87,7 +89,11 @@ void FontLoader::readChars(int nb) {
 					fscanf(fd, "%x", &line);
 					int nbDigits = 0;
 					while (line >> (4 * (++nbDigits)));
-					fontGlyphs[encoding].bitmap[fontHeight - fontDescent - bbh - bby + i] = line << (16 - 4 * nbDigits - bbx);
+					int idx = fontHeight - fontDescent - bbh - bby + i;
+					if (idx < 0) {
+						idx += fontHeight;
+					}
+					fontGlyphs[encoding].bitmap[idx] = line << (16 - 4 * nbDigits - bbx);
 				}
 			} else if (eq(kw, "ENDCHAR")) {
 				end = true;
@@ -95,6 +101,12 @@ void FontLoader::readChars(int nb) {
 				//fprintf(stderr, "Ignored keyword: %s\n", kw);
 				while (fgetc(fd) != '\n');
 			}
+		}
+	}
+
+	for (int c = 0; c < 256; c++) {
+		if (fontGlyphs[c].width == 0) {
+			memcpy(&fontGlyphs[c], &fontGlyphs[defaultChar], sizeof(fontGlyphs[defaultChar]));
 		}
 	}
 }
