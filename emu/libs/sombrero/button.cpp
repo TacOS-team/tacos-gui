@@ -29,11 +29,19 @@ namespace sombrero {
     this->subscribeEvent(pron::EV_MOUSE_BUTTON);
   }
 
+  std::string Button::getText() {
+    return this->text;
+  }
+
+  void Button::setText(std::string text) {
+    this->text = text;
+  }
+
   void Button::draw() {
     /*printf("draw button (x, y, w, h) : %d, %d, %d, %d\n", this->getX(), this->getY(),
      this->getWidth(), this->getHeight());*/
     // We can clear the window
-    pron::pronClearWindow(Application::getInstance()->d, this->pronWindow);
+    this->clear();
     // Draws the line 
     pron::pronDrawRect(Application::getInstance()->d, this->pronWindow,
                        Application::getInstance()->d->defaultGC, 0,0,

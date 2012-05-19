@@ -122,7 +122,7 @@ class Grid : public Container {
   virtual void attach(Widget *child, int x, int y, int width, int height);
   /**
    * Adds a widget at the position (x,y) with specified width and height
-   * @param widget  The widget to insert
+   * @param child   The widget to insert
    * @param sibling The widget where the new widget will be placed near
    * @param side    Position where the child will be placed relatively to sibling
    *                  (POS_RIGHT, POS_LEFT, POS_TOP, POS_BOTTOM)

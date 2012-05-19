@@ -48,10 +48,12 @@ namespace sombrero {
 
   void Label::setText(const char *text) {
     this->text = text;
+    this->draw();
   }
 
   void Label::setText(const std::string text) {
     this->text = text;
+    this->draw();
   }
 
 } // namespace sombrero

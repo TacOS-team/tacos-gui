@@ -15,6 +15,7 @@ namespace sombrero {
 
   Widget::~Widget() {
     pron::pronDestroyWindow(Application::getInstance()->d, this->pronWindow);
+    Application::getInstance()->widgets.erase(this->pronWindow);
   }
 
   void Widget::init() {
@@ -145,6 +146,10 @@ namespace sombrero {
 
   Container* Widget::getParent() {
     return this->parent;
+  }
+
+  void Widget::clear() {
+    pron::pronClearWindow(Application::getInstance()->d, this->pronWindow);
   }
 
   void Widget::handleEventWindowCreated() {

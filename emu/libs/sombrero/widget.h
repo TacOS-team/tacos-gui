@@ -169,6 +169,10 @@ namespace sombrero {
        * Put here widgets drawing stuff
        */
       virtual void draw() = 0;
+      /**
+       * Clears the widget
+       */
+      void clear();
 
 
       /**
