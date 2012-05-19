@@ -1,8 +1,8 @@
 #ifndef __SCROLLBAR_H__
 #define __SCROLLBAR_H__
 /**
- * @file scrollpane.h
- * Button class definition
+ * @file scrollbar.h
+ * Scrollbar class definition
  */
 
 #include "container.h"

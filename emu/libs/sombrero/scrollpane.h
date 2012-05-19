@@ -2,7 +2,7 @@
 #define __SCROLLPANE_H__
 /**
  * @file scrollpane.h
- * Button class definition
+ * ScrollPane class definition
  */
 
 #include "container.h"

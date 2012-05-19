@@ -1,8 +1,8 @@
 #ifndef __VSCROLLBAR_H__
 #define __VSCROLLBAR_H__
 /**
- * @file scrollpane.h
- * Button class definition
+ * @file vscrollbar.h
+ * VScrollBar class definition
  */
 
 #include "scrollbar.h"
