@@ -44,9 +44,11 @@ void Client::handle() {
     }
     case RQ_CREATE_WINDOW: {
       RqCreateWindow *rq = (RqCreateWindow*) Client::recvBuf;
-      new Window(screen, rq->id, this, (Window*) screen->getDrawable(rq->parent, D_WINDOW),
-          rq->x, rq->y, rq->width, rq->height);
-      screen->traceWindows();
+      Window *parent = (Window*) screen->getDrawable(rq->parent, D_WINDOW);
+      if (parent != NULL) {
+        new Window(screen, rq->id, this, parent, rq->x, rq->y, rq->width, rq->height);
+        screen->traceWindows();
+      }
       break;
     }
     case RQ_MAP_WINDOW: {
