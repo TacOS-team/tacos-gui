@@ -10,6 +10,9 @@
 #include <label.h>
 #include <cstdio>
 
+#include <time.h>
+#include <unistd.h>
+
 using namespace sombrero;
 using namespace std;
 
@@ -20,16 +23,24 @@ class Fichier;
 Fichier * currentButton = NULL;
 
 class Fichier : public Button, public has_slots<> {
+ protected:
+  time_t lastClick;
  public:
   signal1<string> open;
   Fichier(string fileName) : Button(fileName) {
     this->clicked.connect(this, &Fichier::openSlot);
+    lastClick = 0;
   }
 
   void openSlot() {
     //printf("Fichier open %s\n", this->getText().c_str());
-    currentButton = this;
-    this->open(this->getText());
+
+    if(time(NULL) == lastClick) {
+      currentButton = this;
+      this->open(this->getText());
+    } else {
+      lastClick = time(NULL);
+    }
   }
 };
 
@@ -110,6 +121,12 @@ class MyWindow : public Window, public has_slots<> {
       d = d2;
       p.setFiles(d.entryInfoList());
       l.setText(d.getInformations().getAbsolutePath());
+    } else if(d2.getInformations().isFile()) {
+      if(fork() == 0) {
+        char * arg [] = { NULL};
+        execv(d2.getInformations().getAbsolutePath().c_str(), arg);
+        exit(0);
+      }
     }
   }
 
