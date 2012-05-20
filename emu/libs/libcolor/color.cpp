@@ -1,17 +1,5 @@
 #include "color.h"
 
-int pow(int a, int b) {
-  int i;
-  int res = a;
-  if (b == 0) {
-    return 1;
-  }
-  for (i = 1; i < b; i++) {
-    res *= a;
-  }
-  return res;
-}
-
 Color::Color(float r, float g, float b)
     : r(r), g(g), b(b){
 }
