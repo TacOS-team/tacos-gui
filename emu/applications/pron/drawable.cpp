@@ -12,7 +12,7 @@
 #include <screen.h>
 #include <window.h>
 
-#define FAST_BPP32
+#undef FAST_BPP32
 
 Drawable::Drawable(int type, Screen *screen, int id, Client *creator, int width, int height) {
   this->type = type;
@@ -107,11 +107,16 @@ void Drawable::drawPoint(int x, int y) {
 void Drawable::drawHorizLine(int x, int y, int width) {
   switch (this->beforeDrawing(x, y, x + width, y)) {
     case VISIBLE: {
+#ifdef FAST_BPP32
       int line[width];
       for (int i = 0; i < width; i++) {
         line[i] = this->getScreen()->getGC()->fgValue;
       }
       memcpy(this->pixelAddr(x, y), &line, sizeof(line));
+#endif
+      for (int c = 0; c < width; c++) {
+        this->drawPoint(x + c, y);
+      }
       this->afterDrawing(x, y, x + width, y);
     }
     case PARTIAL: {

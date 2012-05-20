@@ -42,7 +42,7 @@ void PronInit() {
   );
 
   // Initialize screen
-  screen = Screen::getInstance(800, 600, 32);
+  screen = Screen::getInstance(800, 600, 24);
   
   // Initialize devices
   mouse = Mouse::getInstance();
