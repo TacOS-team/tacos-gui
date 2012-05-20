@@ -3,6 +3,7 @@
  * Client class implementation.
  */
 
+#include <algorithm>
 #include <stdio.h>
 
 #include <client.h>
@@ -15,15 +16,35 @@
 
 int Client::recvLen;
 char Client::recvBuf[MAX_MSG_SIZE];
+std::vector<Client*> Client::clients;
 
 Client::Client(int id, int fd) {
   this->id = id;
   this->fd = fd;
+  Client::clients.push_back(this);
+}
+
+Client::~Client() {
+  /** @todo: free resources */
+  Screen *screen = Screen::getInstance();
+  for (WindowsTree::IteratorBFS it = screen->tree->beginBFS(); it != screen->tree->endBFS(); it++) {
+    if (it->getCreator() == this) {
+      it->destroy();
+    } else {
+      it->discardInputs(this);
+    }
+  }
+  Client::clients.erase(std::find(Client::clients.begin(), Client::clients.end(), this));
 }
 
 void Client::handle() {
-  if ((Client::recvLen = tsock_read(this->fd, Client::recvBuf, sizeof(Client::recvBuf))) <= 0) {
+  Client::recvLen = tsock_read(this->fd, Client::recvBuf, sizeof(Client::recvBuf));
+  if (Client::recvLen < 0) {
+    // Read error (mostly EGAIN)
     return;
+  } else if (Client::recvLen == 0) {
+    printf("Client %d (fd %d) has disconnected.\n", this->id, this->fd);
+    delete this;
   }
 
   int reqType = *((int*) Client::recvBuf);
@@ -39,7 +60,7 @@ void Client::handle() {
     case RQ_GOODBYE: {
       printf("RQ_GOODBYE from fd %d\n", this->fd);
       tsock_close(this->fd);
-      this->fd = -1; // so that pron knows he can delete the client
+      delete this;
       break;
     }
     case RQ_CREATE_WINDOW: {

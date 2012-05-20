@@ -164,6 +164,12 @@ class Window : public Drawable {
   void selectInput(Client *client, unsigned int mask);
 
   /**
+   * Discards all events previously selected by the specified client.
+   * @param client The client who discards the events
+   */
+  void discardInputs(Client *client);
+
+  /**
    * Raises this window (moves it on top of the screen).
    */
   void raise();

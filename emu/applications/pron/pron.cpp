@@ -22,7 +22,6 @@ using namespace std;
 static Screen *screen; /**< Screen instance */
 static Mouse *mouse; /**< Mouse instance  */
 static Keyboard *keyboard; /**< Keyboard instance */
-static vector<Client*> clients; /**< List of currently connected clients */
 int clientsFd; /**< File descriptor of the socket listening for new clients */
 unsigned int newClientID; /**< Id given to the last client who has connected to pron */
 
@@ -72,8 +71,7 @@ void PronAcceptClient() {
   int newClientFd;
   if ((newClientFd = tsock_accept(clientsFd)) > 0) {
     tsock_set_nonblocking(newClientFd);
-    Client *newClient = new Client(++newClientID, newClientFd);
-    clients.push_back(newClient);
+    new Client(++newClientID, newClientFd);
   }
 }
 
@@ -86,15 +84,8 @@ void PronSelect() {
   PronAcceptClient();
 
   // Handle requests from clients
-  for (unsigned int client = 0; client < clients.size(); client++) {
-    // Check if client has sent a destroy request
-    if (clients[client]->fd == -1) {
-      delete clients[client];
-      clients.erase(clients.begin() + client);
-    }
-    else {
-      clients[client]->handle();
-    }
+  for (unsigned int client = 0; client < Client::clients.size(); client++) {
+    Client::clients[client]->handle();
   }
   
   // Read from devices

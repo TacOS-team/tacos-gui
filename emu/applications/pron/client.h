@@ -1,6 +1,8 @@
 #ifndef __CLIENT_H__
 #define __CLIENT_H__
 
+#include <vector>
+
 /**
  * @file client.h
  * Client class definition.
@@ -13,6 +15,8 @@
  */
 class Client {
 public:
+  static std::vector<Client*> clients; /**< List of currently connected clients */
+
   int id; /**< Client id */
   int fd; /**< File descriptor used to communicate with the client */
 
@@ -22,6 +26,11 @@ public:
    * @param fd The file descriptor used to communicate with the client
    */
   Client(int id, int fd);
+
+  /**
+   * Destructor.
+   */
+  ~Client();
 
   /**
    * Reads from the client and handles new messages he has sent.

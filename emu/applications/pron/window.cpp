@@ -252,9 +252,18 @@ void Window::selectInput(Client *client, unsigned int mask) {
         this->otherClients[i].mask = mask;
         break;
       }
-   }
+    }
     if (i == this->otherClients.size()) { // Not found, add it
       this->otherClients.push_back(OtherClient(client, mask));
+    }
+  }
+}
+
+void Window::discardInputs(Client *client) {
+  for (vector<OtherClient>::iterator it = this->otherClients.begin(); it != this->otherClients.end(); ++it) {
+    if (it->client == client) {
+      this->otherClients.erase(it);
+      break;
     }
   }
 }
