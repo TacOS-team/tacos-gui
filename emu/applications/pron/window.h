@@ -201,6 +201,17 @@ class Window : public Drawable {
   void resize(int width, int height);
 
   /**
+   * Handles the exposure of a given area of this window.
+   * This window and all its children that overlap the area will be delivered
+   * an exposure avent.
+   * @param x The x-coordinate of the top-left corner of the exposed area (absolute)
+   * @param y The y-coordinate of the top-left corner of the exposed area (absolute)
+   * @param width The width of the exposed area
+   * @param height The height of the exposed area
+   */
+  void exposeArea(int x, int y, int width, int height);
+
+  /**
    * Delivers an event to this window.
    * @param e The event to deliver
    * @param size The size of the event

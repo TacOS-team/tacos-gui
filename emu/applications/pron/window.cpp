@@ -118,11 +118,8 @@ void Window::unmap() {
 
     // Redraw covered lower siblings
     for (Window *sib = this->prevSibling; sib != NULL; sib = sib->prevSibling) {
-      if (this->overlaps(sib) && sib->realized()) {
-        //sib->clear(this->x - sib->x, this->y - sib->y, this->getWidth(), this->getHeight());
-        // Test: only send exposure event to improve performances
-        EventExpose expose(sib->getId(), this->x - sib->x, this->y - sib->y, this->getWidth(), this->getHeight());
-        sib->deliverEvent(&expose, sizeof(expose));
+      if (this->overlaps(sib)) {
+        sib->exposeArea(this->x, this->y, this->getWidth(), this->getHeight()); 
       }
     }
   }
@@ -343,17 +340,23 @@ void Window::raise() {
   this->parent->lastChild->nextSibling = this;
   this->parent->lastChild = this;
 
-  if (overlap && this->realized()) {
-    //this->clear(0, 0, this->getWidth(), this->getHeight());
-    // Test: only send exposure event to improve performances
-    EventExpose expose(this->getId(), 0, 0, this->getWidth(), this->getHeight());
-    this->deliverEvent(&expose, sizeof(expose));
+  if (overlap) {
+    this->exposeArea(this->x, this->y, this->getWidth(), this->getHeight());
+  }
+}
 
-    for (WindowsTree::IteratorBFS it = ++(this->getScreen()->tree->beginBFS(this)); it != this->getScreen()->tree->endBFS(); it++) {
-      //it->clear(0 - it->x, 0 - it->y, this->getWidth(), this->getHeight());
-      // Test: only send exposure event to improve performances
-      if (it->realized()) {
-        EventExpose expose(it->getId(), 0 - it->x, 0 - it->y, this->getWidth(), this->getHeight());
+void Window::exposeArea(int x, int y, int width, int height) {
+  for (WindowsTree::IteratorBFS it = this->getScreen()->tree->beginBFS(this); it != this->getScreen()->tree->endBFS(); it++) {
+    //it->clear(x - it->x, y - it->y, width, height);
+    // Test: only send exposure event to improve performances
+    if (it->realized()) {
+      int myX = x - it->x;
+      int myY = y - it->y;
+      int myW = width;
+      int myH = height;
+      it->reduce(myX, myY, myW, myH);
+      if (myW > 0 && myH > 0) {
+        EventExpose expose(it->getId(), myX, myY, myW, myH);
         it->deliverEvent(&expose, sizeof(expose));
       }
     }
