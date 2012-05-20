@@ -407,8 +407,9 @@ void Window::reparent(Window *w) {
 }
 
 void Window::destroy() {
-  printf("window::destroy(%d)\n", this->getId());
+  printf("window::destroy(%x) (@%p)\n", this->getId(), this);
   this->unmap();
+
   // We remove the window from the tree 
   if (this->prevSibling != NULL) {
     this->prevSibling->nextSibling = this->nextSibling;
@@ -420,6 +421,13 @@ void Window::destroy() {
   } else {
     this->parent->lastChild = this->prevSibling;
   }
+
+  for (WindowsTree::IteratorBFS it = this->getScreen()->tree->beginBFS(this); it != this->getScreen()->tree->endBFS(); ++it) {
+    if (this->getScreen()->getGrabWin() == &(*it)) {
+      this->getScreen()->setGrabWin(NULL);
+    }
+  }
+
   this->getScreen()->destroy(this);
   delete this;
 }
