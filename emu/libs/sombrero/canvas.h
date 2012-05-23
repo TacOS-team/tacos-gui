@@ -31,6 +31,14 @@ class Canvas : public Widget {
   Canvas(Container *parent);
 
   /**
+   * Canvas constructor
+   * @param parent
+   * @param pixmap pwidth
+   * @param pixmap pheight
+   */
+  Canvas(Container *parent, int pWidth, int pHeight);
+
+  /**
    * Canvas destructor
    */
   ~Canvas();

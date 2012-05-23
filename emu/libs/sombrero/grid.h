@@ -1,8 +1,8 @@
 #ifndef __GRID_H__
 #define __GRID_H__
 /**
- * @file canvas.h
- * Canvas class definition
+ * @file grid.h
+ * Grid class definition
  */
 
 #include "container.h"
@@ -10,11 +10,16 @@
 #include "window.h"
 #include <algorithm>
 
-#define SOMBRERO_CANVAS_DEPTH 24
-
 class Container;
 
 namespace sombrero {
+
+enum PositionType {
+  POS_LEFT,
+  POS_RIGHT,
+  POS_TOP,
+  POS_BOTTOM,
+};
 
 /**
  * Grid class definition. A grid is a widget containing several other widgets
