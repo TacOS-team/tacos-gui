@@ -31,7 +31,7 @@ int main() {
 
   sombrero::Window w2(0, 0, 300, 20);
   sombrero::Label l(title2);
-  w.add(&l);
+  w2.add(&l);
 
   // Clicked signatl handler
   MouseClicked mc(&l);

@@ -68,7 +68,7 @@ void ScrollBar::thumbReleased() {
 }
 
 
-void ScrollBar::setParent(Container *parent) {
+void ScrollBar::setParent(Widget *parent) {
   Widget::setParent(parent);
   this->thumb.setParent(this);
   this->thumb.clicked.connect  (this, &ScrollBar::thumbClicked);

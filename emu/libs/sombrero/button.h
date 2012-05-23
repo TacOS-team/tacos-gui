@@ -50,11 +50,6 @@ class Button : public Widget {
    */
   ~Button();
   /**
-   * Sets the parent container
-   * @param Pointer to the parent container
-   */
-  virtual void setParent(Container *parent);
-  /**
    * Gets the text of the button
    */
   virtual std::string getText();

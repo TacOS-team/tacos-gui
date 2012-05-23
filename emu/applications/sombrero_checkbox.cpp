@@ -15,7 +15,8 @@ int main () {
 
   sombrero::Application::getInstance()->init();
   sombrero::Window w(0,0,300,300);
-  sombrero::Grid g(&w);
+  sombrero::Grid g;
+  w.add(&w);
   MyCheckbox cb;
 
   sombrero::Application::getInstance()->sombrerun();

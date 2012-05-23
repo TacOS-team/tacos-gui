@@ -22,29 +22,17 @@ namespace sombrero {
       this->subscribeEvent(pron::EV_EXPOSE);
       this->subscribeEvent(pron::EV_DESTROY_WINDOW);
       this->subscribeEvent(pron::EV_RESIZE_WINDOW);
-
-      this->layout = NULL;
   }
 
   Window::~Window() {
   }
 
-  void Window::setLayout(Container *layout) {
-    this->layout = layout;
-    layout->setWidth(this->getWidth());
-    layout->setHeight(this->getHeight());
-    layout->setX(this->getX());
-    layout->setY(this->getY());
-    layout->setParent(this);
-    this->add(layout);
-  }
-
   void Window::handleEventResizeWindow(int width, int height) {
-    Bin::handleEventResizeWindow(width, height);
-    if(this->layout != NULL) {
-      this->layout->setWidth(width);
-      this->layout->setHeight(height);
-      this->layout->update();
+    Widget *w = this->getWidget();
+    if(w != NULL) {
+      w->setWidth(width);
+      w->setHeight(height);
+      w->update();
     }
   }
 

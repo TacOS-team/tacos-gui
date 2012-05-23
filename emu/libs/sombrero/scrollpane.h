@@ -5,7 +5,7 @@
  * ScrollPane class definition
  */
 
-#include "container.h"
+#include "bin.h"
 #include "vscrollbar.h"
 
 namespace sombrero {
@@ -14,7 +14,7 @@ namespace sombrero {
  * ScrollPane class definition
  * @brief The Scrollpane container
  */ 
-class ScrollPane : public Container, public has_slots<> {
+class ScrollPane : public Bin, public has_slots<> {
 
  protected:
   /**
