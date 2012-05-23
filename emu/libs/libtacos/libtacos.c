@@ -13,6 +13,8 @@
 #include <mousedrv.h>
 #include <kbddrv.h>
 
+#include <elf.h>
+
 #define MAX_FD 128
 #define MAX_SDL_EVENTS 128
 
@@ -233,4 +235,16 @@ void debug(const char * format, ...) {
   vprintf(format, args);
   va_end(args);
 #endif // DEBUG
+}
+
+int exec_elf(char* cmdline, int orphan __attribute__((unused))) {
+  int pid = fork();
+  if(pid < 0) {
+    return -1;
+  } else if(pid == 0) {
+    char * arg [] = { NULL};
+    execv(cmdline, arg);
+    exit(0);
+  }
+  return pid;
 }
