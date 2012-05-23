@@ -87,7 +87,7 @@ void Window::unmap() {
 
   this->mapped = false;
 
-  Window *mouseWin = this->getScreen()->getClipWin();
+  Window *mouseWin = this->getScreen()->getMouseWin();
   Window *clipWin = this->getScreen()->getClipWin();
 
   for (WindowsTree::IteratorBFS it = this->getScreen()->tree->beginBFS(this); it != this->getScreen()->tree->endBFS(); it++) {
@@ -112,6 +112,7 @@ void Window::unmap() {
       this->parent->clear(this->x - parent->x, this->y - parent->y, this->getWidth(), this->getHeight());
     } else {
       // Test: only send exposure event to improve performances
+      //printf("expose parent %x\n", this->parent->getId());
       EventExpose expose(this->parent->getId(), this->x - parent->x, this->y - parent->y, this->getWidth(), this->getHeight());
       this->parent->deliverEvent(&expose, sizeof(expose));
     }
@@ -421,7 +422,7 @@ void Window::reparent(Window *w) {
 void Window::destroy() {
   printf("window::destroy(%x) (@%p)\n", this->getId(), this);
   this->unmap();
-
+  
   // We remove the window from the tree 
   if (this->prevSibling != NULL) {
     this->prevSibling->nextSibling = this->nextSibling;
@@ -439,7 +440,7 @@ void Window::destroy() {
       this->getScreen()->setGrabWin(NULL);
     }
   }
-
+  
   this->getScreen()->destroy(this);
   delete this;
 }
