@@ -5,13 +5,17 @@ namespace sombrero {
 
   Checkbox::Checkbox() {
     this->state = false; 
-    // sign up to EV_MOUSE_BUTTON
-    pron::pronSelectInput(Application::getInstance()->d,this->pronWindow,PRON_EVENTMASK(pron::EV_EXPOSE) | PRON_EVENTMASK(pron::EV_MOUSE_BUTTON));
     this->gcValues.fg = Color(255, 0, 0);
+    
+    // sign up to the wanted event
+    this->subscribeEvent(pron::EV_EXPOSE);
+    this->subscribeEvent(pron::EV_MOUSE_BUTTON);
+
     this->gc = pronCreateGC(Application::getInstance()->d,this->gcValues, pron::GC_VAL_FG);
   }
 
-  Checkbox::~Checkbox() {}
+  Checkbox::~Checkbox() {
+  }
 
   void Checkbox::handleEventMouseButton(pron::EventMouseButton *e) {
     if ( ((pron::EventMouseButton *) e)->b1) {
@@ -26,6 +30,7 @@ namespace sombrero {
   }
 
   void Checkbox::draw() {
+    printf("DRAW\n");
     if (state == true) {
       this->gcValues.fg = Color(0, 255, 0);
     }

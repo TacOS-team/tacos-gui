@@ -29,6 +29,7 @@ bool Widget::isPronWindowCreated() {
 void Widget::subscribeEvent(uint32_t eventMask) {
   this->eventMask |= PRON_EVENTMASK(eventMask);
   if(this->isPronWindowCreated()) {
+    printf("subscribe event for %d\n",this->pronWindow);
     pron::pronSelectInput(Application::getInstance()->d, this->pronWindow,
         this->eventMask);
   }
@@ -67,6 +68,7 @@ void Widget::setParent(Widget *parent) {
         this->parent->pronWindow,
         this->x, this->y,
         this->width, this->height);
+    printf("SET PARENT : %u for %u\n", parent->pronWindow, this->pronWindow);
     // Associates the pron::window to the widget
     Application::getInstance()->widgets[this->pronWindow] = this;
     // Maps the window
