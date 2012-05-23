@@ -13,6 +13,9 @@
 #include <time.h>
 #include <unistd.h>
 
+#include <elf.h>
+
+
 using namespace sombrero;
 using namespace std;
 
@@ -100,6 +103,9 @@ class Panel : public sombrero::Container, public has_slots<> {
   }
 
   void draw() {
+    /*for(size_t i = 0; i < boutons.size(); ++i) {
+      boutons[i]->draw();
+    }*/
     sombrero::Container::draw();
   }
 };
@@ -114,6 +120,11 @@ class MyWindow : public Window, public has_slots<> {
 
  public:
 
+  void draw() {
+    g.draw();
+    sombrero::Container::draw();
+  }
+
   void openSlot(std::string fileName) {
     //printf("MyWindow open %s\n", fileName.c_str());
     Directory d2(d.getInformations().getAbsolutePath()+"/"+fileName);
@@ -122,10 +133,13 @@ class MyWindow : public Window, public has_slots<> {
       p.setFiles(d.entryInfoList());
       l.setText(d.getInformations().getAbsolutePath());
     } else if(d2.getInformations().isFile()) {
-      if(fork() == 0) {
+      /*if(fork() == 0) {
         char * arg [] = { NULL};
         execv(d2.getInformations().getAbsolutePath().c_str(), arg);
         exit(0);
+      }*/
+      if(exec_elf((char*)d2.getInformations().getAbsolutePath().c_str(), 0) < 0) {
+        printf("commande invalide.\n");
       }
     }
   }

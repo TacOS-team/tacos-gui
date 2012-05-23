@@ -156,6 +156,7 @@ namespace sombrero {
   }
 
   void Widget::handleEventExpose() {
+    //printf("handleEventExpose\n");
     this->draw();
   }
 
