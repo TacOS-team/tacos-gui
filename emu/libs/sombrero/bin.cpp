@@ -7,11 +7,6 @@ Bin::Bin() {
   this->isFull = false;
 }
 
-Bin::Bin(Container *parent)
-    : Container(parent) {
-  this->isFull = false;
-}
-
 Bin::~Bin() {
 }
 

@@ -3,7 +3,7 @@
 
 namespace sombrero {
 
-  Checkbox::Checkbox(Container *parent) : Widget(parent) {
+  Checkbox::Checkbox() {
     this->state = false; 
     // sign up to EV_MOUSE_BUTTON
     pron::pronSelectInput(Application::getInstance()->d,this->pronWindow,PRON_EVENTMASK(pron::EV_EXPOSE) | PRON_EVENTMASK(pron::EV_MOUSE_BUTTON));

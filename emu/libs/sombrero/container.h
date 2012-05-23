@@ -27,11 +27,6 @@ class Container : public Widget {
    */
   Container();
   /**
-   * Container constructor
-   * @param parent The parent container
-   */
-  Container(Container *parent);
-  /**
    * Container destructor
    */
   ~Container();

@@ -25,7 +25,7 @@ namespace sombrero {
        * Constructor.
        * @param parent The parent widget, must be a container.
        */
-      Textbox(Container *parent);
+      Textbox();
 
       /**
        * Destructor.

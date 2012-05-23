@@ -12,7 +12,7 @@ namespace sombrero {
     this->init();
   }
 
-  Button::Button(const std::string text) : text(text) {
+  Button::Button(const std::string &text) : text(text) {
     this->init();
   }
 

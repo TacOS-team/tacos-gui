@@ -4,12 +4,11 @@
 
 namespace sombrero {
 
-  Textbox::Textbox(Container *parent)
-    : Widget(parent) {
-      this->cursor = 0;
-      this->display = 0;
-      pron::pronSelectInput(Application::getInstance()->d, this->pronWindow, PRON_EVENTMASK(pron::EV_EXPOSE) | PRON_EVENTMASK(pron::EV_KEY_PRESSED));
-    }
+  Textbox::Textbox() {
+    this->cursor = 0;
+    this->display = 0;
+    pron::pronSelectInput(Application::getInstance()->d, this->pronWindow, PRON_EVENTMASK(pron::EV_EXPOSE) | PRON_EVENTMASK(pron::EV_KEY_PRESSED));
+  }
 
   Textbox::~Textbox() {
 

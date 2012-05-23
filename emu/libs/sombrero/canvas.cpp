@@ -4,17 +4,7 @@
 
 namespace sombrero {
 
-  Canvas::Canvas(Container *parent)
-      : Widget(parent) {
-    this->pixmap = pronCreatePixmap(Application::getInstance()->d, this->getWidth(), this->getHeight(), SOMBRERO_CANVAS_DEPTH);
-    Color bgColor((int) (this->pixmap >> 16), (int) (this->pixmap >> 16), (int) (this->pixmap >> 16));
-    pron::PronGCValues values;
-    values.fg = bgColor;
-    this->bgGC = pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG);
-  }
-  
-  Canvas::Canvas(Container *parent, int pWidth, int pHeight)
-      : Widget(parent) {
+  Canvas::Canvas(int pWidth, int pHeight) {
     this->pixmap = pronCreatePixmap(Application::getInstance()->d, pWidth, pHeight, SOMBRERO_CANVAS_DEPTH);
     Color bgColor((int) (this->pixmap >> 16), (int) (this->pixmap >> 16), (int) (this->pixmap >> 16));
     pron::PronGCValues values;

@@ -4,7 +4,6 @@ int factor = 100;
 
 namespace sombrero {
 
-
 ScrollPane::ScrollPane(Widget *widget) {
   this->widget = widget;
   this->init();
@@ -24,7 +23,6 @@ void ScrollPane::YMoved(int val) {
     this->widget->updatePronPosition();
   }
 }
-
 
 void ScrollPane::update() {
   //printf("update scrollpane\n");

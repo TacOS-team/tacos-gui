@@ -27,11 +27,6 @@ class Bin : public Container {
    */
   Bin();
   /**
-   * Bin constructor
-   * @param parent The parent container
-   */
-  Bin(Container *parent);
-  /**
    * Bin destructor
    */
   ~Bin();
