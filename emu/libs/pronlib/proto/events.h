@@ -114,6 +114,21 @@ struct EventPointerMoved : public PronEvent {
  * @see https://www.etud.insa-toulouse.fr/redmine/projects/tacos-gui/wiki/%C3%89v%C3%A9nements_souris
  */
 struct EventMouseButton : public PronEvent {
+ protected:
+  void init(bool b1, bool b2, bool b3, bool b4, bool b5, bool b6, 
+      int x, int y, int xRoot, int yRoot) {
+    this->b1 = b1;
+    this->b2 = b2;
+    this->b3 = b3;
+    this->b4 = b4;
+    this->b5 = b5;
+    this->b6 = b6;
+    this->x  = x;
+    this->y  = y;
+    this->xRoot = xRoot;
+    this->yRoot = yRoot;
+  }
+ public:
   /**
    * Constructor.
    * @param window The window the event is delivered to
@@ -131,21 +146,20 @@ struct EventMouseButton : public PronEvent {
   EventMouseButton(unsigned int window, bool b1, bool b2, bool b3, bool b4, bool b5, bool b6, 
       int x, int y, int xRoot, int yRoot)
       : PronEvent(EV_MOUSE_BUTTON, window) {
-    this->b1 = b1;
-    this->b2 = b2;
-    this->b3 = b3;
-    this->b4 = b4;
-    this->b5 = b5;
-    this->b6 = b6;
-    this->x  = x;
-    this->y  = y;
-    this->xRoot = xRoot;
-    this->yRoot = yRoot;
+    this->init(b1, b2, b3, b4, b5, b6, x, y, xRoot, yRoot);
+  }
+  /**
+   * Default constructor
+   */
+  EventMouseButton()
+      : PronEvent(EV_MOUSE_BUTTON, 0) {
+    this->init(false, false, false, false, false, false,
+      0, 0, 0, 0);
   }
 
-  bool b1; /**< State of button 1 (left button) */
-  bool b2; /**< State of button 2 (right button) */
-  bool b3; /**< State of button 3 */
+  bool b1; /**< State of button 1 (left button)   */
+  bool b2; /**< State of button 2 (middle button) */
+  bool b3; /**< State of button 3 (right button)  */
   bool b4; /**< State of button 4 */
   bool b5; /**< State of button 5 */
   bool b6; /**< State of button 6 */

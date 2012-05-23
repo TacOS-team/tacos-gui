@@ -19,30 +19,43 @@ void Widget::init() {
   this->lastY      = -1;
   this->lastWidth  = -1;
   this->lastHeight = -1;
+  this->pronWindow = (pron::Window)-1;
+}
+
+bool Widget::isPronWindowCreated() {
+  return this->pronWindow != (pron::Window)-1;
 }
 
 void Widget::subscribeEvent(uint32_t eventMask) {
   this->eventMask |= PRON_EVENTMASK(eventMask);
-  pron::pronSelectInput(Application::getInstance()->d, this->pronWindow,
-      this->eventMask);
+  if(this->isPronWindowCreated()) {
+    pron::pronSelectInput(Application::getInstance()->d, this->pronWindow,
+        this->eventMask);
+  }
 }
 
 void Widget::unsubscribeEvent(uint32_t eventMask) {
   this->eventMask &= ~PRON_EVENTMASK(eventMask);
-  pron::pronSelectInput(Application::getInstance()->d, this->pronWindow,
-      this->eventMask);
+  if(this->isPronWindowCreated()) {
+    pron::pronSelectInput(Application::getInstance()->d, this->pronWindow,
+        this->eventMask);
+  }
 }
 
 void Widget::dontPropagateEvent(uint32_t eventMask) {
-  this->dontPropagateEventMask |= PRON_EVENTMASK(eventMask);
-  pron::pronDontPropagateEvent(Application::getInstance()->d, this->pronWindow,
-      this->dontPropagateEventMask);
+    this->dontPropagateEventMask |= PRON_EVENTMASK(eventMask);
+    if(this->isPronWindowCreated()) {
+      pron::pronDontPropagateEvent(Application::getInstance()->d, this->pronWindow,
+              this->dontPropagateEventMask);
+    }
 }
 
 void Widget::propagateEvent(uint32_t eventMask) {
   this->dontPropagateEventMask &= ~PRON_EVENTMASK(eventMask);
-  pron::pronDontPropagateEvent(Application::getInstance()->d, this->pronWindow,
-      this->dontPropagateEventMask);
+  if(this->isPronWindowCreated()) {
+    pron::pronDontPropagateEvent(Application::getInstance()->d, this->pronWindow,
+        this->dontPropagateEventMask);
+  }
 }
 
 void Widget::setParent(Widget *parent) {
@@ -146,6 +159,14 @@ void Widget::clear() {
   pron::pronClearWindow(Application::getInstance()->d, this->pronWindow);
 }
 
+void Widget::handleMouseClick(MouseButton button __attribute__((unused))) {
+
+}
+
+void Widget::handleMouseReleased(MouseButton button __attribute__((unused))) {
+
+}
+
 void Widget::handleEventWindowCreated() {
 }
 
@@ -159,8 +180,30 @@ void Widget::handleEventPointerMoved(pron::EventPointerMoved *mousePointerEvent)
       mousePointerEvent->x, mousePointerEvent->y);
 }
 
-void Widget::handleEventMouseButton(pron::EventMouseButton *e __attribute__((unused))) {
+void Widget::handleEventMouseButton(pron::EventMouseButton *e) {
   //printf("handleEventMouseButton\n");
+  if(this->oldButtonsState.b1 != e->b1) {
+    if(e->b1) {
+      this->handleMouseClick(leftButton);
+    } else {
+      this->handleMouseReleased(leftButton);
+    }
+  }
+  if(this->oldButtonsState.b2 != e->b2) {
+    if(e->b2) {
+      this->handleMouseClick(middleButton);
+    } else {
+      this->handleMouseReleased(middleButton);
+    }
+  }
+  if(this->oldButtonsState.b3 != e->b3) {
+    if(e->b3) {
+      this->handleMouseClick(rightButton);
+    } else {
+      this->handleMouseReleased(rightButton);
+    }
+  }
+  this->oldButtonsState = *e;
 }
 
 void Widget::handleEventKeyPressed(pron::PronEvent *e __attribute__((unused))) {
