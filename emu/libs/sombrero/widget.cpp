@@ -20,12 +20,16 @@ namespace sombrero {
     this->lastY      = -1;
     this->lastWidth  = -1;
     this->lastHeight = -1;
-    this->pronWindow = -1;
+    this->pronWindow = (pron::Window)-1;
+  }
+
+  bool Widget::isPronWindowCreated() {
+    return this->pronWindow != (pron::Window)-1;
   }
 
   void Widget::subscribeEvent(uint32_t eventMask) {
     this->eventMask |= PRON_EVENTMASK(eventMask);
-    if(this->pronWindow != -1) {
+    if(this->isPronWindowCreated()) {
       pron::pronSelectInput(Application::getInstance()->d, this->pronWindow,
               this->eventMask);
     }
@@ -33,7 +37,7 @@ namespace sombrero {
 
   void Widget::unsubscribeEvent(uint32_t eventMask) {
     this->eventMask &= ~PRON_EVENTMASK(eventMask);
-    if(this->pronWindow != -1) {
+    if(this->isPronWindowCreated()) {
       pron::pronSelectInput(Application::getInstance()->d, this->pronWindow,
               this->eventMask);
     }
@@ -41,7 +45,7 @@ namespace sombrero {
 
   void Widget::dontPropagateEvent(uint32_t eventMask) {
     this->dontPropagateEventMask |= PRON_EVENTMASK(eventMask);
-    if(this->pronWindow != -1) {
+    if(this->isPronWindowCreated()) {
       pron::pronDontPropagateEvent(Application::getInstance()->d, this->pronWindow,
               this->dontPropagateEventMask);
     }
@@ -49,7 +53,7 @@ namespace sombrero {
 
   void Widget::propagateEvent(uint32_t eventMask) {
     this->dontPropagateEventMask &= ~PRON_EVENTMASK(eventMask);
-    if(this->pronWindow != -1) {
+    if(this->isPronWindowCreated()) {
       pron::pronDontPropagateEvent(Application::getInstance()->d, this->pronWindow,
               this->dontPropagateEventMask);
     }

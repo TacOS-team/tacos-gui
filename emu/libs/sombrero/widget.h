@@ -71,6 +71,11 @@ namespace sombrero {
        */
       virtual void handleMouseReleased(MouseButton button);
 
+      /**
+       * returns true if the pron windw has been created
+       */
+      bool isPronWindowCreated();
+
     public:
       // Signals
       signal0<> resized;

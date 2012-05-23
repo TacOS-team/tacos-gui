@@ -52,14 +52,14 @@ namespace sombrero {
   }
 
   void Button::handleMouseClick(MouseButton button) {
-    printf("handleMouseClick\n");
+    //printf("handleMouseClick\n");
     if(button == leftButton) {
       this->clicked();
     }
   }
 
   void Button::handleMouseReleased(MouseButton button) {
-    printf("handleMouseReleased\n");
+    //printf("handleMouseReleased\n");
     if(button == leftButton) {
       this->released();
     }
