@@ -14,6 +14,13 @@ class Container;
 
 namespace sombrero {
 
+enum PositionType {
+  POS_LEFT,
+  POS_RIGHT,
+  POS_TOP,
+  POS_BOTTOM,
+};
+
 /**
  * Grid class definition. A grid is a widget containing several other widgets
  *    as a grid.
