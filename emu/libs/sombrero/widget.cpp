@@ -19,36 +19,45 @@ namespace sombrero {
   }
 
   void Widget::init() {
-    this->parent    = NULL;
-    this->eventMask = 0;
+    this->parent     = NULL;
+    this->eventMask  = 0;
     this->lastX      = -1;
     this->lastY      = -1;
     this->lastWidth  = -1;
     this->lastHeight = -1;
+    this->pronWindow = -1;
   }
 
   void Widget::subscribeEvent(uint32_t eventMask) {
     this->eventMask |= PRON_EVENTMASK(eventMask);
-    pron::pronSelectInput(Application::getInstance()->d, this->pronWindow,
+    if(this->pronWindow != -1) {
+      pron::pronSelectInput(Application::getInstance()->d, this->pronWindow,
               this->eventMask);
+    }
   }
 
   void Widget::unsubscribeEvent(uint32_t eventMask) {
     this->eventMask &= ~PRON_EVENTMASK(eventMask);
-    pron::pronSelectInput(Application::getInstance()->d, this->pronWindow,
+    if(this->pronWindow != -1) {
+      pron::pronSelectInput(Application::getInstance()->d, this->pronWindow,
               this->eventMask);
+    }
   }
 
   void Widget::dontPropagateEvent(uint32_t eventMask) {
     this->dontPropagateEventMask |= PRON_EVENTMASK(eventMask);
-    pron::pronDontPropagateEvent(Application::getInstance()->d, this->pronWindow,
+    if(this->pronWindow != -1) {
+      pron::pronDontPropagateEvent(Application::getInstance()->d, this->pronWindow,
               this->dontPropagateEventMask);
+    }
   }
 
   void Widget::propagateEvent(uint32_t eventMask) {
     this->dontPropagateEventMask &= ~PRON_EVENTMASK(eventMask);
-    pron::pronDontPropagateEvent(Application::getInstance()->d, this->pronWindow,
+    if(this->pronWindow != -1) {
+      pron::pronDontPropagateEvent(Application::getInstance()->d, this->pronWindow,
               this->dontPropagateEventMask);
+    }
   }
 
   void Widget::setParent(Container *parent) {
@@ -152,6 +161,14 @@ namespace sombrero {
     pron::pronClearWindow(Application::getInstance()->d, this->pronWindow);
   }
 
+  void Widget::handleMouseClick(MouseButton button __attribute__((unused))) {
+
+  }
+
+  void Widget::handleMouseReleased(MouseButton button __attribute__((unused))) {
+
+  }
+
   void Widget::handleEventWindowCreated() {
   }
 
@@ -165,8 +182,30 @@ namespace sombrero {
                     mousePointerEvent->x, mousePointerEvent->y);
   }
 
-  void Widget::handleEventMouseButton(pron::EventMouseButton *e __attribute__((unused))) {
+  void Widget::handleEventMouseButton(pron::EventMouseButton *e) {
     //printf("handleEventMouseButton\n");
+    if(this->oldButtonsState.b1 != e->b1) {
+      if(e->b1) {
+        this->handleMouseClick(leftButton);
+      } else {
+        this->handleMouseReleased(leftButton);
+      }
+    }
+    if(this->oldButtonsState.b2 != e->b2) {
+      if(e->b2) {
+        this->handleMouseClick(middleButton);
+      } else {
+        this->handleMouseReleased(middleButton);
+      }
+    }
+    if(this->oldButtonsState.b3 != e->b3) {
+      if(e->b3) {
+        this->handleMouseClick(rightButton);
+      } else {
+        this->handleMouseReleased(rightButton);
+      }
+    }
+    this->oldButtonsState = *e;
   }
 
   void Widget::handleEventKeyPressed(pron::PronEvent *e __attribute__((unused))) {

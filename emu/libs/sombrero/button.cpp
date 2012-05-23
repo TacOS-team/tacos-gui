@@ -51,12 +51,16 @@ namespace sombrero {
       this->getHeight() / 2 + this->fontSize/2, this->text.c_str(), this->text.length());
   }
 
-  void Button::handleEventMouseButton(pron::EventMouseButton *e) {
-    //printf("handleEventMouseButton\n");
-    // TODO sauvegarder état bouton
-    if(e->b1) {
+  void Button::handleMouseClick(MouseButton button) {
+    printf("handleMouseClick\n");
+    if(button == leftButton) {
       this->clicked();
-    } else {
+    }
+  }
+
+  void Button::handleMouseReleased(MouseButton button) {
+    printf("handleMouseReleased\n");
+    if(button == leftButton) {
       this->released();
     }
   }
