@@ -18,10 +18,12 @@ namespace sombrero {
    */ 
   class Checkbox : public Widget {
     private:
-      bool state; /**< The state of the box (true if checked) */
       pron::GC gc; /**< specific GC for displaying red or green regarding to the state */
       pron::PronGCValues gcValues; /**< values of the gc */
       
+    protected:
+      bool state; /**< The state of the box (true if checked) */
+
     public:
       // Signals
       signal0<> clicked;
