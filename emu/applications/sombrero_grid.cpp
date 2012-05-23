@@ -86,7 +86,7 @@ int main() {
   g2.add(&l9);*/
 
   /** /sombrero::Button b1("Bouton 1");
-  g.add(&b1);/**/
+  g.add(&b1);*/
 
   //b1.clicked.connect(&w, &MyWindow::changeLabel);
 

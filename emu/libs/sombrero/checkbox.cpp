@@ -13,7 +13,7 @@ namespace sombrero {
 
   Checkbox::~Checkbox() {}
 
-  void Checkbox::handleEventMouseButton(pron::PronEvent *e) {
+  void Checkbox::handleEventMouseButton(pron::EventMouseButton *e) {
     if ( ((pron::EventMouseButton *) e)->b1) {
       this->clicked();
       this->state = !this->state;

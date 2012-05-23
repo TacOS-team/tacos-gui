@@ -41,7 +41,7 @@ namespace sombrero {
        * Redefined method for handling a mouseButton event
        * @param e A pointer to the event that occured
        */
-      void handleEventMouseButton(pron::PronEvent *e) ;
+      void handleEventMouseButton(pron::EventMouseButton *e) ;
 
       /**
        * checkbox drawing stuff
