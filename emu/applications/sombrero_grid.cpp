@@ -41,7 +41,8 @@ int main() {
   // Window button
 
   MyWindow w(50, 50, 300, 100);
-  sombrero::Grid g(&w);
+  sombrero::Grid g;
+  w.add(&w);
   /*sombrero::Label l1("Label 1");
   pLabel = &l1;
 

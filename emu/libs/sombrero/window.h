@@ -20,7 +20,6 @@ class Bin;
 class Window : public Bin {
 
  protected:
-  Container *layout;
   
  public:
   /**
@@ -39,11 +38,6 @@ class Window : public Bin {
    * Handle for a resizeWindow event
    */
   virtual void handleEventResizeWindow(int width, int height) ;
-  /**
-   * Sets the layout of the window
-   * @param Pointer to the layout
-   */
-  void setLayout(Container *layout);
   /**
    * Adds a widget in the children vector
    * @param widget Pointer to the widget to add

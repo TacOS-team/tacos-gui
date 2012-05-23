@@ -19,7 +19,6 @@ namespace sombrero {
 class Container : public Widget {
   
  private:
-  vector<Widget*> children; /**< collection of widgets */
   
  protected:
   /**
@@ -36,12 +35,12 @@ class Container : public Widget {
    * Adds a widget in the children vector
    * @param widget Pointer to the widget to add
    */
-  virtual void add(Widget *widget);
+  virtual void add(Widget *widget) = 0;
   /**
    * Remove a widget from the children vector
    * @param widget Pointer to the widget to remove
    */
-  virtual void remove(Widget *widget);
+  virtual void remove(Widget *widget) = 0;
   /**
    * Draw children widgets
    */
@@ -50,10 +49,6 @@ class Container : public Widget {
    * Updates the container and its contents
    */
   virtual void update();
-  /**
-   * Draws the window
-   */
-  virtual void draw();
   /**
    * Gets a copy of the children vector
    * @return The copied vector of children widgets

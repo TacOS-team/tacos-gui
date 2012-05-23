@@ -21,7 +21,7 @@ namespace sombrero {
   class Widget {
 
     private:
-      Container *parent; /**< The parent widget */
+      Widget *parent; /**< The parent widget */
       int lastX; /**< last x coordinate received/sent from/to pron */
       int lastY; /**< last y coordinate received/sent from/to pron */
       int x; /**< x coordinate */
@@ -87,7 +87,7 @@ namespace sombrero {
        * Sets the parent container
        * @param Pointer to the parent container
        */
-      virtual void setParent(Container *parent);
+      virtual void setParent(Widget *parent);
       /**
        * Gets x
        * @return x
@@ -163,7 +163,7 @@ namespace sombrero {
       /**
        * Put here widgets drawing stuff
        */
-      virtual void draw() = 0;
+      virtual void draw();
       /**
        * Clears the widget
        */
@@ -209,7 +209,7 @@ namespace sombrero {
        * Gets parent container
        * @return The parent Container
        */
-      Container* getParent();
+      Widget* getParent();
 
   };
 

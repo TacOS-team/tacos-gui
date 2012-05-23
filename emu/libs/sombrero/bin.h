@@ -19,7 +19,7 @@ namespace sombrero {
 class Bin : public Container {
   
  private:
-  bool isFull;
+  Widget *widget;
   
  protected:
   /**
@@ -46,7 +46,7 @@ class Bin : public Container {
    * Gets the widget contained
    * @return Returns the widget
    */
-  Widget * getWidget();
+  Widget* getWidget();
 
 };
 

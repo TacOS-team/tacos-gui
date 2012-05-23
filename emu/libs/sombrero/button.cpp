@@ -22,7 +22,7 @@ namespace sombrero {
 
   Button::~Button() {}
 
-  void Button::setParent(Container *parent) {
+  void Button::setParent(Widget *parent) {
     Widget::setParent(parent);
     // Select more events
     this->subscribeEvent(pron::EV_EXPOSE);

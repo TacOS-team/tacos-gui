@@ -14,7 +14,7 @@ namespace sombrero {
  * ScrollBar class definition
  * @brief The Scrollbar widget
  */ 
-class ScrollBar : public Container, public has_slots<> {
+class ScrollBar : public Widget, public has_slots<> {
 
  protected:
   Button thumb;/** The thumb of the scrollbar */
@@ -95,7 +95,7 @@ class ScrollBar : public Container, public has_slots<> {
   /**
    * Sets the new parent and creates the thumb button
    */
-  virtual void setParent(Container *parent);
+  virtual void setParent(Widget *parent);
   /**
    * Updates the widgets to pron
    */
