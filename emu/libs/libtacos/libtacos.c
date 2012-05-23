@@ -19,6 +19,8 @@
 SDL_Surface *screen;
 SDL_mutex* mutex;
 
+int SDL_initialized = 0;
+
 int (*libc_open)(const char *pathname, int flags);
 int (*libc_close)(int fd);
 ssize_t (*libc_read)(int fd, void *buf, size_t count);
@@ -58,13 +60,14 @@ Uint32 libtacos_periodic_checks(Uint32 interval, void *param __attribute__((unus
   return interval;
 }
 
-void __attribute__((constructor)) libtacos_init() {
-  printf("Initializing libtacos.\n");
+void init_hooks() {
   libc_open = dlsym(RTLD_NEXT, "open");
   libc_close = dlsym(RTLD_NEXT, "close");
   libc_read = dlsym(RTLD_NEXT, "read");
   libc_ioctl = dlsym(RTLD_NEXT, "ioctl");
+}
 
+void init_sdl() {
   mutex = SDL_CreateMutex();
 
   SDL_mutexP(mutex);
@@ -84,12 +87,25 @@ void __attribute__((constructor)) libtacos_init() {
 
   SDL_mutexV(mutex);
 
-  SDL_AddTimer(1000, libtacos_periodic_checks, NULL); 
+  SDL_AddTimer(1000, libtacos_periodic_checks, NULL);
+
+  SDL_initialized = 1;
+}
+
+void destroy_sdl() {
+  SDL_Quit();
+}
+
+void __attribute__((constructor)) libtacos_init() {
+  printf("Initializing libtacos.\n");
+  init_hooks();
 }
 
 void __attribute__((destructor)) libtacos_destroy() {
   printf("Destroying libtacos.\n");
-  SDL_Quit();
+  if (SDL_initialized) {
+    SDL_Quit();
+  }
 }
 
 int open(const char *pathname, int flags) {
@@ -101,10 +117,16 @@ int open(const char *pathname, int flags) {
     // VGA driver
     fd = libc_open("/tmp", 0); // dummy fd
     tacos_descriptors[fd] = VGA;
+    if (!SDL_initialized) {
+      init_sdl();
+    }
   } else if (strcmp(pathname, "/dev/vesa") == 0) {
     // VESA driver
     fd = libc_open("/tmp", 0); // dummy fd
     tacos_descriptors[fd] = VESA;
+    if (!SDL_initialized) {
+      init_sdl();
+    }
   } else if (strcmp(pathname, "/dev/mouse") == 0) {
     // Mouse driver
     fd = libc_open("/tmp", 0); // dummy fd
@@ -207,8 +229,8 @@ int getchar() {
 void debug(const char * format, ...) {
 #ifdef DEBUG
   va_list args;
-  va_start (args, format);
-  vprintf (format, args);
-  va_end (args);
+  va_start(args, format);
+  vprintf(format, args);
+  va_end(args);
 #endif // DEBUG
 }
