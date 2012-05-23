@@ -12,6 +12,12 @@ using namespace sigslot;
 
 namespace sombrero {
 
+  enum MouseButton {
+    rightButton,
+    leftButton,
+    middleButton,
+  };
+
   class Container;
 
   /**
@@ -34,6 +40,7 @@ namespace sombrero {
       bool visible; /**< The widget has to be shown */
       uint32_t eventMask; /**< The event mask */
       uint32_t dontPropagateEventMask; /**< The event mask to don't propagate */
+      pron::EventMouseButton oldButtonsState;/**< the buttons state of the last mouse event */
 
     protected:
       /**
@@ -53,6 +60,21 @@ namespace sombrero {
        * initialize the widget
        */
       void init();
+
+      /**
+       * Function called when a client clicks on the widget
+       */
+      virtual void handleMouseClick(MouseButton button);
+
+      /**
+       * Function called when a client clicks on the widget
+       */
+      virtual void handleMouseReleased(MouseButton button);
+
+      /**
+       * returns true if the pron windw has been created
+       */
+      bool isPronWindowCreated();
 
     public:
       // Signals
