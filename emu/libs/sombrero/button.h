@@ -41,7 +41,7 @@ class Button : public Widget {
    * The button constructor 
    * @param parent Parent Container
    */
-  Button(const  std::string text);
+  Button(const std::string &text);
   /**
    * Button destructor
    */

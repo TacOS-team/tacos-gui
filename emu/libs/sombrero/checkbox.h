@@ -21,17 +21,14 @@ namespace sombrero {
       bool state; /**< The state of the box (true if checked) */
       pron::GC gc; /**< specific GC for displaying red or green regarding to the state */
       pron::PronGCValues gcValues; /**< values of the gc */
-
-      
       
     public:
       // Signals
       signal0<> clicked;
       /**
        * The checkbox constructor 
-       * @param parent Parent Container
        */
-      Checkbox(Container *parent);
+      Checkbox();
       /**
        * checkbox destructor
        */

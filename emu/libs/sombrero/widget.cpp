@@ -8,11 +8,6 @@ namespace sombrero {
     this->init();
   }
 
-  Widget::Widget(Container *parent) {
-    this->init();
-    parent->add(this);
-  }
-
   Widget::~Widget() {
     pron::pronDestroyWindow(Application::getInstance()->d, this->pronWindow);
     Application::getInstance()->widgets.erase(this->pronWindow);

@@ -55,8 +55,10 @@ void Cuadraw::init(int argc, char **argv) {
 
 void Cuadraw::initSombrero() {
   this->w = new sombrero::Window(0, 0, 500, 500);
-  this->g = new sombrero::Grid(w);
-  this->c = new sombrero::Canvas(g, 300, 300);
+  //this->g = new sombrero::Grid(w);
+  //this->bp = new sombrero::Button("Pixel");
+  //this->bc = new sombrero::Button("Cirle");
+  //this->c = new sombrero::Canvas(g, 300, 300);
   sombrero::Application::getInstance()->sombrerun();
 }
 

@@ -4,18 +4,8 @@
 
 namespace sombrero {
 
-  Label::Label(Container *parent, const std::string text) 
-    : Widget(parent), text(text) {
-    this->init();
-  }
-
   Label::Label(const std::string text) {
     this->text = text;
-    this->init();
-  }
-
-  Label::Label(Container *parent, const char *text) 
-    : Widget(parent), text(text) {
     this->init();
   }
 

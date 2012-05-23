@@ -12,6 +12,8 @@ class Cuadraw {
   sombrero::Window *w; /**< The main window */
   sombrero::Canvas *c; /**< The canvas of the where to draw */
   sombrero::Grid *g; /**< The sombrero grid */
+  sombrero::Button *bp; /**< Pixel brush button */
+  sombrero::Button *bc; /**< Circle brush button */
   /**
    * Initialize cuadraw
    * @param argc

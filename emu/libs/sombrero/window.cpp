@@ -29,7 +29,6 @@ namespace sombrero {
   Window::~Window() {
   }
 
-
   void Window::setLayout(Container *layout) {
     this->layout = layout;
     layout->setWidth(this->getWidth());
@@ -40,7 +39,6 @@ namespace sombrero {
     this->add(layout);
   }
 
-
   void Window::handleEventResizeWindow(int width, int height) {
     Bin::handleEventResizeWindow(width, height);
     if(this->layout != NULL) {
@@ -49,7 +47,6 @@ namespace sombrero {
       this->layout->update();
     }
   }
-
 
   void Window::add(Widget *widget) {
     widget->setX(0);
