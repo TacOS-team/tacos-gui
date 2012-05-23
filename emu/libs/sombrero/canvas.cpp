@@ -12,6 +12,15 @@ namespace sombrero {
     values.fg = bgColor;
     this->bgGC = pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG);
   }
+  
+  Canvas::Canvas(Container *parent, int pWidth, int pHeight)
+      : Widget(parent) {
+    this->pixmap = pronCreatePixmap(Application::getInstance()->d, pWidth, pHeight, SOMBRERO_CANVAS_DEPTH);
+    Color bgColor((int) (this->pixmap >> 16), (int) (this->pixmap >> 16), (int) (this->pixmap >> 16));
+    pron::PronGCValues values;
+    values.fg = bgColor;
+    this->bgGC = pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG);
+  }
 
   Canvas::~Canvas() {
     pronFreePixmap(Application::getInstance()->d, this->pixmap);
