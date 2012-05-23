@@ -1,16 +1,14 @@
 #ifndef __GRID_H__
 #define __GRID_H__
 /**
- * @file canvas.h
- * Canvas class definition
+ * @file grid.h
+ * Grid class definition
  */
 
 #include "container.h"
 #include "sombrero.h"
 #include "window.h"
 #include <algorithm>
-
-#define SOMBRERO_CANVAS_DEPTH 24
 
 class Container;
 
