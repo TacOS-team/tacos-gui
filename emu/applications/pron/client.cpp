@@ -27,11 +27,17 @@ Client::Client(int id, int fd) {
 Client::~Client() {
   /** @todo: free resources */
   Screen *screen = Screen::getInstance();
-  for (WindowsTree::IteratorBFS it = screen->tree->beginBFS(); it != screen->tree->endBFS(); it++) {
-    if (it->getCreator() == this) {
-      it->destroy();
-    } else {
-      it->discardInputs(this);
+  int destroyed = true;
+  while (destroyed) {
+    destroyed = false;
+    for (WindowsTree::IteratorBFS it = screen->tree->beginBFS(); it != screen->tree->endBFS(); it++) {
+      if (it->getCreator() == this) {
+        it->destroy();
+        destroyed = true;
+        break;
+      } else {
+        it->discardInputs(this);
+      }
     }
   }
   Client::clients.erase(std::find(Client::clients.begin(), Client::clients.end(), this));
