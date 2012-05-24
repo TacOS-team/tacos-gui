@@ -42,7 +42,7 @@ int main() {
 
   MyWindow w(50, 50, 300, 100);
   sombrero::Grid g;
-  w.add(&w);
+  w.add(&g);
   /*sombrero::Label l1("Label 1");
   pLabel = &l1;
 
