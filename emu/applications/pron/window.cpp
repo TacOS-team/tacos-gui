@@ -85,6 +85,11 @@ void Window::unmap() {
     return;
   }
 
+  // Already unmapped
+  if (!this->mapped) {
+    return;
+  }
+
   this->mapped = false;
 
   Window *mouseWin = this->getScreen()->getMouseWin();
@@ -127,6 +132,11 @@ void Window::unmap() {
 }
 
 void Window::map() {
+  // Already mapped
+  if (this->mapped) {
+    return;
+  }
+
   this->mapped = true;
 
   /** @todo update clipwin/mousewin/focuswin */
@@ -416,7 +426,9 @@ void Window::reparent(Window *w) {
   
   this->parent = w;
 
-  this->unmappedParents = (parent->mapped ? 0 : 1) + parent->unmappedParents;
+  for (WindowsTree::IteratorBFS it = this->getScreen()->tree->beginBFS(this); it != this->getScreen()->tree->endBFS(); it++) {
+    it->unmappedParents = (it->parent->mapped ? 0 : 1) + it->parent->unmappedParents;
+  }
 }
 
 void Window::destroy() {
@@ -517,3 +529,25 @@ void Window::afterDrawing(int x1 __attribute__((unused)),
   // Will only show the pointer if it has been hidden
   Mouse::getInstance()->showPointer();
 }
+
+void Window::traceWindowsRec(string prefix) {
+  printf("%s%x (p: %x, fc: %x, lc: %x, ps: %x, ns: %x, x: %d, y; %d, w: %d, h: %d, r: %s, m: %d, ump: %d)\n",
+        prefix.c_str(),
+        this->getId(),
+        this->parent == NULL ? 0 : this->parent->getId(),
+        this->firstChild == NULL ? 0 : this->firstChild->getId(),
+        this->lastChild == NULL ? 0 : this->lastChild->getId(),
+        this->prevSibling == NULL ? 0 : this->prevSibling->getId(),
+        this->nextSibling == NULL ? 0 : this->nextSibling->getId(),
+        this->getX(),
+        this->getY(),
+        this->getWidth(),
+        this->getHeight(),
+        this->realized() ? "yes" : "no",
+        this->mapped,
+        this->unmappedParents);
+  for (Window *currentChild = this->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
+    currentChild->traceWindowsRec(prefix + "--");
+  }
+}
+

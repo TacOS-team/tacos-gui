@@ -187,32 +187,8 @@ bool Screen::prepareDrawing(Drawable *d, GC *gc) {
   return true;
 }
 
-/**
- * Utility function used by Screen::traceWindows.
- * @param w The current window to show
- * @param prefix The current prefix to show
- */
-void traceWindowsRec(Window *w, string prefix) {
-  printf("%s%x (p: %x, fc: %x, lc: %x, ps: %x, ns: %x, x: %d, y; %d, w: %d, h: %d, r: %s)\n",
-        prefix.c_str(),
-        w->getId(),
-        w->parent == NULL ? 0 : w->parent->getId(),
-        w->firstChild == NULL ? 0 : w->firstChild->getId(),
-        w->lastChild == NULL ? 0 : w->lastChild->getId(),
-        w->prevSibling == NULL ? 0 : w->prevSibling->getId(),
-        w->nextSibling == NULL ? 0 : w->nextSibling->getId(),
-        w->getX(),
-        w->getY(),
-        w->getWidth(),
-        w->getHeight(),
-        w->realized() ? "yes" : "no");
-  for (Window *currentChild = w->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
-    traceWindowsRec(currentChild, prefix + "--");
-  }
-}
-
 void Screen::traceWindows() {
-  traceWindowsRec(this->tree->getRoot(), "");
+  this->tree->getRoot()->traceWindowsRec("");
   /*printf("TraceWindow : ");
   for (WindowsTree::IteratorDFS it = tree->beginDFS() ; it != tree->endDFS(); it++) {
     printf("%d ", it->getId());
@@ -239,7 +215,7 @@ void Screen::destroy(Window * w) {
 void Screen::reparent (Window * child, Window * newParent) {
   child->reparent(newParent);
   this->setClipWin(NULL);
-  this->traceWindows();
+  //this->traceWindows();
 }
 
 Font* Screen::getFont(int id) {
