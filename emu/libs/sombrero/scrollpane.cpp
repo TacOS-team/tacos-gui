@@ -50,8 +50,8 @@ void ScrollPane::update() {
   Container::update();
 }
 
-void ScrollPane::setParent(Container *parent) {
-  Container::setParent(parent);
+void ScrollPane::setParent(Widget *parent) {
+  Bin::setParent(parent);
   this->scrollBar.setParent(this);
   // If the widget is set, we create it
   if(this->widget) {
