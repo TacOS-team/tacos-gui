@@ -63,13 +63,30 @@ namespace sombrero {
 
       /**
        * Function called when a client clicks on the widget
+       * @param button The clicked button (rightButton, middleButton or leftButton)
        */
       virtual void handleMouseClicked(MouseButton button);
 
       /**
        * Function called when a client clicks on the widget
+       *   with the mouse event attributes (for mouse position information)
+       * @param button The clicked button (rightButton, middleButton or leftButton)
+       * @param e      The complete mouse event button informations
+       */
+      virtual void handleMouseClicked(MouseButton button, pron::EventMouseButton * e);
+
+      /**
+       * Function called when a client clicks on the widget
+       * @param button The clicked button (rightButton, middleButton or leftButton)
        */
       virtual void handleMouseReleased(MouseButton button);
+      /**
+       * Function called when a client clicks on the widget
+       *   with the mouse event attributes (for mouse position information)
+       * @param button The clicked button (rightButton, middleButton or leftButton)
+       * @param e      The complete mouse event button informations
+       */
+      virtual void handleMouseReleased(MouseButton button, pron::EventMouseButton * e);
 
       /**
        * returns true if the pron windw has been created

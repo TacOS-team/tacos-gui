@@ -165,7 +165,17 @@ void Widget::handleMouseClicked(MouseButton button __attribute__((unused))) {
 
 }
 
+void Widget::handleMouseClicked(MouseButton button __attribute__((unused)),
+                                pron::EventMouseButton * e __attribute__((unused))) {
+
+}
+
 void Widget::handleMouseReleased(MouseButton button __attribute__((unused))) {
+
+}
+
+void Widget::handleMouseReleased(MouseButton button __attribute__((unused)),
+                                 pron::EventMouseButton * e __attribute__((unused))) {
 
 }
 

@@ -24,6 +24,9 @@ Button::Button(const std::string &text) : text(text) {
 
 void Button::init() {
   this->fontSize = 10;
+  // Select more events
+  this->subscribeEvent(pron::EV_EXPOSE);
+  this->subscribeEvent(pron::EV_MOUSE_BUTTON);
 }
 
 Button::~Button() {}
