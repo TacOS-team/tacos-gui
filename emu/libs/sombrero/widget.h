@@ -64,7 +64,7 @@ namespace sombrero {
       /**
        * Function called when a client clicks on the widget
        */
-      virtual void handleMouseClick(MouseButton button);
+      virtual void handleMouseClicked(MouseButton button);
 
       /**
        * Function called when a client clicks on the widget
@@ -83,7 +83,7 @@ namespace sombrero {
        * Signal sent when the mouse moves.
        * <xMove, yMove, relativeXPosition, relativeYPosition>
        */
-      signal4<int, int, int, int> mouseDrag;
+      signal4<int, int, int, int> mouseMoved;
       /**
        * Subscribes to new event
        * @param eventMask The event mask to add (only one event at once)

@@ -50,7 +50,7 @@ void Button::draw() {
       this->getHeight() / 2 + this->fontSize/2, this->text.c_str(), this->text.length());
 }
 
-void Button::handleMouseClick(MouseButton button) {
+void Button::handleMouseClicked(MouseButton button) {
   //printf("handleMouseClick\n");
   if(button == leftButton) {
     this->clicked();

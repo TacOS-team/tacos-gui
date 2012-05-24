@@ -29,7 +29,7 @@ bool Widget::isPronWindowCreated() {
 void Widget::subscribeEvent(uint32_t eventMask) {
   this->eventMask |= PRON_EVENTMASK(eventMask);
   if(this->isPronWindowCreated()) {
-    printf("subscribe event for %d\n",this->pronWindow);
+    printf("subscribe event for Ox%x\n",this->pronWindow);
     pron::pronSelectInput(Application::getInstance()->d, this->pronWindow,
         this->eventMask);
   }
@@ -68,7 +68,7 @@ void Widget::setParent(Widget *parent) {
         this->parent->pronWindow,
         this->x, this->y,
         this->width, this->height);
-    printf("SET PARENT : %u for %u\n", parent->pronWindow, this->pronWindow);
+    printf("SET PARENT : Ox%x for Ox%x\n", parent->pronWindow, this->pronWindow);
     // Associates the pron::window to the widget
     Application::getInstance()->widgets[this->pronWindow] = this;
     // Maps the window
@@ -161,7 +161,7 @@ void Widget::clear() {
   pron::pronClearWindow(Application::getInstance()->d, this->pronWindow);
 }
 
-void Widget::handleMouseClick(MouseButton button __attribute__((unused))) {
+void Widget::handleMouseClicked(MouseButton button __attribute__((unused))) {
 
 }
 
@@ -178,7 +178,7 @@ void Widget::handleEventExpose() {
 }
 
 void Widget::handleEventPointerMoved(pron::EventPointerMoved *mousePointerEvent) {
-  this->mouseDrag(mousePointerEvent->xMove, mousePointerEvent->yMove,
+  this->mouseMoved(mousePointerEvent->xMove, mousePointerEvent->yMove,
       mousePointerEvent->x, mousePointerEvent->y);
 }
 
@@ -186,21 +186,21 @@ void Widget::handleEventMouseButton(pron::EventMouseButton *e) {
   //printf("handleEventMouseButton\n");
   if(this->oldButtonsState.b1 != e->b1) {
     if(e->b1) {
-      this->handleMouseClick(leftButton);
+      this->handleMouseClicked(leftButton);
     } else {
       this->handleMouseReleased(leftButton);
     }
   }
   if(this->oldButtonsState.b2 != e->b2) {
     if(e->b2) {
-      this->handleMouseClick(middleButton);
+      this->handleMouseClicked(middleButton);
     } else {
       this->handleMouseReleased(middleButton);
     }
   }
   if(this->oldButtonsState.b3 != e->b3) {
     if(e->b3) {
-      this->handleMouseClick(rightButton);
+      this->handleMouseClicked(rightButton);
     } else {
       this->handleMouseReleased(rightButton);
     }
