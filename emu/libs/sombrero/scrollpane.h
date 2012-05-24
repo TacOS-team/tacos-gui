@@ -39,7 +39,7 @@ class ScrollPane : public Bin, public has_slots<> {
    * Sets the parent container
    * @param Pointer to the parent container
    */
-  virtual void setParent(Container *parent);
+  virtual void setParent(Widget *parent);
   /**
    * Updates the scrollbar etc.
    */

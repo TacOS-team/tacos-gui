@@ -133,8 +133,10 @@ void Grid::attach(widgetWrapper *wrapper) {
     }
   }
   nbColumns = max(nbColumns, this->widgetsTab[wrapper->y].size());
-  wrapper->widget->setParent(this);
-  this->update();
+  if(this->isPronWindowCreated()) {
+    wrapper->widget->setParent(this);
+    this->update();
+  }
 }
 
 void Grid::attach(Widget *child, int x, int y, int width, int height) {
@@ -195,7 +197,7 @@ void Grid::attachNextTo(Widget *child, Widget *sibling, PositionType side, int w
 }
 
 void Grid::setParent(Widget *parent) {
-  printf("Grid::setParent\n");
+  //printf("Grid::setParent\n");
   Container::setParent(parent);
   for(size_t currentY = 0; currentY < widgetsTab.size(); ++currentY) {
     for(size_t currentX = 0; currentX < widgetsTab[currentY].size(); ++currentX) {
