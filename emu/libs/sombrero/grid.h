@@ -176,6 +176,11 @@ class Grid : public Container {
    * Updates the display of the widgets. Resize and replace correctly
    */
   virtual void update();
+  /**
+   * Sets the parent container
+   * @param Pointer to the parent container
+   */
+  virtual void setParent(Widget *parent);
 };
 
 } //namespace sombrero

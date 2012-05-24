@@ -18,8 +18,10 @@ void Grid::add(Widget *widget) {
   wrapper->y = widgetsTab.size()-1;
   widgetsTab[widgetsTab.size()-1].push_back(wrapper);
   nbColumns = std::max(nbColumns, widgetsTab[widgetsTab.size()-1].size());
-  widget->setParent(this);
-  this->update();
+  if(this->isPronWindowCreated()) {
+    widget->setParent(this);
+    this->update();
+  }
 }
 
 void Grid::remove(__attribute__((unused))Widget *widget) {}
@@ -35,27 +37,29 @@ void Grid::draw() {
 void Grid::update() {
   // TODO meilleure gestion des calculs de position pour éviter les espaces entre widgets
   // Sends the new informations to pron
-  this->setVisible(false);
-  Container::update();
-  // Calculates the new colomns width and line height
-  float columnWidth = (float)this->getWidth()/nbColumns;
-  float lineHeight  = (float)this->getHeight()/widgetsTab.size();
-  for(size_t currentY = 0; currentY < widgetsTab.size(); ++currentY) {
-    for(size_t currentX = 0; currentX < widgetsTab[currentY].size(); ++currentX) {
-      widgetWrapper *currentWrapper = widgetsTab[currentY][currentX];
-      // We update the widget just once (the same wrapper can be in sevaral positions)
-      if(currentWrapper != NULL && currentWrapper->x == (int)currentX
-          && currentWrapper->y == (int)currentY) {
-        currentWrapper->widget->setWidth (columnWidth * currentWrapper->width);
-        currentWrapper->widget->setHeight(lineHeight  * currentWrapper->height);
-        currentWrapper->widget->setX (this->getX()+columnWidth*currentWrapper->x);
-        currentWrapper->widget->setY (this->getY()+lineHeight*currentWrapper->y);
-        // Sends the new informations to pron
-        currentWrapper->widget->update();
+  if(this->isPronWindowCreated()) {
+    this->setVisible(false);
+    Container::update();
+    // Calculates the new colomns width and line height
+    float columnWidth = (float)this->getWidth()/nbColumns;
+    float lineHeight  = (float)this->getHeight()/widgetsTab.size();
+    for(size_t currentY = 0; currentY < widgetsTab.size(); ++currentY) {
+      for(size_t currentX = 0; currentX < widgetsTab[currentY].size(); ++currentX) {
+        widgetWrapper *currentWrapper = widgetsTab[currentY][currentX];
+        // We update the widget just once (the same wrapper can be in sevaral positions)
+        if(currentWrapper != NULL && currentWrapper->x == (int)currentX
+            && currentWrapper->y == (int)currentY) {
+          currentWrapper->widget->setWidth (columnWidth * currentWrapper->width);
+          currentWrapper->widget->setHeight(lineHeight  * currentWrapper->height);
+          currentWrapper->widget->setX (this->getX()+columnWidth*currentWrapper->x);
+          currentWrapper->widget->setY (this->getY()+lineHeight*currentWrapper->y);
+          // Sends the new informations to pron
+          currentWrapper->widget->update();
+        }
       }
     }
+    this->setVisible(true);
   }
-  this->setVisible(true);
 }
 
 void Grid::insertRow (int position) {
@@ -188,6 +192,22 @@ void Grid::attachNextTo(Widget *child, Widget *sibling, PositionType side, int w
     }
     this->attach(wrapper);
   }// TODO else exception
+}
+
+void Grid::setParent(Widget *parent) {
+  printf("Grid::setParent\n");
+  Container::setParent(parent);
+  for(size_t currentY = 0; currentY < widgetsTab.size(); ++currentY) {
+    for(size_t currentX = 0; currentX < widgetsTab[currentY].size(); ++currentX) {
+      widgetWrapper *currentWrapper = widgetsTab[currentY][currentX];
+      // We update the widget just once (the same wrapper can be in sevaral positions)
+      if(currentWrapper != NULL && currentWrapper->x == (int)currentX
+          && currentWrapper->y == (int)currentY) {
+        currentWrapper->widget->setParent(this);
+      }
+    }
+  }
+  this->update();
 }
 
 Grid::widgetWrapper::widgetWrapper(Widget* w) {
