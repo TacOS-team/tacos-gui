@@ -5,12 +5,14 @@
 #define TEMP_NAM_PREFIX "cuad"
 #define TEMP_NAM_FOLDER "/tmp"
 
-class Cuadraw {
+class CoolCanvas;
+
+class Cuadraw : public has_slots<> {
  private:
   FILE *fileIn; /**< The input file */
   FILE *fileOut; /**< The output file */
   sombrero::Window *w; /**< The main window */
-  sombrero::Canvas *c; /**< The canvas of the where to draw */
+  CoolCanvas *c; /**< The canvas of the where to draw */
   sombrero::Grid *g; /**< The sombrero grid */
   sombrero::Button *bp; /**< Pixel brush button */
   sombrero::Button *bc; /**< Circle brush button */
@@ -33,12 +35,18 @@ class Cuadraw {
    */
   Cuadraw(int argc, char **argv);
   /**
+   * Cuadraw destructor
+   */
+  ~Cuadraw();
+  /**
    * Lanches the cuadraw application
    */
   void run();
   /**
-   * Cuadraw destructor
+   * Do the pixel brush action
    */
-  ~Cuadraw();
+   void doPixelClicked();
+   void canvasMouseMoved(int x, int y, int aX, int aY);
+   void canvasMouseClicked(sombrero::MouseButton);
 };
 #endif//__CUADRAW_H__

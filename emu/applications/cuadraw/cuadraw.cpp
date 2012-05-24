@@ -3,6 +3,22 @@
 #include <sombrero.h>
 #include "cuadraw.h"
 
+class CoolCanvas : public sombrero::Canvas, public has_slots<> {
+ private:
+ protected:
+ public:
+  CoolCanvas(int width, int height) : Canvas(width, height) {
+    this->subscribeEvent(pron::EV_MOUSE_BUTTON);
+    this->subscribeEvent(pron::EV_POINTER_MOVED);
+  }
+  // Signals
+  signal1<sombrero::MouseButton> mouseClicked;
+
+  void handleMouseClicked(sombrero::MouseButton b) {
+    this->mouseClicked(b);
+  }
+};
+
 Cuadraw::Cuadraw(int argc, char **argv) 
     : fileIn(NULL), fileOut(NULL) {
   this->init(argc, argv);
@@ -55,12 +71,31 @@ void Cuadraw::init(int argc, char **argv) {
 
 void Cuadraw::initSombrero() {
   this->w = new sombrero::Window(0, 0, 500, 500);
-  //this->g = new sombrero::Grid(w);
+  this->g = new sombrero::Grid();
+  w->add(g);
   this->bp = new sombrero::Button("Pixel");
-  //this->bc = new sombrero::Button("Cirle");
-  //this->c = new sombrero::Canvas(g, 300, 300);
-  w->add(this->bp);
+  this->bp->clicked.connect(this, &Cuadraw::doPixelClicked);
+  this->bc = new sombrero::Button("Cirle");
+  this->c = new CoolCanvas(500, 500);
+  c->mouseClicked.connect(this, &Cuadraw::canvasMouseClicked);
+  c->mouseMoved.connect(this, &Cuadraw::canvasMouseMoved);
+  g->add(this->bp);
+  g->newLine();
+  g->add(this->bc);
+  g->attach(this->c, 1, 0, 6, 2);
   sombrero::Application::getInstance()->sombrerun();
+}
+
+void Cuadraw::doPixelClicked(){
+  printf("hello world\n");
+}
+
+void Cuadraw::canvasMouseMoved(int xMove, int yMove, int x, int y) {
+  printf("mouse Moved at (%d %d) (%d %d)\n", x, y, xMove, yMove);
+}
+
+void Cuadraw::canvasMouseClicked(sombrero::MouseButton b) {
+  printf("mouse clicked %d\n", b);
 }
 
 int main (int argc, char **argv) {
