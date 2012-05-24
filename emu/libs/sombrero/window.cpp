@@ -24,8 +24,7 @@ namespace sombrero {
       this->subscribeEvent(pron::EV_RESIZE_WINDOW);
   }
 
-  Window::~Window() {
-  }
+  Window::~Window() {}
 
   void Window::handleEventResizeWindow(int width, int height) {
     Widget *w = this->getWidget();

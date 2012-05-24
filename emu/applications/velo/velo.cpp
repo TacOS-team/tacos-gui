@@ -47,7 +47,7 @@ class Fichier : public Button, public has_slots<> {
   }
 };
 
-class Panel : public sombrero::Bin, public has_slots<> {
+class Panel : public sombrero::Container, public has_slots<> {
  protected:
   vector<Fichier*> boutons;
  public:

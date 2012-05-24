@@ -143,7 +143,7 @@ void Grid::attach(Widget *child, int x, int y, int width, int height) {
   this->attach(wrapper);
 }
 
-void Grid::attachNextTo (Widget *child, Widget *sibling, PositionType side, int width, int height) {
+void Grid::attachNextTo(Widget *child, Widget *sibling, PositionType side, int width, int height) {
   size_t x, y;
   // If sibling is NULL, it adds at the begining
   if(sibling == NULL) {
