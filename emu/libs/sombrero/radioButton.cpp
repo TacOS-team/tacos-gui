@@ -40,8 +40,8 @@ void RadioButton::joinGroup (RadioButton * radioButton) {
   } 
 }
 
-void RadioButton::handleEventMouseButton(pron::EventMouseButton *e) {
-  if (((pron::EventMouseButton *) e)->b1) {
+void RadioButton::handleMouseClicked(MouseButton button) {
+  if (button == leftButton) {
     this->clicked();
     if (this->state == false) {
       if (this->group != NULL) {

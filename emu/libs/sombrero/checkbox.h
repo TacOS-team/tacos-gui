@@ -23,6 +23,7 @@ class Checkbox : public Widget {
     
   protected:
     bool state; /**< The state of the box (true if checked) */
+    void handleMouseClicked(MouseButton button);
 
   public:
     // Signals
@@ -35,12 +36,6 @@ class Checkbox : public Widget {
      * checkbox destructor
      */
     ~Checkbox();
-
-    /**
-     * Redefined method for handling a mouseButton event
-     * @param e A pointer to the event that occured
-     */
-    void handleEventMouseButton(pron::EventMouseButton *e) ;
 
     /**
      * checkbox drawing stuff

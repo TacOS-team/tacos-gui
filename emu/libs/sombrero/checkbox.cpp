@@ -17,8 +17,8 @@ Checkbox::Checkbox() {
 Checkbox::~Checkbox() {
 }
 
-void Checkbox::handleEventMouseButton(pron::EventMouseButton *e) {
-  if ( ((pron::EventMouseButton *) e)->b1) {
+void Checkbox::handleMouseClicked(MouseButton button) {
+  if (button == leftButton) {
     this->clicked();
     this->state = !this->state;
     this->draw();
@@ -30,7 +30,6 @@ bool Checkbox::isChecked() {
 }
 
 void Checkbox::draw() {
-  printf("DRAW\n");
   if (state == true) {
     this->gcValues.fg = Color(0, 255, 0);
   }
