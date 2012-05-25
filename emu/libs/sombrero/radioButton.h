@@ -54,8 +54,9 @@ class RadioButton : public Checkbox {
     /**
      * set the group of the RadioButton
      * @param group The group to join
+     * @param setGroup Indiquates whether the group->add(this) has to be called
      */
-    void setGroup(RadioButtonGroup * group);
+    void setGroup(RadioButtonGroup * group, bool addToGroup = true);
 
     /**
      * removes the radioButton from its group
@@ -73,6 +74,7 @@ class RadioButton : public Checkbox {
      * @param newState The new state to be set
      */
     void setState(bool newState);
+    
   };
 
 
