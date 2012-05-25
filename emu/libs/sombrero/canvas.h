@@ -24,11 +24,14 @@ class Canvas : public Widget {
   pron::GC bgGC; /**< GC to use when clearing the pixmap */
 
  public:
+
   /**
    * Canvas constructor
    * @param parent
+   * @param pixmap pwidth
+   * @param pixmap pheight
    */
-  Canvas(Container *parent);
+  Canvas(int pWidth, int pHeight);
 
   /**
    * Canvas destructor

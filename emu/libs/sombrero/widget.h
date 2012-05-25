@@ -12,6 +12,12 @@ using namespace sigslot;
 
 namespace sombrero {
 
+  enum MouseButton {
+    rightButton,
+    leftButton,
+    middleButton,
+  };
+
   class Container;
 
   /**
@@ -21,7 +27,7 @@ namespace sombrero {
   class Widget {
 
     private:
-      Container *parent; /**< The parent widget */
+      Widget *parent; /**< The parent widget */
       int lastX; /**< last x coordinate received/sent from/to pron */
       int lastY; /**< last y coordinate received/sent from/to pron */
       int x; /**< x coordinate */
@@ -34,6 +40,7 @@ namespace sombrero {
       bool visible; /**< The widget has to be shown */
       uint32_t eventMask; /**< The event mask */
       uint32_t dontPropagateEventMask; /**< The event mask to don't propagate */
+      pron::EventMouseButton oldButtonsState;/**< the buttons state of the last mouse event */
 
     protected:
       /**
@@ -46,11 +53,6 @@ namespace sombrero {
        */
       Widget();
       /**
-       * Widget constructor. With given parent container
-       * @param parent The parent container
-       */
-      Widget(Container *parent);
-      /**
        * Widget destructor. Destroys the pron top window
        */
       ~Widget();
@@ -59,6 +61,38 @@ namespace sombrero {
        */
       void init();
 
+      /**
+       * Function called when a client clicks on the widget
+       * @param button The clicked button (rightButton, middleButton or leftButton)
+       */
+      virtual void handleMouseClicked(MouseButton button);
+
+      /**
+       * Function called when a client clicks on the widget
+       *   with the mouse event attributes (for mouse position information)
+       * @param button The clicked button (rightButton, middleButton or leftButton)
+       * @param e      The complete mouse event button informations
+       */
+      virtual void handleMouseClicked(MouseButton button, pron::EventMouseButton * e);
+
+      /**
+       * Function called when a client clicks on the widget
+       * @param button The clicked button (rightButton, middleButton or leftButton)
+       */
+      virtual void handleMouseReleased(MouseButton button);
+      /**
+       * Function called when a client clicks on the widget
+       *   with the mouse event attributes (for mouse position information)
+       * @param button The clicked button (rightButton, middleButton or leftButton)
+       * @param e      The complete mouse event button informations
+       */
+      virtual void handleMouseReleased(MouseButton button, pron::EventMouseButton * e);
+
+      /**
+       * returns true if the pron windw has been created
+       */
+      bool isPronWindowCreated();
+
     public:
       // Signals
       signal0<> resized;
@@ -66,7 +100,7 @@ namespace sombrero {
        * Signal sent when the mouse moves.
        * <xMove, yMove, relativeXPosition, relativeYPosition>
        */
-      signal4<int, int, int, int> mouseDrag;
+      signal4<int, int, int, int> mouseMoved;
       /**
        * Subscribes to new event
        * @param eventMask The event mask to add (only one event at once)
@@ -92,7 +126,7 @@ namespace sombrero {
        * Sets the parent container
        * @param Pointer to the parent container
        */
-      virtual void setParent(Container *parent);
+      virtual void setParent(Widget *parent);
       /**
        * Gets x
        * @return x
@@ -168,7 +202,7 @@ namespace sombrero {
       /**
        * Put here widgets drawing stuff
        */
-      virtual void draw() = 0;
+      virtual void draw();
       /**
        * Clears the widget
        */
@@ -214,7 +248,7 @@ namespace sombrero {
        * Gets parent container
        * @return The parent Container
        */
-      Container* getParent();
+      Widget* getParent();
 
   };
 

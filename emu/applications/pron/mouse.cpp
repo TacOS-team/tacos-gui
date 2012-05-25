@@ -7,6 +7,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/time.h>
+#include <stdio.h>
 
 #include <libtacos.h>
 #include <mouse.h>
@@ -142,6 +143,7 @@ void Mouse::handleButton(mousestate_t *state) {
       wToDeliverEvent = mouseWin;
     }
 
+    //printf("wToDeliverEvent Ox%x\n", wToDeliverEvent->getId());
     // Computing the relative coordinates
     int relX = state->x - wToDeliverEvent->getX();
     int relY = state->y - wToDeliverEvent->getY();

@@ -146,7 +146,7 @@ class MyWindow : public Window, public has_slots<> {
 
   MyWindow(int x, int y, int width, int height)
     : sombrero::Window(x, y, width, height),
-      g(this),
+      g(),
       d("."),
       scrollpane(&p),
       l("") {

@@ -4,7 +4,6 @@ int factor = 100;
 
 namespace sombrero {
 
-
 ScrollPane::ScrollPane(Widget *widget) {
   this->widget = widget;
   this->init();
@@ -24,7 +23,6 @@ void ScrollPane::YMoved(int val) {
     this->widget->updatePronPosition();
   }
 }
-
 
 void ScrollPane::update() {
   //printf("update scrollpane\n");
@@ -52,8 +50,8 @@ void ScrollPane::update() {
   Container::update();
 }
 
-void ScrollPane::setParent(Container *parent) {
-  Container::setParent(parent);
+void ScrollPane::setParent(Widget *parent) {
+  Bin::setParent(parent);
   this->scrollBar.setParent(this);
   // If the widget is set, we create it
   if(this->widget) {

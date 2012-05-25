@@ -135,6 +135,7 @@ void Client::handle() {
     }
     case RQ_SELECT_INPUT: {
       RqSelectInput *rq = (RqSelectInput*) Client::recvBuf;
+      //printf("SELECT INPUT FOR Ox%x from Ox%x with Ox%x\n", rq->window, this->id, rq->eventMask);
       Window *w = (Window*) screen->getDrawable(rq->window, D_WINDOW);
       if (w != NULL) {
         w->selectInput(this, rq->eventMask);
@@ -254,6 +255,7 @@ void Client::handle() {
       if (child != NULL && newParent != NULL) {
         screen->reparent(child, newParent);
       }
+      screen->traceWindows();
       break;
     }
     case RQ_DESTROY_WINDOW: {

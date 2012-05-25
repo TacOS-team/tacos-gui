@@ -49,7 +49,7 @@ namespace sombrero {
         exit(1);
       }
 
-      //printf("event received\n");
+      //printf("event received %d\n", e->window);
 
       map<pron::Window, Widget*>::iterator it = Application::getInstance()->widgets.find(e->window);
       if(it != Application::getInstance()->widgets.end()) {
@@ -65,7 +65,7 @@ namespace sombrero {
             w->handleEventPointerMoved((pron::EventPointerMoved*) e);
             break;
           case pron::EV_MOUSE_BUTTON:
-            w->handleEventMouseButton((pron::EventMouseButton*)e);
+            w->handleEventMouseButton((pron::EventMouseButton*) e);
             break;
           case pron::EV_KEY_PRESSED:
             w->handleEventKeyPressed(e);

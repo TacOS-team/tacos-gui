@@ -1,8 +1,8 @@
 #ifndef __GRID_H__
 #define __GRID_H__
 /**
- * @file canvas.h
- * Canvas class definition
+ * @file grid.h
+ * Grid class definition
  */
 
 #include "container.h"
@@ -10,11 +10,16 @@
 #include "window.h"
 #include <algorithm>
 
-#define SOMBRERO_CANVAS_DEPTH 24
-
 class Container;
 
 namespace sombrero {
+
+enum PositionType {
+  POS_LEFT,
+  POS_RIGHT,
+  POS_TOP,
+  POS_BOTTOM,
+};
 
 /**
  * Grid class definition. A grid is a widget containing several other widgets
@@ -98,10 +103,6 @@ class Grid : public Container {
 
  public:
   /**
-   * Constructs the object and sets himself as layout of the parent
-   */
-  Grid(Window *parent);
-  /**
    * Default constructor
    */
   Grid();
@@ -110,7 +111,13 @@ class Grid : public Container {
    * Adds a widget on the last line of the grid
    * @param widget The widget to insert
    */
-  virtual void add(Widget* widget);
+  virtual void add(Widget *widget);
+  /**
+   * Removes a widget 
+   * @TODO unimplemented
+   * @param widget The widget to remove
+   */
+  virtual void remove(Widget *widget);
   /**
    * Adds a widget at the position (x,y) with specified width and height
    * @param widget The widget to insert
@@ -129,7 +136,7 @@ class Grid : public Container {
    * @param width   The number of columns to span the widget
    * @param height  The number of lines to span the widget
    */
-  virtual void attachNextTo (Widget *child, Widget *sibling, PositionType side, int width, int height);
+  virtual void attachNextTo(Widget *child, Widget *sibling, PositionType side, int width, int height);
 
   /**
    * Adds an new empty line at the end of the grid
@@ -169,6 +176,11 @@ class Grid : public Container {
    * Updates the display of the widgets. Resize and replace correctly
    */
   virtual void update();
+  /**
+   * Sets the parent container
+   * @param Pointer to the parent container
+   */
+  virtual void setParent(Widget *parent);
 };
 
 } //namespace sombrero

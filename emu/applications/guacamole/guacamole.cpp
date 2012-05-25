@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <vector>
+#include <stdio.h>
 
 #include <gwindows_manager.h>
 #include <libtacos.h>
@@ -132,7 +133,7 @@ int main() {
             // Puts the window on foreground
             gwin->raise();
           }
-        } else {
+        } else if (!mouseButtonEvent->b1) {
           if (moving) {
             moving = false;
             pronMapWindow(display, windowLeftButtonPressed->window);
@@ -146,6 +147,8 @@ int main() {
           // Unsubscribe of events of the root window to avoid useless events
           currentRootEventMask &= ~PRON_EVENTMASK(EV_MOUSE_BUTTON);
           currentRootEventMask &= ~PRON_EVENTMASK(EV_POINTER_MOVED);
+        } else {
+          //printf("OLOL PUTAIN gwin = %p pour mouseButtonEvent->window = %x\n", gwin, mouseButtonEvent->window);
         }
         pronSelectInput(display, display->rootWindow, currentRootEventMask);
         break;

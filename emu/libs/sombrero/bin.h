@@ -19,18 +19,13 @@ namespace sombrero {
 class Bin : public Container {
   
  private:
-  bool isFull;
+  Widget *widget;
   
  protected:
   /**
    * Bin default constructor that does nothing.
    */
   Bin();
-  /**
-   * Bin constructor
-   * @param parent The parent container
-   */
-  Bin(Container *parent);
   /**
    * Bin destructor
    */
@@ -51,7 +46,7 @@ class Bin : public Container {
    * Gets the widget contained
    * @return Returns the widget
    */
-  Widget * getWidget();
+  Widget* getWidget();
 
 };
 

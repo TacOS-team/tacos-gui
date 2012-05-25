@@ -23,6 +23,9 @@ class Button : public Widget {
   std::string text;
 
   void init();
+
+  void handleMouseClicked(MouseButton button);
+  void handleMouseReleased(MouseButton button);
   
  public:
   // Signals
@@ -41,16 +44,11 @@ class Button : public Widget {
    * The button constructor 
    * @param parent Parent Container
    */
-  Button(const  std::string text);
+  Button(const std::string &text);
   /**
    * Button destructor
    */
   ~Button();
-  /**
-   * Sets the parent container
-   * @param Pointer to the parent container
-   */
-  virtual void setParent(Container *parent);
   /**
    * Gets the text of the button
    */
@@ -63,11 +61,6 @@ class Button : public Widget {
    * Button drawing stuff
    */
   virtual void draw();
-  /**
-   * Handle for a mouseButton event
-   * @param e A pointer to the event that accured
-   */
-  virtual void handleEventMouseButton(pron::EventMouseButton * e); 
 
 };
 

@@ -41,7 +41,7 @@ int main() {
   // Window button
 
   MyWindow w(50, 50, 300, 100);
-  sombrero::Grid g(&w);
+  sombrero::Grid g;
   /*sombrero::Label l1("Label 1");
   pLabel = &l1;
 
@@ -113,6 +113,8 @@ int main() {
   sombrero::Button bResize2("Diminuer taille");
   g.add(&bResize2);
   bResize2.clicked.connect(&w, &MyWindow::resize2);
+  
+  w.add(&g);
 
   sombrero::Application::getInstance()->sombrerun();
 

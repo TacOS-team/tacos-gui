@@ -19,18 +19,13 @@ namespace sombrero {
 class Container : public Widget {
   
  private:
-  vector<Widget*> children; /**< collection of widgets */
-  
+   vector<Widget*> children; /**< collection of widgets */ 
+    
  protected:
   /**
    * Container default constructor that does nothing.
    */
   Container();
-  /**
-   * Container constructor
-   * @param parent The parent container
-   */
-  Container(Container *parent);
   /**
    * Container destructor
    */
@@ -51,14 +46,6 @@ class Container : public Widget {
    * Draw children widgets
    */
   void drawChildren();
-  /**
-   * Updates the container and its contents
-   */
-  virtual void update();
-  /**
-   * Draws the window
-   */
-  virtual void draw();
   /**
    * Gets a copy of the children vector
    * @return The copied vector of children widgets

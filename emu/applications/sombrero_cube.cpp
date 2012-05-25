@@ -107,7 +107,8 @@ int main() {
   sombrero::Application::getInstance()->init();
   sombrero::Window w(0, 0, 200, 200);
   printf("window = %p\n", &w);
-  sombrero::Canvas c(&w);
+  sombrero::Canvas c(200, 200);
+  w.add(&c);
   printf("canvas = %p\n", &c);
   Cube cube(c);
   printf("cube = %p\n", &cube);

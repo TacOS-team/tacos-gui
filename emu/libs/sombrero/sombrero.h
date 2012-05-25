@@ -17,6 +17,7 @@
 #include "checkbox.h"
 #include "label.h"
 #include "image.h"
+#include "grid.h"
 
 /**
  * Sombrero library namespace
@@ -33,13 +34,6 @@ void sombrero_ascii_art();
  * Exits the program if it fails to connect to pron.
  */
 void init();
-
-enum PositionType {
-  POS_LEFT,
-  POS_RIGHT,
-  POS_TOP,
-  POS_BOTTOM,
-};
 
 } // namespace sombrero
 
