@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sombrero.h>
+#include <unistd.h>
 #include "cuadraw.h"
 
 class CoolCanvas : public sombrero::Canvas, public has_slots<> {
