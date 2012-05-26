@@ -19,6 +19,9 @@ class RadioButton : public Checkbox {
 
   private :
     RadioButtonGroup *group; /**< The group of the radioButton */
+  
+  protected:
+    void handleMouseClicked(MouseButton button);
 
   public :
     // Signals
@@ -40,12 +43,6 @@ class RadioButton : public Checkbox {
      */
     ~RadioButton ();
 
-    /**
-     * Redefined method for handling a mouseButton event
-     * @param e A pointer to the event that occured
-     */
-    void handleEventMouseButton(pron::EventMouseButton *e) ;
-
     /** get the group of the radioButton
      * @return the group of the radioButton
      */
@@ -54,8 +51,9 @@ class RadioButton : public Checkbox {
     /**
      * set the group of the RadioButton
      * @param group The group to join
+     * @param setGroup Indiquates whether the group->add(this) has to be called
      */
-    void setGroup(RadioButtonGroup * group);
+    void setGroup(RadioButtonGroup * group, bool addToGroup = true);
 
     /**
      * removes the radioButton from its group
@@ -73,6 +71,7 @@ class RadioButton : public Checkbox {
      * @param newState The new state to be set
      */
     void setState(bool newState);
+    
   };
 
 

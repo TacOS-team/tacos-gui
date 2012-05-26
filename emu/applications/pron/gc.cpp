@@ -30,6 +30,22 @@ GC::GC() {
 
 GC::GC(unsigned int id, const PronGCValues &values, unsigned int mask) {
   this->id = id;
+
+  // Default foreground color
+  //this->setFg(Color(255, 255, 255));
+  /** @todo xxx */
+  this->fg = Color(255, 255, 255);
+  this->fgValue = 0x00FFFFFF;
+
+  // Default background color
+  //this->setBg(Color(0, 0, 0));
+  /** @todo xxx */
+  this->bg = Color(0, 0, 0);
+  this->bgValue = 0x00000000;
+
+  // Default font
+  this->font_num = 0;
+
   this->setValues(values, mask);
   GC::gcs.push_back(this);
 }

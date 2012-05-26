@@ -219,5 +219,10 @@ void Screen::reparent (Window * child, Window * newParent) {
 }
 
 Font* Screen::getFont(int id) {
+  if (id < 0 || id >= (int) this->fonts.size()) {
+    fprintf(stderr, "Invalid font %d.\n", id);
+    return this->fonts[0];
+  }
+  
   return this->fonts[id];
 }

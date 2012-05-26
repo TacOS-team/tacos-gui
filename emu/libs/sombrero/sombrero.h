@@ -18,6 +18,7 @@
 #include "label.h"
 #include "image.h"
 #include "grid.h"
+#include "scrollpane.h"
 
 /**
  * Sombrero library namespace

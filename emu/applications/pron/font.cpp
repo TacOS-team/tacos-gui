@@ -36,7 +36,6 @@ void Font::drawChar(Drawable *d, int x, int y, unsigned char car) {
 }
 
 void Font::drawText(Drawable *d, int x, int y, const char *text, int length) {
-  y -= (this->height - 1);
   for (int i = 0; i < length; i++) {
     unsigned char car = text[i];
     this->drawChar(d, x, y, car);

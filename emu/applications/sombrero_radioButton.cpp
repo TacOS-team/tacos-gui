@@ -1,40 +1,36 @@
 #include "sombrero.h"
 #include "radioButton.h"
 #include "radioButtonGroup.h"
+#include "stdio.h"
+
+
 
 int main () {
   sombrero::Application::getInstance()->init();
 
-  sombrero::Window w(0,0,300,300);
-  sombrero::Window w1(0,0,300,300);
-  sombrero::Window w2(0,0,300,300);
-  
-/*  sombrero::RadioButton b2;
-  sombrero::RadioButton b1;
-  sombrero::RadioButton b3;
-  */
-  sombrero::Checkbox cb1;
-  sombrero::Checkbox cb2;
-  sombrero::Checkbox cb3;
+  sombrero::Window w1(0,0,100,100);
+  sombrero::Window w2(0,0,100,100);
+  sombrero::Window w3(0,0,100,100);
+  sombrero::RadioButtonGroup g;
+  sombrero::RadioButton rb1;
+  sombrero::RadioButton rb2;
+  sombrero::RadioButton rb3;
 
- // sombrero::RadioButtonGroup group;
- // sombrero::Grid grid(&w);
-/*
-  group.add(&b1);
-  group.add(&b2);
-  group.add(&b3);
-*/
-  w.add(&cb1);
-  w1.add(&cb2);
-  w2.add(&cb3);
+  // rb3 is the only one to true in the end
+  rb1.setState(true);
+  rb2.setState(true);
+  rb3.setState(true);
 
+  // Three ways to associate a group with a radioButton
+  rb1.setGroup(&g);
+  rb2.joinGroup(&rb1);
+  g.add(&rb3);
 
-/*  grid.add(&cb1);
-  grid.newLine();
-  grid.add(&cb2);
-  grid.newLine();
-  grid.add(&cb3);
-*/
+  w1.add(&rb1);
+  w2.add(&rb2);
+  w3.add(&rb3);
+    
+
   sombrero::Application::getInstance()->sombrerun();
 
   return 0;

@@ -1,5 +1,5 @@
 #ifndef __CUADRAW_H__
-#define __CUADRAW_H_
+#define __CUADRAW_H__
 #include <sombrero.h>
 
 #define TEMP_NAM_PREFIX "cuad"
