@@ -1,24 +1,75 @@
 #include <string.h>
 #include <sombrero.h>
 #include <directory.h>
-#include "stdio.h"
+#include <stdio.h>
 
+#include "widget.h"
 #include "mirar.h"
 
+
+class BotonSiguiente : public sombrero::Button {
+  private:
+    Mirar * aplicacion;
+  protected:
+    void handleMouseClicked(sombrero::MouseButton button) {
+      sombrero::Button::handleMouseClicked(button);
+      if (button == sombrero::leftButton) {
+        printf("CLIC SOBRE EL BUTTON SIGUIENTE\n");
+        this->aplicacion->verSiguiente();
+      }
+    }
+
+  public:
+    BotonSiguiente(const char *text, Mirar *aplicacion) : sombrero::Button(text) {
+      this->aplicacion = aplicacion;
+    }
+};
+      
+class BotonAnterior : public sombrero::Button {
+  public:
+    BotonAnterior(const char *text) : sombrero::Button(text) {
+    }
+  protected:
+    void handleMouseClicked(sombrero::MouseButton button) {
+      sombrero::Button::handleMouseClicked(button);
+      if (button == sombrero::leftButton) {
+        printf("CLIC SOBRE EL BUTTON ANTERIOR\n");
+      }
+    }
+};
+
+bool esUnJpegHombre (std::string &nombre) {
+  bool ret = false;
+  if (nombre.size() > 4 && nombre.find_last_of(".jpeg") != nombre.npos) {
+    ret = true;
+  }
+  return ret;
+}
+  
+
 Mirar::Mirar(char * camino) {
-  sombrero::Directory *carpeta = new sombrero::Directory ((string &) camino);
+  /*sombrero::Directory *carpeta = new sombrero::Directory ((string &) camino);
   std::list<std::string> archivos = carpeta->entryList();
+  for (std::list<std::string>::iterator it = archivos.begin(); it != archivos.end(); it++) {
+    if (esUnJpegHombre((string &)it)) {
+      this->jpegArchivos.push_back((string &)it);
+    }
+  }
+  */
+
+  this->corrienteArchivo = 0;
+  this->jpegArchivos.push_back("tahitiBob.jpg");
+  this->jpegArchivos.push_back("plant.jpg");
   this->inicializacionSombrero();
 }
 
 void Mirar::inicializacionSombrero() {
-  std::string * archivo = new std::string("plant.jpg");
   sombrero::Application::getInstance()->init();
   this->ventana = new sombrero::Window(0,0,MAIN_WINDOW_WIDTH,MAIN_WINDOW_HEIGHT);
   this->g = new sombrero::Grid();
-  this->siguiente = new sombrero::Button("Siguiente");
-  this->anterior = new sombrero::Button("Anterior");
-  this->image = new sombrero::Image(*archivo);
+  this->siguiente = new BotonSiguiente("Siguiente",this);
+  this->anterior = new BotonAnterior("Anterior");
+  this->image = new sombrero::Image(this->jpegArchivos[this->corrienteArchivo]);
   this->sp = new sombrero::ScrollPane(this->image);
 
   ventana->add(g);
@@ -31,6 +82,14 @@ void Mirar::inicializacionSombrero() {
 }
 
 Mirar::~Mirar() {
+}
+
+void Mirar::verSiguiente() {
+  this->corrienteArchivo = (this->corrienteArchivo + 1) % this->jpegArchivos.size();
+  this->image = new sombrero::Image(this->jpegArchivos[this->corrienteArchivo]); // @TODO cambiar eso
+  this->sp = new sombrero::ScrollPane(this->image);
+  this->g->attach(this->sp,0,1,2,8);
+  this->g->draw();
 }
 
 void Mirar::correr() {
