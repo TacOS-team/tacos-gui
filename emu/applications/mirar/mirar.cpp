@@ -1,47 +1,52 @@
 #include <string.h>
 #include <sombrero.h>
+#include <directory.h>
+#include "stdio.h"
 
 #include "mirar.h"
 
-Mirar::Mirar(char * path) {
-  this->path = path;
-  this->initSombrero(path);
+Mirar::Mirar(char * camino) {
+  sombrero::Directory *carpeta = new sombrero::Directory ((string &) camino);
+  std::list<std::string> archivos = carpeta->entryList();
+  this->inicializacionSombrero();
 }
 
-void Mirar::initSombrero(char * path) {
+void Mirar::inicializacionSombrero() {
+  std::string * archivo = new std::string("plant.jpg");
   sombrero::Application::getInstance()->init();
-  this->w = new sombrero::Window(0,0,640,480);
+  this->ventana = new sombrero::Window(0,0,MAIN_WINDOW_WIDTH,MAIN_WINDOW_HEIGHT);
   this->g = new sombrero::Grid();
-  this->next = new sombrero::Button("Siguiente");
-  this->prev = new sombrero::Button("Anterior");
-  this->image = new sombrero::Image((string &)path);
+  this->siguiente = new sombrero::Button("Siguiente");
+  this->anterior = new sombrero::Button("Anterior");
+  this->image = new sombrero::Image(*archivo);
   this->sp = new sombrero::ScrollPane(this->image);
 
-  w->add(g);
+  ventana->add(g);
 
-  this->g->add(this->next);
-  this->g->add(this->prev);
+  g->attach(anterior,0,0,1,1);
+  g->attachNextTo(siguiente,anterior,sombrero::POS_RIGHT,1,1);
   this->g->newLine();
-  this->g->add(this->sp);
+  this->g->attach(this->sp,0,1,2,8);
   this->g->draw();
 }
 
 Mirar::~Mirar() {
 }
 
-void Mirar::run() {
+void Mirar::correr() {
   sombrero::Application::getInstance()->sombrerun();
 }
   
 int main (int argc, char ** argv) {
-  char * path;
+  char * camino;
   if (argc > 1) {
-    path = argv[1];
+    camino = argv[1];
   } else {
-    path = (char *)malloc(2 * sizeof(char));
-    path[0] = '.';
-    path[1] = '\0';
+    printf("Hombre, no me has dado una carpeta !\nVoy a mirar la carpeta corriente.\n");
+    camino = (char *)malloc(2 * sizeof(char));
+    camino[0] = '.';
+    camino[1] = '\0';
   }
-  Mirar m (path);
-  m.run();
+  Mirar m (camino);
+  m.correr();
 }

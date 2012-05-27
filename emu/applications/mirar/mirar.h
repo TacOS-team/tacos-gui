@@ -4,22 +4,25 @@
 #include <sombrero.h>
 #include <scrollpane.h>
 
+#define MAIN_WINDOW_WIDTH 640
+#define MAIN_WINDOW_HEIGHT 480
+
 class Mirar :public has_slots<> {
   private:
-    sombrero::Window *w;
+    sombrero::Window *ventana; /**< la ventana sombrero que contene la aplicacion */
     sombrero::Grid *g;
-    sombrero::Button *next;
-    sombrero::Button *prev;
+    sombrero::Button *siguiente;
+    sombrero::Button *anterior;
     sombrero::Image *image;
     sombrero::ScrollPane *sp;
-    char * path;
+    std::vector<std::string> *jpegArchivos; /**< los jpeg archivos que la aplicacion debe MIRAR */
 
   public:
-    Mirar(char * path);
+    Mirar(char * camino);
     ~Mirar();
 
-    void initSombrero(char * path);
-    void run();
+    void inicializacionSombrero();
+    void correr();
 
 };
   
