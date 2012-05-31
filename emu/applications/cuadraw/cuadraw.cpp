@@ -138,12 +138,16 @@ void Cuadraw::doCircleClicked(){
   // Updates the last mouse down coordinates
 }
 
+int abs(int val) {
+  return (val > 0) ? val : -val;
+}
+
 void Cuadraw::circleMouseMoved(int xMove, int yMove, int x, int y) {
   printf("Circle : mouse Moved at (%d %d) (%d %d)\n", x, y, xMove, yMove);
   if (this->mouseDown) {
     this->c->restorePixmap();
     printf("Last coord (%d, %d)\n", this->downX, this->downY);
-    this->c->drawEllipse(this->downX + (x - this->downX) / 2, this->downY + (y - this->downY) / 2, (x - this->downX) / 2, (y - this->downY) / 2);
+    this->c->drawEllipse(this->downX + (x - this->downX) / 2, this->downY + (y - this->downY) / 2, abs((x - this->downX) / 2), abs((y - this->downY) / 2));
     this->c->draw();
   } else {
     this->downX = x;
