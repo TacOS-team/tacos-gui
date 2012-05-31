@@ -20,7 +20,8 @@ namespace sombrero {
 class Canvas : public Widget {
   
  private:
-  pron::Pixmap pixmap; /**< Pron pixmap : where to draw */
+  pron::Pixmap pixmap; /**< Pron pixmap : the current pixmap, where to draw */
+  pron::Pixmap pixmap2; /**< Pron pixmap : two pixmaps, to restore things  */
   pron::GC bgGC; /**< GC to use when clearing the pixmap */
 
  public:
@@ -42,6 +43,18 @@ class Canvas : public Widget {
    * Clears the canvas.
    */
   void clear();
+
+  /**
+   * Switches the current pixmap where to draw
+   * copying the current pixmap in the other 
+   */
+  void switchPixmap();
+
+  /**
+   * Restore the pixmap of the non current pixmap 
+   * in the current pixmap
+   */
+  void restorePixmap();
 
   /**
    * Draws a ligne

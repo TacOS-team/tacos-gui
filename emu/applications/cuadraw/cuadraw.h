@@ -17,6 +17,8 @@ class Cuadraw : public has_slots<> {
   sombrero::Button *bp; /**< Pixel brush button */
   sombrero::Button *bc; /**< Circle brush button */
   bool mouseDown; /**< Mouse down in canvas */
+  int downX; /**< Last mouse down x */
+  int downY; /**< Last mouse down y */
   /**
    * Initialize cuadraw
    * @param argc

@@ -76,6 +76,8 @@ void Cuadraw::init(int argc, char **argv) {
 }
 
 void Cuadraw::initSombrero() {
+  this->downX = 0;
+  this->downY = 0;
   this->w = new sombrero::Window(0, 0, 500, 500);
   this->g = new sombrero::Grid();
   w->add(g);
@@ -109,6 +111,9 @@ void Cuadraw::pixelMouseMoved(int xMove, int yMove, int x, int y) {
   if (this->mouseDown) {
     this->c->drawPoint(x, y);
     this->c->draw();
+  } else {
+    this->downX = x;
+    this->downY = y;
   }
 }
 
@@ -119,6 +124,7 @@ void Cuadraw::pixelMouseClicked(sombrero::MouseButton b) {
 
 void Cuadraw::pixelMouseReleased(sombrero::MouseButton b) {
   this->mouseDown = false;
+  this->c->switchPixmap();
   printf("Pixel : mouse released %d (%d)\n", b, this->mouseDown);
 }
 
@@ -129,10 +135,20 @@ void Cuadraw::doCircleClicked(){
   c->mouseClicked.connect(this, &Cuadraw::circleMouseClicked);
   c->mouseReleased.connect(this, &Cuadraw::circleMouseReleased);
   c->mouseMoved.connect(this, &Cuadraw::circleMouseMoved);
+  // Updates the last mouse down coordinates
 }
 
 void Cuadraw::circleMouseMoved(int xMove, int yMove, int x, int y) {
   printf("Circle : mouse Moved at (%d %d) (%d %d)\n", x, y, xMove, yMove);
+  if (this->mouseDown) {
+    this->c->restorePixmap();
+    printf("Last coord (%d, %d)\n", this->downX, this->downY);
+    this->c->drawEllipse(this->downX + (x - this->downX) / 2, this->downY + (y - this->downY) / 2, (x - this->downX) / 2, (y - this->downY) / 2);
+    this->c->draw();
+  } else {
+    this->downX = x;
+    this->downY = y;
+  }
 }
 
 void Cuadraw::circleMouseClicked(sombrero::MouseButton b) {
@@ -142,6 +158,7 @@ void Cuadraw::circleMouseClicked(sombrero::MouseButton b) {
 
 void Cuadraw::circleMouseReleased(sombrero::MouseButton b) {
   this->mouseDown = false;
+  this->c->switchPixmap();
   printf("Circle : mouse released %d (%d)\n", b, this->mouseDown);
 }
 
@@ -150,3 +167,4 @@ int main (int argc, char **argv) {
   Cuadraw c(argc, argv);
   return 0;
 }
+
