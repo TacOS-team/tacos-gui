@@ -58,8 +58,8 @@ Mirar::Mirar(char * camino) {
   */
 
   this->corrienteArchivo = 0;
-  this->jpegArchivos.push_back("tahitiBob.jpg");
-  this->jpegArchivos.push_back("plant.jpg");
+  this->jpegArchivos.push_back("/home/garfunk/Bureau/madre.jpg");
+  this->jpegArchivos.push_back("/home/garfunk/Bureau/chucknorris.jpg");
   this->inicializacionSombrero();
 }
 

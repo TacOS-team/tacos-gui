@@ -193,7 +193,7 @@ void Widget::handleEventPointerMoved(pron::EventPointerMoved *mousePointerEvent)
 }
 
 void Widget::handleEventMouseButton(pron::EventMouseButton *e) {
-  //printf("handleEventMouseButton\n");
+  printf("handleEventMouseButton\n");
   if(this->oldButtonsState.b1 != e->b1) {
     if(e->b1) {
       this->handleMouseClicked(leftButton);

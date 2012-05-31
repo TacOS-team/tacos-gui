@@ -14,10 +14,15 @@ class CoolCanvas : public sombrero::Canvas, public has_slots<> {
   }
   // Signals
   signal1<sombrero::MouseButton> mouseClicked;
-
+  signal1<sombrero::MouseButton> mouseReleased;
+  
   void handleMouseClicked(sombrero::MouseButton b) {
     this->mouseClicked(b);
   }
+  void handleMouseReleased(sombrero::MouseButton b) {
+    this->mouseReleased(b);
+  }
+
 };
 
 Cuadraw::Cuadraw(int argc, char **argv) 
@@ -77,9 +82,8 @@ void Cuadraw::initSombrero() {
   this->bp = new sombrero::Button("Pixel");
   this->bp->clicked.connect(this, &Cuadraw::doPixelClicked);
   this->bc = new sombrero::Button("Cirle");
+  this->bc->clicked.connect(this, &Cuadraw::doCircleClicked);
   this->c = new CoolCanvas(500, 500);
-  c->mouseClicked.connect(this, &Cuadraw::canvasMouseClicked);
-  c->mouseMoved.connect(this, &Cuadraw::canvasMouseMoved);
   g->add(this->bp);
   g->newLine();
   g->add(this->bc);
@@ -87,17 +91,60 @@ void Cuadraw::initSombrero() {
   sombrero::Application::getInstance()->sombrerun();
 }
 
+/**
+ * !!! Drawing modes !!!
+ */
+
 void Cuadraw::doPixelClicked(){
-  printf("hello world\n");
+  c->mouseClicked.disconnect_all();
+  c->mouseReleased.disconnect_all();
+  c->mouseMoved.disconnect_all();
+  c->mouseClicked.connect(this, &Cuadraw::pixelMouseClicked);
+  c->mouseReleased.connect(this, &Cuadraw::pixelMouseReleased);
+  c->mouseMoved.connect(this, &Cuadraw::pixelMouseMoved);
 }
 
-void Cuadraw::canvasMouseMoved(int xMove, int yMove, int x, int y) {
-  printf("mouse Moved at (%d %d) (%d %d)\n", x, y, xMove, yMove);
+void Cuadraw::pixelMouseMoved(int xMove, int yMove, int x, int y) {
+  printf("Pixel : mouse Moved at (%d %d) (%d %d)\n", x, y, xMove, yMove);
+  if (this->mouseDown) {
+    this->c->drawPoint(x, y);
+    this->c->draw();
+  }
 }
 
-void Cuadraw::canvasMouseClicked(sombrero::MouseButton b) {
-  printf("mouse clicked %d\n", b);
+void Cuadraw::pixelMouseClicked(sombrero::MouseButton b) {
+  this->mouseDown = true;
+  printf("Pixel : mouse clicked %d (%d)\n", b, this->mouseDown);
 }
+
+void Cuadraw::pixelMouseReleased(sombrero::MouseButton b) {
+  this->mouseDown = false;
+  printf("Pixel : mouse released %d (%d)\n", b, this->mouseDown);
+}
+
+void Cuadraw::doCircleClicked(){
+  c->mouseClicked.disconnect_all();
+  c->mouseReleased.disconnect_all();
+  c->mouseMoved.disconnect_all();
+  c->mouseClicked.connect(this, &Cuadraw::circleMouseClicked);
+  c->mouseReleased.connect(this, &Cuadraw::circleMouseReleased);
+  c->mouseMoved.connect(this, &Cuadraw::circleMouseMoved);
+}
+
+void Cuadraw::circleMouseMoved(int xMove, int yMove, int x, int y) {
+  printf("Circle : mouse Moved at (%d %d) (%d %d)\n", x, y, xMove, yMove);
+}
+
+void Cuadraw::circleMouseClicked(sombrero::MouseButton b) {
+  this->mouseDown = true;
+  printf("Circle : mouse clicked %d (%d)\n", b, this->mouseDown);
+}
+
+void Cuadraw::circleMouseReleased(sombrero::MouseButton b) {
+  this->mouseDown = false;
+  printf("Circle : mouse released %d (%d)\n", b, this->mouseDown);
+}
+
 
 int main (int argc, char **argv) {
   Cuadraw c(argc, argv);
