@@ -68,7 +68,7 @@ namespace sombrero {
             w->handleEventMouseButton((pron::EventMouseButton*) e);
             break;
           case pron::EV_KEY_PRESSED:
-            w->handleEventKeyPressed(e);
+            w->handleEventKeyPressed((pron::EventKeyPressed*) e);
             break;
           case pron::EV_KEY_RELEASED:
             w->handleEventKeyReleased();

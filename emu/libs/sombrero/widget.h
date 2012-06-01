@@ -194,42 +194,42 @@ class Widget {
   /**
    * Handle for a windowCreated event
    */
-  virtual void handleEventWindowCreated() ;
+  virtual void handleEventWindowCreated();
   /**
    * Handle for an expose event
    */
-  virtual void handleEventExpose() ;
+  virtual void handleEventExpose();
   /**
    * Handle for a pointerMoved event
    */
-  virtual void handleEventPointerMoved(pron::EventPointerMoved * e) ;
+  virtual void handleEventPointerMoved(pron::EventPointerMoved * e);
   /**
    * Handle for a mouseButton event
    * @param e A pointer to the event that accured
    */
-  virtual void handleEventMouseButton(pron::EventMouseButton * e) ;
-  /**
-   * Handle for a keyPressed event
-   * @param e A pointer to the event that occured
-   */
-  virtual void handleEventKeyPressed(pron::PronEvent * e __attribute__((unused))) ;
+  virtual void handleEventMouseButton(pron::EventMouseButton * e);
   /**
    * Handle for a keyReleased event
    */
-  virtual void handleEventKeyReleased() ;
+  virtual void handleEventKeyReleased();
   /**
    * Handle for a destroyWindow event
    */
-  virtual void handleEventDestroyWindow() ;
+  virtual void handleEventDestroyWindow();
   /**
    * Handle for a resizeWindow event
    */
-  virtual void handleEventResizeWindow(int width, int height) ;
+  virtual void handleEventResizeWindow(int width, int height);
   /**
    * Gets parent container
    * @return The parent Container
    */
   Widget* getParent();
+  /**
+   * Handle for a keyPressed event
+   * @param e A pointer to the event that occured
+   */
+  virtual void handleEventKeyPressed(pron::EventKeyPressed *e);
   /**
    * Set the foreground color
    */

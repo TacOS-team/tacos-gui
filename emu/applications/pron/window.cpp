@@ -19,7 +19,7 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
   this->x = x;
   this->y = y;
   memset(&this->bgColor, 0, sizeof(this->bgColor));
-  this->bgColor = Color(0, 0, 0);
+  this->bgColor = (parent == NULL) ? Color(0x20, 0x20, 0x20) : Color(0xdb, 0xdb, 0xdf);
   this->eventMask = 0;
   this->dontPropagateMask = 0;
   this->mapped = false;
@@ -176,17 +176,6 @@ void Window::clear(int x, int y, int width, int height, bool sendExposureEvent) 
   } else {
     this->reduce(x, y, width, height);
     this->fillRectangle(x, y, width, height);
-  }
-  /** @todo XXX If it is the root window, we print a grid (provisoire) */
-  if (this->getId() == 0) {
-    this->getScreen()->getGC()->setFg(Color(255, 0, 0));
-    int step = 50;
-    for (int i = step; i < this->getWidth(); i += step) {
-      this->drawLine(i, 0, i, this->getHeight());
-    }
-    for (int i = step; i < this->getHeight(); i += step) {
-      this->drawLine(0, i, this->getWidth(), i);
-    }
   }
   this->getScreen()->getGC()->setFg(oldFg);
 

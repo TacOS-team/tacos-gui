@@ -4,16 +4,40 @@
 #include <gwindows_manager.h>
 
 GWindowsManager * GWindowsManager::instance = NULL;
+Color activeTitleColor(0x30, 0x30, 0x30);
+Color inactiveTitleColor(0x60, 0x60, 0x60);
+Color borderColor(0, 0, 0);
+GC whiteGC, blackGC, borderGC, activeTitleGC, inactiveTitleGC;
+
+extern Display *display;
 
 void GWindowsManager::init(Window rootWindow) {
   if (instance != NULL) {
     delete instance;
   }
+
   instance = new GWindowsManager();
   instance->rootWindow = rootWindow;
   instance->positionTranslation = 100;
   instance->currentInitXPosition = instance->positionTranslation;
   instance->currentInitYPosition = instance->positionTranslation;
+    
+  PronGCValues values;
+  values.bg = Color(0, 0, 0);
+  values.fg = Color(0xbe, 0xbe, 0xbe);
+  whiteGC = pronCreateGC(display, values, GC_VAL_FG | GC_VAL_BG);
+  
+  values.fg = Color(0, 0, 0);
+  blackGC = pronCreateGC(display, values, GC_VAL_FG | GC_VAL_BG);
+  
+  values.fg = borderColor;
+  borderGC = pronCreateGC(display, values, GC_VAL_FG | GC_VAL_BG);
+
+  values.fg = activeTitleColor;
+  activeTitleGC = pronCreateGC(display, values, GC_VAL_FG | GC_VAL_BG);
+
+  values.fg = inactiveTitleColor;
+  inactiveTitleGC = pronCreateGC(display, values, GC_VAL_FG | GC_VAL_BG);
 }
 
 
