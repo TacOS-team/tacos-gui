@@ -14,11 +14,6 @@ class GWindow {
   Window window;
   Window parent;
   Window closeButton;
-  GC closeButtonGC;
-  GC backgroundParentGC;
-  GC backgroundCloseButtonGC;
-  GC backgroundMaximiseButtonGC;
-  GC backgroundResizeButtonGC;
   Window resizeButton;
   Window maximiseButton;
   PronWindowAttributes attributes;

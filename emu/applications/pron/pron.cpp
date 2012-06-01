@@ -51,6 +51,7 @@ void PronInit() {
   // Create root window
   screen->tree->setRoot(new Window(screen, 0, NULL, NULL, 0, 0, 800, 600));
   screen->tree->getRoot()->map();
+  screen->tree->getRoot()->clear();
 
   // The id of the first client to connect will be 0
   newClientID = 0;
