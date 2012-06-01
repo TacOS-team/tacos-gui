@@ -23,7 +23,6 @@ Button::Button(const std::string &text) : text(text) {
 }
 
 void Button::init() {
-  this->fontSize = 10;
   // Select more events
   this->subscribeEvent(pron::EV_EXPOSE);
   this->subscribeEvent(pron::EV_MOUSE_BUTTON);
@@ -46,11 +45,17 @@ void Button::draw() {
   this->clear();
   // Draws the line 
   pron::pronDrawRect(Application::getInstance()->d, this->pronWindow,
-      this->fgColor, 0,0,
+      this->fgColor, 0, 0,
       this->getWidth(), this->getHeight());
   // Draws the text
-  pron::pronDrawText(Application::getInstance()->d, this->pronWindow, this->fgColor, this->getWidth() / 2 - this->text.length()/2 * this->fontSize/2,
-      this->getHeight() / 2 + this->fontSize/2, this->text.c_str(), this->text.length());
+  int textWidth, textHeight;
+  pronTextSize(Application::getInstance()->d,
+      this->fgColor,
+      this->text.c_str(), this->text.length(), &textWidth, &textHeight);
+  pron::pronDrawText(Application::getInstance()->d, this->pronWindow,
+      this->fgColor,
+      (this->getWidth() - textWidth) / 2, (this->getHeight() - textHeight) / 2,
+      this->text.c_str(), this->text.length());
 }
 
 void Button::handleMouseDown(MouseButton button, int x __attribute__((unused)), int y __attribute__((unused))) {
