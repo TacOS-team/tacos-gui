@@ -11,8 +11,8 @@ class BotonSiguiente : public sombrero::Button {
   private:
     Mirar * aplicacion;
   protected:
-    void handleMouseClicked(sombrero::MouseButton button, int x, int y) {
-      sombrero::Button::handleMouseClicked(button, x, y);
+    void handleMouseDown(sombrero::MouseButton button, int x, int y) {
+      sombrero::Button::handleMouseDown(button, x, y);
       if (button == sombrero::leftButton) {
         printf("CLIC SOBRE EL BUTTON SIGUIENTE\n");
         this->aplicacion->verSiguiente();
@@ -30,8 +30,8 @@ class BotonAnterior : public sombrero::Button {
     BotonAnterior(const char *text) : sombrero::Button(text) {
     }
   protected:
-    void handleMouseClicked(sombrero::MouseButton button, int x, int y) {
-      sombrero::Button::handleMouseClicked(button, x, y);
+    void handleMouseDown(sombrero::MouseButton button, int x, int y) {
+      sombrero::Button::handleMouseDown(button, x, y);
       if (button == sombrero::leftButton) {
         printf("CLIC SOBRE EL BUTTON ANTERIOR\n");
       }

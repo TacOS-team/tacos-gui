@@ -40,7 +40,7 @@ void RadioButton::joinGroup (RadioButton * radioButton) {
   } 
 }
 
-void RadioButton::handleMouseClicked(MouseButton button) {
+void RadioButton::handleMouseDown(MouseButton button, int x __attribute__((unused)), int y __attribute__((unused))) {
   if (button == leftButton) {
     this->clicked();
     if (this->state == false) {

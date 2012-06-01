@@ -65,7 +65,7 @@ namespace sombrero {
        * Function called when a client clicks on the widget
        * @param button The clicked button (rightButton, middleButton or leftButton)
        */
-      virtual void handleMouseClicked(MouseButton button, int x, int y);
+      virtual void handleMouseDown(MouseButton button, int x, int y);
 
 
       /**
