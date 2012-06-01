@@ -31,7 +31,7 @@ void Grid::newLine() {
 }
 
 void Grid::draw() {
-  //printf("draw grid (x, y, w, h) : %d, %d, %d, %d\n", this->getX(), this->getY(), this->getWidth(), this->getHeight());
+  printf("draw grid (x, y, w, h) : %d, %d, %d, %d, %p\n", this->getX(), this->getY(), this->getWidth(), this->getHeight(), this);
 }
 
 void Grid::update() {

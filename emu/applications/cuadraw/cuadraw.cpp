@@ -105,6 +105,7 @@ void Cuadraw::initSombrero() {
   this->bfr = new sombrero::Button("Fill Rect");
   this->bfr->clicked.connect(this, &Cuadraw::doFillRectClicked);
   this->c = new CoolCanvas(500, 500);
+  this->cp = new sombrero::ColorPicker(10);
   this->g->add(this->bp);
   this->g->newLine();
   this->g->add(this->bl);
@@ -116,7 +117,10 @@ void Cuadraw::initSombrero() {
   this->g->add(this->br);
   this->g->newLine();
   this->g->add(this->bfr);
-  this->g->attach(this->c, 1, 0, 6, 6);
+  this->g->attach(this->c, 1, 0, 6, 5);
+  this->g->attach(this->cp, 1, 5, 6, 1);
+  /*this->cp = new sombrero::ColorPicker(10);
+  this->g->attach(this->cp, 0, 0, 1, 1);*/
   sombrero::Application::getInstance()->sombrerun();
 }
 
