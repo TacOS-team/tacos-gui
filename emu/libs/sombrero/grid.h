@@ -6,7 +6,6 @@
  */
 
 #include "container.h"
-#include "sombrero.h"
 #include "window.h"
 #include <algorithm>
 

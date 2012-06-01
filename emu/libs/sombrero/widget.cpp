@@ -233,4 +233,12 @@ void Widget::handleEventResizeWindow(int width, int height) {
 
 void Widget::draw() {}
 
+void setFGColor(const Color &c __attribute__((unused))) {
+
+}
+
+void setBGColor(const Color &c __attribute__((unused))) {
+
+}
+
 } // namespace sombrero

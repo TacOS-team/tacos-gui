@@ -20,6 +20,7 @@ class Cuadraw : public has_slots<> {
   sombrero::Button *bfc; /**< Fill circle brush button */
   sombrero::Button *br; /**< Rect brush button */
   sombrero::Button *bfr; /**< Fill Rect brush button */
+  sombrero::ColorPicker *cp; /**< Color picker */
   bool mouseDown; /**< Mouse down in canvas */
   int downX; /**< Last mouse down x */
   int downY; /**< Last mouse down y */

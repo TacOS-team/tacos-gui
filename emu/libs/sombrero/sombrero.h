@@ -19,6 +19,7 @@
 #include "image.h"
 #include "grid.h"
 #include "scrollpane.h"
+#include "colorpicker.h"
 
 /**
  * Sombrero library namespace
