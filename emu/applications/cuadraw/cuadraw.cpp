@@ -20,7 +20,7 @@ class CoolCanvas : public sombrero::Canvas, public has_slots<> {
   signal3<sombrero::MouseButton, int, int> mouseClicked;
   signal3<sombrero::MouseButton, int, int> mouseReleased;
   
-  void handleMouseClicked(sombrero::MouseButton b, int x, int y) {
+  void handleMouseDown(sombrero::MouseButton b, int x, int y) {
     this->mouseClicked(b, x, y);
   }
   void handleMouseReleased(sombrero::MouseButton b, int x, int y) {
