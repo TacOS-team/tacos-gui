@@ -19,7 +19,6 @@ class Container;
 class Button : public Widget {
 
  protected:
-  unsigned char fontSize;
   std::string text;
 
   void init();
