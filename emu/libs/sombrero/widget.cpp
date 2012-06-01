@@ -208,7 +208,7 @@ void Widget::handleEventMouseButton(pron::EventMouseButton *e) {
   this->oldButtonsState = *e;
 }
 
-void Widget::handleEventKeyPressed(pron::PronEvent *e __attribute__((unused))) {
+void Widget::handleEventKeyPressed (pron::EventKeyPressed *e __attribute__((unused))) {
 }
 
 void Widget::handleEventKeyReleased() {

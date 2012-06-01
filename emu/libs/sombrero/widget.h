@@ -216,7 +216,7 @@ namespace sombrero {
        * Handle for a keyPressed event
        * @param e A pointer to the event that occured
        */
-      virtual void handleEventKeyPressed(pron::PronEvent * e __attribute__((unused))) ;
+      virtual void handleEventKeyPressed(pron::EventKeyPressed *e) ;
       /**
        * Handle for a keyReleased event
        */

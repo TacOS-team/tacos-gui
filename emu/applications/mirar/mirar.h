@@ -11,17 +11,18 @@
 
 class BotonSiguiente;
 class BotonAnterior;
+class VentanaMirar;
 
 class Mirar :public has_slots<> {
   private:
-    sombrero::Window *ventana; /**< la ventana sombrero que contene la aplicacion */
+    VentanaMirar *ventana; /**< la ventana sombrero que contene la aplicacion */
     sombrero::Grid *g;
     BotonSiguiente *siguiente;
     BotonAnterior *anterior;
     sombrero::Image *image;
     sombrero::ScrollPane *sp;
     std::vector<std::string> jpegArchivos; /**< los jpeg archivos que la aplicacion debe MIRAR */
-    unsigned int corrienteArchivo;
+    int corrienteArchivo;
 
   public:
     Mirar(char * camino);
@@ -29,6 +30,7 @@ class Mirar :public has_slots<> {
 
     void inicializacionSombrero();
     void verSiguiente();
+    void verAnterior();
     void correr();
 
 };
