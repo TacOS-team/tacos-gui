@@ -5,6 +5,16 @@ namespace sombrero {
 
 Widget::Widget() {
   this->init();
+  // Initialiazes GC
+  Color cb(0, 0, 0);
+  Color cw(255, 255, 255);
+  pron::PronGCValues values;
+  values.bg = cw;
+  values.fg = cb;
+  this->fgColor = pron::pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG | pron::GC_VAL_BG);
+  values.bg = cw;
+  values.fg = cb;
+  this->bgColor = pron::pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG | pron::GC_VAL_BG);
 }
 
 Widget::~Widget() {
@@ -208,7 +218,7 @@ void Widget::handleEventMouseButton(pron::EventMouseButton *e) {
   this->oldButtonsState = *e;
 }
 
-void Widget::handleEventKeyPressed (pron::EventKeyPressed *e __attribute__((unused))) {
+void Widget::handleEventKeyPressed(pron::EventKeyPressed *e __attribute__((unused))) {
 }
 
 void Widget::handleEventKeyReleased() {
@@ -233,12 +243,20 @@ void Widget::handleEventResizeWindow(int width, int height) {
 
 void Widget::draw() {}
 
-void setFGColor(const Color &c __attribute__((unused))) {
-
+void Widget::setFGColor(const Color &c) {
+  pron::pronFreeGC(Application::getInstance()->d, this->fgColor);
+  pron::PronGCValues values;
+  values.bg = Color(0, 0, 0);
+  values.fg = c;
+  this->fgColor = pron::pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG | pron::GC_VAL_BG);
 }
 
-void setBGColor(const Color &c __attribute__((unused))) {
-
+void Widget::setBGColor(const Color &c __attribute__((unused))) {
+  pron::pronFreeGC(Application::getInstance()->d, this->bgColor);
+  pron::PronGCValues values;
+  values.bg = Color(0, 0, 0);
+  values.fg = c;
+  this->bgColor = pron::pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG | pron::GC_VAL_BG);
 }
 
 } // namespace sombrero

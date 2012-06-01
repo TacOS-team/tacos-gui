@@ -41,10 +41,10 @@ class Widget {
   uint32_t eventMask; /**< The event mask */
   uint32_t dontPropagateEventMask; /**< The event mask to don't propagate */
   pron::EventMouseButton oldButtonsState;/**< the buttons state of the last mouse event */
-  pron::GC fgColor; /**< The foreground color */
-  pron::GC bgColor; /**< The background color */
 
  protected:
+  pron::GC fgColor; /**< The foreground color */
+  pron::GC bgColor; /**< The background color */
   /**
    * The pronWindow associated with the widget.
    * Has to be reparented when the widget is reparented.
