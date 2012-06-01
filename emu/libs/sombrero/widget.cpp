@@ -161,21 +161,11 @@ void Widget::clear() {
   pron::pronClearWindow(Application::getInstance()->d, this->pronWindow);
 }
 
-void Widget::handleMouseClicked(MouseButton button __attribute__((unused))) {
+void Widget::handleMouseDown(MouseButton button __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused))) {
 
 }
 
-void Widget::handleMouseClicked(MouseButton button __attribute__((unused)),
-                                pron::EventMouseButton * e __attribute__((unused))) {
-
-}
-
-void Widget::handleMouseReleased(MouseButton button __attribute__((unused))) {
-
-}
-
-void Widget::handleMouseReleased(MouseButton button __attribute__((unused)),
-                                 pron::EventMouseButton * e __attribute__((unused))) {
+void Widget::handleMouseReleased(MouseButton button __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused))) {
 
 }
 
@@ -196,29 +186,29 @@ void Widget::handleEventMouseButton(pron::EventMouseButton *e) {
   printf("handleEventMouseButton\n");
   if(this->oldButtonsState.b1 != e->b1) {
     if(e->b1) {
-      this->handleMouseClicked(leftButton);
+      this->handleMouseDown(leftButton, e->x, e->y);
     } else {
-      this->handleMouseReleased(leftButton);
+      this->handleMouseReleased(leftButton, e->x, e->y);
     }
   }
   if(this->oldButtonsState.b2 != e->b2) {
     if(e->b2) {
-      this->handleMouseClicked(middleButton);
+      this->handleMouseDown(middleButton, e->x, e->y);
     } else {
-      this->handleMouseReleased(middleButton);
+      this->handleMouseReleased(middleButton, e->x, e->y);
     }
   }
   if(this->oldButtonsState.b3 != e->b3) {
     if(e->b3) {
-      this->handleMouseClicked(rightButton);
+      this->handleMouseDown(rightButton, e->x, e->y);
     } else {
-      this->handleMouseReleased(rightButton);
+      this->handleMouseReleased(rightButton, e->x, e->y);
     }
   }
   this->oldButtonsState = *e;
 }
 
-void Widget::handleEventKeyPressed(pron::PronEvent *e __attribute__((unused))) {
+void Widget::handleEventKeyPressed (pron::EventKeyPressed *e __attribute__((unused))) {
 }
 
 void Widget::handleEventKeyReleased() {

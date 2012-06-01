@@ -11,6 +11,7 @@ Image::Image(string &filename)
 }
 
 Image::~Image() { 
+  pron::pronClearWindow(Application::getInstance()->d, this->pronWindow);
   pron::pronFreePixmap(Application::getInstance()->d, this->pixmap);
 }
 

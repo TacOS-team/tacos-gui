@@ -21,7 +21,7 @@ class RadioButton : public Checkbox {
     RadioButtonGroup *group; /**< The group of the radioButton */
   
   protected:
-    void handleMouseClicked(MouseButton button);
+    void handleMouseDown(MouseButton button, int x, int y);
 
   public :
     // Signals
