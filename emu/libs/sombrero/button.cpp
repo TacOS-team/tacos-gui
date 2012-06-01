@@ -53,7 +53,7 @@ void Button::draw() {
       this->getHeight() / 2 + this->fontSize/2, this->text.c_str(), this->text.length());
 }
 
-void Button::handleMouseClicked(MouseButton button, int x __attribute__((unused)), int y __attribute__((unused))) {
+void Button::handleMouseDown(MouseButton button, int x __attribute__((unused)), int y __attribute__((unused))) {
   //printf("handleMouseClick\n");
   if(button == leftButton) {
     this->clicked();

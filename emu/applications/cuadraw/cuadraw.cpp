@@ -20,7 +20,7 @@ class CoolCanvas : public sombrero::Canvas, public has_slots<> {
   signal3<sombrero::MouseButton, int, int> mouseClicked;
   signal3<sombrero::MouseButton, int, int> mouseReleased;
   
-  void handleMouseClicked(sombrero::MouseButton b, int x, int y) {
+  void handleMouseDown(sombrero::MouseButton b, int x, int y) {
     this->mouseClicked(b, x, y);
   }
   void handleMouseReleased(sombrero::MouseButton b, int x, int y) {
@@ -94,17 +94,29 @@ void Cuadraw::initSombrero() {
   this->w->add(g);
   this->bp = new sombrero::Button("Pixel");
   this->bp->clicked.connect(this, &Cuadraw::doPixelClicked);
-  this->bc = new sombrero::Button("Cirle");
-  this->bc->clicked.connect(this, &Cuadraw::doCircleClicked);
   this->bl = new sombrero::Button("Line");
   this->bl->clicked.connect(this, &Cuadraw::doLineClicked);
+  this->bc = new sombrero::Button("Cirle");
+  this->bc->clicked.connect(this, &Cuadraw::doCircleClicked);
+  this->bfc = new sombrero::Button("Fill Circle");
+  this->bfc->clicked.connect(this, &Cuadraw::doFillCircleClicked);
+  this->br = new sombrero::Button("Rect");
+  this->br->clicked.connect(this, &Cuadraw::doRectClicked);
+  this->bfr = new sombrero::Button("Fill Rect");
+  this->bfr->clicked.connect(this, &Cuadraw::doFillRectClicked);
   this->c = new CoolCanvas(500, 500);
   this->g->add(this->bp);
   this->g->newLine();
+  this->g->add(this->bl);
+  this->g->newLine();
   this->g->add(this->bc);
   this->g->newLine();
-  this->g->add(this->bl);
-  this->g->attach(this->c, 1, 0, 6, 3);
+  this->g->add(this->bfc);
+  this->g->newLine();
+  this->g->add(this->br);
+  this->g->newLine();
+  this->g->add(this->bfr);
+  this->g->attach(this->c, 1, 0, 6, 6);
   sombrero::Application::getInstance()->sombrerun();
 }
 
@@ -120,7 +132,6 @@ void Cuadraw::doPixelClicked(){
 }
 
 void Cuadraw::pixelMouseMoved(int xMove __attribute__((unused)), int yMove __attribute__((unused)), int x, int y) {
-  // printf("Pixel : mouse Moved at (%d %d) (%d %d)\n", x, y, xMove, yMove);
   if (this->mouseDown) {
     this->c->drawPoint(x, y);
     this->c->draw();
@@ -129,45 +140,13 @@ void Cuadraw::pixelMouseMoved(int xMove __attribute__((unused)), int yMove __att
 
 void Cuadraw::pixelMouseClicked(sombrero::MouseButton b __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused))) {
   this->mouseDown = true;
-  // printf("Pixel : mouse clicked %d (%d)\n", b, this->mouseDown);
 }
 
-void Cuadraw::pixelMouseReleased(sombrero::MouseButton b __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused))) {
+void Cuadraw::pixelMouseReleased(sombrero::MouseButton b __attribute__((unused)), int x, int y) {
   this->mouseDown = false;
   this->c->switchPixmap();
-  // printf("Pixel : mouse released %d (%d)\n", b, this->mouseDown);
-}
-
-void Cuadraw::doCircleClicked(){
-  this->clearSignals();
-  c->mouseClicked.connect(this, &Cuadraw::circleMouseClicked);
-  c->mouseReleased.connect(this, &Cuadraw::circleMouseReleased);
-  c->mouseMoved.connect(this, &Cuadraw::circleMouseMoved);
-  // Updates the last mouse down coordinates
-}
-
-void Cuadraw::circleMouseMoved(int xMove __attribute__((unused)), int yMove __attribute__((unused)), int x, int y) {
-  // printf("Circle : mouse Moved at (%d %d) (%d %d)\n", x, y, xMove, yMove);
-  if (this->mouseDown) {
-    this->c->restorePixmap();
-    // printf("Last coord (%d, %d)\n", this->downX, this->downY);
-    this->c->drawEllipse(this->downX + (x - this->downX) / 2, this->downY + (y - this->downY) / 2, abs((x - this->downX) / 2), abs((y - this->downY) / 2));
-    this->c->draw();
-  } else {
-    this->downX = x;
-    this->downY = y;
-  }
-}
-
-void Cuadraw::circleMouseClicked(sombrero::MouseButton b __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused))) {
-  this->mouseDown = true;
-  // printf("Circle : mouse clicked %d (%d)\n", b, this->mouseDown);
-}
-
-void Cuadraw::circleMouseReleased(sombrero::MouseButton b __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused))) {
-  this->mouseDown = false;
-  this->c->switchPixmap();
-  // printf("Circle : mouse released %d (%d)\n", b, this->mouseDown);
+  this->downX = x;
+  this->downY = y;
 }
 
 void Cuadraw::doLineClicked(){
@@ -175,7 +154,6 @@ void Cuadraw::doLineClicked(){
   c->mouseClicked.connect(this, &Cuadraw::lineMouseClicked);
   c->mouseReleased.connect(this, &Cuadraw::lineMouseReleased);
   c->mouseMoved.connect(this, &Cuadraw::lineMouseMoved);
-  // Updates the last mouse down coordinates
 }
 
 void Cuadraw::lineMouseMoved(int xMove __attribute__((unused)), int yMove __attribute__((unused)), int x, int y) {
@@ -191,13 +169,129 @@ void Cuadraw::lineMouseMoved(int xMove __attribute__((unused)), int yMove __attr
 
 void Cuadraw::lineMouseClicked(sombrero::MouseButton b __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused))) {
   this->mouseDown = true;
-  // printf("Circle : mouse clicked %d (%d)\n", b, this->mouseDown);
 }
 
-void Cuadraw::lineMouseReleased(sombrero::MouseButton b __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused))) {
+void Cuadraw::lineMouseReleased(sombrero::MouseButton b __attribute__((unused)), int x, int y) {
   this->mouseDown = false;
   this->c->switchPixmap();
-  // printf("Circle : mouse released %d (%d)\n", b, this->mouseDown);
+  this->downX = x;
+  this->downY = y;
+}
+
+void Cuadraw::doCircleClicked(){
+  this->clearSignals();
+  c->mouseClicked.connect(this, &Cuadraw::circleMouseClicked);
+  c->mouseReleased.connect(this, &Cuadraw::circleMouseReleased);
+  c->mouseMoved.connect(this, &Cuadraw::circleMouseMoved);
+}
+
+void Cuadraw::circleMouseMoved(int xMove __attribute__((unused)), int yMove __attribute__((unused)), int x, int y) {
+  if (this->mouseDown) {
+    this->c->restorePixmap();
+    this->c->drawEllipse(this->downX + (x - this->downX) / 2, this->downY + (y - this->downY) / 2, abs((x - this->downX) / 2), abs((y - this->downY) / 2));
+    this->c->draw();
+  } else {
+    this->downX = x;
+    this->downY = y;
+  }
+}
+
+void Cuadraw::circleMouseClicked(sombrero::MouseButton b __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused))) {
+  this->mouseDown = true;
+}
+
+void Cuadraw::circleMouseReleased(sombrero::MouseButton b __attribute__((unused)), int x, int y) {
+  this->mouseDown = false;
+  this->c->switchPixmap();
+  this->downX = x;
+  this->downY = y;
+}
+
+void Cuadraw::doFillCircleClicked(){
+  this->clearSignals();
+  c->mouseClicked.connect(this, &Cuadraw::fillCircleMouseClicked);
+  c->mouseReleased.connect(this, &Cuadraw::fillCircleMouseReleased);
+  c->mouseMoved.connect(this, &Cuadraw::fillCircleMouseMoved);
+}
+
+void Cuadraw::fillCircleMouseMoved(int xMove __attribute__((unused)), int yMove __attribute__((unused)), int x, int y) {
+  if (this->mouseDown) {
+    this->c->restorePixmap();
+    this->c->fillEllipse(this->downX + (x - this->downX) / 2, this->downY + (y - this->downY) / 2, abs((x - this->downX) / 2), abs((y - this->downY) / 2));
+    this->c->draw();
+  } else {
+    this->downX = x;
+    this->downY = y;
+  }
+}
+
+void Cuadraw::fillCircleMouseClicked(sombrero::MouseButton b __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused))) {
+  this->mouseDown = true;
+}
+
+void Cuadraw::fillCircleMouseReleased(sombrero::MouseButton b __attribute__((unused)), int x, int y) {
+  this->mouseDown = false;
+  this->c->switchPixmap();
+  this->downX = x;
+  this->downY = y;
+}
+
+void Cuadraw::doRectClicked(){
+  this->clearSignals();
+  c->mouseClicked.connect(this, &Cuadraw::rectMouseClicked);
+  c->mouseReleased.connect(this, &Cuadraw::rectMouseReleased);
+  c->mouseMoved.connect(this, &Cuadraw::rectMouseMoved);
+}
+
+void Cuadraw::rectMouseMoved(int xMove __attribute__((unused)), int yMove __attribute__((unused)), int x, int y) {
+  if (this->mouseDown) {
+    this->c->restorePixmap();
+    this->c->drawRectangle((this->downX > x) ? x : this->downX , (this->downY > y) ? y : this->downY, abs(this->downX - x), abs(this->downY - y));
+    this->c->draw();
+  } else {
+    this->downX = x;
+    this->downY = y;
+  }
+}
+
+void Cuadraw::rectMouseClicked(sombrero::MouseButton b __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused))) {
+  this->mouseDown = true;
+}
+
+void Cuadraw::rectMouseReleased(sombrero::MouseButton b __attribute__((unused)), int x, int y) {
+  this->mouseDown = false;
+  this->c->switchPixmap();
+  this->downX = x;
+  this->downY = y;
+}
+
+void Cuadraw::doFillRectClicked(){
+  this->clearSignals();
+  c->mouseClicked.connect(this, &Cuadraw::fillRectMouseClicked);
+  c->mouseReleased.connect(this, &Cuadraw::fillRectMouseReleased);
+  c->mouseMoved.connect(this, &Cuadraw::fillRectMouseMoved);
+}
+
+void Cuadraw::fillRectMouseMoved(int xMove __attribute__((unused)), int yMove __attribute__((unused)), int x, int y) {
+  if (this->mouseDown) {
+    this->c->restorePixmap();
+    this->c->fillRectangle((this->downX > x) ? x : this->downX , (this->downY > y) ? y : this->downY, abs(this->downX - x), abs(this->downY - y));
+    this->c->draw();
+  } else {
+    this->downX = x;
+    this->downY = y;
+  }
+}
+
+void Cuadraw::fillRectMouseClicked(sombrero::MouseButton b __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused))) {
+  this->mouseDown = true;
+}
+
+void Cuadraw::fillRectMouseReleased(sombrero::MouseButton b __attribute__((unused)), int x, int y) {
+  this->mouseDown = false;
+  this->c->switchPixmap();
+  this->downX = x;
+  this->downY = y;
 }
 
 int main (int argc, char **argv) {

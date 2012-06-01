@@ -161,7 +161,7 @@ void Widget::clear() {
   pron::pronClearWindow(Application::getInstance()->d, this->pronWindow);
 }
 
-void Widget::handleMouseClicked(MouseButton button __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused))) {
+void Widget::handleMouseDown(MouseButton button __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused))) {
 
 }
 
@@ -186,21 +186,21 @@ void Widget::handleEventMouseButton(pron::EventMouseButton *e) {
   printf("handleEventMouseButton\n");
   if(this->oldButtonsState.b1 != e->b1) {
     if(e->b1) {
-      this->handleMouseClicked(leftButton, e->x, e->y);
+      this->handleMouseDown(leftButton, e->x, e->y);
     } else {
       this->handleMouseReleased(leftButton, e->x, e->y);
     }
   }
   if(this->oldButtonsState.b2 != e->b2) {
     if(e->b2) {
-      this->handleMouseClicked(middleButton, e->x, e->y);
+      this->handleMouseDown(middleButton, e->x, e->y);
     } else {
       this->handleMouseReleased(middleButton, e->x, e->y);
     }
   }
   if(this->oldButtonsState.b3 != e->b3) {
     if(e->b3) {
-      this->handleMouseClicked(rightButton, e->x, e->y);
+      this->handleMouseDown(rightButton, e->x, e->y);
     } else {
       this->handleMouseReleased(rightButton, e->x, e->y);
     }

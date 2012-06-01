@@ -17,7 +17,7 @@ Checkbox::Checkbox() {
 Checkbox::~Checkbox() {
 }
 
-void Checkbox::handleMouseClicked(MouseButton button, int x __attribute__((unused)), int y __attribute__((unused))) {
+void Checkbox::handleMouseDown(MouseButton button, int x __attribute__((unused)), int y __attribute__((unused))) {
   if (button == leftButton) {
     this->clicked();
     this->state = !this->state;
