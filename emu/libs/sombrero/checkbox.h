@@ -23,7 +23,7 @@ class Checkbox : public Widget {
     
   protected:
     bool state; /**< The state of the box (true if checked) */
-    void handleMouseClicked(MouseButton button);
+    void handleMouseClicked(MouseButton button, int x, int y);
 
   public:
     // Signals

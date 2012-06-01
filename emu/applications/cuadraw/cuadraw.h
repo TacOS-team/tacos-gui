@@ -16,6 +16,7 @@ class Cuadraw : public has_slots<> {
   sombrero::Grid *g; /**< The sombrero grid */
   sombrero::Button *bp; /**< Pixel brush button */
   sombrero::Button *bc; /**< Circle brush button */
+  sombrero::Button *bl; /**< Line brush button */
   bool mouseDown; /**< Mouse down in canvas */
   int downX; /**< Last mouse down x */
   int downY; /**< Last mouse down y */
@@ -31,6 +32,7 @@ class Cuadraw : public has_slots<> {
   void initSombrero();
  protected:
  public:
+  void clearSignals();
   /**
    * Cuadraw constructor
    * @param argc
@@ -49,47 +51,70 @@ class Cuadraw : public has_slots<> {
    * Do the pixel brush action
    * Pixel button click handler
    */
-   void doPixelClicked();
-   /**
-    * Pixel Brush mouse moved
-    * @param xMove x move
-    * @param yMove y move
-    * @param x x coordinate
-    * @param y y coordinate
-    */
-   void pixelMouseMoved(int x, int y, int aX, int aY);
-   /**
-    * Pixel Brush mouse clicked
-    * @param b MouseBotton button state
-    */
-   void pixelMouseClicked(sombrero::MouseButton);
-   /**
-    * Pixel Brush mouse released
-    * @param b MouseBotton button state
-    */
-   void pixelMouseReleased(sombrero::MouseButton);
-   /**
-    * Changes the mode of drawing to Circle Brush
-    * Circle button click handler
-    */
-   void doCircleClicked();
-   /**
-    * Circle Brush mouse moved
-    * @param xMove x move
-    * @param yMove y move
-    * @param x x coordinate
-    * @param y y coordinate
-    */
-   void circleMouseMoved(int x, int y, int aX, int aY);
-   /**
-    * Circle Brush mouse clicked
-    * @param b MouseBotton button state
-    */
-   void circleMouseClicked(sombrero::MouseButton);
-   /**
-    * Circle Brush mouse released
-    * @param b MouseBotton button state
-    */
-   void circleMouseReleased(sombrero::MouseButton);
+  void doPixelClicked();
+  /**
+   * Pixel Brush mouse moved
+   * @param xMove x move
+   * @param yMove y move
+   * @param x x coordinate
+   * @param y y coordinate
+   */
+  void pixelMouseMoved(int x, int y, int aX, int aY);
+  /**
+   * Pixel Brush mouse clicked
+   * @param b MouseBotton button state
+   */
+  void pixelMouseClicked(sombrero::MouseButton, int x, int y);
+  /**
+   * Pixel Brush mouse released
+   * @param b MouseBotton button state
+   */
+  void pixelMouseReleased(sombrero::MouseButton, int x, int y);
+  /**
+   * Changes the mode of drawing to Circle Brush
+   * Circle button click handler
+   */
+  void doCircleClicked();
+  /**
+   * Circle Brush mouse moved
+   * @param xMove x move
+   * @param yMove y move
+   * @param x x coordinate
+   * @param y y coordinate
+   */
+  void circleMouseMoved(int x, int y, int aX, int aY);
+  /**
+   * Circle Brush mouse clicked
+   * @param b MouseBotton button state
+   */
+  void circleMouseClicked(sombrero::MouseButton, int x, int y);
+  /**
+   * Circle Brush mouse released
+   * @param b MouseBotton button state
+   */
+  void circleMouseReleased(sombrero::MouseButton, int x, int y);
+  /**
+   * Changes the mode of drawing to Line Brush
+   * Circle button click handler
+   */
+  void doLineClicked();
+  /**
+   * Line Brush mouse moved
+   * @param xMove x move
+   * @param yMove y move
+   * @param x x coordinate
+   * @param y y coordinate
+   */
+  void lineMouseMoved(int x, int y, int aX, int aY);
+  /**
+   * Line Brush mouse clicked
+   * @param b MouseBotton button state
+   */
+  void lineMouseClicked(sombrero::MouseButton, int x, int y);
+  /**
+   * Line Brush mouse released
+   * @param b MouseBotton button state
+   */
+  void lineMouseReleased(sombrero::MouseButton, int x, int y);
 };
 #endif//__CUADRAW_H__

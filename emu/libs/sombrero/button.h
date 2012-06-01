@@ -24,8 +24,8 @@ class Button : public Widget {
 
   void init();
 
-  void handleMouseClicked(MouseButton button);
-  void handleMouseReleased(MouseButton button);
+  void handleMouseClicked(MouseButton button, int x, int y);
+  void handleMouseReleased(MouseButton button, int x, int y);
   
  public:
   // Signals
