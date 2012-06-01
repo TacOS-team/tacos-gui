@@ -132,9 +132,11 @@ void Cuadraw::pixelMouseClicked(sombrero::MouseButton b __attribute__((unused)),
   // printf("Pixel : mouse clicked %d (%d)\n", b, this->mouseDown);
 }
 
-void Cuadraw::pixelMouseReleased(sombrero::MouseButton b __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused))) {
+void Cuadraw::pixelMouseReleased(sombrero::MouseButton b __attribute__((unused)), int x, int y) {
   this->mouseDown = false;
   this->c->switchPixmap();
+  this->downX = x;
+  this->downY = y;
   // printf("Pixel : mouse released %d (%d)\n", b, this->mouseDown);
 }
 
@@ -164,9 +166,11 @@ void Cuadraw::circleMouseClicked(sombrero::MouseButton b __attribute__((unused))
   // printf("Circle : mouse clicked %d (%d)\n", b, this->mouseDown);
 }
 
-void Cuadraw::circleMouseReleased(sombrero::MouseButton b __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused))) {
+void Cuadraw::circleMouseReleased(sombrero::MouseButton b __attribute__((unused)), int x, int y) {
   this->mouseDown = false;
   this->c->switchPixmap();
+  this->downX = x;
+  this->downY = y;
   // printf("Circle : mouse released %d (%d)\n", b, this->mouseDown);
 }
 
@@ -194,9 +198,11 @@ void Cuadraw::lineMouseClicked(sombrero::MouseButton b __attribute__((unused)), 
   // printf("Circle : mouse clicked %d (%d)\n", b, this->mouseDown);
 }
 
-void Cuadraw::lineMouseReleased(sombrero::MouseButton b __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused))) {
+void Cuadraw::lineMouseReleased(sombrero::MouseButton b __attribute__((unused)), int x, int y) {
   this->mouseDown = false;
   this->c->switchPixmap();
+  this->downX = x;
+  this->downY = y;
   // printf("Circle : mouse released %d (%d)\n", b, this->mouseDown);
 }
 
