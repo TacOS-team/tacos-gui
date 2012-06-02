@@ -3,7 +3,7 @@ OBJS = velo.o
 
 all: $(BUILDDIRAPPS)/velo
 
-$(BUILDDIRAPPS)/velo: $(addprefix $(BUILDDIROBJS)/, $(OBJS)) $(SOMBRERO) $(LIBTACOS)
+$(BUILDDIRAPPS)/velo: $(addprefix $(BUILDDIROBJS)/, $(OBJS)) $(SOMBRERO) $(LIBTACOS) $(PRONLIB)
 	$(CXX) -o $@ $^ $(CXXFLAGS) $(INCLUDES) -lm
 
 $(BUILDDIROBJS)/%.o: %.cpp

@@ -12,8 +12,8 @@ Widget::Widget() {
   values.bg = cw;
   values.fg = cb;
   this->fgGC = pron::pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG | pron::GC_VAL_BG);
-  values.bg = cw;
-  values.fg = cb;
+  values.bg = cb;
+  values.fg = cw;
   this->bgGC = pron::pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG | pron::GC_VAL_BG);
 }
 
@@ -30,6 +30,7 @@ void Widget::init() {
   this->lastAttributes.width  = -1;
   this->lastAttributes.height = -1;
   this->pronWindow            = (pron::Window) -1;
+  this->isUpdating            = false;
   // Subscribe to the expose event for everyone
   this->subscribeEvent(pron::EV_EXPOSE);
 }
@@ -172,9 +173,20 @@ void Widget::updateBGColor() {
 }
 
 void Widget::update() {
-  this->setVisible(false);
-  this->execUpdate();
-  this->setVisible(true);
+  printf("Widget::update\n");
+  if(!this->isUpdating) {
+    this->isUpdating = true;
+    if(this->getParent() && !this->getParent()->isUpdating) {
+      this->setVisible(false);
+    }
+    this->execUpdate();
+    if(this->getParent() && !this->getParent()->isUpdating) {
+      this->setVisible(true);
+    }
+    this->isUpdating = false;
+  } else {
+    //this->execUpdate();
+  }
 }
 
 void Widget::execUpdate() {

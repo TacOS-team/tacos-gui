@@ -35,6 +35,7 @@ class Widget : public has_slots<> {
   uint32_t eventMask; /**< The event mask */
   uint32_t dontPropagateEventMask; /**< The event mask to don't propagate */
   pron::EventMouseButton oldButtonsState;/**< the buttons state of the last mouse event */
+  bool isUpdating;/**< True when the window is beeing updated */
 
  protected:
   pron::GC fgGC; /**< The foreground GC */

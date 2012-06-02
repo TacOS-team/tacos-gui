@@ -22,7 +22,6 @@ void ScrollBar::setRatio(int ratio) {
   if(this->ratio > this->max - this->min) {
     this->ratio = this->max - this->min;
   }
-  this->update();
 }
 
 int ScrollBar::getRatio() {
@@ -50,7 +49,6 @@ void ScrollBar::setRange(unsigned int min, unsigned int max) {
   if(this->ratio == 0) {
     this->ratio = 1;
   }
-  this->update();
 }
 
 void ScrollBar::thumbClicked() {

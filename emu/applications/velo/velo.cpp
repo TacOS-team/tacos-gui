@@ -92,14 +92,15 @@ class Panel : public sombrero::Container {
     this->update();
   }
 
-  void update() {
-    this->unsubscribeEvent(pron::EV_EXPOSE);
+  void execUpdate() {
     if((int)boutons.size() * heightFile > this->getParent()->getHeight()) {
       this->setHeight(boutons.size() * heightFile);
     } else {
       this->setHeight(this->getParent()->getHeight());
     }
-    Container::update();
+
+    Container::execUpdate();
+    
     for(size_t i = 0; i < boutons.size(); ++i) {
       boutons[i]->setY(i * heightFile);
       boutons[i]->setX(0);
@@ -107,12 +108,17 @@ class Panel : public sombrero::Container {
       boutons[i]->setHeight(heightFile);
       boutons[i]->update();
     }
-    this->subscribeEvent(pron::EV_EXPOSE);
   }
 
   void draw() {
     printf("Panel::draw\n");
-    this->clear();
+    //this->clear();
+    if((int)boutons.size() * heightFile < this->getHeight()) {
+      pronFillRectangle(Application::getInstance()->d, this->pronWindow,
+               this->bgGC,
+               0, boutons.size() * heightFile, this->getWidth(),
+               this->getHeight()-boutons.size() * heightFile);
+    }
   }
 
 };
@@ -166,8 +172,8 @@ class MyWindow : public Window {
     p = new Panel();
     scrollpane = new ScrollPane(p);
     g->attachNextTo(scrollpane, l, POS_BOTTOM, 1, 6);
-    g->update();
     p->setFiles(d.entryInfoList());
+    g->update();
     p->open.connect(this, &MyWindow::openSlot);
   }
 
