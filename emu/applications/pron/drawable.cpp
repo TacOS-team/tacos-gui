@@ -407,14 +407,15 @@ void Drawable::negArea(int dstX, int dstY, Drawable *d, int srcX, int srcY, int 
   }
 }
 
-void Drawable::drawText(int x, int y, const char *text, int length) {
+void Drawable::drawText(int x, int y, const char *text, int length,
+    HPosition hpos, VPosition vpos) {
   Font *font = this->getScreen()->getFont(this->getScreen()->getGC()->font_num);
   
   int textWidth, textHeight;
   font->textSize(text, length, &textWidth, &textHeight);
 
   if (this->beforeDrawing(x, y, x + textWidth - 1, y + textHeight - 1)) {
-    font->drawText(this, x, y, text, length);
+    font->drawText(this, x, y, text, length, hpos, vpos);
     this->afterDrawing(x, y, x + textWidth - 1, y + textHeight - 1);
   }
 }

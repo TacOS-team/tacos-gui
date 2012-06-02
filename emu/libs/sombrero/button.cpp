@@ -41,14 +41,9 @@ void Button::draw() {
       this->fgGC, 0, 0,
       this->getWidth(), this->getHeight());
   // Draws the text
-  int textWidth, textHeight;
-  pronTextSize(Application::getInstance()->d,
-      this->fgGC,
-      this->text.c_str(), this->text.length(), &textWidth, &textHeight);
   pron::pronDrawText(Application::getInstance()->d, this->pronWindow,
-      this->fgGC,
-      (this->getWidth() - textWidth) / 2, (this->getHeight() - textHeight) / 2,
-      this->text.c_str(), this->text.length());
+      this->fgGC, this->getWidth() /2, this->getHeight() / 2,
+      this->text.c_str(), this->text.length(), CENTER, MIDDLE);
 }
 
 void Button::handleMouseDown(MouseButton button, int x __attribute__((unused)), int y __attribute__((unused))) {

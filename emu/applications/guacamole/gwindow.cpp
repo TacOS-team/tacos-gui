@@ -119,14 +119,9 @@ void GWindow::decorate() {
     pronDrawRect(display, this->parent, borderGC,
         0, 0, this->parentAttributes.width, titleBarSize);
    
-    int textWidth, textHeight;
-    pronTextSize(display, whiteGC, this->attributes.wm_title,
-        strlen(this->attributes.wm_title), &textWidth, &textHeight);
-    printf("Writing %s (size %d %d)...\n", this->attributes.wm_title,
-        textWidth, textHeight);
-    pronDrawText(display, this->parent, whiteGC,
-        5, (titleBarSize - textHeight) / 2,
-        this->attributes.wm_title, strlen(this->attributes.wm_title));
+    pronDrawText(display, this->parent, whiteGC, 5, titleBarSize / 2,
+        this->attributes.wm_title, strlen(this->attributes.wm_title),
+        LEFT, MIDDLE);
 
     // Barre de gauche
     pronFillRectangle(display, this->parent, borderGC,
@@ -244,31 +239,48 @@ void GWindow::maximise() {
   // so that we can know if the window is resizable
   PronWindowAttributes windowAttributes;
   pronGetWindowAttributes(this->display, this->window, &windowAttributes);
-  if (windowAttributes.isResizable && windowAttributes.maxHeight == -1 && windowAttributes.maxWidth == -1){
+
+  if (windowAttributes.isResizable && windowAttributes.maxHeight == -1 && windowAttributes.maxWidth == -1) {
     if (!this->isMaximised) {
-      // On en profite pour mettre tous les attributs à jour
-      this->attributes = windowAttributes;
-      pronGetWindowAttributes(display, this->parent, &this->parentAttributes);
+      // Backup old attributes
       this->oldParentAttributes = this->parentAttributes;
+
+      // Hide window during update
       pronUnmapWindow(display, this->parent);
-      pronMoveWindowTo(display, this->parent, 0, 0);
+      // Resize decoration window
       this->resize(GWindowsManager::getInstance()->getRootWindowAttributes().width,
         GWindowsManager::getInstance()->getRootWindowAttributes().height);
-      // Puts the window on foreground
+      // Resize inner window
+      pronResizeWindow(display, this->window,
+          this->attributes.width, this->attributes.height);
+      // Move to the top-left corner of the screen
+      pronMoveWindowTo(display, this->parent, 0, 0);
+      // Put the window on top
       this->raise();
+      // Show updated window
       pronMapWindow(display, this->parent);
-      /** @todo unmap de resizewindow */
+      
       this->isMaximised = true;
     } else {
-      this->isMaximised = false;
+      // Hide window during update
       pronUnmapWindow(display, this->parent);
+      // Resize decoration window
       this->resize(this->oldParentAttributes.width, this->oldParentAttributes.height);
+      // Resize inner window
+      pronResizeWindow(display, this->window,
+          this->attributes.width, this->attributes.height);
+      // Move to old position 
       pronMoveWindowTo(display, this->parent, this->oldParentAttributes.x, this->oldParentAttributes.y);
+      // Show updated window
       pronMapWindow(display, this->parent);
-      // On en profite pour mettre tous les attributs à jour
-      this->attributes = windowAttributes;
-      pronGetWindowAttributes(display, this->parent, &this->parentAttributes);
+      
+      this->isMaximised = false;
     }
+
+    // On en profite pour mettre tous les attributs à jour
+    /** @todo check this ça a l'air foireux */
+    this->attributes = windowAttributes;
+    pronGetWindowAttributes(display, this->parent, &this->parentAttributes);
   }
 }
 

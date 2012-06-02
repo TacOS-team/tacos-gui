@@ -399,9 +399,11 @@ void pronCopyArea(Display *d, Drawable src, Drawable dest, GC gc,
  * @param y The y-coordinate of the origin of the first character
  * @param text The text to draw
  * @param length The length of the text
+ * @param hpos The horizontal position of the text
+ * @param vpos The vertical position of the text
  */
-void pronDrawText(Display *d, Window w, GC gc, int x, int y,
-    const char *text, int length);
+void pronDrawText(Display *d, Window w, GC gc, int x, int y, const char *text,
+    int length, HPosition hpos = LEFT, VPosition vpos = MIDDLE);
 
 /**
  * Gets the width and the height of a string.
