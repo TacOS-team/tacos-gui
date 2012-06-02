@@ -101,6 +101,17 @@ Display* pronConnect();
 Window pronCreateWindow(Display *d, Window parent, int x, int y, int width, int height);
 
 /**
+ * Creates a new window with extended attributes.
+ * @param d The connection to pron
+ * @param parent The id of the the parent window
+ * @param attributes The attributes of the new window
+ * @param mask The mask that specifies the attributes to be set
+ * @return The window id of the created window
+ */
+Window pronCreateWindowExtended(Display *d, Window parent,
+    const PronWindowAttributes &attr, unsigned int mask);
+
+/**
  * Clears the specified window.
  * @param d The connection to pron
  * @param w The id of the window to clear

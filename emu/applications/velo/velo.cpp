@@ -152,8 +152,8 @@ class MyWindow : public Window, public has_slots<> {
     }
   }
 
-  MyWindow(int x, int y, int width, int height)
-    : sombrero::Window(x, y, width, height),
+  MyWindow(std::string title, int x, int y, int width, int height)
+    : sombrero::Window(title, x, y, width, height),
       d(".") {
     g = new Grid();
     g->setWidth(width);
@@ -175,7 +175,7 @@ class MyWindow : public Window, public has_slots<> {
 };
 
 int main() {
-  MyWindow w(50, 50, 300, 100);
+  MyWindow w("Velo", 50, 50, 300, 100);
   sombrero::Application::getInstance()->sombrerun();
 
   return 0;

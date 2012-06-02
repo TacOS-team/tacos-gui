@@ -46,6 +46,7 @@ enum MessageType {
   RQ_COPY_AREA                = (RQ_PREFIX | 30),
   RQ_DRAW_TEXT                = (RQ_PREFIX | 31),
   RQ_TEXT_SIZE                = (RQ_PREFIX | 32),
+  RQ_CREATE_WINDOW_EXT        = (RQ_PREFIX | 33),
 
   /* Responses */
   RS_WELCOME                  = (RS_PREFIX |  1),

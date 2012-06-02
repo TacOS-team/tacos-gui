@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
   // Window button
   string filename(argv[1]);
   sombrero::Image i(filename);
-  sombrero::Window w(0, 0, i.getImageWidth(), i.getImageHeight());
+  sombrero::Window w("Test image", 0, 0, i.getImageWidth(), i.getImageHeight());
   w.add(&i);
 
   sombrero::Application::getInstance()->sombrerun();

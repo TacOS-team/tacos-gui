@@ -10,8 +10,8 @@ sombrero::Label *pLabel;
 
 class MyWindow : public sombrero::Window, public has_slots<> {
  public:
-  MyWindow(int x, int y, int width, int height)
-    : sombrero::Window(x, y, width, height) {
+  MyWindow(std::string title, int x, int y, int width, int height)
+    : sombrero::Window(title, x, y, width, height) {
 
   }
   void changeLabel() {
@@ -41,7 +41,7 @@ void grid1() {
   
   // Window button
 
-  MyWindow w(50, 50, 300, 100);
+  MyWindow w("Roxxing grid", 50, 50, 300, 100);
   sombrero::Grid g;
 
   sombrero::Label labelScrollPane("Oh yeah !!!!");
@@ -71,7 +71,7 @@ void grid2() {
   
   // Window button
 
-  MyWindow w(50, 50, 300, 100);
+  MyWindow w("Roxxing grid 2", 50, 50, 300, 100);
   sombrero::Grid g;
 
   sombrero::Grid g2;
