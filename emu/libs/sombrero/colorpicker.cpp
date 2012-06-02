@@ -44,6 +44,9 @@ void ColorPicker::init() {
     this->attach((Widget *)this->bcolors[i + this->nbColors], i, 1, 1, 1);
     this->attach((Widget *)this->bcolors[i + 2 * this->nbColors], i, 2, 1, 1);
   }
+  // Adds the color sum into the grid
+  this->attach((Widget *)&this->lcolor, i, 0, this->nbColors / 3, 3);
+
 }
 
 ColorPicker::~ColorPicker() {
@@ -57,7 +60,7 @@ ColorPicker::~ColorPicker() {
 }
 
 ColorPicker::ColorPicker(unsigned int nbColors) 
-    : Grid(), nbColors(nbColors) {
+    : Grid(), nbColors(nbColors), lcolor("") {
   init();
 }
 

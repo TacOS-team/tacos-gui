@@ -7,6 +7,7 @@
 
 #include "grid.h"
 #include "color.h"
+#include "label.h"
 
 namespace sombrero {
 
@@ -15,7 +16,8 @@ class ColorButton;
 class ColorPicker : public Grid {
  private:
   int nbColors; /**< The number of buttons per color */
-  ColorButton **bcolors; /**< The button colors [0; nbColors[ : red, [nbColors; 2nbColors[ : green, [2nbColors; 3nbColors[ : blue */ 
+  ColorButton **bcolors; /**< The button colors [0; nbColors[ : red, [nbColors; 2nbColors[ : green, [2nbColors; 3nbColors[ : blue */
+  Label lcolor; /**< Label displaying the coosen color */
   Color c; /**< The current color */
 
  protected:
