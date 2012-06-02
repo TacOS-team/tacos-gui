@@ -189,5 +189,10 @@ class Cuadraw : public has_slots<> {
    * @param b MouseBotton button state
    */
   void fillRectMouseReleased(sombrero::MouseButton, int x, int y);
+  /**
+   * Slot for the signal color changed of colorpicker
+   * @param c Color to use
+   */
+  void doColorChanged(Color c);
 };
 #endif//__CUADRAW_H__

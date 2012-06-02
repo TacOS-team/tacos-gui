@@ -6,6 +6,7 @@
  */
 
 #include "widget.h"
+#include "color.h"
 
 #define SOMBRERO_CANVAS_DEPTH 24
 
@@ -23,6 +24,8 @@ class Canvas : public Widget {
   pron::Pixmap pixmap; /**< Pron pixmap : the current pixmap, where to draw */
   pron::Pixmap pixmap2; /**< Pron pixmap : two pixmaps, to restore things  */
   pron::GC bgGC; /**< GC to use when clearing the pixmap */
+  pron::GC fgGC; /**< GC to use when drawing into the pixmap */
+  Color c; /**< Current color */
 
  public:
 
@@ -113,6 +116,11 @@ class Canvas : public Widget {
    * Drawing stuff
    */
   void draw();
+
+  /**
+   * Set the drawing color
+   */
+  void setFGColor(const Color &c);
 };
 
 } //namespace sombrero

@@ -5,7 +5,7 @@ namespace sombrero {
 
 class Widget;
 
-class ColorButton : public Button{
+class ColorButton : public Button {
  private:
   Color c;
   ColorPicker *cp;
@@ -32,6 +32,7 @@ void ColorPicker::setCurrentColor(Color c) {
   }
   this->lcolor.setBGColor(this->c);
   this->lcolor.draw();
+  this->colorChanged(this->c);
 }
 
 void ColorPicker::init() {

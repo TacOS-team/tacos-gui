@@ -22,6 +22,8 @@ class ColorPicker : public Grid {
 
  protected:
  public:
+  // Signals
+  signal1<Color> colorChanged; /**< notifies chen color is changed */
   /**
    * Default constructor
    * @param nbColors the number of buttons per color
