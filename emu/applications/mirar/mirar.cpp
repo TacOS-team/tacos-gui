@@ -11,7 +11,8 @@ class VentanaMirar : public sombrero::Window {
   private:
     Mirar * aplicacion;
   public:
-    VentanaMirar (int x, int y, int width, int height, Mirar *aplicacion) : sombrero::Window(x, y, width, height) {
+    VentanaMirar(std::string title, int x, int y, int width, int height, Mirar *aplicacion)
+        : sombrero::Window(title, x, y, width, height) {
       this->subscribeEvent(pron::EV_KEY_PRESSED);
       this->aplicacion = aplicacion;
     }
@@ -87,7 +88,7 @@ Mirar::Mirar(char * camino) {
 
 void Mirar::inicializacionSombrero() {
   sombrero::Application::getInstance()->init();
-  this->ventana = new VentanaMirar (0,0,MAIN_WINDOW_WIDTH,MAIN_WINDOW_HEIGHT, this);
+  this->ventana = new VentanaMirar("Mirar", 0, 0, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, this);
   this->g = new sombrero::Grid();
   this->siguiente = new BotonSiguiente("Siguiente",this);
   this->anterior = new BotonAnterior("Anterior",this);

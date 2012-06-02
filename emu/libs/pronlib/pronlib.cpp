@@ -135,6 +135,15 @@ Window pronCreateWindow(Display *d, Window parent, int x, int y, int width, int 
   return w;
 }
 
+Window pronCreateWindowExtended(Display *d, Window parent,
+    const PronWindowAttributes &attr, unsigned int mask) {
+  Window w = d->newResourceId();
+  RqCreateWindowExtended rq(w, parent, attr, mask);
+  tsock_write(d->fd, &rq, sizeof(rq));
+
+  return w;
+}
+
 void pronClearWindow(Display *d, Window w) {
   RqClearWindow rq(w);
   tsock_write(d->fd, &rq, sizeof(rq));

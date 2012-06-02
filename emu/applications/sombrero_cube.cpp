@@ -105,7 +105,7 @@ int Cube::lignes[12][2] = {
 
 int main() {
   sombrero::Application::getInstance()->init();
-  sombrero::Window w(0, 0, 200, 200);
+  sombrero::Window w("Cube", 0, 0, 200, 200);
   printf("window = %p\n", &w);
   sombrero::Canvas c(200, 200);
   w.add(&c);

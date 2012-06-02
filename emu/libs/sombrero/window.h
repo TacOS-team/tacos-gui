@@ -5,6 +5,7 @@
  * Window class definition
  */
 
+#include <string>
 #include "bin.h"
 
 namespace sombrero {
@@ -24,12 +25,14 @@ class Window : public Bin {
  public:
   /**
    * The window constructor 
+   * @param title The title of the window (displayed by the WM)
    * @param x
    * @param y
    * @param width
    * @param height
+   * @param decorate Whether the WM should decorate the window or not
    */
-  Window(int x, int y, int width, int height);
+  Window(std::string title, int x, int y, int width, int height, bool decorate = true);
   /**
    * Window destructor
    */

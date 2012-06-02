@@ -89,7 +89,7 @@ void Cuadraw::initSombrero() {
   this->downX = 0;
   this->downY = 0;
   this->mouseDown = false;
-  this->w = new sombrero::Window(0, 0, 500, 500);
+  this->w = new sombrero::Window("Cuadraw", 0, 0, 500, 500);
   this->g = new sombrero::Grid();
   this->w->add(g);
   this->bp = new sombrero::Button("Pixel");

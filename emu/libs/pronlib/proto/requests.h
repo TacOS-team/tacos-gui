@@ -84,6 +84,33 @@ struct RqCreateWindow : public PronRequest {
 };
 
 /**
+ * CreateWindowExtended request.
+ * Sent by a client to create a new window with extended attributes.
+ */
+struct RqCreateWindowExtended : public PronRequest {
+  /**
+   * Constructor.
+   * @param id The id of the window to create
+   * @param parent The id of the the parent window
+   * @param attributes The attributes of the new window
+   * @param mask The mask that specifies the attributes to be set
+   */
+  RqCreateWindowExtended(unsigned int id, unsigned int parent,
+      const PronWindowAttributes &attr, unsigned int mask)
+      : PronRequest(RQ_CREATE_WINDOW_EXT) {
+    this->id = id;
+    this->parent = parent;
+    this->attr = attr;
+    this->mask = mask;
+  }
+
+  unsigned int id; /**< Id of the window to create */
+  int parent; /**< Id of the parent window */
+  PronWindowAttributes attr; /**< Attributes of the new window */
+  unsigned int mask; /**< Specifies which attributes have to be set */
+};
+
+/**
  * ClearWindow request.
  * Sent by a client to clear the contents of a window.
  */

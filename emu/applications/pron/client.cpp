@@ -78,6 +78,16 @@ void Client::handle() {
       }
       break;
     }
+    case RQ_CREATE_WINDOW_EXT: {
+      RqCreateWindowExtended *rq = (RqCreateWindowExtended*) Client::recvBuf;
+      Window *parent = (Window*) screen->getDrawable(rq->parent, D_WINDOW);
+      if (parent != NULL && (rq->mask & WIN_ATTR_X) && (rq->mask & WIN_ATTR_Y) &&
+          (rq->mask & WIN_ATTR_WIDTH) && (rq->mask & WIN_ATTR_HEIGHT)) {
+        new Window(screen, rq->id, this, parent, &rq->attr, rq->mask);
+        screen->traceWindows();
+      }
+      break;
+    }
     case RQ_MAP_WINDOW: {
       RqMapWindow *rq = (RqMapWindow*) Client::recvBuf;
       Window *w = (Window*) screen->getDrawable(rq->window, D_WINDOW);

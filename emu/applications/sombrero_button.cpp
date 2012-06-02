@@ -21,7 +21,7 @@ int main() {
   
   // Window button
 
-  sombrero::Window w(0, 0, 300, 20);
+  sombrero::Window w("Bouton", 0, 0, 300, 20);
   char title[] = "Press me to change the label";
   char title2[] = "Hello I am the first label";
   sombrero::Button b(title);
@@ -29,7 +29,7 @@ int main() {
 
   // Window label
 
-  sombrero::Window w2(0, 0, 300, 20);
+  sombrero::Window w2("Label", 0, 0, 300, 20);
   sombrero::Label l(title2);
   w2.add(&l);
 

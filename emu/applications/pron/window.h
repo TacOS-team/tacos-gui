@@ -61,12 +61,34 @@ class Window : public Drawable {
    * @param width The width of the window
    * @param height The height of the window
    */
-  Window(Screen *screen, int id, Client *creator, Window *parent, int x, int y, int width, int height);
+  Window(Screen *screen, int id, Client *creator, Window *parent,
+      int x, int y, int width, int height);
+  
+  /**
+   * Extended constructor.
+   * @param screen The screen the window belongs to
+   * @param id The id of the window
+   * @param creator The client who has created the window
+   * @param parent The parent window
+   * @param attributes The attributes of the new window
+   * @param mask The mask that specifies the attributes to be set
+   */
+  Window(Screen *screen, int id, Client *creator, Window *parent,
+      PronWindowAttributes *attributes, unsigned int mask);
 
   /**
    * Destructor.
    */
   ~Window();
+
+  /**
+   * Initializes a window.
+   * Used by the constructors.
+   * @param parent The parent window
+   * @param x The x-coordinate of the top-left corner of the window
+   * @param y The y-coordinate of the top-left corner of the window
+   */
+  void init(Window *parent, int x, int y);
   
   /**
    * Gets the address of the pixel (x, y) in memory.

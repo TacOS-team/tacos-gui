@@ -14,8 +14,34 @@
 #include <screen.h>
 #include <window.h>
 
-Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, int y, int width, int height) 
+Window::Window(Screen *screen, int id, Client *creator, Window *parent,
+    PronWindowAttributes *attributes, unsigned int mask)
+    : Drawable(D_WINDOW, screen, id, creator, attributes->width, attributes->height) {
+  this->init(parent, attributes->x, attributes->y);
+  this->setAttributes(attributes, mask);
+  
+  if (this->parent != NULL) {
+    // Send an event notifiying the window creation
+    EventWindowCreated eventCreated(this->getId(), this->parent->getId(),
+        this->getAttributes());
+    this->deliverWindowEvent(&eventCreated, sizeof(eventCreated));
+  }
+}
+
+Window::Window(Screen *screen, int id, Client *creator, Window *parent,
+    int x, int y, int width, int height) 
     : Drawable(D_WINDOW, screen, id, creator, width, height) {
+  this->init(parent, x, y);
+  
+  if (this->parent != NULL) {
+    // Send an event notifiying the window creation
+    EventWindowCreated eventCreated(this->getId(), this->parent->getId(),
+        this->getAttributes());
+    this->deliverWindowEvent(&eventCreated, sizeof(eventCreated));
+  }
+}
+
+void Window::init(Window *parent, int x, int y) {
   this->x = x;
   this->y = y;
   memset(&this->bgColor, 0, sizeof(this->bgColor));
@@ -29,7 +55,7 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
   this->minWidth = -1;
   this->minHeight = -1;
   this->wm_decorate = true;
-  sprintf(this->wm_title, "Window %x", id);
+  sprintf(this->wm_title, "Window %x", this->getId());
 
   if (parent != NULL) {
     this->unmappedParents = (parent->mapped ? 0 : 1) + parent->unmappedParents;
@@ -56,12 +82,6 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
       this->parent->lastChild->nextSibling = this;
       this->parent->lastChild = this;
     }
-  }
-  
-  if (this->parent != NULL) {
-    // Send an event notifiying the window creation
-    EventWindowCreated eventCreated(this->getId(), this->parent->getId(), this->getAttributes());
-    this->deliverWindowEvent(&eventCreated, sizeof(eventCreated));
   }
 }
 
