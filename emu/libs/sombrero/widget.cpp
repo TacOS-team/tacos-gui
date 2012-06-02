@@ -73,7 +73,7 @@ void Widget::propagateEvent(uint32_t eventMask) {
 
 void Widget::setParent(Widget *parent) {
   // TODO à réfléchir si on supprime si ça vaut pas null etc.
-  if (this->parent == NULL) {
+  if (this->parent == NULL && parent->isPronWindowCreated()) {
     this->parent = parent;
     // Creates the window
     this->pronWindow = pron::pronCreateWindow(Application::getInstance()->d,
