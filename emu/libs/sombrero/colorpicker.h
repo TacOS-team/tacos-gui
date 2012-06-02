@@ -40,8 +40,9 @@ class ColorPicker : public Grid {
   /**
    * Sets the current color
    * @param c current color
+   * @param c colorComponent
    */
-  void setCurrentColor(Color c);
+  void setCurrentColor(Color c, int colorComponent);
 };
 
 } // namespace sombrero

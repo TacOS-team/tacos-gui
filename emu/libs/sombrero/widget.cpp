@@ -169,6 +169,7 @@ void Widget::updateBGColor() {
     pron::PronWindowAttributes newAttr;
     newAttr.bgColor = this->attributes.bgColor;
     pron::pronSetWindowAttributes(Application::getInstance()->d, this->pronWindow, newAttr, pron::WIN_ATTR_BG_COLOR);
+    this->lastAttributes.bgColor = this->attributes.bgColor;
   }
 }
 

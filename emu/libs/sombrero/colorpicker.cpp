@@ -5,31 +5,42 @@ namespace sombrero {
 
 class Widget;
 
+enum COLOR_COMPONENT {
+  C_RED,
+  C_GREEN,
+  C_BLUE
+};
+
 class ColorButton : public Button {
  private:
   Color c;
   ColorPicker *cp;
+  int colorComponent;
  protected:
  public:
-  ColorButton(const Color &c, ColorPicker *cp) 
-      : Button(), c(c), cp(cp) {
+  ColorButton(const Color &c, ColorPicker *cp, int colorComponent) 
+      : Button(), c(c), cp(cp), colorComponent(colorComponent) {
     this->setBGColor(c);
   }
   void handleMouseDown(sombrero::MouseButton b __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused))) {
-    cp->setCurrentColor(this->c);
+    cp->setCurrentColor(this->c, colorComponent);
   }
 };
 
-void ColorPicker::setCurrentColor(Color c) {
-  if (c.getR() != 0.) {
-    this->c.setR(c.getR());
+void ColorPicker::setCurrentColor(Color c, int colorComponent) {
+
+  switch (colorComponent) {
+    case C_RED: 
+      this->c.setR(c.getR());
+      break;
+    case C_GREEN:
+      this->c.setG(c.getG());
+      break;
+    case C_BLUE:
+      this->c.setB(c.getB());
+      break;
   }
-  if (c.getG() != 0.) {
-    this->c.setG(c.getG());
-  }
-  if (c.getB() != 0.) {
-    this->c.setB(c.getB());
-  }
+
   this->lcolor.setBGColor(this->c);
   this->lcolor.draw();
   this->colorChanged(this->c);
@@ -39,21 +50,21 @@ void ColorPicker::init() {
   int i;
   unsigned char c;
   // initializes the Color button table
-  this->bcolors = new ColorButton*[nbColors * 3];
-  for (i = 0; i < this->nbColors; ++i) {
+  this->bcolors = new ColorButton*[(nbColors + 1) * 3];
+  for (i = 0; i <= this->nbColors; ++i) {
     c = i * (255 / this->nbColors);
     printf("c %d\n", c);
     // Creates the buttons
     Color col(c, 0, 0);
-    this->bcolors[i] = new ColorButton(col, this); // red
+    this->bcolors[i] = new ColorButton(col, this, C_RED); // red
     Color col2(0, c, 0);
-    this->bcolors[i + this->nbColors] = new ColorButton(col2, this); // green
+    this->bcolors[i + this->nbColors] = new ColorButton(col2, this, C_GREEN); // green
     Color col3(0, 0, c);
-    this->bcolors[i + 2 * this->nbColors] = new ColorButton(col3, this); // blue
+    this->bcolors[i + 2 * this->nbColors] = new ColorButton(col3, this, C_BLUE); // blue
     // Adds the buttons to the color picker
-    this->attach((Widget *)this->bcolors[i], i, 0, 1, 1);
-    this->attach((Widget *)this->bcolors[i + this->nbColors], i, 1, 1, 1);
-    this->attach((Widget *)this->bcolors[i + 2 * this->nbColors], i, 2, 1, 1);
+    this->attach(this->bcolors[i], i, 0, 1, 1);
+    this->attach(this->bcolors[i + this->nbColors], i, 1, 1, 1);
+    this->attach(this->bcolors[i + 2 * this->nbColors], i, 2, 1, 1);
   }
   // Adds the color sum into the grid
   this->attach((Widget *)&this->lcolor, i, 0, this->nbColors / 3, 3);
