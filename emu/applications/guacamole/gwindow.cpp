@@ -242,6 +242,11 @@ void GWindow::maximise() {
 
   if (windowAttributes.isResizable && windowAttributes.maxHeight == -1 && windowAttributes.maxWidth == -1) {
     if (!this->isMaximised) {
+      // On en profite pour mettre tous les attributs à jour
+      // @todo XXX ??????
+      this->attributes = windowAttributes;
+      pronGetWindowAttributes(display, this->parent, &this->parentAttributes);
+      
       // Backup old attributes
       this->oldParentAttributes = this->parentAttributes;
 
@@ -262,6 +267,8 @@ void GWindow::maximise() {
       
       this->isMaximised = true;
     } else {
+      this->isMaximised = false;
+
       // Hide window during update
       pronUnmapWindow(display, this->parent);
       // Resize decoration window
@@ -274,13 +281,11 @@ void GWindow::maximise() {
       // Show updated window
       pronMapWindow(display, this->parent);
       
-      this->isMaximised = false;
+      // On en profite pour mettre tous les attributs à jour
+      // @todo XXX ??????
+      this->attributes = windowAttributes;
+      pronGetWindowAttributes(display, this->parent, &this->parentAttributes);
     }
-
-    // On en profite pour mettre tous les attributs à jour
-    /** @todo check this ça a l'air foireux */
-    this->attributes = windowAttributes;
-    pronGetWindowAttributes(display, this->parent, &this->parentAttributes);
   }
 }
 
