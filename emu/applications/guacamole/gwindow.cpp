@@ -119,14 +119,9 @@ void GWindow::decorate() {
     pronDrawRect(display, this->parent, borderGC,
         0, 0, this->parentAttributes.width, titleBarSize);
    
-    int textWidth, textHeight;
-    pronTextSize(display, whiteGC, this->attributes.wm_title,
-        strlen(this->attributes.wm_title), &textWidth, &textHeight);
-    printf("Writing %s (size %d %d)...\n", this->attributes.wm_title,
-        textWidth, textHeight);
-    pronDrawText(display, this->parent, whiteGC,
-        5, (titleBarSize - textHeight) / 2,
-        this->attributes.wm_title, strlen(this->attributes.wm_title));
+    pronDrawText(display, this->parent, whiteGC, 5, titleBarSize / 2,
+        this->attributes.wm_title, strlen(this->attributes.wm_title),
+        LEFT, MIDDLE);
 
     // Barre de gauche
     pronFillRectangle(display, this->parent, borderGC,
