@@ -10,11 +10,12 @@
 #include <label.h>
 #include <cstdio>
 
-#include <time.h>
+#include <sys/time.h>
 #include <unistd.h>
 
 #include <elf.h>
 
+const int delay = 250;
 
 using namespace sombrero;
 using namespace std;
@@ -27,22 +28,27 @@ Fichier * currentButton = NULL;
 
 class Fichier : public Button, public has_slots<> {
  protected:
-  time_t lastClick;
+  struct timeval lastClick;
  public:
   signal1<string> open;
   Fichier(string fileName) : Button(fileName) {
     this->clicked.connect(this, &Fichier::openSlot);
-    lastClick = 0;
+    gettimeofday(&lastClick, NULL);
   }
 
   void openSlot() {
     //printf("Fichier open %s\n", this->getText().c_str());
 
-    if(time(NULL) == lastClick) {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+
+
+    if(((tv.tv_sec-lastClick.tv_sec)*1000000
+        +tv.tv_usec-lastClick.tv_usec) < delay*1000) {
       currentButton = this;
       this->open(this->getText());
     } else {
-      lastClick = time(NULL);
+      lastClick = tv;
     }
   }
 };
@@ -89,7 +95,11 @@ class Panel : public sombrero::Container, public has_slots<> {
   void update() {
     //printf("Panel::update debut\n");
     this->clear();
-    this->setHeight(boutons.size() * heightFile);
+    if((int)boutons.size() * heightFile > this->getParent()->getHeight()) {
+      this->setHeight(boutons.size() * heightFile);
+    } else {
+      this->setHeight(this->getParent()->getHeight());
+    }
     sombrero::Container::update();
     //printf("Panel::update avant boucle\n");
     for(size_t i = 0; i < boutons.size(); ++i) {
@@ -99,7 +109,12 @@ class Panel : public sombrero::Container, public has_slots<> {
       boutons[i]->setHeight(heightFile);
       boutons[i]->update();
     }
+    sombrero::Container::update();
     //printf("Panel::update fin\n");
+  }
+
+  void draw() {
+    this->clear();
   }
 };
 
