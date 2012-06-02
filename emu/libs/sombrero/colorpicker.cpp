@@ -1,9 +1,10 @@
 #include "colorpicker.h"
 #include "button.h"
+#include "widget.h"
 
 namespace sombrero {
 
-class Widget;
+//class Widget;
 
 enum COLOR_COMPONENT {
   C_RED,
@@ -57,7 +58,6 @@ void ColorPicker::init() {
     } else {
       c = 255;
     }
-    printf("c %d\n", c);
     // Creates the buttons
     Color col(c, 0, 0);
     this->bcolors[i] = new ColorButton(col, this, C_RED); // red

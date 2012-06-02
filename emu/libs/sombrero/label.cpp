@@ -21,7 +21,6 @@ void Label::init() {
 Label::~Label() {}
 
 void Label::draw() {
-  printf("Draw\n");
   this->clear();
   // Draws the line 
   pron::pronDrawRect(Application::getInstance()->d, this->pronWindow,
