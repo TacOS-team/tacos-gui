@@ -28,6 +28,8 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
   this->maxHeight = -1;
   this->minWidth = -1;
   this->minHeight = -1;
+  this->wm_decorate = true;
+  sprintf(this->wm_title, "Window %x", id);
 
   if (parent != NULL) {
     this->unmappedParents = (parent->mapped ? 0 : 1) + parent->unmappedParents;
@@ -192,6 +194,7 @@ void Window::clear(bool sendExposureEvent) {
 
 PronWindowAttributes Window::getAttributes() {
   PronWindowAttributes attr;
+
   attr.x = this->x;
   attr.y = this->y;
   attr.width = this->getWidth();
@@ -202,6 +205,8 @@ PronWindowAttributes Window::getAttributes() {
   attr.maxHeight = this->maxHeight;
   attr.minWidth = this->minWidth;
   attr.minHeight = this->minHeight;
+  attr.wm_decorate = this->wm_decorate;
+  strcpy(attr.wm_title, this->wm_title);
 
   return attr;
 }
@@ -236,6 +241,13 @@ void Window::setAttributes(PronWindowAttributes *newAttr, unsigned int mask) {
   }
   if (mask & WIN_ATTR_MIN_HEIGHT) {
     this->minHeight = newAttr->minHeight;
+  }
+  if (mask & WIN_ATTR_WM_DECORATE) {
+    this->wm_decorate = newAttr->wm_decorate;
+  }
+  if (mask & WIN_ATTR_WM_TITLE) {
+    strncpy(this->wm_title, newAttr->wm_title, WM_TITLE_MAX_LEN - 1);
+    this->wm_title[WM_TITLE_MAX_LEN - 1] = '\0';
   }
 }
 

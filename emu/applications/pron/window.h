@@ -301,6 +301,8 @@ class Window : public Drawable {
   int maxHeight; /**< Maximum height */
   int minWidth; /**< Minimum width */
   int minHeight; /**< Minimum height */
+  bool wm_decorate; /**< Whether the window manager should decorate the window or not */
+  char wm_title[128]; /**< Title displayed by the window manager */
   bool mapped; /**< Whether the window is mapped (showable on the screen) or not */
   int unmappedParents; /**< Number of unmapped parents. */
   vector<OtherClient> otherClients; /**< Other clients who have selected events on this window */

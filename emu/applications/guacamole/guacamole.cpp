@@ -74,15 +74,10 @@ int main() {
       case EV_WINDOW_CREATED : {
         debug("EVENT_WINDOW_CREATED reçu\n");
         EventWindowCreated *windowCreated = (EventWindowCreated*) e;
-        bool winAlreadyExists = false;
 
         // we don't want to add a window that is already known
-        if (GWindowsManager::getInstance()->getGWindow(windowCreated->window) != NULL) {
-          winAlreadyExists = true;
-        }
-        if (!winAlreadyExists && windowCreated->parent == 0) {
-          printf("top level window\n");
-          
+        if (windowCreated->parent == 0 && windowCreated->attributes.wm_decorate &&
+            GWindowsManager::getInstance()->getGWindow(windowCreated->window) == NULL) {
           new GWindow(windowCreated->window, windowCreated->attributes, true, display);
         }
         break;
