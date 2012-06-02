@@ -26,6 +26,8 @@ class Canvas : public Widget {
   pron::GC bgGC; /**< GC to use when clearing the pixmap */
   pron::GC fgGC; /**< GC to use when drawing into the pixmap */
   Color c; /**< Current color */
+  unsigned int pWidth; /**< The pixmap width */
+  unsigned int pHeight; /**< The pixmap height */
 
  public:
 

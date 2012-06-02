@@ -5,16 +5,6 @@ namespace sombrero {
 
 Widget::Widget() {
   this->init();
-  // Initialiazes GC
-  Color cb(0, 0, 0);
-  Color cw(255, 255, 255);
-  pron::PronGCValues values;
-  values.bg = cw;
-  values.fg = cb;
-  this->fgGC = pron::pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG | pron::GC_VAL_BG);
-  values.bg = cb;
-  values.fg = cw;
-  this->bgGC = pron::pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG | pron::GC_VAL_BG);
 }
 
 Widget::~Widget() {
@@ -33,6 +23,23 @@ void Widget::init() {
   this->isUpdating            = false;
   // Subscribe to the expose event for everyone
   this->subscribeEvent(pron::EV_EXPOSE);
+  // Color initialization
+  this->lastAttributes.bgColor.setR(-1.);
+  this->lastAttributes.bgColor.setG(-1.);
+  this->lastAttributes.bgColor.setB(-1.);
+  this->attributes.bgColor.setR(-1.);
+  this->attributes.bgColor.setG(-1.);
+  this->attributes.bgColor.setB(-1.);
+  // Initialiazes GC
+  Color cb(0, 0, 0);
+  Color cw(255, 255, 255);
+  pron::PronGCValues values;
+  values.bg = cw;
+  values.fg = cb;
+  this->fgGC = pron::pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG | pron::GC_VAL_BG);
+  values.bg = cb;
+  values.fg = cw;
+  this->bgGC = pron::pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG | pron::GC_VAL_BG);
 }
 
 bool Widget::isPronWindowCreated() {
@@ -169,6 +176,7 @@ void Widget::updateBGColor() {
     pron::PronWindowAttributes newAttr;
     newAttr.bgColor = this->attributes.bgColor;
     pron::pronSetWindowAttributes(Application::getInstance()->d, this->pronWindow, newAttr, pron::WIN_ATTR_BG_COLOR);
+    this->lastAttributes.bgColor = this->attributes.bgColor;
   }
 }
 
@@ -225,7 +233,7 @@ void Widget::handleEventPointerMoved(pron::EventPointerMoved *mousePointerEvent)
 }
 
 void Widget::handleEventMouseButton(pron::EventMouseButton *e) {
-  printf("handleEventMouseButton\n");
+  //printf("handleEventMouseButton\n");
   if(this->oldButtonsState.b1 != e->b1) {
     if(e->b1) {
       this->handleMouseDown(leftButton, e->x, e->y);
@@ -293,7 +301,9 @@ void Widget::setBGColor(const Color &c) {
   pron::pronChangeGC(Application::getInstance()->d, this->bgGC, values,
       pron::GC_VAL_FG | pron::GC_VAL_BG);
   // We have to update pron attributes
-  this->update();
+  if (this->isPronWindowCreated()) {
+    this->update();
+  }
 }
 
 } // namespace sombrero

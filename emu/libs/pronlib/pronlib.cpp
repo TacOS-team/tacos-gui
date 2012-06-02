@@ -368,8 +368,8 @@ void pronCopyArea(Display *d, Drawable src, Drawable dest, GC gc,
 }
 
 void pronDrawText(Display *d, Window w, GC gc, int x, int y,
-    const char *text, int length) {
-  RqDrawText rq(gc, w, x, y, text, length);
+    const char *text, int length, HPosition hpos, VPosition vpos) {
+  RqDrawText rq(gc, w, x, y, text, length, hpos, vpos);
   tsock_write(d->fd, &rq, sizeof(rq));
 }
 
