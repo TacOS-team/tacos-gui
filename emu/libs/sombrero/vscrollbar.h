@@ -32,7 +32,7 @@ class VScrollBar : public ScrollBar {
   /**
    * Updates the widgets to pron
    */
-  virtual void update();
+  void execUpdate();
   /**
    * Handle for a pointerMoved event
    */

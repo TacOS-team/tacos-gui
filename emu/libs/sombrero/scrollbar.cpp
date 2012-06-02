@@ -98,10 +98,6 @@ int ScrollBar::getMaxThumbPosition(unsigned int thumbLength) {
   return this->getMaxThumbLength() + this->getMinThumbPosition() - thumbLength;
 }
 
-void ScrollBar::update() {
-  Widget::update();
-}
-
 void ScrollBar::updateThumbPosition(int move) {
   unsigned short thumbLength;
   unsigned short thumbPosition;

@@ -172,6 +172,12 @@ void Widget::updateBGColor() {
 }
 
 void Widget::update() {
+  this->setVisible(false);
+  this->execUpdate();
+  this->setVisible(true);
+}
+
+void Widget::execUpdate() {
   this->updatePronPosition();
   this->updatePronSize();
   this->updateBGColor();

@@ -26,7 +26,7 @@ class Fichier;
 
 Fichier * currentButton = NULL;
 
-class Fichier : public Button, public has_slots<> {
+class Fichier : public Button {
  protected:
   struct timeval lastClick;
  public:
@@ -53,7 +53,7 @@ class Fichier : public Button, public has_slots<> {
   }
 };
 
-class Panel : public sombrero::Container, public has_slots<> {
+class Panel : public sombrero::Container {
  protected:
   vector<Fichier*> boutons;
  public:
@@ -117,7 +117,7 @@ class Panel : public sombrero::Container, public has_slots<> {
 
 };
 
-class MyWindow : public Window, public has_slots<> {
+class MyWindow : public Window {
  protected:
   Grid *g;
   Directory d;

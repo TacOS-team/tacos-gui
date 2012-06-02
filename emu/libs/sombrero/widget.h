@@ -24,7 +24,7 @@ class Container;
  * Widget class definition. A widget is something dealing with 
  * graphic and events
  */
-class Widget {
+class Widget : public has_slots<> {
 
  private:
   Widget *parent; /**< The parent widget */
@@ -161,7 +161,11 @@ class Widget {
   /**
    * Updates the widgets to pron
    */
-  virtual void update();
+  void update();
+  /**
+   * the update function to overload
+   */
+  virtual void execUpdate();
   /**
    * Gets active
    * @return active

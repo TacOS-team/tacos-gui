@@ -7,7 +7,7 @@ int VScrollBar::getMaxThumbLength() {
   return this->getHeight() - 2 * this->getMinThumbPosition();
 }
 
-void VScrollBar::update() {
+void VScrollBar::execUpdate() {
   unsigned short thumbLength;
   unsigned short thumbPosition;
   this->getCursorInformations(thumbPosition, thumbLength);
@@ -17,7 +17,7 @@ void VScrollBar::update() {
   this->thumb.setWidth (this->getWidth() - 2*this->marginSize);
   this->thumb.setHeight(thumbLength);
   this->thumb.update();
-  ScrollBar::update();
+  ScrollBar::execUpdate();
 }
 
 

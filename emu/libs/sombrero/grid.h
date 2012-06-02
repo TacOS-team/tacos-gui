@@ -174,7 +174,7 @@ class Grid : public Container {
   /**
    * Updates the display of the widgets. Resize and replace correctly
    */
-  virtual void update();
+  void execUpdate();
   /**
    * Sets the parent container
    * @param Pointer to the parent container

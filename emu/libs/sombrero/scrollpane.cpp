@@ -24,7 +24,7 @@ void ScrollPane::YMoved(int val) {
   }
 }
 
-void ScrollPane::update() {
+void ScrollPane::execUpdate() {
   //printf("update scrollpane\n");
   this->scrollBar.setHeight(this->getHeight());
   this->scrollBar.setX(this->getWidth() - this->scrollBar.getWidth());
@@ -47,7 +47,7 @@ void ScrollPane::update() {
     this->widget->setY(this->scrollBar.getValue());
     this->widget->update();
   }
-  Container::update();
+  Container::execUpdate();
 }
 
 void ScrollPane::setParent(Widget *parent) {
@@ -57,7 +57,7 @@ void ScrollPane::setParent(Widget *parent) {
   if(this->widget) {
     this->widget->setParent(this);
     this->widget->subscribeEvent(pron::EV_RESIZE_WINDOW);
-    this->widget->resized.connect(this, &ScrollPane::update);
+    this->widget->resized.connect((Widget*)this, &Widget::update);
   }
 }
 

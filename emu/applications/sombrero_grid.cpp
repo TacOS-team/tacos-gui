@@ -8,7 +8,7 @@
 
 sombrero::Label *pLabel;
 
-class MyWindow : public sombrero::Window, public has_slots<> {
+class MyWindow : public sombrero::Window {
  public:
   MyWindow(std::string title, int x, int y, int width, int height)
     : sombrero::Window(title, x, y, width, height) {

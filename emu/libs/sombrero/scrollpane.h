@@ -14,7 +14,7 @@ namespace sombrero {
  * ScrollPane class definition
  * @brief The Scrollpane container
  */ 
-class ScrollPane : public Bin, public has_slots<> {
+class ScrollPane : public Bin {
 
  protected:
   /**
@@ -43,7 +43,7 @@ class ScrollPane : public Bin, public has_slots<> {
   /**
    * Updates the scrollbar etc.
    */
-  virtual void update();
+  void execUpdate();
   // Slots
   void YMoved(int val);/** Slot called when the user moves the scrollbar */
 };

@@ -8,7 +8,7 @@ int abs(int val) {
   return (val > 0) ? val : -val;
 }
 
-class CoolCanvas : public sombrero::Canvas, public has_slots<> {
+class CoolCanvas : public sombrero::Canvas {
  private:
  protected:
  public:

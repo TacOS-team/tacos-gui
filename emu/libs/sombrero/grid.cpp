@@ -34,12 +34,11 @@ void Grid::draw() {
   printf("draw grid (x, y, w, h) : %d, %d, %d, %d, %p\n", this->getX(), this->getY(), this->getWidth(), this->getHeight(), this);
 }
 
-void Grid::update() {
+void Grid::execUpdate() {
   // TODO meilleure gestion des calculs de position pour éviter les espaces entre widgets
   // Sends the new informations to pron
   if(this->isPronWindowCreated()) {
-    this->setVisible(false);
-    Container::update();
+    Container::execUpdate();
     // Calculates the new colomns width and line height
     float columnWidth = (float)this->getWidth()/nbColumns;
     float lineHeight  = (float)this->getHeight()/widgetsTab.size();
@@ -58,7 +57,6 @@ void Grid::update() {
         }
       }
     }
-    this->setVisible(true);
   }
 }
 
