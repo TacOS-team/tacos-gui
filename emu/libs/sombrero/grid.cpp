@@ -51,8 +51,8 @@ void Grid::update() {
             && currentWrapper->y == (int)currentY) {
           currentWrapper->widget->setWidth (columnWidth * currentWrapper->width);
           currentWrapper->widget->setHeight(lineHeight  * currentWrapper->height);
-          currentWrapper->widget->setX (this->getX()+columnWidth*currentWrapper->x);
-          currentWrapper->widget->setY (this->getY()+lineHeight*currentWrapper->y);
+          currentWrapper->widget->setX (columnWidth*currentWrapper->x);
+          currentWrapper->widget->setY (lineHeight*currentWrapper->y);
           // Sends the new informations to pron
           currentWrapper->widget->update();
         }

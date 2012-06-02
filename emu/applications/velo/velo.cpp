@@ -101,27 +101,20 @@ class Panel : public sombrero::Container, public has_slots<> {
     }
     //printf("Panel::update fin\n");
   }
-
-  void draw() {
-    /*for(size_t i = 0; i < boutons.size(); ++i) {
-      boutons[i]->draw();
-    }*/
-    sombrero::Container::draw();
-  }
 };
 
 class MyWindow : public Window, public has_slots<> {
  protected:
-  Grid g;
+  Grid *g;
   Directory d;
-  ScrollPane scrollpane;
-  Panel p;
-  Label l;
+  ScrollPane *scrollpane;
+  Panel *p;
+  Label *l;
 
  public:
 
   void draw() {
-    g.draw();
+    g->draw();
     sombrero::Container::draw();
   }
 
@@ -130,8 +123,8 @@ class MyWindow : public Window, public has_slots<> {
     Directory d2(d.getInformations().getAbsolutePath()+"/"+fileName);
     if(d2.getInformations().isDir()) {
       d = d2;
-      p.setFiles(d.entryInfoList());
-      l.setText(d.getInformations().getAbsolutePath());
+      p->setFiles(d.entryInfoList());
+      l->setText(d.getInformations().getAbsolutePath());
     } else if(d2.getInformations().isFile()) {
       /*if(fork() == 0) {
         char * arg [] = { NULL};
@@ -146,32 +139,27 @@ class MyWindow : public Window, public has_slots<> {
 
   MyWindow(std::string title, int x, int y, int width, int height)
     : sombrero::Window(title, x, y, width, height),
-      g(),
-      d("."),
-      scrollpane(&p),
-      l("") {
-    g.add(&l);
-    l.setText(d.getInformations().getAbsolutePath());
-    g.attachNextTo(&scrollpane, &l, POS_BOTTOM, 1, 6);
-    g.setWidth(width);
-    g.setHeight(height);
-    g.setX(0);
-    g.setY(0);
-    g.update();
-    p.setFiles(d.entryInfoList());
-    p.open.connect(this, &MyWindow::openSlot);
+      d(".") {
+    g = new Grid();
+    g->setWidth(width);
+    g->setHeight(height);
+    g->setX(0);
+    g->setY(0);
+    this->add(g);
+    l = new Label("");
+    g->add(l);
+    l->setText(d.getInformations().getAbsolutePath());
+    p = new Panel();
+    scrollpane = new ScrollPane(p);
+    g->attachNextTo(scrollpane, l, POS_BOTTOM, 1, 6);
+    g->update();
+    p->setFiles(d.entryInfoList());
+    p->open.connect(this, &MyWindow::openSlot);
   }
 
 };
 
 int main() {
-  /*Directory d("/");
-  list<FileInfo> files = d.entryInfoList();
-  for(list<FileInfo>::iterator it = files.begin(); it != files.end(); ++it) {
-    if(it->isDir())  printf("D ");
-    if(it->isFile()) printf("F ");
-    printf("%s\n", it->getFileName().c_str());
-  }*/
   MyWindow w("Velo", 50, 50, 300, 100);
   sombrero::Application::getInstance()->sombrerun();
 

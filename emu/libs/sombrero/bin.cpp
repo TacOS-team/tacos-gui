@@ -3,7 +3,9 @@
 
 namespace sombrero {
 
-Bin::Bin() {}
+Bin::Bin() {
+  this->widget = NULL;
+}
 
 Bin::~Bin() {}
 
