@@ -6,6 +6,7 @@
 #include <proto/base.h>
 #include <proto/bits/attributes.h>
 #include <proto/bits/gc.h>
+#include <proto/bits/text.h>
 
 namespace pron {
 
@@ -785,8 +786,11 @@ struct RqDrawText : public PronRequest {
    * @param y The y-coordinate of the origin of the first character
    * @param text The text to draw
    * @param length The length of the text
+   * @param hpos The horizontal position of the text
+   * @param vpos The vertical position of the text
    */
-  RqDrawText(unsigned int gc, unsigned int drawable, int x, int y, const char *text, int length)
+  RqDrawText(unsigned int gc, unsigned int drawable, int x, int y,
+      const char *text, int length, HPosition hpos, VPosition vpos)
       : PronRequest(RQ_DRAW_TEXT) {
     this->gc = gc;
     this->drawable = drawable;
@@ -794,6 +798,8 @@ struct RqDrawText : public PronRequest {
     this->y = y;
     memcpy(this->text, text, length);
     this->length = length;
+    this->hpos = hpos;
+    this->vpos = vpos;
   }
 
   unsigned int gc; /**< Id of the graphics context to use */
@@ -802,6 +808,8 @@ struct RqDrawText : public PronRequest {
   int y; /**< Y-coordinate of the origin of the first character */
   char text[512]; /**< Text to draw */
   int length; /**< Length of the text */
+  HPosition hpos; /**< Horizontal position of the text */
+  VPosition vpos; /**< Vertical position of the text */
 };
 
 /**

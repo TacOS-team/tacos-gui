@@ -244,7 +244,7 @@ void Client::handle() {
       Drawable *d = screen->getDrawable(rq->drawable);
       GC *gc = GC::getGC(rq->gc);
       if (d != NULL && screen->prepareDrawing(d, gc)) {
-        d->drawText(rq->x, rq->y, rq->text, rq->length);
+        d->drawText(rq->x, rq->y, rq->text, rq->length, rq->hpos, rq->vpos);
       }
       break;
     }

@@ -6,6 +6,7 @@
 #include <font.h>
 #include <stdio.h>
 #include <string.h>
+#include <proto/bits/text.h>
 
 Font::Font(char *name, int height, glyph_t glyphs[256]) {
   this->name = strdup(name);
@@ -35,7 +36,23 @@ void Font::drawChar(Drawable *d, int x, int y, unsigned char car) {
   }
 }
 
-void Font::drawText(Drawable *d, int x, int y, const char *text, int length) {
+void Font::drawText(Drawable *d, int x, int y, const char *text, int length,
+    HPosition hpos, VPosition vpos) {
+  int textWidth, textHeight;
+  this->textSize(text, length, &textWidth, &textHeight);
+
+  if (hpos == CENTER) {
+    x -= textWidth / 2;
+  } else if (hpos == RIGHT) {
+    x -= textWidth;
+  }
+
+  if (vpos == MIDDLE) {
+    y -= textHeight / 2;
+  } else if (vpos == BOTTOM) {
+    y -= textHeight;
+  }
+
   for (int i = 0; i < length; i++) {
     unsigned char car = text[i];
     this->drawChar(d, x, y, car);

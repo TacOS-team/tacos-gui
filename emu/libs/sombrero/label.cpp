@@ -25,14 +25,11 @@ void Label::draw() {
   this->clear();
   // Draws the line 
   pron::pronDrawRect(Application::getInstance()->d, this->pronWindow,
-               this->fgGC, 0, 0,
-               this->getWidth(), this->getHeight());
+      this->fgGC, 0, 0, this->getWidth(), this->getHeight());
   // Draws the text
   pron::pronDrawText(Application::getInstance()->d, this->pronWindow,
-               this->fgGC,
-               this->getWidth() / 2 - this->text.length()/2*this->fontSize/2,
-               this->getHeight() / 2 + this->fontSize/2,
-               this->text.c_str(),this->text.length());
+      this->fgGC, this->getWidth() / 2, this->getHeight() / 2,
+      this->text.c_str(),this->text.length(), CENTER, MIDDLE);
 }
 
 void Label::setText(const char *text) {
