@@ -386,11 +386,15 @@ void Drawable::putImage(PronImage *image, int x, int y, int offset, int size) {
 }
 
 void Drawable::copyArea(int dstX, int dstY, Drawable *d, int srcX, int srcY, int width, int height) {
-  /** @todo XXX Bourrin à revoir (problème de depth et de byte per pixel de la pixmap et de l'écran) */
-  for (int y = 0; y < height; y++) {
-    for (int x = 0; x < width; x++) {
-      this->setPixel(x + dstX, y + dstY, d->getPixel(x + srcX, y + srcY));
+  if (this->beforeDrawing(dstX, dstY, dstX + width - 1, dstY + height - 1)) {
+    /** @todo XXX Bourrin à revoir (problème de depth et de byte per pixel de la pixmap et de l'écran) */
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        this->setPixel(x + dstX, y + dstY, d->getPixel(x + srcX, y + srcY));
+      }
     }
+
+    this->afterDrawing(dstX, dstY, dstX + width - 1, dstY + height - 1);
   }
 }
 

@@ -3,6 +3,8 @@
 
 #include <color.h>
 
+#define WM_TITLE_MAX_LEN 128
+
 namespace pron {
 
 /**
@@ -19,6 +21,8 @@ enum WindowAttributeField {
   WIN_ATTR_MAX_HEIGHT   = (1 << 7),
   WIN_ATTR_MIN_WIDTH    = (1 << 8),
   WIN_ATTR_MIN_HEIGHT   = (1 << 9),
+  WIN_ATTR_WM_DECORATE  = (1 << 10),
+  WIN_ATTR_WM_TITLE     = (1 << 11),
 };
 
 /**
@@ -35,6 +39,8 @@ struct PronWindowAttributes {
   int maxHeight; /**< Maximum height */
   int minWidth; /**< Minimum width */
   int minHeight; /**< Minimum height */
+  bool wm_decorate; /**< Whether the window manager should decorate the window or not */
+  char wm_title[128]; /**< Title displayed by the window manager */
 };
 
 } // namespace pron

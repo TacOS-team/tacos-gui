@@ -28,6 +28,8 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent, int x, i
   this->maxHeight = -1;
   this->minWidth = -1;
   this->minHeight = -1;
+  this->wm_decorate = true;
+  sprintf(this->wm_title, "Window %x", id);
 
   if (parent != NULL) {
     this->unmappedParents = (parent->mapped ? 0 : 1) + parent->unmappedParents;
@@ -192,6 +194,7 @@ void Window::clear(bool sendExposureEvent) {
 
 PronWindowAttributes Window::getAttributes() {
   PronWindowAttributes attr;
+
   attr.x = this->x;
   attr.y = this->y;
   attr.width = this->getWidth();
@@ -202,6 +205,8 @@ PronWindowAttributes Window::getAttributes() {
   attr.maxHeight = this->maxHeight;
   attr.minWidth = this->minWidth;
   attr.minHeight = this->minHeight;
+  attr.wm_decorate = this->wm_decorate;
+  strcpy(attr.wm_title, this->wm_title);
 
   return attr;
 }
@@ -236,6 +241,13 @@ void Window::setAttributes(PronWindowAttributes *newAttr, unsigned int mask) {
   }
   if (mask & WIN_ATTR_MIN_HEIGHT) {
     this->minHeight = newAttr->minHeight;
+  }
+  if (mask & WIN_ATTR_WM_DECORATE) {
+    this->wm_decorate = newAttr->wm_decorate;
+  }
+  if (mask & WIN_ATTR_WM_TITLE) {
+    strncpy(this->wm_title, newAttr->wm_title, WM_TITLE_MAX_LEN - 1);
+    this->wm_title[WM_TITLE_MAX_LEN - 1] = '\0';
   }
 }
 
@@ -520,19 +532,23 @@ void Window::afterDrawing(int x1 __attribute__((unused)),
 }
 
 void Window::traceWindowsRec(string prefix) {
-  printf("%s%x (p: %x, fc: %x, lc: %x, ps: %x, ns: %x, x: %d, y; %d, w: %d, h: %d, r: %s, m: %d, ump: %d)\n",
+  printf("%s%-6x (p: %-6x, fc: %-6x, lc: %-6x, ps: %-6x, ns: %-6x\n",
         prefix.c_str(),
         this->getId(),
         this->parent == NULL ? 0 : this->parent->getId(),
         this->firstChild == NULL ? 0 : this->firstChild->getId(),
         this->lastChild == NULL ? 0 : this->lastChild->getId(),
         this->prevSibling == NULL ? 0 : this->prevSibling->getId(),
-        this->nextSibling == NULL ? 0 : this->nextSibling->getId(),
+        this->nextSibling == NULL ? 0 : this->nextSibling->getId());
+  printf("%s        x: %-6d, y : %-6d, w : %-6d, h : %-6d, r : %s\n",
+        prefix.c_str(),
         this->getX(),
         this->getY(),
         this->getWidth(),
         this->getHeight(),
-        this->realized() ? "yes" : "no",
+        this->realized() ? "y" : "n");
+  printf("%s        m: %-6d, up: %-6d)\n",
+        prefix.c_str(),
         this->mapped,
         this->unmappedParents);
   for (Window *currentChild = this->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {

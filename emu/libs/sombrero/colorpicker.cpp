@@ -15,9 +15,8 @@ class ColorButton : public Button{
       : Button(), c(c), cp(cp) {
     this->setBGColor(c);
   }
-  void handleMouseDown(sombrero::MouseButton b, int x, int y) {
+  void handleMouseDown(sombrero::MouseButton b __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused))) {
     cp->setCurrentColor(this->c);
-    printf("LOLLLLLLL 0x%x\n", this->c.getRGB24());
   }
 };
 
@@ -32,6 +31,7 @@ void ColorPicker::init() {
   this->bcolors = new ColorButton*[nbColors * 3];
   for (i = 0; i < this->nbColors; ++i) {
     c = i * (255 / this->nbColors);
+    printf("c %d\n", c);
     // Creates the buttons
     Color col(c, 0, 0);
     this->bcolors[i] = new ColorButton(col, this); // red

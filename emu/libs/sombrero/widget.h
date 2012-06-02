@@ -28,14 +28,8 @@ class Widget {
 
  private:
   Widget *parent; /**< The parent widget */
-  int lastX; /**< last x coordinate received/sent from/to pron */
-  int lastY; /**< last y coordinate received/sent from/to pron */
-  int x; /**< x coordinate */
-  int y; /**< y coordinate */
-  int lastWidth; /**< last Width received/sent from/to pron */
-  int lastHeight; /**< last Height received/sent from/to pron */
-  int width; /**< Width */
-  int height; /**< Height */
+  pron::PronWindowAttributes attributes; /**< Current attributes (x, y, width, height...) */
+  pron::PronWindowAttributes lastAttributes; /**< Last attributes received/sent from/to pron */
   bool active; /**< Dealing with activable widgets */
   bool visible; /**< The widget has to be shown */
   uint32_t eventMask; /**< The event mask */
@@ -43,8 +37,9 @@ class Widget {
   pron::EventMouseButton oldButtonsState;/**< the buttons state of the last mouse event */
 
  protected:
-  pron::GC fgColor; /**< The foreground color */
-  pron::GC bgColor; /**< The background color */
+  pron::GC fgGC; /**< The foreground GC */
+  pron::GC bgGC; /**< The background GC */
+
   /**
    * The pronWindow associated with the widget.
    * Has to be reparented when the widget is reparented.
@@ -135,6 +130,10 @@ class Widget {
    * Sends the new position to pron
    */
   void updatePronPosition();
+  /**
+   * Sends the new window bgColor to pron
+   */
+  void updateBGColor();
   /**
    * Gets the width
    * @return width

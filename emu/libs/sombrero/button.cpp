@@ -45,15 +45,15 @@ void Button::draw() {
   this->clear();
   // Draws the line 
   pron::pronDrawRect(Application::getInstance()->d, this->pronWindow,
-      this->fgColor, 0, 0,
+      this->fgGC, 0, 0,
       this->getWidth(), this->getHeight());
   // Draws the text
   int textWidth, textHeight;
   pronTextSize(Application::getInstance()->d,
-      this->fgColor,
+      this->fgGC,
       this->text.c_str(), this->text.length(), &textWidth, &textHeight);
   pron::pronDrawText(Application::getInstance()->d, this->pronWindow,
-      this->fgColor,
+      this->fgGC,
       (this->getWidth() - textWidth) / 2, (this->getHeight() - textHeight) / 2,
       this->text.c_str(), this->text.length());
 }
