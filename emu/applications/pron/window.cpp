@@ -532,19 +532,23 @@ void Window::afterDrawing(int x1 __attribute__((unused)),
 }
 
 void Window::traceWindowsRec(string prefix) {
-  printf("%s%x (p: %x, fc: %x, lc: %x, ps: %x, ns: %x, x: %d, y; %d, w: %d, h: %d, r: %s, m: %d, ump: %d)\n",
+  printf("%s%-6x (p: %-6x, fc: %-6x, lc: %-6x, ps: %-6x, ns: %-6x\n",
         prefix.c_str(),
         this->getId(),
         this->parent == NULL ? 0 : this->parent->getId(),
         this->firstChild == NULL ? 0 : this->firstChild->getId(),
         this->lastChild == NULL ? 0 : this->lastChild->getId(),
         this->prevSibling == NULL ? 0 : this->prevSibling->getId(),
-        this->nextSibling == NULL ? 0 : this->nextSibling->getId(),
+        this->nextSibling == NULL ? 0 : this->nextSibling->getId());
+  printf("%s        x: %-6d, y : %-6d, w : %-6d, h : %-6d, r : %s\n",
+        prefix.c_str(),
         this->getX(),
         this->getY(),
         this->getWidth(),
         this->getHeight(),
-        this->realized() ? "yes" : "no",
+        this->realized() ? "y" : "n");
+  printf("%s        m: %-6d, up: %-6d)\n",
+        prefix.c_str(),
         this->mapped,
         this->unmappedParents);
   for (Window *currentChild = this->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
