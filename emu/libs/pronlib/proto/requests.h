@@ -827,6 +827,99 @@ struct RqTextSize : public PronRequest {
   int length; /**< Length of the text */
 };
 
+/**
+ * RotateArea request.
+ * Sent by a client to rotate an area from a drawable to another one.
+ */
+struct RqRotateArea : public PronRequest {
+  /**
+   * Constructor.
+   * @param src The source drawable
+   * @param dest The destination drawable
+   * @param gc The graphics context to use during the rotation
+   * @param srcX The x-coordinate of the top-left corner of the
+   * source drawable area to rotate
+   * @param srcY The y-coordinate of the top-left corner of the
+   * source drawable area to rotate
+   * @param width The width of the source drawable area to rotate
+   * @param height The height of the source drawable area to rotate
+   * @param destX The destination top-left corner x-coordinate
+   * @param destY The destination top-left corner y-coordinate
+   * @param angle The angle to rotate
+   */
+  RqRotateArea(unsigned int src, unsigned int dest,
+      unsigned int gc, int srcX, int srcY, int width,
+      int height, int destX, int destY, int angle)
+      : PronRequest(RQ_ROTATE_AREA) {
+    this->src = src;
+    this->dest = dest;
+    this->gc = gc;
+    this->srcX = srcX;
+    this->srcY = srcY;
+    this->width = width;
+    this->height = height;
+    this->destX = destX;
+    this->destY = destY;
+    this->angle = angle;
+  }
+
+  unsigned int src; /**< Id of the source drawable */
+  unsigned int dest; /**< Id of the destination drawable */
+  unsigned int gc; /**< Id of the graphics context to use */
+  int srcX; /**< Source top-left corner x-coordinate */
+  int srcY; /**< Source top-left corner x-coordinate */
+  int width; /**< Width to rotate */
+  int height; /**< Height to rotate */
+  int destX; /**< Destination top-left corner x-coordinate */
+  int destY; /**< Destination top-left corner y-coordinate */
+  int angle; /**< Angle to rotate */
+};
+
+/**
+ * NegArea request.
+ * Sent by a client to revrse the colors of an area from a drawable to another one.
+ */
+struct RqNegArea : public PronRequest {
+  /**
+   * Constructor.
+   * @param src The source drawable
+   * @param dest The destination drawable
+   * @param gc The graphics context to use during the rotation
+   * @param srcX The x-coordinate of the top-left corner of the
+   * source drawable area to reverse
+   * @param srcY The y-coordinate of the top-left corner of the
+   * source drawable area to reverse
+   * @param width The width of the source drawable area to reverse
+   * @param height The height of the source drawable area to reverse
+   * @param destX The destination top-left corner x-coordinate
+   * @param destY The destination top-left corner y-coordinate
+   */
+  RqNegArea(unsigned int src, unsigned int dest,
+      unsigned int gc, int srcX, int srcY, int width,
+      int height, int destX, int destY)
+      : PronRequest(RQ_NEG_AREA) {
+    this->src = src;
+    this->dest = dest;
+    this->gc = gc;
+    this->srcX = srcX;
+    this->srcY = srcY;
+    this->width = width;
+    this->height = height;
+    this->destX = destX;
+    this->destY = destY;
+  }
+
+  unsigned int src; /**< Id of the source drawable */
+  unsigned int dest; /**< Id of the destination drawable */
+  unsigned int gc; /**< Id of the graphics context to use */
+  int srcX; /**< Source top-left corner x-coordinate */
+  int srcY; /**< Source top-left corner x-coordinate */
+  int width; /**< Width to reverse color*/
+  int height; /**< Height to  reverse color*/
+  int destX; /**< Destination top-left corner x-coordinate */
+  int destY; /**< Destination top-left corner y-coordinate */
+};
+
 } // namespace pron
 
 #endif // __PRONPROTO_REQUESTS_H__
