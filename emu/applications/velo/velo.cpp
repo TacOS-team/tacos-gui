@@ -93,15 +93,13 @@ class Panel : public sombrero::Container, public has_slots<> {
   }
 
   void update() {
-    //printf("Panel::update debut\n");
-    this->clear();
+    this->unsubscribeEvent(pron::EV_EXPOSE);
     if((int)boutons.size() * heightFile > this->getParent()->getHeight()) {
       this->setHeight(boutons.size() * heightFile);
     } else {
       this->setHeight(this->getParent()->getHeight());
     }
-    sombrero::Container::update();
-    //printf("Panel::update avant boucle\n");
+    Container::update();
     for(size_t i = 0; i < boutons.size(); ++i) {
       boutons[i]->setY(i * heightFile);
       boutons[i]->setX(0);
@@ -109,13 +107,14 @@ class Panel : public sombrero::Container, public has_slots<> {
       boutons[i]->setHeight(heightFile);
       boutons[i]->update();
     }
-    sombrero::Container::update();
-    //printf("Panel::update fin\n");
+    this->subscribeEvent(pron::EV_EXPOSE);
   }
 
   void draw() {
+    printf("Panel::draw\n");
     this->clear();
   }
+
 };
 
 class MyWindow : public Window, public has_slots<> {
