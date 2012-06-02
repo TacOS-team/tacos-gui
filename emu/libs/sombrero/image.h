@@ -18,6 +18,7 @@ class Image : public Widget {
  private:
   unsigned int imageWidth; /**< The real image width */
   unsigned int imageHeight; /**< The real image height */
+  bool isReversed; /**< incates whether the colors of the image are reversed */
   pron::Pixmap pixmap; /**< The pixmap where the image is put */
   string &filename; /**< the name of the file to open */
   void init(); /**< intializes the image and the pixmap */
@@ -36,6 +37,7 @@ class Image : public Widget {
    * Image drawing stuff
    */
   void draw();
+
   /**
    * Gets the width of the image
    * @return the width of the image
@@ -46,6 +48,8 @@ class Image : public Widget {
    * @return the height of the image
    */
   unsigned int getImageHeight();
+
+  void reverseColors();
 };
 
 }// namespace sombrero

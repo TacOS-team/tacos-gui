@@ -6,25 +6,18 @@ namespace sombrero {
 
 Button::Button() : text("") {
   this->init();
-  this->subscribeEvent(pron::EV_EXPOSE);
-  this->subscribeEvent(pron::EV_MOUSE_BUTTON);
 }
 
 Button::Button(const char *text) : text(text) {
   this->init();
-  this->subscribeEvent(pron::EV_EXPOSE);
-  this->subscribeEvent(pron::EV_MOUSE_BUTTON);
 }
 
 Button::Button(const std::string &text) : text(text) {
   this->init();
-  this->subscribeEvent(pron::EV_EXPOSE);
-  this->subscribeEvent(pron::EV_MOUSE_BUTTON);
 }
 
 void Button::init() {
   // Select more events
-  this->subscribeEvent(pron::EV_EXPOSE);
   this->subscribeEvent(pron::EV_MOUSE_BUTTON);
 }
 

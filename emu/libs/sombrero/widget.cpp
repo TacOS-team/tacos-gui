@@ -30,6 +30,8 @@ void Widget::init() {
   this->lastAttributes.width  = -1;
   this->lastAttributes.height = -1;
   this->pronWindow            = (pron::Window) -1;
+  // Subscribe to the expose event for everyone
+  this->subscribeEvent(pron::EV_EXPOSE);
 }
 
 bool Widget::isPronWindowCreated() {
@@ -272,6 +274,8 @@ void Widget::setBGColor(const Color &c) {
   values.fg = c;
   pron::pronChangeGC(Application::getInstance()->d, this->bgGC, values,
       pron::GC_VAL_FG | pron::GC_VAL_BG);
+  // We have to update pron attributes
+  this->update();
 }
 
 } // namespace sombrero

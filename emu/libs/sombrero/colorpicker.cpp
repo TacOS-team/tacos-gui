@@ -5,7 +5,7 @@ namespace sombrero {
 
 class Widget;
 
-class ColorButton : public Button{
+class ColorButton : public Button {
  private:
   Color c;
   ColorPicker *cp;
@@ -21,7 +21,18 @@ class ColorButton : public Button{
 };
 
 void ColorPicker::setCurrentColor(Color c) {
-  this->c = c;
+  if (c.getR() != 0.) {
+    this->c.setR(c.getR());
+  }
+  if (c.getG() != 0.) {
+    this->c.setG(c.getG());
+  }
+  if (c.getB() != 0.) {
+    this->c.setB(c.getB());
+  }
+  this->lcolor.setBGColor(this->c);
+  this->lcolor.draw();
+  this->colorChanged(this->c);
 }
 
 void ColorPicker::init() {
@@ -44,6 +55,9 @@ void ColorPicker::init() {
     this->attach((Widget *)this->bcolors[i + this->nbColors], i, 1, 1, 1);
     this->attach((Widget *)this->bcolors[i + 2 * this->nbColors], i, 2, 1, 1);
   }
+  // Adds the color sum into the grid
+  this->attach((Widget *)&this->lcolor, i, 0, this->nbColors / 3, 3);
+
 }
 
 ColorPicker::~ColorPicker() {
@@ -57,7 +71,7 @@ ColorPicker::~ColorPicker() {
 }
 
 ColorPicker::ColorPicker(unsigned int nbColors) 
-    : Grid(), nbColors(nbColors) {
+    : Grid(), nbColors(nbColors), lcolor("") {
   init();
 }
 

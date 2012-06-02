@@ -60,6 +60,22 @@ class BotonAnterior : public sombrero::Button {
     }
 };
 
+class BotonInvertir : public sombrero::Button {
+  private:
+    Mirar * aplicacion;
+  protected:
+    void handleMouseDown(sombrero::MouseButton button, int x, int y) {
+      sombrero::Button::handleMouseDown(button, x, y);
+      if (button == sombrero::leftButton) {
+        this->aplicacion->verInverso();
+      }
+    }
+    
+  public:
+    BotonInvertir(const char *text, Mirar *aplicacion) : sombrero::Button(text) {
+      this->aplicacion = aplicacion;
+    }
+};
 
 Mirar::Mirar(char * camino) {
   sombrero::Directory *carpeta = new sombrero::Directory ((string &) camino);
@@ -92,15 +108,17 @@ void Mirar::inicializacionSombrero() {
   this->g = new sombrero::Grid();
   this->siguiente = new BotonSiguiente("Siguiente",this);
   this->anterior = new BotonAnterior("Anterior",this);
+  this->invertir = new BotonInvertir("Invertir",this);
   this->image = new sombrero::Image(this->jpegArchivos[this->corrienteArchivo]);
   this->sp = new sombrero::ScrollPane(this->image);
 
   ventana->add(g);
 
   g->attach(anterior,0,0,1,1);
-  g->attachNextTo(siguiente,anterior,sombrero::POS_RIGHT,1,1);
+  g->attachNextTo(this->siguiente,this->anterior,sombrero::POS_RIGHT,1,1);
+  g->attachNextTo(this->invertir,this->siguiente,sombrero::POS_RIGHT,1,1);
   this->g->newLine();
-  this->g->attach(this->sp,0,1,2,8);
+  this->g->attach(this->sp,0,1,3,8);
 }
 
 Mirar::~Mirar() {
@@ -112,7 +130,7 @@ void Mirar::verSiguiente() {
   delete this->image;
   this->image = new sombrero::Image(this->jpegArchivos[this->corrienteArchivo]);
   this->sp->add(this->image);
-  this->g->attach(this->sp,0,1,2,8);
+  this->g->attach(this->sp,0,1,3,8);
   this->ventana->draw();
 }
 
@@ -125,8 +143,13 @@ void Mirar::verAnterior() {
   delete this->image;
   this->image = new sombrero::Image(this->jpegArchivos[this->corrienteArchivo]);
   this->sp->add(this->image);
-  this->g->attach(this->sp,0,1,2,8);
+  this->g->attach(this->sp,0,1,3,8);
   this->ventana->draw();
+}
+
+void Mirar::verInverso() {
+  this->image->reverseColors();
+  this->image->draw();
 }
 
 void Mirar::correr() {

@@ -119,6 +119,8 @@ void Cuadraw::initSombrero() {
   this->g->add(this->bfr);
   this->g->attach(this->c, 1, 0, 6, 5);
   this->g->attach(this->cp, 1, 5, 6, 1);
+  // Color changed 
+  this->cp->colorChanged.connect(this, &Cuadraw::doColorChanged);
   /*this->cp = new sombrero::ColorPicker(10);
   this->g->attach(this->cp, 0, 0, 1, 1);*/
   sombrero::Application::getInstance()->sombrerun();
@@ -127,6 +129,10 @@ void Cuadraw::initSombrero() {
 /**
  * !!! Drawing modes !!!
  */
+
+void Cuadraw::doColorChanged(Color c) {
+  this->c->setFGColor(c);
+}
 
 void Cuadraw::doPixelClicked(){
   this->clearSignals();
