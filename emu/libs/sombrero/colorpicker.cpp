@@ -52,7 +52,11 @@ void ColorPicker::init() {
   // initializes the Color button table
   this->bcolors = new ColorButton*[(nbColors + 1) * 3];
   for (i = 0; i <= this->nbColors; ++i) {
-    c = i * (255 / this->nbColors);
+    if (i < this->nbColors) {
+      c = i * (255 / this->nbColors);
+    } else {
+      c = 255;
+    }
     printf("c %d\n", c);
     // Creates the buttons
     Color col(c, 0, 0);
