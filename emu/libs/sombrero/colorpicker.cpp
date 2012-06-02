@@ -21,7 +21,17 @@ class ColorButton : public Button{
 };
 
 void ColorPicker::setCurrentColor(Color c) {
-  this->c = c;
+  if (c.getR() != 0.) {
+    this->c.setR(c.getR());
+  }
+  if (c.getG() != 0.) {
+    this->c.setG(c.getG());
+  }
+  if (c.getB() != 0.) {
+    this->c.setB(c.getB());
+  }
+  this->lcolor.setBGColor(this->c);
+  this->lcolor.draw();
 }
 
 void ColorPicker::init() {
