@@ -1,4 +1,5 @@
-#ifndef __MOUSE_H__
+                                                                   
+                                                                       #ifndef __MOUSE_H__
 #define __MOUSE_H__
 
 /**
@@ -9,8 +10,8 @@
 #include <mouse_types.h>
 #include <pixmap.h>
 
-#define PRON_MOUSE_POINTER_WIDTH 6 /**< Width of the pointer */
-#define PRON_MOUSE_POINTER_HEIGHT 6 /**< Height of the pointer */
+#define PRON_MOUSE_POINTER_WIDTH  13 /**< Width of the pointer */
+#define PRON_MOUSE_POINTER_HEIGHT 19 /**< Height of the pointer */
 
 /**
  * Mouse.

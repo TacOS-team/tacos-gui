@@ -38,16 +38,37 @@ Mouse::Mouse() {
   this->lastSentX = 0;
   this->lastSentY = 0;
 
-  /** @todo xxx red is transparent */
+  /** @todo xxx 0x00FDFEFB is transparent */
   Color oldFg = screen->getGC()->getFg();
-  screen->getGC()->setFg(Color(255, 0, 0));
+  screen->getGC()->setFg(Color(253, 254, 251));
 
   this->pointer->fillRectangle(0, 0, PRON_MOUSE_POINTER_WIDTH, PRON_MOUSE_POINTER_HEIGHT);
 
+  screen->getGC()->setFg(Color(0, 0, 0));
+
+  this->pointer->drawLine(1,  2,  1, 15);
+  this->pointer->drawLine(2,  3,  2, 14);
+  this->pointer->drawLine(3,  4,  3, 13);
+  this->pointer->drawLine(4,  5,  4, 13);
+  this->pointer->drawLine(5,  6,  5, 14);
+  this->pointer->drawLine(6,  7,  6, 16);
+  this->pointer->drawLine(7,  8,  7, 11);
+  this->pointer->drawLine(7, 15,  7, 17);
+  this->pointer->drawLine(8,  8,  8, 11);
+  this->pointer->drawLine(9, 10,  9, 11);
+  this->pointer->drawPoint(10, 10);
+
   screen->getGC()->setFg(oldFg);
 
-  this->pointer->drawLine(0, 0, 0, PRON_MOUSE_POINTER_HEIGHT - 1);
-  this->pointer->drawLine(0, 0, PRON_MOUSE_POINTER_WIDTH - 1, 0);
+  this->pointer->drawLine(0,  0,  0, 17);
+  this->pointer->drawLine(0,  0, 12, 12);
+  this->pointer->drawLine(0, 17,  3, 14);
+  this->pointer->drawLine(4, 14,  5, 15);
+  this->pointer->drawLine(5, 16,  7, 18);
+  this->pointer->drawLine(5, 17,  6, 18);
+  this->pointer->drawLine(8, 15,  8, 18);
+  this->pointer->drawLine(7, 12,  7, 14);
+  this->pointer->drawLine(8, 12, 12, 12);
 }
 
 void Mouse::checkEvents() {
@@ -257,8 +278,8 @@ void Mouse::showPointer() {
           memcpy(destination, source, screen->bytesPerPixel);
 
           // Draw new pixel
-          /** @todo xxx red is transparent haha degueu */
-          if (this->pointer->getPixel(x, y) != 0x00FF0000) {
+          /** @todo xxx 0x00FDFEFB is transparent haha degueu */
+          if (this->pointer->getPixel(x, y) != 0x00FDFEFB) {
             destination = source;
             source = this->pointer->pixelAddr(x, y);
             memcpy(destination, source, screen->bytesPerPixel);
