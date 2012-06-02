@@ -223,8 +223,6 @@ void GWindow::resize(int width, int height) {
       this->parentAttributes.height = height;
       this->attributes.width        = width  - 2 * borderSize;
       this->attributes.height       = height - titleBarSize - borderSize;
-      pronResizeWindow(display, this->window,
-          this->attributes.width, this->attributes.height);
     }
   }
 }
