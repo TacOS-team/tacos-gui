@@ -161,9 +161,18 @@ void Widget::updatePronPosition() {
   }
 }
 
+void Widget::updateBGColor() {
+  if (this->attributes.bgColor.getRGB24() != this->lastAttributes.bgColor.getRGB24()) {
+    pron::PronWindowAttributes newAttr;
+    newAttr.bgColor = this->attributes.bgColor;
+    pron::pronSetWindowAttributes(Application::getInstance()->d, this->pronWindow, newAttr, pron::WIN_ATTR_BG_COLOR);
+  }
+}
+
 void Widget::update() {
   this->updatePronPosition();
   this->updatePronSize();
+  this->updateBGColor();
 }
 
 Widget* Widget::getParent() {
@@ -257,6 +266,7 @@ void Widget::setFGColor(const Color &c) {
 }
 
 void Widget::setBGColor(const Color &c) {
+  this->attributes.bgColor = c;
   pron::PronGCValues values;
   values.bg = Color(0, 0, 0);
   values.fg = c;

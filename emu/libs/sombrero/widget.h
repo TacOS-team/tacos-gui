@@ -131,6 +131,10 @@ class Widget {
    */
   void updatePronPosition();
   /**
+   * Sends the new window bgColor to pron
+   */
+  void updateBGColor();
+  /**
    * Gets the width
    * @return width
    */
