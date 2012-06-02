@@ -144,8 +144,8 @@ class MyWindow : public Window, public has_slots<> {
     }
   }
 
-  MyWindow(int x, int y, int width, int height)
-    : sombrero::Window(x, y, width, height),
+  MyWindow(std::string title, int x, int y, int width, int height)
+    : sombrero::Window(title, x, y, width, height),
       g(),
       d("."),
       scrollpane(&p),
@@ -172,7 +172,7 @@ int main() {
     if(it->isFile()) printf("F ");
     printf("%s\n", it->getFileName().c_str());
   }*/
-  MyWindow w(50, 50, 300, 100);
+  MyWindow w("Velo", 50, 50, 300, 100);
   sombrero::Application::getInstance()->sombrerun();
 
   return 0;
