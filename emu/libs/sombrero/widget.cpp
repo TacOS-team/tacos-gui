@@ -3,6 +3,8 @@
 
 namespace sombrero {
 
+static const int doubleClickDelay = 250;
+
 Widget::Widget() {
   this->init();
 }
@@ -13,6 +15,7 @@ Widget::~Widget() {
 }
 
 void Widget::init() {
+  gettimeofday(&lastClick, NULL);
   this->parent                = NULL;
   this->eventMask             = 0;
   this->lastAttributes.x      = -1;
@@ -21,8 +24,6 @@ void Widget::init() {
   this->lastAttributes.height = -1;
   this->pronWindow            = (pron::Window) -1;
   this->isUpdating            = false;
-  // Subscribe to the expose event for everyone
-  this->subscribeEvent(pron::EV_EXPOSE);
   // Color initialization
   this->lastAttributes.bgColor.setR(-1.);
   this->lastAttributes.bgColor.setG(-1.);
@@ -215,6 +216,10 @@ void Widget::handleMouseDown(MouseButton button __attribute__((unused)), int x _
 
 }
 
+void Widget::handleDoubleClick(int x __attribute__((unused)), int y __attribute__((unused))) {
+
+}
+
 void Widget::handleMouseReleased(MouseButton button __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused))) {
 
 }
@@ -236,6 +241,15 @@ void Widget::handleEventMouseButton(pron::EventMouseButton *e) {
   //printf("handleEventMouseButton\n");
   if(this->oldButtonsState.b1 != e->b1) {
     if(e->b1) {
+      struct timeval tv;
+      gettimeofday(&tv, NULL);
+      if(((tv.tv_sec-lastClick.tv_sec)*1000000
+        +tv.tv_usec-lastClick.tv_usec) < doubleClickDelay*1000) {
+        this->handleDoubleClick(e->x, e->y);
+        lastClick.tv_sec = 0;
+      } else {
+        lastClick = tv;
+      }
       this->handleMouseDown(leftButton, e->x, e->y);
     } else {
       this->handleMouseReleased(leftButton, e->x, e->y);

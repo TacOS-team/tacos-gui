@@ -15,8 +15,6 @@
 
 #include <elf.h>
 
-const int delay = 250;
-
 using namespace sombrero;
 using namespace std;
 
@@ -27,29 +25,15 @@ class Fichier;
 Fichier * currentButton = NULL;
 
 class Fichier : public Button {
- protected:
-  struct timeval lastClick;
  public:
   signal1<string> open;
   Fichier(string fileName) : Button(fileName) {
-    this->clicked.connect(this, &Fichier::openSlot);
-    gettimeofday(&lastClick, NULL);
   }
 
-  void openSlot() {
+  void handleDoubleClick(int x __attribute__((unused)), int y __attribute__((unused))) {
     //printf("Fichier open %s\n", this->getText().c_str());
-
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-
-
-    if(((tv.tv_sec-lastClick.tv_sec)*1000000
-        +tv.tv_usec-lastClick.tv_usec) < delay*1000) {
-      currentButton = this;
-      this->open(this->getText());
-    } else {
-      lastClick = tv;
-    }
+    currentButton = this;
+    this->open(this->getText());
   }
 };
 
@@ -111,7 +95,7 @@ class Panel : public sombrero::Container {
   }
 
   void draw() {
-    printf("Panel::draw\n");
+    //printf("Panel::draw\n");
     //this->clear();
     if((int)boutons.size() * heightFile < this->getHeight()) {
       pronFillRectangle(Application::getInstance()->d, this->pronWindow,

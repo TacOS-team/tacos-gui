@@ -7,6 +7,7 @@
 
 #include "pronlib.h"
 #include "sigslot.h"
+#include <sys/time.h>
 
 using namespace sigslot;
 
@@ -36,6 +37,7 @@ class Widget : public has_slots<> {
   uint32_t dontPropagateEventMask; /**< The event mask to don't propagate */
   pron::EventMouseButton oldButtonsState;/**< the buttons state of the last mouse event */
   bool isUpdating;/**< True when the window is beeing updated */
+  struct timeval lastClick;/**< The time of the last click */
 
  protected:
   pron::GC fgGC; /**< The foreground GC */
@@ -61,8 +63,16 @@ class Widget : public has_slots<> {
   /**
    * Function called when a client clicks on the widget
    * @param button The clicked button (rightButton, middleButton or leftButton)
+   * @param x the x position of the mouse
+   * @param y the y position of the mouse
    */
   virtual void handleMouseDown(MouseButton button, int x, int y);
+  /**
+   * Function called when a client double clicks on the widget
+   * @param x the x position of the mouse
+   * @param y the y position of the mouse
+   */
+  virtual void handleDoubleClick(int x, int y);
   /**
    * Function called when a client clicks on the widget
    * @param button The clicked button (rightButton, middleButton or leftButton)
