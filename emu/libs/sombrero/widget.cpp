@@ -11,10 +11,10 @@ Widget::Widget() {
   pron::PronGCValues values;
   values.bg = cw;
   values.fg = cb;
-  this->fgColor = pron::pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG | pron::GC_VAL_BG);
+  this->fgGC = pron::pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG | pron::GC_VAL_BG);
   values.bg = cw;
   values.fg = cb;
-  this->bgColor = pron::pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG | pron::GC_VAL_BG);
+  this->bgGC = pron::pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG | pron::GC_VAL_BG);
 }
 
 Widget::~Widget() {
@@ -23,22 +23,22 @@ Widget::~Widget() {
 }
 
 void Widget::init() {
-  this->parent     = NULL;
-  this->eventMask  = 0;
-  this->lastX      = -1;
-  this->lastY      = -1;
-  this->lastWidth  = -1;
-  this->lastHeight = -1;
-  this->pronWindow = (pron::Window)-1;
+  this->parent                = NULL;
+  this->eventMask             = 0;
+  this->lastAttributes.x      = -1;
+  this->lastAttributes.y      = -1;
+  this->lastAttributes.width  = -1;
+  this->lastAttributes.height = -1;
+  this->pronWindow            = (pron::Window) -1;
 }
 
 bool Widget::isPronWindowCreated() {
-  return this->pronWindow != (pron::Window)-1;
+  return this->pronWindow != (pron::Window) -1;
 }
 
 void Widget::subscribeEvent(uint32_t eventMask) {
   this->eventMask |= PRON_EVENTMASK(eventMask);
-  if(this->isPronWindowCreated()) {
+  if (this->isPronWindowCreated()) {
     //printf("subscribe event for Ox%x\n",this->pronWindow);
     pron::pronSelectInput(Application::getInstance()->d, this->pronWindow,
         this->eventMask);
@@ -47,7 +47,7 @@ void Widget::subscribeEvent(uint32_t eventMask) {
 
 void Widget::unsubscribeEvent(uint32_t eventMask) {
   this->eventMask &= ~PRON_EVENTMASK(eventMask);
-  if(this->isPronWindowCreated()) {
+  if (this->isPronWindowCreated()) {
     pron::pronSelectInput(Application::getInstance()->d, this->pronWindow,
         this->eventMask);
   }
@@ -55,7 +55,7 @@ void Widget::unsubscribeEvent(uint32_t eventMask) {
 
 void Widget::dontPropagateEvent(uint32_t eventMask) {
     this->dontPropagateEventMask |= PRON_EVENTMASK(eventMask);
-    if(this->isPronWindowCreated()) {
+    if (this->isPronWindowCreated()) {
       pron::pronDontPropagateEvent(Application::getInstance()->d, this->pronWindow,
               this->dontPropagateEventMask);
     }
@@ -63,7 +63,7 @@ void Widget::dontPropagateEvent(uint32_t eventMask) {
 
 void Widget::propagateEvent(uint32_t eventMask) {
   this->dontPropagateEventMask &= ~PRON_EVENTMASK(eventMask);
-  if(this->isPronWindowCreated()) {
+  if (this->isPronWindowCreated()) {
     pron::pronDontPropagateEvent(Application::getInstance()->d, this->pronWindow,
         this->dontPropagateEventMask);
   }
@@ -75,9 +75,8 @@ void Widget::setParent(Widget *parent) {
     this->parent = parent;
     // Creates the window
     this->pronWindow = pron::pronCreateWindow(Application::getInstance()->d,
-        this->parent->pronWindow,
-        this->x, this->y,
-        this->width, this->height);
+        this->parent->pronWindow, this->getX(), this->getY(),
+        this->getWidth(), this->getHeight());
     //printf("SET PARENT : Ox%x for Ox%x\n", parent->pronWindow, this->pronWindow);
     // Associates the pron::window to the widget
     Application::getInstance()->widgets[this->pronWindow] = this;
@@ -89,27 +88,29 @@ void Widget::setParent(Widget *parent) {
 }
 
 int Widget::getWidth() {
-  return this->width;
+  return this->attributes.width;
 }
 
 void Widget::setWidth(int width) {
-  this->width = width;
+  this->attributes.width = width;
 }
 
 int Widget::getHeight() {
-  return this->height;
+  return this->attributes.height;
 }
 
 void Widget::setHeight(int height) {
-  this->height = height;
+  this->attributes.height = height;
 }
 
 void Widget::updatePronSize() {
-  if(this->lastWidth != this->width || this->lastHeight != this->height) {
-    this->lastWidth  = this->width;
-    this->lastHeight = this->height;
+  if (this->lastAttributes.width != this->getWidth() ||
+      this->lastAttributes.height != this->getHeight()) {
+    this->lastAttributes.width  = this->getWidth();
+    this->lastAttributes.height = this->getHeight();
     this->resized();
-    pronResizeWindow(Application::getInstance()->d, this->pronWindow, this->width, this->height);
+    pronResizeWindow(Application::getInstance()->d, this->pronWindow,
+        this->getWidth(), this->getHeight());
   }
 }
 
@@ -135,26 +136,28 @@ void Widget::setVisible(bool visible) {
 }
 
 int Widget::getX() {
-  return this->x;
+  return this->attributes.x;
 }
 
 void Widget::setX(int x) {
-  this->x = x;
+  this->attributes.x = x;
 }
 
 int Widget::getY() {
-  return this->y;
+  return this->attributes.y;
 }
 
 void Widget::setY(int y) {
-  this->y = y;
+  this->attributes.y = y;
 }
 
 void Widget::updatePronPosition() {
-  if(this->lastX != this->x || this->lastY != this->y) {
-    this->lastX = this->x;
-    this->lastY = this->y;
-    pronMoveWindowTo(Application::getInstance()->d, this->pronWindow, this->x, this->y);
+  if (this->lastAttributes.x != this->getX() ||
+      this->lastAttributes.y != this->getY()) {
+    this->lastAttributes.x = this->getX();
+    this->lastAttributes.y = this->getY();
+    pronMoveWindowTo(Application::getInstance()->d, this->pronWindow,
+        this->getX(), this->getY());
   }
 }
 
@@ -232,9 +235,11 @@ void Widget::handleEventDestroyWindow() {
 void Widget::handleEventResizeWindow(int width, int height) {
   //printf("handleEventResizeWindow\n");
   bool isResized   = this->getWidth() != width || this->getHeight() != height;
-  this->lastHeight = height;
-  this->lastWidth  = width;
-  if(isResized) {
+
+  this->lastAttributes.height = height;
+  this->lastAttributes.width  = width;
+
+  if (isResized) {
     this->setWidth(width);
     this->setHeight(height);
     this->resized();
@@ -244,19 +249,19 @@ void Widget::handleEventResizeWindow(int width, int height) {
 void Widget::draw() {}
 
 void Widget::setFGColor(const Color &c) {
-  pron::pronFreeGC(Application::getInstance()->d, this->fgColor);
   pron::PronGCValues values;
   values.bg = Color(0, 0, 0);
   values.fg = c;
-  this->fgColor = pron::pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG | pron::GC_VAL_BG);
+  pron::pronChangeGC(Application::getInstance()->d, this->fgGC, values,
+      pron::GC_VAL_FG | pron::GC_VAL_BG);
 }
 
-void Widget::setBGColor(const Color &c __attribute__((unused))) {
-  pron::pronFreeGC(Application::getInstance()->d, this->bgColor);
+void Widget::setBGColor(const Color &c) {
   pron::PronGCValues values;
   values.bg = Color(0, 0, 0);
   values.fg = c;
-  this->bgColor = pron::pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG | pron::GC_VAL_BG);
+  pron::pronChangeGC(Application::getInstance()->d, this->bgGC, values,
+      pron::GC_VAL_FG | pron::GC_VAL_BG);
 }
 
 } // namespace sombrero
