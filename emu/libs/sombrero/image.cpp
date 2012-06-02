@@ -16,10 +16,16 @@ Image::~Image() {
 }
 
 void Image::draw() {
-  pron::pronCopyArea(Application::getInstance()->d, this->pixmap, this->pronWindow, Application::getInstance()->d->defaultGC, 0, 0, this->imageWidth, this->imageHeight, 0, 0);
+  if (this->isReversed) {
+    pron::pronNegArea(Application::getInstance()->d, this->pixmap, this->pronWindow, Application::getInstance()->d->defaultGC, 0, 0, this->imageWidth, this->imageHeight, 0, 0);
+  } else {
+    pron::pronCopyArea(Application::getInstance()->d, this->pixmap, this->pronWindow, Application::getInstance()->d->defaultGC, 0, 0, this->imageWidth, this->imageHeight, 0, 0);
+  }
 }
 
 void Image::init() {
+  this->isReversed = false;
+
   /* we will be using this uninitialized pointer later to store raw, uncompressd image */
   char *raw_image = NULL;
 
@@ -102,6 +108,10 @@ unsigned int Image::getImageWidth(){
 }
 unsigned int Image::getImageHeight(){
   return this->imageHeight;
+}
+
+void Image::reverseColors() {
+  this->isReversed = ! this->isReversed;
 }
 
 } // namespace sombrero

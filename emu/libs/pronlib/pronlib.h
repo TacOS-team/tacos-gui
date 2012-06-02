@@ -415,6 +415,41 @@ void pronDrawText(Display *d, Window w, GC gc, int x, int y,
 void pronTextSize(Display *d, GC gc, const char *text, int length, int *width, int *height);
 
 /**
+ * rotates an area from a drawable to another one with a given angle.
+ * @param d The connection to pron
+ * @param src The source drawable
+ * @param dest The destination drawable
+ * @param gc The graphics context to use during the rotation
+ * @param srcX The x-coordinate of the top-left corner of the
+ * source drawable area to rotate
+ * @param srcY The y-coordinate of the top-left corner of the
+ * source drawable area to rotate
+ * @param width The width of the source drawable area to rotate
+ * @param height The height of the source drawable area to rotate
+ * @param destX The destination top-left corner x-coordinate
+ * @param destY The destination top-left corner y-coordinate
+ */
+void pronRotateArea(Display *d, Drawable src, Drawable dest, GC gc, 
+    int srcX, int srcY, unsigned int width, unsigned int height, int destX, int destY, int angle);
+
+/**
+ * reverse colors an area from a drawable to another one.
+ * @param d The connection to pron
+ * @param src The source drawable
+ * @param dest The destination drawable
+ * @param gc The graphics context to use during the reverse
+ * @param srcX The x-coordinate of the top-left corner of the
+ * source drawable area to reverse
+ * @param srcY The y-coordinate of the top-left corner of the
+ * source drawable area to reverse
+ * @param width The width of the source drawable area to reverse
+ * @param height The height of the source drawable area to reverse
+ * @param destX The destination top-left corner x-coordinate
+ * @param destY The destination top-left corner y-coordinate
+ */
+void pronNegArea(Display *d, Drawable src, Drawable dest, GC gc, 
+    int srcX, int srcY, unsigned int width, unsigned int height, int destX, int destY);
+/**
  * Allocates memory needed to receive a pron event.
  * @return Pointer to the allocated PronEvent
  */

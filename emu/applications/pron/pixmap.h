@@ -48,7 +48,7 @@ class Pixmap : public Drawable {
    * @return true if we can draw at position (x, y)
    */
   bool isValid(int x, int y);
-
+  
  private:
   char *buf; /**< Pixmap buffer */
   int depth; /**< Pixmap depth */

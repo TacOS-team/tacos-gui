@@ -398,6 +398,15 @@ void Drawable::copyArea(int dstX, int dstY, Drawable *d, int srcX, int srcY, int
   }
 }
 
+void Drawable::negArea(int dstX, int dstY, Drawable *d, int srcX, int srcY, int width, int height) {
+  /** @todo XXX Bourrin à revoir (problème de depth et de byte per pixel de la pixmap et de l'écran) */
+  for (int y = 0; y < height; y++) {
+    for (int x = 0; x < width; x++) {
+      this->setPixel(x + dstX, y + dstY, 255 - d->getPixel(x + srcX, y + srcY));
+    }
+  }
+}
+
 void Drawable::drawText(int x, int y, const char *text, int length) {
   Font *font = this->getScreen()->getFont(this->getScreen()->getGC()->font_num);
   
