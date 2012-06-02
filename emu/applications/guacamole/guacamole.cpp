@@ -136,6 +136,8 @@ int main() {
           if (resizing) {
             resizing = false;
             pronMapWindow(display, windowResizeButtonPressed->window);
+            pronResizeWindow(display, windowResizeButtonPressed->window,
+                windowResizeButtonPressed->attributes.width, windowResizeButtonPressed->attributes.height);
           }
           windowLeftButtonPressed   = NULL;
           windowResizeButtonPressed = NULL;
