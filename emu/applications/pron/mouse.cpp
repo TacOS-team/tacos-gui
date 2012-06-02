@@ -46,6 +46,7 @@ Mouse::Mouse() {
 
   screen->getGC()->setFg(Color(0, 0, 0));
 
+  // Interrieur noir
   this->pointer->drawLine(1,  2,  1, 15);
   this->pointer->drawLine(2,  3,  2, 14);
   this->pointer->drawLine(3,  4,  3, 13);
@@ -59,13 +60,13 @@ Mouse::Mouse() {
   this->pointer->drawPoint(10, 10);
 
   screen->getGC()->setFg(oldFg);
-
+  // Contour blanc
   this->pointer->drawLine(0,  0,  0, 17);
   this->pointer->drawLine(0,  0, 12, 12);
   this->pointer->drawLine(0, 17,  3, 14);
   this->pointer->drawLine(4, 14,  5, 15);
   this->pointer->drawLine(5, 16,  7, 18);
-  this->pointer->drawLine(5, 17,  6, 18);
+  this->pointer->drawPoint(6, 18);
   this->pointer->drawLine(8, 15,  8, 18);
   this->pointer->drawLine(7, 12,  7, 14);
   this->pointer->drawLine(8, 12, 12, 12);
