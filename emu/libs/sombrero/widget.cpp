@@ -15,6 +15,9 @@ Widget::Widget() {
   values.bg = cw;
   values.fg = cb;
   this->bgColor = pron::pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG | pron::GC_VAL_BG);
+  /*pron::PronWindowAttributes newAttr;
+  newAttr.bgColor = cw;
+  pron::pronSetWindowAttributes(Application::getInstance()->d, this->pronWindow, newAttr, pron::WIN_ATTR_BG_COLOR);*/
 }
 
 Widget::~Widget() {
@@ -251,11 +254,11 @@ void Widget::setFGColor(const Color &c) {
   this->fgColor = pron::pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG | pron::GC_VAL_BG);
 }
 
-void Widget::setBGColor(const Color &c __attribute__((unused))) {
+void Widget::setBGColor(const Color &c) {
   pron::pronFreeGC(Application::getInstance()->d, this->bgColor);
   pron::PronGCValues values;
-  values.bg = Color(0, 0, 0);
-  values.fg = c;
+  values.bg = c;
+  values.fg = Color(0, 0, 0);
   this->bgColor = pron::pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG | pron::GC_VAL_BG);
 }
 

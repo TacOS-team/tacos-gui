@@ -5,14 +5,15 @@ namespace sombrero {
 
 class Widget;
 
-class ColorButton : Button{
+class ColorButton : public Button{
  private:
   Color c;
   ColorPicker *cp;
  protected:
  public:
-  ColorButton(int r, int g, int b, ColorPicker *cp) 
-      : Button(), c(r, g, b), cp(cp) {
+  ColorButton(const Color &c, ColorPicker *cp) 
+      : Button(), c(c), cp(cp) {
+    this->setBGColor(c);
   }
   void handleMouseDown(sombrero::MouseButton b, int x, int y) {
     cp->setCurrentColor(this->c);
@@ -32,9 +33,12 @@ void ColorPicker::init() {
   for (i = 0; i < this->nbColors; ++i) {
     c = i * (255 / this->nbColors);
     // Creates the buttons
-    this->bcolors[i] = new ColorButton(c, 0, 0, this); // red
-    this->bcolors[i + this->nbColors] = new ColorButton(0, c, 0, this); // green
-    this->bcolors[i + 2 * this->nbColors] = new ColorButton(0, 0, c, this); // blue
+    Color col(c, 0, 0);
+    this->bcolors[i] = new ColorButton(col, this); // red
+    Color col2(0, c, 0);
+    this->bcolors[i + this->nbColors] = new ColorButton(col2, this); // green
+    Color col3(0, 0, c);
+    this->bcolors[i + 2 * this->nbColors] = new ColorButton(col3, this); // blue
     // Adds the buttons to the color picker
     this->attach((Widget *)this->bcolors[i], i, 0, 1, 1);
     this->attach((Widget *)this->bcolors[i + this->nbColors], i, 1, 1, 1);
