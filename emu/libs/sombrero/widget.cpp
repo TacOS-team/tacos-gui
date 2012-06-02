@@ -165,6 +165,7 @@ void Widget::updatePronPosition() {
 
 void Widget::updateBGColor() {
   if (this->attributes.bgColor.getRGB24() != this->lastAttributes.bgColor.getRGB24()) {
+    printf("Window attribute %x\n", this->pronWindow);
     pron::PronWindowAttributes newAttr;
     newAttr.bgColor = this->attributes.bgColor;
     pron::pronSetWindowAttributes(Application::getInstance()->d, this->pronWindow, newAttr, pron::WIN_ATTR_BG_COLOR);
@@ -275,7 +276,9 @@ void Widget::setBGColor(const Color &c) {
   pron::pronChangeGC(Application::getInstance()->d, this->bgGC, values,
       pron::GC_VAL_FG | pron::GC_VAL_BG);
   // We have to update pron attributes
-  this->update();
+  if (this->isPronWindowCreated()) {
+    this->update();
+  }
 }
 
 } // namespace sombrero

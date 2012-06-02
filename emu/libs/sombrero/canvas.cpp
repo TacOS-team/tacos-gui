@@ -4,7 +4,7 @@
 
 namespace sombrero {
 
-Canvas::Canvas(int pWidth, int pHeight) : c(0, 0, 0) {
+Canvas::Canvas(int pWidth, int pHeight) : c(0, 0, 0), pWidth(pWidth), pHeight(pHeight) {
   this->pixmap = pronCreatePixmap(Application::getInstance()->d, pWidth, pHeight, SOMBRERO_CANVAS_DEPTH);
   this->pixmap2 = pronCreatePixmap(Application::getInstance()->d, pWidth, pHeight, SOMBRERO_CANVAS_DEPTH);
   Color bgColor(255, 255, 255);
@@ -18,11 +18,12 @@ Canvas::Canvas(int pWidth, int pHeight) : c(0, 0, 0) {
 
 Canvas::~Canvas() {
   pronFreePixmap(Application::getInstance()->d, this->pixmap);
+  pronFreePixmap(Application::getInstance()->d, this->pixmap2);
 }
 
 void Canvas::clear() {
-  pronFillRectangle(Application::getInstance()->d, this->pixmap, this->bgGC, 0, 0, this->getWidth(), this->getHeight());
-  pronFillRectangle(Application::getInstance()->d, this->pixmap2, this->bgGC, 0, 0, this->getWidth(), this->getHeight());
+  pronFillRectangle(Application::getInstance()->d, this->pixmap, this->bgGC, 0, 0, this->pWidth, this->pHeight);
+  pronFillRectangle(Application::getInstance()->d, this->pixmap2, this->bgGC, 0, 0, this->pWidth, this->pHeight);
 }
 
 void Canvas::drawPoint(int x, int y){
