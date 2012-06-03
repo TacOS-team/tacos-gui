@@ -41,7 +41,7 @@ class VScrollBar : public ScrollBar {
    * Handle for a mouseButton event
    * @param e A pointer to the event that accured
    */
-  virtual void handleEventMouseButton(pron::EventMouseButton * e);
+  void handleClick(int x, int y);
 };
 
 } // namespace sombrero

@@ -104,7 +104,7 @@ class ScrollBar : public Widget {
    * Handle for a mouseButton event
    * @param e A pointer to the event that accured
    */
-  virtual void handleEventMouseButton(pron::EventMouseButton * e) = 0;
+  virtual void handleClick(int x, int y) = 0;
   /**
    * Draw the widget
    */
