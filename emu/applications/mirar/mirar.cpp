@@ -32,11 +32,11 @@ class BotonSiguiente : public sombrero::Button {
   private:
     Mirar * aplicacion;
   protected:
-    void handleMouseDown(sombrero::MouseButton button, int x, int y) {
-      sombrero::Button::handleMouseDown(button, x, y);
-      if (button == sombrero::leftButton) {
+    void handleClick(int x, int y) {
+      sombrero::Button::handleClick(x, y);
+      //if (button == sombrero::leftButton) {
         this->aplicacion->verSiguiente();
-      }
+      //}
     }
     
   public:
@@ -118,6 +118,7 @@ void Mirar::inicializacionSombrero() {
   this->anterior->clicked.connect(this, &Mirar::verAnterior);
   this->invertir = new BotonInvertir("Invertir",this);
   this->image = new sombrero::Image(this->jpegArchivos[this->corrienteArchivo]);
+  this->image->setXOffset((this->sp->getWidth() - this->image->getImageWidth()) / 2);
   this->sp = new sombrero::VScrollPane(this->image);
 
   ventana->add(g);
@@ -127,32 +128,37 @@ void Mirar::inicializacionSombrero() {
   g->attachNextTo(this->invertir,this->siguiente,sombrero::POS_RIGHT,1,1);
   this->g->newLine();
   this->g->attach(this->sp,0,1,3,8);
+  this->ventana->draw();
 }
 
 Mirar::~Mirar() {
 }
 
-void Mirar::verSiguiente() {
-  this->corrienteArchivo = (this->corrienteArchivo + 1) % this->jpegArchivos.size();
+void Mirar::verNuevo (bool siguiente) {
+  if (siguiente) {
+    this->corrienteArchivo = (this->corrienteArchivo + 1) % this->jpegArchivos.size();
+  } else {
+    this->corrienteArchivo = this->corrienteArchivo - 1;
+    if (this->corrienteArchivo < 0) {
+      this->corrienteArchivo = this->jpegArchivos.size() - 1;
+    }
+  }
   this->sp->remove(this->image);
   delete this->image;
   this->image = new sombrero::Image(this->jpegArchivos[this->corrienteArchivo]);
+  this->image->setXOffset((this->sp->getWidth() - this->image->getImageWidth()) / 2);
   this->sp->add(this->image);
   this->g->attach(this->sp,0,1,3,8);
   this->ventana->draw();
 }
 
+
+void Mirar::verSiguiente() {
+  this->verNuevo(true);
+}
+
 void Mirar::verAnterior() {
-  this->corrienteArchivo = this->corrienteArchivo - 1;
-  if (this->corrienteArchivo < 0) {
-    this->corrienteArchivo = this->jpegArchivos.size() - 1;
-  }
-  this->sp->remove(this->image);
-  delete this->image;
-  this->image = new sombrero::Image(this->jpegArchivos[this->corrienteArchivo]);
-  this->sp->add(this->image);
-  this->g->attach(this->sp,0,1,3,8);
-  this->ventana->draw();
+  this->verNuevo(false);
 }
 
 void Mirar::verInverso() {
