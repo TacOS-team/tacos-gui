@@ -16,8 +16,8 @@ void ScrollPane::init() {
 }
 
 void ScrollPane::positionChanged(int val) {
-  if(this->getWidget() && this->getWidget()->getWidth() > this->getWidth()) {
-    this->getWidget()->setX(-1*val/factor);
+  if(this->getWidget() && this->getWidgetLength() > this->getScrollPaneLength()) {
+    this->setWidgetPosition(-1*val/factor);
     this->getWidget()->updatePronPosition();
   }
 }
