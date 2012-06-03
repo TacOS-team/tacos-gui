@@ -17,6 +17,7 @@ ssize_t kbd_read(void *buf) {
     kbd_state.state = event.key.state;
     kbd_state.keysym = event.key.keysym.sym;
     kbd_state.modifiers = event.key.keysym.mod;
+    kbd_state.ch = event.key.keysym.unicode;
 
     memcpy(buf, &kbd_state, sizeof(kbd_state));
     ret = sizeof(kbd_state);

@@ -411,7 +411,7 @@ void pronCopyArea(Display *d, Drawable src, Drawable dest, GC gc,
  * @param vpos The vertical position of the text
  */
 void pronDrawText(Display *d, Window w, GC gc, int x, int y, const char *text,
-    int length, HPosition hpos = LEFT, VPosition vpos = MIDDLE);
+    int length, HPosition hpos = LEFT, VPosition vpos = TOP);
 
 /**
  * Gets the width and the height of a string.
