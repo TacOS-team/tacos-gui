@@ -29,10 +29,10 @@ void Keyboard::checkEvents() {
     Window *src = (Window *) screen->getFocusWin();
     if (src != NULL) {
       if (state.state == PRON_RELEASED) {
-        EventKeyReleased keyReleased(src->getId(), src->getId(), 0, 0, 0, 0, state.keysym, state.modifiers);
+        EventKeyReleased keyReleased(src->getId(), src->getId(), 0, 0, 0, 0, state.keysym, state.modifiers, state.ch);
         src->deliverDeviceEvent(&keyReleased, sizeof(keyReleased));
       } else if (state.state == PRON_PRESSED) {
-        EventKeyPressed keyPressed(src->getId(), src->getId(), 0, 0, 0, 0, state.keysym, state.modifiers);
+        EventKeyPressed keyPressed(src->getId(), src->getId(), 0, 0, 0, 0, state.keysym, state.modifiers, state.ch);
         src->deliverDeviceEvent(&keyPressed, sizeof(keyPressed));
       }
     }

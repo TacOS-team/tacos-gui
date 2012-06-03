@@ -184,9 +184,11 @@ struct EventKey : public PronEvent {
    * @param yRoot The y-coordinate of the mouse (relative to the root window)
    * @param keysym The pron internal key code
    * @param modifiers The modifiers (CTRL, ALT, SHIFT...)
+   * @param ch The ASCII character
    */
   EventKey(MessageType type, unsigned int window, unsigned int subwindow,
-      int x, int y, int xRoot, int yRoot, unsigned int keysym, unsigned int modifiers)
+      int x, int y, int xRoot, int yRoot,
+      unsigned int keysym, unsigned int modifiers, char ch)
       : PronEvent(type, window) {
     this->subwindow = subwindow;
     this->x = x;
@@ -195,6 +197,7 @@ struct EventKey : public PronEvent {
     this->yRoot = yRoot;
     this->keysym = keysym;
     this->modifiers = modifiers;
+    this->ch = ch;
   }
 
   unsigned int subwindow; /**< Window the event has occured in */
@@ -204,6 +207,7 @@ struct EventKey : public PronEvent {
   int yRoot; /**< Mouse absolute y position */
   unsigned int keysym; /**< Pron internal key code */
   unsigned int modifiers; /**< Modifiers (CTRL, ALT, SHIFT...) */
+  char ch; /**< ASCII character */
 };
 
 /**
@@ -221,10 +225,13 @@ struct EventKeyPressed : public EventKey {
    * @param yRoot The y-coordinate of the mouse (relative to the root window)
    * @param keysym The pron internal key code
    * @param modifiers The modifiers (CTRL, ALT, SHIFT...)
+   * @param ch The ASCII character
    */
   EventKeyPressed(unsigned int window, unsigned int subwindow, int x, int y,
-      int xRoot, int yRoot, unsigned int keysym, unsigned int modifiers)
-      : EventKey(EV_KEY_PRESSED, window, subwindow, x, y, xRoot, yRoot, keysym, modifiers) {}
+      int xRoot, int yRoot, unsigned int keysym,
+      unsigned int modifiers, char ch)
+      : EventKey(EV_KEY_PRESSED, window, subwindow,
+          x, y, xRoot, yRoot, keysym, modifiers, ch) {}
 };
 
 /**
@@ -242,10 +249,13 @@ struct EventKeyReleased : public EventKey {
    * @param yRoot The y-coordinate of the mouse (relative to the root window)
    * @param keysym The pron internal key code
    * @param modifiers The modifiers (CTRL, ALT, SHIFT...)
+   * @param ch The ASCII character
    */
   EventKeyReleased(unsigned int window, unsigned int subwindow, int x, int y,
-      int xRoot, int yRoot, unsigned int keysym, unsigned int modifiers)
-      : EventKey(EV_KEY_RELEASED, window, subwindow, x, y, xRoot, yRoot, keysym, modifiers) {}
+      int xRoot, int yRoot, unsigned int keysym,
+      unsigned int modifiers, char ch)
+      : EventKey(EV_KEY_RELEASED, window, subwindow,
+          x, y, xRoot, yRoot, keysym, modifiers, ch) {}
 };
 
 /**
