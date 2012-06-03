@@ -105,7 +105,7 @@ int main() {
       }
       case EV_MOUSE_BUTTON : {
         EventMouseButton *mouseButtonEvent = (EventMouseButton*) e;
-        printf("mouse button event. ID : %d\n", mouseButtonEvent->window);
+        //printf("mouse button event. ID : %d\n", mouseButtonEvent->window);
         GWindow *gwin = GWindowsManager::getInstance()->getGWindow(mouseButtonEvent->window);
         if (gwin && mouseButtonEvent->b1) {
           // If the window is the decoration window

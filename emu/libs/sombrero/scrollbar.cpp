@@ -69,7 +69,7 @@ void ScrollBar::thumbReleased() {
 void ScrollBar::setParent(Widget *parent) {
   Widget::setParent(parent);
   this->thumb.setParent(this);
-  this->thumb.clicked.connect  (this, &ScrollBar::thumbClicked);
+  this->thumb.down.connect  (this, &ScrollBar::thumbClicked);
   this->thumb.released.connect (this, &ScrollBar::thumbReleased);
   this->thumb.dontPropagateEvent(pron::EV_MOUSE_BUTTON);
   this->subscribeEvent(pron::EV_MOUSE_BUTTON);

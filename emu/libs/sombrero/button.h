@@ -25,10 +25,16 @@ class Button : public Widget {
 
   void handleMouseDown(MouseButton button, int x, int y);
   void handleMouseReleased(MouseButton button, int x, int y);
+
+  bool isDown;
+
+  void setDown();
+  void setReleased();
   
  public:
   // Signals
   signal0<> clicked;
+  signal0<> down;
   signal0<> released;
   /**
    * The default button constructor
@@ -60,6 +66,12 @@ class Button : public Widget {
    * Button drawing stuff
    */
   virtual void draw();
+  /**
+   * Function called when a client clicks on the widget
+   * @param x the x position of the mouse
+   * @param y the y position of the mouse
+   */
+  void handleClick(int x, int y);
 
 };
 

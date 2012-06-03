@@ -75,6 +75,12 @@ class Widget : public has_slots<> {
   virtual void handleDoubleClick(int x, int y);
   /**
    * Function called when a client clicks on the widget
+   * @param x the x position of the mouse
+   * @param y the y position of the mouse
+   */
+  virtual void handleClick(int x, int y);
+  /**
+   * Function called when a client clicks on the widget
    * @param button The clicked button (rightButton, middleButton or leftButton)
    */
   virtual void handleMouseReleased(MouseButton button, int x, int y);

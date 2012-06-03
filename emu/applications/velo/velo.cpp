@@ -157,6 +157,8 @@ class MyWindow : public Window {
     scrollpane = new ScrollPane(p);
     g->attachNextTo(scrollpane, l, POS_BOTTOM, 1, 6);
     p->setFiles(d.entryInfoList());
+    p->update();
+    scrollpane->update();
     g->update();
     p->open.connect(this, &MyWindow::openSlot);
   }

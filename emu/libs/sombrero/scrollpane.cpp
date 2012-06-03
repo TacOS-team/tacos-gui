@@ -40,11 +40,11 @@ void ScrollPane::execUpdate() {
       // The ratio depends on the ratio visible and hidden
       this->scrollBar.setRatio(factor*(this->widget->getHeight() - this->getHeight())
         * ((float)this->getHeight()/this->widget->getHeight()));
-      this->scrollBar.update();
     } else {
       // If the widget is smaller, the scrollbar cannot be moved
       this->scrollBar.setRange(0, 0);
     }
+    this->scrollBar.update();
     this->widget->setY(this->scrollBar.getValue());
     this->widget->update();
   }
