@@ -34,8 +34,8 @@ class Mirar :public has_slots<> {
     void verSiguiente();
     void verAnterior();
     void verInverso();
+    void verNuevo (bool siguiente);
     void correr();
-
 };
   
 
