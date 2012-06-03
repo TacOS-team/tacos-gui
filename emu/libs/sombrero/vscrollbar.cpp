@@ -48,29 +48,30 @@ void VScrollBar::draw() {
   }
 }
 
-void VScrollBar::handleEventPointerMoved(pron::EventPointerMoved *mousePointerEvent) {
-  ScrollBar::handleEventPointerMoved(mousePointerEvent);
-  this->updateThumbPosition(mousePointerEvent->y - this->thumb.getHeight()/2);
+void VScrollBar::thumbClickedAt(int x __attribute__((unused)), int y) {
+  this->clickPosition = y;
 }
 
-void VScrollBar::handleEventMouseButton(pron::EventMouseButton * e) {
-  // TODO gestion propre click
+void VScrollBar::handleEventPointerMoved(pron::EventPointerMoved *mousePointerEvent) {
+  ScrollBar::handleEventPointerMoved(mousePointerEvent);
+  this->updateThumbPosition(mousePointerEvent->y - this->clickPosition);
+}
+
+void VScrollBar::handleClick(int x __attribute__((unused)), int y) {
   //printf("ScrollBar::handleEventMouseButton\n");
-  if(e->b1) {
-    // If the click is above the thumb we step up
-    if(e->y < this->thumb.getY()) {
-      int newVal = (int)this->value - this->step;
-      if(newVal >= 0) {
-        this->setValue(this->value - this->step);
-      } else {
-        this->value = this->min;
-      }
-    } else if(e->y > this->thumb.getY() + this->thumb.getHeight()) {
-      // If below, we step down
-      this->setValue(this->value + this->step);
+  // If the click is above the thumb we step up
+  if(y < this->thumb.getY()) {
+    int newVal = (int)this->value - this->step;
+    if(newVal >= 0) {
+      this->setValue(this->value - this->step);
+    } else {
+      this->value = this->min;
     }
-    this->update();
+  } else if(y > this->thumb.getY() + this->thumb.getHeight()) {
+    // If below, we step down
+    this->setValue(this->value + this->step);
   }
+  this->update();
 }
 
 void VScrollBar::setThumbPosition(unsigned short position) {

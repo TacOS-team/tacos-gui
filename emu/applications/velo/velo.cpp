@@ -1,10 +1,9 @@
 
-#include <fileinfo.h>
+#include <sombrero.h>
 #include <button.h>
 #include <window.h>
 #include <grid.h>
 #include <container.h>
-#include <scrollpane.h>
 #include <directory.h>
 #include <application.h>
 #include <label.h>
@@ -48,8 +47,8 @@ class Panel : public sombrero::Container {
     this->open(fileName);
   }
 
-  void add(Widget *widget) {}
-  void remove(Widget *widget) {}
+  void add(Widget *widget __attribute__((unused))) {}
+  void remove(Widget *widget __attribute__((unused))) {}
 
   void setFiles(list<FileInfo> fileList) {
     //printf("Panel::setFiles\n");
@@ -124,7 +123,7 @@ class MyWindow : public Window {
  protected:
   Grid *g;
   Directory d;
-  ScrollPane *scrollpane;
+  VScrollPane *scrollpane;
   Panel *p;
   Label *l;
 
@@ -168,7 +167,7 @@ class MyWindow : public Window {
     l->setText(d.getInformations().getAbsolutePath());
     p = new Panel();
     p->setFiles(d.entryInfoList());
-    scrollpane = new ScrollPane(p);
+    scrollpane = new VScrollPane(p);
     g->attachNextTo(scrollpane, l, POS_BOTTOM, 1, 6);
     //scrollpane->update();
     g->update();

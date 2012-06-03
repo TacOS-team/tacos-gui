@@ -1,8 +1,8 @@
-#ifndef __VSCROLLBAR_H__
-#define __VSCROLLBAR_H__
+#ifndef __HSCROLLBAR_H__
+#define __HSCROLLBAR_H__
 /**
- * @file vscrollbar.h
- * VScrollBar class definition
+ * @file hscrollbar.h
+ * HScrollBar class definition
  */
 
 #include "scrollbar.h"
@@ -10,10 +10,10 @@
 namespace sombrero {
 
 /**
- * VScrollBar class definition
- * @brief The VScrollBar widget
+ * HScrollBar class definition
+ * @brief The HScrollBar widget
  */ 
-class VScrollBar : public ScrollBar {
+class HScrollBar : public ScrollBar {
 
  protected:
   /**
@@ -47,4 +47,4 @@ class VScrollBar : public ScrollBar {
 
 } // namespace sombrero
 
-#endif//__VSCROLLBAR_H__
+#endif//__HSCROLLBAR_H__

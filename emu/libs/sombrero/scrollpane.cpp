@@ -1,51 +1,49 @@
-#include "scrollpane.h"
+#include "hscrollpane.h"
 
-int factor = 100;
+static int factor = 100;
 
 namespace sombrero {
 
 ScrollPane::ScrollPane(Widget *widget) {
   this->add(widget);
-  this->init();
 }
 
 void ScrollPane::init() {
-  this->scrollBar.setWidth(20);
-  this->scrollBar.setY(0);
-  this->scrollBar.setStep(factor*10);
-  this->getWidget()->setY(0);
-  this->scrollBar.newValue.connect(this, &ScrollPane::YMoved);
+  this->setScrollBarWidth(20);
+  this->scrollbar->setStep(factor*10);
+  this->getWidget()->setX(0);
+  this->scrollbar->newValue.connect(this, &ScrollPane::positionChanged);
 }
 
-void ScrollPane::YMoved(int val) {
-  if(this->getWidget() && this->getWidget()->getHeight() > this->getHeight()) {
-    this->getWidget()->setY(-1*val/factor);
+void ScrollPane::positionChanged(int val) {
+  if(this->getWidget() && this->getWidgetLength() > this->getScrollPaneLength()) {
+    this->setWidgetPosition(-1*val/factor);
     this->getWidget()->updatePronPosition();
   }
 }
 
 void ScrollPane::execUpdate() {
-  //printf("update scrollpane\n");
-  this->scrollBar.setHeight(this->getHeight());
-  this->scrollBar.setX(this->getWidth() - this->scrollBar.getWidth());
+  //printf("ScrollPane::execUpdate\n");
+  this->setScrollBarLength(this->getScrollPaneLength());
+  this->moveScrollBarTo(this->getScrollPanewidth() - this->getScrollBarWidth());
   // If the widget has been set
   if(this->getWidget()) {
-    this->getWidget()->setWidth(this->getWidth() - this->scrollBar.getWidth());
-    this->getWidget()->setX(0);
+    this->setWidgetWidth(this->getScrollPanewidth() - this->getScrollBarWidth());
+    this->setWidgetPosition(0);
     // If the widget is bigger than the scrollpane
-    if(this->getWidget()->getHeight() > this->getHeight()) {
+    if(this->getWidgetLength() > this->getScrollPaneLength()) {
       // Sets the range. Is depends on the number of hidden pixels
       // Multiplied per factor to avoid strange behavior on the ratio of small values
-      this->scrollBar.setRange(0, factor*(this->getWidget()->getHeight() - this->getHeight()));
+      this->scrollbar->setRange(0, factor*(this->getWidgetLength() - this->getScrollPaneLength()));
       // The ratio depends on the ratio visible and hidden
-      this->scrollBar.setRatio(factor*(this->getWidget()->getHeight() - this->getHeight())
-        * ((float)this->getHeight()/this->getWidget()->getHeight()));
+      this->scrollbar->setRatio(factor*(this->getWidgetLength() - this->getScrollPaneLength())
+        * ((float)this->getScrollPaneLength()/this->getWidgetLength()));
     } else {
       // If the widget is smaller, the scrollbar cannot be moved
-      this->scrollBar.setRange(0, 0);
+      this->scrollbar->setRange(0, 0);
     }
-    this->scrollBar.update();
-    this->getWidget()->setY(-1*this->scrollBar.getValue()/factor);
+    this->scrollbar->update();
+    this->setWidgetPosition(-1*this->scrollbar->getValue()/factor);
     this->getWidget()->update();
   }
   Container::execUpdate();
@@ -62,7 +60,7 @@ void ScrollPane::setParent(Widget *parent) {
 
 std::vector<Widget*> ScrollPane::getChildren() {
   std::vector<Widget*> res (Bin::getChildren());
-  res.push_back(&this->scrollBar);
+  res.push_back(this->scrollbar);
   return res;
 }
 
