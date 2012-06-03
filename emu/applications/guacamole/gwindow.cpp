@@ -203,7 +203,7 @@ void GWindow::resize(int width, int height) {
       height = attr.minHeight;
     }
 
-    printf("%d %d %d %d\n",attr.minHeight, attr.minWidth, height, width);
+    //printf("%d %d %d %d\n",attr.minHeight, attr.minWidth, height, width);
 
     if (!this->isMaximised) {
       pronResizeWindow(display, this->parent, width, height);

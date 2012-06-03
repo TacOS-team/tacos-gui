@@ -49,14 +49,6 @@ class Widget : public has_slots<> {
    */
   pron::Window pronWindow;
   /**
-   * Widget default constructor that does nothing.
-   */
-  Widget();
-  /**
-   * Widget destructor. Destroys the pron top window
-   */
-  ~Widget();
-  /**
    * initialize the widget
    */
   void init();
@@ -75,6 +67,12 @@ class Widget : public has_slots<> {
   virtual void handleDoubleClick(int x, int y);
   /**
    * Function called when a client clicks on the widget
+   * @param x the x position of the mouse
+   * @param y the y position of the mouse
+   */
+  virtual void handleClick(int x, int y);
+  /**
+   * Function called when a client clicks on the widget
    * @param button The clicked button (rightButton, middleButton or leftButton)
    */
   virtual void handleMouseReleased(MouseButton button, int x, int y);
@@ -84,6 +82,14 @@ class Widget : public has_slots<> {
   bool isPronWindowCreated();
 
  public:
+  /**
+   * Widget default constructor that does nothing.
+   */
+  Widget();
+  /**
+   * Widget destructor. Destroys the pron top window
+   */
+  ~Widget();
   // Signals
   signal0<> resized;
   /**

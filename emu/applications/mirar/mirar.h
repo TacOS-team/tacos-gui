@@ -2,7 +2,6 @@
 #define __MIRAR_H__
 
 #include <sombrero.h>
-#include <scrollpane.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -19,23 +18,23 @@ class Mirar :public has_slots<> {
     VentanaMirar *ventana; /**< la ventana sombrero que contene la aplicacion */
     sombrero::Grid *g;
     BotonSiguiente *siguiente;
-    BotonAnterior *anterior;
+    sombrero::Button *anterior;
     BotonInvertir *invertir;
     sombrero::Image *image;
-    sombrero::ScrollPane *sp;
+    sombrero::VScrollPane *sp;
     std::vector<std::string> jpegArchivos; /**< los jpeg archivos que la aplicacion debe MIRAR */
     int corrienteArchivo;
 
   public:
-    Mirar(char * camino);
+    Mirar(std::string camino);
     ~Mirar();
 
     void inicializacionSombrero();
     void verSiguiente();
     void verAnterior();
     void verInverso();
+    void verNuevo (bool siguiente);
     void correr();
-
 };
   
 

@@ -1,10 +1,9 @@
 
-#include <fileinfo.h>
+#include <sombrero.h>
 #include <button.h>
 #include <window.h>
 #include <grid.h>
 #include <container.h>
-#include <scrollpane.h>
 #include <directory.h>
 #include <application.h>
 #include <label.h>
@@ -48,6 +47,9 @@ class Panel : public sombrero::Container {
     this->open(fileName);
   }
 
+  void add(Widget *widget __attribute__((unused))) {}
+  void remove(Widget *widget __attribute__((unused))) {}
+
   void setFiles(list<FileInfo> fileList) {
     //printf("Panel::setFiles\n");
     for(size_t i = 0; i < boutons.size(); ++i) {
@@ -77,32 +79,27 @@ class Panel : public sombrero::Container {
   }
 
   void execUpdate() {
-    if((int)boutons.size() * heightFile > this->getParent()->getHeight()) {
+    if(this->getParent()) {
       this->setHeight(boutons.size() * heightFile);
-    } else {
-      this->setHeight(this->getParent()->getHeight());
-    }
 
-    Container::execUpdate();
-    
-    for(size_t i = 0; i < boutons.size(); ++i) {
-      boutons[i]->setY(i * heightFile);
-      boutons[i]->setX(0);
-      boutons[i]->setWidth(this->getWidth());
-      boutons[i]->setHeight(heightFile);
-      boutons[i]->update();
+      Container::execUpdate();
+      
+      for(size_t i = 0; i < boutons.size(); ++i) {
+        boutons[i]->setY(i * heightFile);
+        boutons[i]->setX(0);
+        boutons[i]->setWidth(this->getWidth());
+        boutons[i]->setHeight(heightFile);
+        boutons[i]->update();
+      }
     }
   }
 
-  void draw() {
-    //printf("Panel::draw\n");
-    //this->clear();
-    if((int)boutons.size() * heightFile < this->getHeight()) {
-      pronFillRectangle(Application::getInstance()->d, this->pronWindow,
-               this->bgGC,
-               0, boutons.size() * heightFile, this->getWidth(),
-               this->getHeight()-boutons.size() * heightFile);
+  std::vector<Widget*> getChildren() {
+    std::vector<Widget*> res;
+    for(size_t i = 0; i < boutons.size(); ++i) {
+      res.push_back(boutons[i]);
     }
+    return res;
   }
 
 };
@@ -111,7 +108,7 @@ class MyWindow : public Window {
  protected:
   Grid *g;
   Directory d;
-  ScrollPane *scrollpane;
+  VScrollPane *scrollpane;
   Panel *p;
   Label *l;
 
@@ -154,9 +151,10 @@ class MyWindow : public Window {
     g->add(l);
     l->setText(d.getInformations().getAbsolutePath());
     p = new Panel();
-    scrollpane = new ScrollPane(p);
-    g->attachNextTo(scrollpane, l, POS_BOTTOM, 1, 6);
     p->setFiles(d.entryInfoList());
+    scrollpane = new VScrollPane(p);
+    g->attachNextTo(scrollpane, l, POS_BOTTOM, 1, 6);
+    //scrollpane->update();
     g->update();
     p->open.connect(this, &MyWindow::openSlot);
   }

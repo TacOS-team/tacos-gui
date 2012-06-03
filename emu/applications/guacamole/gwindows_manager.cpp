@@ -149,7 +149,7 @@ void add(vector<freeSpace> & spaces, vector<freeSpace> & oldSpaces, freeSpace sp
 }
 
 bool GWindowsManager::findFreeSpace(int & x, int & y, int width, int height) {
-  printf("findFreeSpace (width, height) : %d, %d\n", width, height);
+  //printf("findFreeSpace (width, height) : %d, %d\n", width, height);
   freeSpace root;
   root.x      = 0;
   root.y      = 0;

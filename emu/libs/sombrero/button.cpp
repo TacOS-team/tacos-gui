@@ -19,6 +19,7 @@ Button::Button(const std::string &text) : text(text) {
 void Button::init() {
   // Select more events
   this->subscribeEvent(pron::EV_MOUSE_BUTTON);
+  this->isDown = false;
 }
 
 Button::~Button() {}
@@ -36,6 +37,12 @@ void Button::draw() {
   this->getWidth(), this->getHeight());*/
   // We can clear the window
   this->clear();
+
+  if(this->isDown) {
+    pron::pronFillRectangle(Application::getInstance()->d, this->pronWindow,
+      this->bgGC, 0, 0,
+      this->getWidth(), this->getHeight());
+  }
   // Draws the line 
   pron::pronDrawRect(Application::getInstance()->d, this->pronWindow,
       this->fgGC, 0, 0,
@@ -46,18 +53,34 @@ void Button::draw() {
       this->text.c_str(), this->text.length(), CENTER, MIDDLE);
 }
 
+void Button::handleClick(int x __attribute__((unused)), int y __attribute__((unused))) {
+  this->clicked();
+}
+
 void Button::handleMouseDown(MouseButton button, int x __attribute__((unused)), int y __attribute__((unused))) {
   //printf("handleMouseClick\n");
   if(button == leftButton) {
-    this->clicked();
+    this->setDown();
+    this->down();
   }
 }
 
 void Button::handleMouseReleased(MouseButton button, int x __attribute__((unused)), int y __attribute__((unused))) {
   //printf("handleMouseReleased\n");
   if(button == leftButton) {
+    this->setReleased();
     this->released();
   }
+}
+
+void Button::setDown() {
+  this->isDown = true;
+  this->draw();
+}
+
+void Button::setReleased() {
+  this->isDown = false;
+  this->draw();
 }
 
 } // namespace sombrero

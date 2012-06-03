@@ -24,4 +24,10 @@ Widget* Bin::getWidget() {
   return this->widget;
 }
 
+std::vector<Widget*> Bin::getChildren() {
+  std::vector<Widget*> res;
+  res.push_back(this->widget);
+  return res;
+}
+
 } // Namespace sombrero

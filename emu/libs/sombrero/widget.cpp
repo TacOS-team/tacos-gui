@@ -182,7 +182,7 @@ void Widget::updateBGColor() {
 }
 
 void Widget::update() {
-  printf("Widget::update\n");
+  //printf("Widget::update\n");
   if(!this->isUpdating) {
     this->isUpdating = true;
     if(this->getParent() && !this->getParent()->isUpdating) {
@@ -220,6 +220,10 @@ void Widget::handleDoubleClick(int x __attribute__((unused)), int y __attribute_
 
 }
 
+void Widget::handleClick(int x __attribute__((unused)), int y __attribute__((unused))) {
+
+}
+
 void Widget::handleMouseReleased(MouseButton button __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused))) {
 
 }
@@ -228,7 +232,7 @@ void Widget::handleEventWindowCreated() {
 }
 
 void Widget::handleEventExpose() {
-  //printf("handleEventExpose\n");
+  //printf("handleEventExpose %x\n", this->pronWindow);
   this->draw();
 }
 
@@ -253,6 +257,11 @@ void Widget::handleEventMouseButton(pron::EventMouseButton *e) {
       this->handleMouseDown(leftButton, e->x, e->y);
     } else {
       this->handleMouseReleased(leftButton, e->x, e->y);
+      if(e->x >= 0 && e->y >= 0
+        && e->x < this->getWidth()
+        && e->y < this->getHeight()) {
+        this->handleClick(e->x, e->y);
+      }
     }
   }
   if(this->oldButtonsState.b2 != e->b2) {
