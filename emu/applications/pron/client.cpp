@@ -324,6 +324,15 @@ void Client::handle() {
       delete p;
       break;
     }
+    case RQ_SET_CURSOR: {
+      RqSetCursor *rq = (RqSetCursor*) Client::recvBuf;
+      printf("set Cursor %d at window %u\n", rq->pixmap, rq->window);
+      Window *w = (Window*) screen->getDrawable(rq->window, D_WINDOW);
+      if (w != NULL) {
+        w->pointer = rq->pixmap;
+      }
+      break;
+    }
     case RQ_COPY_AREA: {
       RqCopyArea *rq = (RqCopyArea*) Client::recvBuf;
       Drawable *src = screen->getDrawable(rq->src);

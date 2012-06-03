@@ -360,6 +360,11 @@ void pronFreePixmap(Display *d, unsigned int p) {
   tsock_write(d->fd, &rq, sizeof(rq));
 }
 
+void pronSetCursor(Display *d, unsigned int pixmap, unsigned int window) {
+  RqSetCursor rq(pixmap, window);
+  tsock_write(d->fd, &rq, sizeof(rq));
+}
+
 void pronCopyArea(Display *d, Drawable src, Drawable dest, GC gc, 
     int srcX, int srcY, unsigned int width, 
     unsigned int height, int destX, int destY) {

@@ -6,7 +6,7 @@ using namespace sombrero;
 
 int main() {
   Window w("Wallpaper", 0, 0, 800, 600, false);
-  string filename = "wallpaper.jpg";
+  string filename = "ressources/images/wallpaper.jpg";
   Image img(filename);
   w.add(&img);
   img.draw();

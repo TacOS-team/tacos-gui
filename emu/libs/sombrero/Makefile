@@ -7,7 +7,7 @@ OBJS = sombrero.o application.o widget.o window.o container.o \
 
 all: $(SOMBRERO)
 
-$(SOMBRERO): $(addprefix $(BUILDDIROBJS)/sombrero_, $(OBJS)) $(PRONLIB)
+$(SOMBRERO): $(addprefix $(BUILDDIROBJS)/sombrero_, $(OBJS)) $(PRONLIB) $(LIBBMP)
 	$(CXX) -o $@ -shared $^ -ljpeg
 
 $(BUILDDIROBJS)/sombrero_%.o: %.cpp

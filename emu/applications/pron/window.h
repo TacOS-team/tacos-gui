@@ -16,6 +16,7 @@ using namespace pron;
 
 class Screen;
 class Client;
+class Pixmap;
 
 /**
  * Client who is not the creator but has selected events on the window.
@@ -43,6 +44,8 @@ class Window : public Drawable {
  public:
   int eventMask; /**< Events selected by the creator of the window */
   int dontPropagateMask; /**< Events that the window must not propagate */
+
+  unsigned int pointer; /**< The mouse pointeur of the window */
   
   Window *parent; /**< Parent window */
   Window *prevSibling; /**< Previous sibling (linked list) */

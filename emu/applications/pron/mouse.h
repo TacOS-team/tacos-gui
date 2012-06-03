@@ -46,6 +46,7 @@ class Mouse {
   Mouse();
 
  public:
+  static unsigned int defaultPointer;
   /**
    * Returns the unique Mouse instance (singleton). Creates it if necessary.
    * @return the unique Mouse instance (singleton)

@@ -14,19 +14,22 @@
 #include <screen.h>
 #include <window.h>
 
-Mouse* Mouse::instance = NULL;
+Mouse*       Mouse::instance       = NULL;
+unsigned int Mouse::defaultPointer = 0;
+
+static int alphaColor = 0x00ff2cf3;
 
 Mouse::Mouse() {
   this->fd = open("/dev/mouse", 0);
   this->pointerBackupX = 0;
   this->pointerBackupY = 0;
   Screen *screen = Screen::getInstance();
-  this->pointer = new Pixmap(screen, 1, NULL, PRON_MOUSE_POINTER_WIDTH, PRON_MOUSE_POINTER_HEIGHT, screen->bitsPerPixel);
-  this->pointerBackup = new Pixmap(screen, 2, NULL, PRON_MOUSE_POINTER_WIDTH, PRON_MOUSE_POINTER_HEIGHT, screen->bitsPerPixel);
-  this->pointerHidden = true;
+  this->pointer        = new Pixmap(screen, 1, NULL, PRON_MOUSE_POINTER_WIDTH, PRON_MOUSE_POINTER_HEIGHT, screen->bitsPerPixel);
+  this->pointerBackup  = new Pixmap(screen, 2, NULL, PRON_MOUSE_POINTER_WIDTH, PRON_MOUSE_POINTER_HEIGHT, screen->bitsPerPixel);
+  this->pointerHidden  = true;
 
-  this->mouseX = 0;
-  this->mouseY = 0;
+  this->mouseX  = 0;
+  this->mouseY  = 0;
   this->mouseB1 = false;
   this->mouseB2 = false;
   this->mouseB3 = false;
@@ -35,12 +38,12 @@ Mouse::Mouse() {
   this->mouseB6 = false;
 
   this->lastMouseEvent = 0;
-  this->lastSentX = 0;
-  this->lastSentY = 0;
+  this->lastSentX      = 0;
+  this->lastSentY      = 0;
 
   /** @todo xxx 0x00FDFEFB is transparent */
   Color oldFg = screen->getGC()->getFg();
-  screen->getGC()->setFg(Color(253, 254, 251));
+  screen->getGC()->setFg(Color((alphaColor&0x00ff0000)>> 16, (alphaColor&0x0000ff00)>> 8, (alphaColor&0x000000ff)));
 
   this->pointer->fillRectangle(0, 0, PRON_MOUSE_POINTER_WIDTH, PRON_MOUSE_POINTER_HEIGHT);
 
@@ -70,6 +73,8 @@ Mouse::Mouse() {
   this->pointer->drawLine(8, 15,  8, 18);
   this->pointer->drawLine(7, 12,  7, 14);
   this->pointer->drawLine(8, 12, 12, 12);
+
+  Mouse::defaultPointer = this->pointer->getId();
 }
 
 void Mouse::checkEvents() {
@@ -212,6 +217,17 @@ void Mouse::updateMouseWin() {
     }
   }
 
+  if(currentWin != NULL) {
+    Pixmap *newPointer = (Pixmap*) screen->getDrawable(currentWin->pointer, D_PIXMAP);
+    if(newPointer != NULL) {
+      this->pointer = newPointer;
+    } else {
+      this->pointer = (Pixmap*) screen->getDrawable(Mouse::defaultPointer, D_PIXMAP);
+    }
+  } else {
+    this->pointer = (Pixmap*) screen->getDrawable(Mouse::defaultPointer, D_PIXMAP);
+  }
+
   // MouseWin is computed we can store it in the screen to increzse performances
   screen->setMouseWin(currentWin);
 }
@@ -280,7 +296,7 @@ void Mouse::showPointer() {
 
           // Draw new pixel
           /** @todo xxx 0x00FDFEFB is transparent haha degueu */
-          if (this->pointer->getPixel(x, y) != 0x00FDFEFB) {
+          if (this->pointer->getPixel(x, y) != alphaColor) {
             destination = source;
             source = this->pointer->pixelAddr(x, y);
             memcpy(destination, source, screen->bytesPerPixel);

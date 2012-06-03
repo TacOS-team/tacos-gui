@@ -95,14 +95,16 @@ void grid3() {
 
   MyWindow w("Roxxing grid 3", 50, 50, 300, 100);
   sombrero::Grid g;
-  string fileName("../../tacos.jpg");
-  sombrero::Image i(fileName);
+  sombrero::Image i("../../ressources/images/tacos.jpg");
+  sombrero::Image handCursor("../../ressources/cursors/black_hand.bmp");
 
   sombrero::DoubleScrollPane scrollPane(&i);
 
   g.add(&scrollPane);
   
   w.add(&g);
+
+  i.setCursor(handCursor.getPixMap());
 
   sombrero::Application::getInstance()->sombrerun();
 }

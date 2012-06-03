@@ -729,6 +729,25 @@ struct RqFreePixmap : public PronRequest {
 };
 
 /**
+ * RqSetCursor request.
+ * Sent by a client to set a cursor to a window.
+ */
+struct RqSetCursor : public PronRequest {
+  /**
+   * Constructor.
+   * @param pixmap The pixmap to free
+   */
+  RqSetCursor(unsigned int pixmap, unsigned int window)
+      : PronRequest(RQ_SET_CURSOR) {
+    this->pixmap    = pixmap;
+    this->window    = window;
+  }
+
+  unsigned int pixmap; /**< Id of the pixmap */
+  unsigned int window; /**< Id of the window */
+};
+
+/**
  * CopyArea request.
  * Sent by a client to copy an area from a drawable to another one.
  */

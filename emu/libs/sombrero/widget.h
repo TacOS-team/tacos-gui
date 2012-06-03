@@ -258,6 +258,10 @@ class Widget : public has_slots<> {
    * Set the background color
    */
   void setBGColor(const Color &c);
+  /**
+   * Set the cursor of the widget
+   */
+  void setCursor(pron::Pixmap pixmap);
 
 };
 

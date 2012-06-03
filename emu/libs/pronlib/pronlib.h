@@ -373,6 +373,14 @@ Pixmap pronCreatePixmap(Display *d, int width, int height, int depth);
 void pronFreePixmap(Display *d, unsigned int p);
 
 /**
+ * Sets the cursor to a window.
+ * @param d The connection to pron
+ * @param pixmap The pixmap of the cursor
+ * @param window The window to change the cursor
+ */
+void pronSetCursor(Display *d, unsigned int pixmap, unsigned int window);
+
+/**
  * Copies an area from a drawable to another one.
  * @param d The connection to pron
  * @param src The source drawable

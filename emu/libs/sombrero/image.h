@@ -5,11 +5,12 @@
  * Image class definition
  */
 
-#include "widget.h"
 #include <string>
 #include <jpeglib.h>
+#include "widget.h"
 
 namespace sombrero {
+
 /**
  * Image class definition
  * @brief The Image widget
@@ -22,15 +23,16 @@ class Image : public Widget {
   int yOffset; /**< the Y offset of the top left corner */
   bool isReversed; /**< incates whether the colors of the image are reversed */
   pron::Pixmap pixmap; /**< The pixmap where the image is put */
-  string &filename; /**< the name of the file to open */
+  string filename; /**< the name of the file to open */
   void init(); /**< intializes the image and the pixmap */
    
  public:
+  pron::Pixmap getPixMap();
   /**
    * Image constructor
    * @param filename The name of the file to open
    */
-  Image(string &filename);
+  Image(const string &filename);
   /**
    * Image destructor
    */

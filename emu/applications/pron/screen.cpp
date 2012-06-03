@@ -33,11 +33,11 @@ Screen::Screen(int width, int height, int bitsPerPixel) {
 
   DIR *dp;
   struct dirent *ep;  
-  dp = opendir("fonts");
+  dp = opendir("ressources/fonts");
   if (dp != NULL) {
     while ((ep = readdir(dp))) {
       if (ep->d_type == DT_REG) {
-        char fileName[256] = "fonts/";
+        char fileName[256] = "ressources/fonts/";
         strcat(fileName, ep->d_name);
         this->fonts.push_back(FontLoader::load(fileName));
       }

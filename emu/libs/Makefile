@@ -1,4 +1,4 @@
-SUBDIRS = libtacos libtsock libcolor pronlib sombrero
+SUBDIRS = libtacos libtsock libcolor libbmp pronlib sombrero
 
 all:
 	@for i in $(SUBDIRS); do \

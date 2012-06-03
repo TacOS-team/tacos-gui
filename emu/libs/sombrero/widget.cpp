@@ -329,4 +329,10 @@ void Widget::setBGColor(const Color &c) {
   }
 }
 
+void Widget::setCursor(pron::Pixmap pixmap) {
+  if(this->isPronWindowCreated()) {
+    pron::pronSetCursor(Application::getInstance()->d, pixmap, this->pronWindow);
+  }
+}
+
 } // namespace sombrero

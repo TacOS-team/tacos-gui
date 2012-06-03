@@ -42,6 +42,7 @@ Window::Window(Screen *screen, int id, Client *creator, Window *parent,
 }
 
 void Window::init(Window *parent, int x, int y) {
+  this->pointer = 6663;
   this->x = x;
   this->y = y;
   memset(&this->bgColor, 0, sizeof(this->bgColor));
