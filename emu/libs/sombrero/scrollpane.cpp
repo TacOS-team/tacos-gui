@@ -9,10 +9,15 @@ ScrollPane::ScrollPane(Widget *widget) {
 }
 
 void ScrollPane::init() {
+  this->resizeWidget = true;
   this->setScrollBarWidth(20);
   this->scrollbar->setStep(factor*10);
   this->getWidget()->setX(0);
   this->scrollbar->newValue.connect(this, &ScrollPane::positionChanged);
+}
+
+void ScrollPane::setResizeWidget(bool resize) {
+  this->resizeWidget = resize;
 }
 
 void ScrollPane::positionChanged(int val) {
@@ -28,7 +33,9 @@ void ScrollPane::execUpdate() {
   this->moveScrollBarTo(this->getScrollPanewidth() - this->getScrollBarWidth());
   // If the widget has been set
   if(this->getWidget()) {
-    this->setWidgetWidth(this->getScrollPanewidth() - this->getScrollBarWidth());
+    if(this->resizeWidget) {
+      this->setWidgetWidth(this->getScrollPanewidth() - this->getScrollBarWidth());
+    }
     this->setWidgetPosition(0);
     // If the widget is bigger than the scrollpane
     if(this->getWidgetLength() > this->getScrollPaneLength()) {

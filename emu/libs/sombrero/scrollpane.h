@@ -18,6 +18,7 @@ class ScrollPane : public Bin {
 
  protected:
   ScrollBar *scrollbar;
+  bool resizeWidget;
   /**
    * Initialises the scrollpane
    */
@@ -27,6 +28,13 @@ class ScrollPane : public Bin {
    * Constructor
    */
   ScrollPane(Widget *widget);
+
+  /**
+   * Asks to the scrollpane to resize the widget or not
+   *   default : true
+   * @param resize true if the widget has to be resized
+   */
+  void setResizeWidget(bool resize);
 
   /**
    * Sets the parent container

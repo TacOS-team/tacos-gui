@@ -1,4 +1,5 @@
 #include "hscrollpane.h"
+#include "application.h"
 
 namespace sombrero {
 
@@ -51,6 +52,22 @@ int HScrollPane::getWidgetLength() {
 void HScrollPane::setWidgetPosition(int position) {
   this->getWidget()->setX(position);
   this->getWidget()->setY(0);
+}
+
+void HScrollPane::draw() {
+  if(this->getWidget()->getWidth() < this->getWidth()) {
+    pronFillRectangle(Application::getInstance()->d, this->pronWindow,
+               this->bgGC,
+               this->getWidget()->getWidth(), 0,
+               this->getWidth() - this->getWidget()->getWidth(), this->getHeight() - this->scrollbar->getHeight());
+  }
+  if(this->getWidget()->getHeight() < this->getHeight() - this->scrollbar->getHeight()) {
+    pronFillRectangle(Application::getInstance()->d, this->pronWindow,
+               this->bgGC,
+               0, this->getWidget()->getHeight(),
+               min(this->getWidth(), this->getWidget()->getWidth()),
+                this->getHeight() - this->scrollbar->getHeight() -this->getWidget()->getHeight());
+  }
 }
 
 } // namespace sombrero

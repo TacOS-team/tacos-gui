@@ -70,6 +70,8 @@ class VScrollPane : public ScrollPane {
    *   (on width or height depending if vertical or horizontal)
    */
   void setWidgetPosition(int position);
+
+  void draw();
 };
 
 } // namespace sombrero
