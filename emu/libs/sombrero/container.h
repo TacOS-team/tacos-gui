@@ -17,10 +17,6 @@ namespace sombrero {
  * other widgets 
  */
 class Container : public Widget {
-  
- private:
-   vector<Widget*> children; /**< collection of widgets */ 
-    
  protected:
   /**
    * Container default constructor that does nothing.
@@ -36,21 +32,21 @@ class Container : public Widget {
    * Adds a widget in the children vector
    * @param widget Pointer to the widget to add
    */
-  virtual void add(Widget *widget);
+  virtual void add(Widget *widget) = 0;
   /**
    * Remove a widget from the children vector
    * @param widget Pointer to the widget to remove
    */
-  virtual void remove(Widget *widget);
+  virtual void remove(Widget *widget) = 0;
   /**
-   * Draw children widgets
+   * 
    */
-  void drawChildren();
+  void setParent(Widget *widget);
   /**
    * Gets a copy of the children vector
    * @return The copied vector of children widgets
    */
-  std::vector<Widget*> getChildren();
+  virtual std::vector<Widget*> getChildren() = 0;
   
 };
 

@@ -48,6 +48,9 @@ class Panel : public sombrero::Container {
     this->open(fileName);
   }
 
+  void add(Widget *widget) {}
+  void remove(Widget *widget) {}
+
   void setFiles(list<FileInfo> fileList) {
     //printf("Panel::setFiles\n");
     for(size_t i = 0; i < boutons.size(); ++i) {
@@ -77,21 +80,31 @@ class Panel : public sombrero::Container {
   }
 
   void execUpdate() {
-    if((int)boutons.size() * heightFile > this->getParent()->getHeight()) {
-      this->setHeight(boutons.size() * heightFile);
-    } else {
-      this->setHeight(this->getParent()->getHeight());
-    }
+    if(this->getParent()) {
+      if((int)boutons.size() * heightFile > this->getParent()->getHeight()) {
+        this->setHeight(boutons.size() * heightFile);
+      } else {
+        this->setHeight(this->getParent()->getHeight());
+      }
 
-    Container::execUpdate();
-    
-    for(size_t i = 0; i < boutons.size(); ++i) {
-      boutons[i]->setY(i * heightFile);
-      boutons[i]->setX(0);
-      boutons[i]->setWidth(this->getWidth());
-      boutons[i]->setHeight(heightFile);
-      boutons[i]->update();
+      Container::execUpdate();
+      
+      for(size_t i = 0; i < boutons.size(); ++i) {
+        boutons[i]->setY(i * heightFile);
+        boutons[i]->setX(0);
+        boutons[i]->setWidth(this->getWidth());
+        boutons[i]->setHeight(heightFile);
+        boutons[i]->update();
+      }
     }
+  }
+
+  std::vector<Widget*> getChildren() {
+    std::vector<Widget*> res;
+    for(size_t i = 0; i < boutons.size(); ++i) {
+      res.push_back(boutons[i]);
+    }
+    return res;
   }
 
   void draw() {
@@ -154,11 +167,10 @@ class MyWindow : public Window {
     g->add(l);
     l->setText(d.getInformations().getAbsolutePath());
     p = new Panel();
+    p->setFiles(d.entryInfoList());
     scrollpane = new ScrollPane(p);
     g->attachNextTo(scrollpane, l, POS_BOTTOM, 1, 6);
-    p->setFiles(d.entryInfoList());
-    p->update();
-    scrollpane->update();
+    //scrollpane->update();
     g->update();
     p->open.connect(this, &MyWindow::openSlot);
   }
