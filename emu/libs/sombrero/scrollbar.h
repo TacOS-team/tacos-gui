@@ -17,7 +17,19 @@ namespace sombrero {
 class ScrollBar : public Widget {
 
  protected:
-  Button thumb;/** The thumb of the scrollbar */
+  class Thumb : public Button {
+   protected:
+    void handleMouseDown(MouseButton button, int x, int y);
+   public:
+    signal2<int, int> downAt;
+    /**
+     * The default constructor 
+     */
+    Thumb();
+
+  };
+
+  Thumb thumb;/** The thumb of the scrollbar */
   int thumbPosition;/** The current thumb position on the scrollbar */
   unsigned int value;/** The current value of the scrollbar */
   unsigned int min;/** The min value of the scrollbar */
@@ -26,6 +38,7 @@ class ScrollBar : public Widget {
   unsigned int step;/** The step added or removed from value for each click */
   unsigned short marginSize;/** The margin size of the scrollBar */
   unsigned short buttonSize;/** The maximum height of the buttons */
+  int clickPosition;/** The last click position o nthe thum */
 
   /**
    * Computes the minimum thumb position from the margin and button sizes
@@ -51,6 +64,7 @@ class ScrollBar : public Widget {
   virtual void updateThumbPosition(int move);
   // Slots
   void thumbClicked();/**  Slot when the thumb is clicked */
+  virtual void thumbClickedAt(int x, int y) = 0;/**  Slot when the thumb is clicked */
   void thumbReleased();/** Slot when the thumb is released  */
  public:
   /**

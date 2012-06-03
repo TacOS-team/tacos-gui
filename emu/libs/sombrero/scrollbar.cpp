@@ -2,7 +2,19 @@
 
 namespace sombrero {
 
-ScrollBar::ScrollBar() : thumb("o") {
+ScrollBar::Thumb::Thumb() : Button("0") {
+
+}
+
+void ScrollBar::Thumb::handleMouseDown(MouseButton button, int x, int y) {
+  Button::handleMouseDown(button, x, y);
+  if(button == leftButton) {
+    this->downAt(x, y);
+  }
+
+}
+
+ScrollBar::ScrollBar() : thumb() {
   this->ratio = 1;
   this->step  = 1;
   this->min   = 0;
@@ -52,10 +64,6 @@ void ScrollBar::setRange(unsigned int min, unsigned int max) {
 }
 
 void ScrollBar::thumbClicked() {
-  // TODO save position cursor on the thumb
-  //   to keep this position during the move avoiding
-  //   to center the mouse each time
-
   // Subscribe to mouse events to move the thumb
   this->subscribeEvent(pron::EV_POINTER_MOVED);
 }
@@ -70,6 +78,7 @@ void ScrollBar::setParent(Widget *parent) {
   Widget::setParent(parent);
   this->thumb.setParent(this);
   this->thumb.down.connect  (this, &ScrollBar::thumbClicked);
+  this->thumb.downAt.connect  (this, &ScrollBar::thumbClickedAt);
   this->thumb.released.connect (this, &ScrollBar::thumbReleased);
   this->thumb.dontPropagateEvent(pron::EV_MOUSE_BUTTON);
   this->subscribeEvent(pron::EV_MOUSE_BUTTON);

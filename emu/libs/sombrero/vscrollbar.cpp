@@ -48,9 +48,13 @@ void VScrollBar::draw() {
   }
 }
 
+void VScrollBar::thumbClickedAt(int x __attribute__((unused)), int y) {
+  this->clickPosition = y;
+}
+
 void VScrollBar::handleEventPointerMoved(pron::EventPointerMoved *mousePointerEvent) {
   ScrollBar::handleEventPointerMoved(mousePointerEvent);
-  this->updateThumbPosition(mousePointerEvent->y - this->thumb.getHeight()/2);
+  this->updateThumbPosition(mousePointerEvent->y - this->clickPosition);
 }
 
 void VScrollBar::handleClick(int x __attribute__((unused)), int y) {

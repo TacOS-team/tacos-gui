@@ -48,8 +48,8 @@ class Panel : public sombrero::Container {
     this->open(fileName);
   }
 
-  void add(Widget *widget) {}
-  void remove(Widget *widget) {}
+  void add(Widget *widget __attribute__((unused))) {}
+  void remove(Widget *widget __attribute__((unused))) {}
 
   void setFiles(list<FileInfo> fileList) {
     //printf("Panel::setFiles\n");

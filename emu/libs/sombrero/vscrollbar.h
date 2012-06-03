@@ -33,6 +33,7 @@ class VScrollBar : public ScrollBar {
    * Updates the widgets to pron
    */
   void execUpdate();
+  void thumbClickedAt(int x, int y);/**  Slot when the thumb is clicked */
   /**
    * Handle for a pointerMoved event
    */
