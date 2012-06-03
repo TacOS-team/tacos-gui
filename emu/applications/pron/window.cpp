@@ -180,6 +180,8 @@ void Window::map() {
       it->deliverEvent(&expose, sizeof(expose));
     }
   }
+
+  Mouse::getInstance()->updateMouseWin();
 }
 
 void* Window::pixelAddr(int x, int y) {
