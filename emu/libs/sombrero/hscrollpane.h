@@ -7,6 +7,7 @@
 
 #include "bin.h"
 #include "hscrollbar.h"
+#include "scrollpane.h"
 
 namespace sombrero {
 
@@ -14,17 +15,10 @@ namespace sombrero {
  * HScrollPane class definition
  * @brief The Scrollpane container
  */ 
-class HScrollPane : public Bin {
-
- protected:
-  /**
-   * The horizontal scrollbar of the scrollpane
-   */
-  HScrollBar scrollBar;
-  /**
-   * Initialises the scrollpane
-   */
+class HScrollPane : public ScrollPane {
+  protected:
   void init();
+
  public:
   /**
    * Constructor
@@ -32,18 +26,50 @@ class HScrollPane : public Bin {
   HScrollPane(Widget *widget);
 
   /**
-   * Sets the parent container
-   * @param Pointer to the parent container
+   * Get the length of the ScrollPane (width for horizontal)
    */
-  virtual void setParent(Widget *parent);
+  int getScrollPaneLength();
   /**
-   * Updates the scrollbar etc.
+   * Get the width of the ScrollPane
+   *   (on height for horizontal)
    */
-  void execUpdate();
-  // Slots
-  void XMoved(int val);/** Slot called when the user moves the scrollbar */
-  
-  std::vector<Widget*> getChildren();
+  int getScrollPanewidth();
+  /**
+   * sets the scrollbarWidth
+   */
+  void setScrollBarWidth(int width);
+  /**
+   * gets the scrollbarWidth
+   */
+  int getScrollBarWidth();
+  /**
+   * sets the scrollbar Length
+   */
+  void setScrollBarLength(int length);
+  /**
+   * gets the scrollbar Length
+   */
+  int getScrollBarLength();
+  /**
+   * Moves the scrollbar to this position
+   *   (on x or y depending if vertical or horizontal)
+   */
+  void moveScrollBarTo(int position);
+  /**
+   * Sets the widget width
+   *   (on width or height depending if vertical or horizontal)
+   */
+  void setWidgetWidth(int width);
+  /**
+   * gets the widget length
+   *   (on width or height depending if vertical or horizontal)
+   */
+  int getWidgetLength();
+  /**
+   * Sets the widget width
+   *   (on width or height depending if vertical or horizontal)
+   */
+  void setWidgetPosition(int position);
 };
 
 } // namespace sombrero
