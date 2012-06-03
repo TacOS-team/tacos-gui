@@ -1,10 +1,9 @@
 
-#include <fileinfo.h>
+#include <sombrero.h>
 #include <button.h>
 #include <window.h>
 #include <grid.h>
 #include <container.h>
-#include <scrollpane.h>
 #include <directory.h>
 #include <application.h>
 #include <label.h>
@@ -124,7 +123,7 @@ class MyWindow : public Window {
  protected:
   Grid *g;
   Directory d;
-  ScrollPane *scrollpane;
+  VScrollPane *scrollpane;
   Panel *p;
   Label *l;
 
@@ -168,7 +167,7 @@ class MyWindow : public Window {
     l->setText(d.getInformations().getAbsolutePath());
     p = new Panel();
     p->setFiles(d.entryInfoList());
-    scrollpane = new ScrollPane(p);
+    scrollpane = new VScrollPane(p);
     g->attachNextTo(scrollpane, l, POS_BOTTOM, 1, 6);
     //scrollpane->update();
     g->update();

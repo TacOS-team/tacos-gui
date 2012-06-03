@@ -18,7 +18,9 @@
 #include "label.h"
 #include "image.h"
 #include "grid.h"
-#include "scrollpane.h"
+#include "vscrollpane.h"
+#include "vscrollbar.h"
+#include "hscrollbar.h"
 #include "colorpicker.h"
 
 /**

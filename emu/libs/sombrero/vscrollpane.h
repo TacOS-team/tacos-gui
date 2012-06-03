@@ -1,8 +1,8 @@
-#ifndef __SCROLLPANE_H__
-#define __SCROLLPANE_H__
+#ifndef __VSCROLLPANE_H__
+#define __VSCROLLPANE_H__
 /**
- * @file scrollpane.h
- * ScrollPane class definition
+ * @file vscrollpane.h
+ * VScrollPane class definition
  */
 
 #include "bin.h"
@@ -14,7 +14,7 @@ namespace sombrero {
  * ScrollPane class definition
  * @brief The Scrollpane container
  */ 
-class ScrollPane : public Bin {
+class VScrollPane : public Bin {
 
  protected:
   /**
@@ -29,7 +29,7 @@ class ScrollPane : public Bin {
   /**
    * Constructor
    */
-  ScrollPane(Widget *widget);
+  VScrollPane(Widget *widget);
 
   /**
    * Sets the parent container
@@ -48,4 +48,4 @@ class ScrollPane : public Bin {
 
 } // namespace sombrero
 
-#endif//__SCROLLPANE_H__
+#endif//__VSCROLLPANE_H__

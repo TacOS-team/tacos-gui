@@ -1,38 +1,38 @@
-#include "scrollpane.h"
+#include "vscrollpane.h"
 
 int factor = 100;
 
 namespace sombrero {
 
-ScrollPane::ScrollPane(Widget *widget) {
+VScrollPane::VScrollPane(Widget *widget) {
   this->add(widget);
   this->init();
 }
 
-void ScrollPane::init() {
+void VScrollPane::init() {
   this->scrollBar.setWidth(20);
   this->scrollBar.setY(0);
   this->scrollBar.setStep(factor*10);
   this->getWidget()->setY(0);
-  this->scrollBar.newValue.connect(this, &ScrollPane::YMoved);
+  this->scrollBar.newValue.connect(this, &VScrollPane::YMoved);
 }
 
-void ScrollPane::YMoved(int val) {
+void VScrollPane::YMoved(int val) {
   if(this->getWidget() && this->getWidget()->getHeight() > this->getHeight()) {
     this->getWidget()->setY(-1*val/factor);
     this->getWidget()->updatePronPosition();
   }
 }
 
-void ScrollPane::execUpdate() {
-  //printf("update scrollpane\n");
+void VScrollPane::execUpdate() {
+  //printf("update vscrollpane\n");
   this->scrollBar.setHeight(this->getHeight());
   this->scrollBar.setX(this->getWidth() - this->scrollBar.getWidth());
   // If the widget has been set
   if(this->getWidget()) {
     this->getWidget()->setWidth(this->getWidth() - this->scrollBar.getWidth());
     this->getWidget()->setX(0);
-    // If the widget is bigger than the scrollpane
+    // If the widget is bigger than the vscrollpane
     if(this->getWidget()->getHeight() > this->getHeight()) {
       // Sets the range. Is depends on the number of hidden pixels
       // Multiplied per factor to avoid strange behavior on the ratio of small values
@@ -51,7 +51,7 @@ void ScrollPane::execUpdate() {
   Container::execUpdate();
 }
 
-void ScrollPane::setParent(Widget *parent) {
+void VScrollPane::setParent(Widget *parent) {
   Bin::setParent(parent);
   // If the widget is set, we create it
   if(this->getWidget()) {
@@ -60,7 +60,7 @@ void ScrollPane::setParent(Widget *parent) {
   }
 }
 
-std::vector<Widget*> ScrollPane::getChildren() {
+std::vector<Widget*> VScrollPane::getChildren() {
   std::vector<Widget*> res (Bin::getChildren());
   res.push_back(&this->scrollBar);
   return res;

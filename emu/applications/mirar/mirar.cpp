@@ -118,7 +118,7 @@ void Mirar::inicializacionSombrero() {
   this->anterior->clicked.connect(this, &Mirar::verAnterior);
   this->invertir = new BotonInvertir("Invertir",this);
   this->image = new sombrero::Image(this->jpegArchivos[this->corrienteArchivo]);
-  this->sp = new sombrero::ScrollPane(this->image);
+  this->sp = new sombrero::VScrollPane(this->image);
 
   ventana->add(g);
 

@@ -1,7 +1,4 @@
 #include "sombrero.h"
-#include "grid.h"
-#include "vscrollbar.h"
-#include "scrollpane.h"
 #include "unistd.h"
 #include <cstdio>
 #include <cstdlib>
@@ -48,7 +45,7 @@ void grid1() {
   pLabel = &labelScrollPane;
   labelScrollPane.setHeight(150);
 
-  sombrero::ScrollPane scrollpane(&labelScrollPane);
+  sombrero::VScrollPane scrollpane(&labelScrollPane);
   g.attachNextTo(&scrollpane,NULL, sombrero::POS_LEFT,2,1);
 
   sombrero::Button bResize("Augmenter taille");
@@ -90,8 +87,26 @@ void grid2() {
   sombrero::Application::getInstance()->sombrerun();
 }
 
+void grid3() {
+
+  sombrero::Application::getInstance()->init();
+  
+  // Window button
+
+  MyWindow w("Roxxing grid 3", 50, 50, 300, 100);
+  sombrero::Grid g;
+
+  sombrero::HScrollBar scrollBar;
+
+  g.add(&scrollBar);
+  
+  w.add(&g);
+
+  sombrero::Application::getInstance()->sombrerun();
+}
+
 int main() {
-  grid2();
+  grid3();
   return 0;
 }
 
