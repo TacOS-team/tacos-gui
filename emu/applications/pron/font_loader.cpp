@@ -58,6 +58,7 @@ void FontLoader::readChars(int nb) {
 		}
 		bool end = false;
 		int encoding = -1, width = -1, bbw = -1, bbh = -1, bbx = 0, bby = 0, line, unused;
+    char line_str[8 + 1];
 		while (!end) {
 			fscanf(fd, "%s", kw);
 			if (eq(kw, "ENCODING")) {
@@ -86,9 +87,14 @@ void FontLoader::readChars(int nb) {
 				}
 
 				for (int i = 0; i < bbh; i++) {
-					fscanf(fd, "%x", &line);
+					/*fscanf(fd, "%x", &line);
 					int nbDigits = 0;
-					while (line >> (4 * (++nbDigits)));
+					while (line >> (4 * (++nbDigits)));*/
+
+          fscanf(fd, "%s", line_str);
+          int nbDigits = strlen(line_str);
+          line = strtol(line_str, NULL, 16); 
+
 					int idx = fontHeight - fontDescent - bbh - bby + i;
 					if (idx < 0) {
 						idx += fontHeight;
