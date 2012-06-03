@@ -37,11 +37,6 @@ class ScrollPane : public Bin {
   void setResizeWidget(bool resize);
 
   /**
-   * Sets the parent container
-   * @param Pointer to the parent container
-   */
-  virtual void setParent(Widget *parent);
-  /**
    * Updates the scrollbar etc.
    */
   void execUpdate();

@@ -49,14 +49,6 @@ class Widget : public has_slots<> {
    */
   pron::Window pronWindow;
   /**
-   * Widget default constructor that does nothing.
-   */
-  Widget();
-  /**
-   * Widget destructor. Destroys the pron top window
-   */
-  ~Widget();
-  /**
    * initialize the widget
    */
   void init();
@@ -90,6 +82,14 @@ class Widget : public has_slots<> {
   bool isPronWindowCreated();
 
  public:
+  /**
+   * Widget default constructor that does nothing.
+   */
+  Widget();
+  /**
+   * Widget destructor. Destroys the pron top window
+   */
+  ~Widget();
   // Signals
   signal0<> resized;
   /**

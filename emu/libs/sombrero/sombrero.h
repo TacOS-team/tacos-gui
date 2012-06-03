@@ -22,6 +22,7 @@
 #include "vscrollbar.h"
 #include "hscrollpane.h"
 #include "hscrollbar.h"
+#include "doublescrollpane.h"
 #include "colorpicker.h"
 
 /**

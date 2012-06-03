@@ -14,6 +14,8 @@ void ScrollPane::init() {
   this->scrollbar->setStep(factor*10);
   this->getWidget()->setX(0);
   this->scrollbar->newValue.connect(this, &ScrollPane::positionChanged);
+  this->getWidget()->subscribeEvent(pron::EV_RESIZE_WINDOW);
+  this->getWidget()->resized.connect((Widget*)this, &Widget::update);
 }
 
 void ScrollPane::setResizeWidget(bool resize) {
@@ -36,7 +38,6 @@ void ScrollPane::execUpdate() {
     if(this->resizeWidget) {
       this->setWidgetWidth(this->getScrollPanewidth() - this->getScrollBarWidth());
     }
-    this->setWidgetPosition(0);
     // If the widget is bigger than the scrollpane
     if(this->getWidgetLength() > this->getScrollPaneLength()) {
       // Sets the range. Is depends on the number of hidden pixels
@@ -53,17 +54,9 @@ void ScrollPane::execUpdate() {
     this->setWidgetPosition(-1*this->scrollbar->getValue()/factor);
     this->getWidget()->update();
   }
-  Container::execUpdate();
+  Bin::execUpdate();
 }
 
-void ScrollPane::setParent(Widget *parent) {
-  Bin::setParent(parent);
-  // If the widget is set, we create it
-  if(this->getWidget()) {
-    this->getWidget()->subscribeEvent(pron::EV_RESIZE_WINDOW);
-    this->getWidget()->resized.connect((Widget*)this, &Widget::update);
-  }
-}
 
 std::vector<Widget*> ScrollPane::getChildren() {
   std::vector<Widget*> res (Bin::getChildren());

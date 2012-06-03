@@ -95,11 +95,10 @@ void grid3() {
 
   MyWindow w("Roxxing grid 3", 50, 50, 300, 100);
   sombrero::Grid g;
-  string fileName("/home/slash-dev/Images/enfoiros2012.jpg");
+  string fileName("../../tacos.jpg");
   sombrero::Image i(fileName);
 
-  sombrero::HScrollPane scrollPane(&i);
-  scrollPane.setResizeWidget(false);
+  sombrero::DoubleScrollPane scrollPane(&i);
 
   g.add(&scrollPane);
   
