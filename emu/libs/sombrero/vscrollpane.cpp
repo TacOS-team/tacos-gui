@@ -1,6 +1,6 @@
 #include "vscrollpane.h"
 
-int factor = 100;
+static int factor = 100;
 
 namespace sombrero {
 

@@ -1,26 +1,26 @@
-#ifndef __VSCROLLPANE_H__
-#define __VSCROLLPANE_H__
+#ifndef __HSCROLLPANE_H__
+#define __HSCROLLPANE_H__
 /**
  * @file vscrollpane.h
  * VScrollPane class definition
  */
 
 #include "bin.h"
-#include "vscrollbar.h"
+#include "hscrollbar.h"
 
 namespace sombrero {
 
 /**
- * VScrollPane class definition
- * @brief The VScrollpane container
+ * HScrollPane class definition
+ * @brief The Scrollpane container
  */ 
-class VScrollPane : public Bin {
+class HScrollPane : public Bin {
 
  protected:
   /**
-   * The vertical scrollbar of the vscrollpane
+   * The horizontal scrollbar of the scrollpane
    */
-  VScrollBar scrollBar;
+  HScrollBar scrollBar;
   /**
    * Initialises the scrollpane
    */
@@ -29,7 +29,7 @@ class VScrollPane : public Bin {
   /**
    * Constructor
    */
-  VScrollPane(Widget *widget);
+  HScrollPane(Widget *widget);
 
   /**
    * Sets the parent container
@@ -41,11 +41,11 @@ class VScrollPane : public Bin {
    */
   void execUpdate();
   // Slots
-  void YMoved(int val);/** Slot called when the user moves the scrollbar */
+  void XMoved(int val);/** Slot called when the user moves the scrollbar */
   
   std::vector<Widget*> getChildren();
 };
 
 } // namespace sombrero
 
-#endif//__VSCROLLPANE_H__
+#endif//__HSCROLLPANE_H__

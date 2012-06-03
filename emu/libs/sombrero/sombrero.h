@@ -20,6 +20,7 @@
 #include "grid.h"
 #include "vscrollpane.h"
 #include "vscrollbar.h"
+#include "hscrollpane.h"
 #include "hscrollbar.h"
 #include "colorpicker.h"
 

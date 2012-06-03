@@ -48,7 +48,7 @@ void HScrollBar::draw() {
   }
 }
 
-void HScrollBar::thumbClickedAt(int x __attribute__((unused)), int y) {
+void HScrollBar::thumbClickedAt(int x, int y __attribute__((unused))) {
   this->clickPosition = x;
 }
 
@@ -57,7 +57,7 @@ void HScrollBar::handleEventPointerMoved(pron::EventPointerMoved *mousePointerEv
   this->updateThumbPosition(mousePointerEvent->x - this->clickPosition);
 }
 
-void HScrollBar::handleClick(int x __attribute__((unused)), int y) {
+void HScrollBar::handleClick(int x, int y __attribute__((unused))) {
   //printf("ScrollBar::handleEventMouseButton\n");
   // If the click is above the thumb we step up
   if(x < this->thumb.getX()) {
