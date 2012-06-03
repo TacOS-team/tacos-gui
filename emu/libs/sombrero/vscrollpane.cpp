@@ -1,4 +1,5 @@
 #include "vscrollpane.h"
+#include "application.h"
 
 namespace sombrero {
 
@@ -51,6 +52,22 @@ int VScrollPane::getWidgetLength() {
 void VScrollPane::setWidgetPosition(int position) {
   this->getWidget()->setY(position);
   this->getWidget()->setX(0);
+}
+
+void VScrollPane::draw() {
+  if(this->getWidget()->getHeight() < this->getHeight()) {
+    pronFillRectangle(Application::getInstance()->d, this->pronWindow,
+               this->bgGC,
+               0, this->getWidget()->getHeight(),
+               this->getWidth() - this->scrollbar->getWidth(), this->getHeight() - this->getWidget()->getHeight());
+  }
+  if(this->getWidget()->getWidth() < this->getWidth() - this->scrollbar->getWidth()) {
+    pronFillRectangle(Application::getInstance()->d, this->pronWindow,
+               this->bgGC,
+               this->getWidget()->getWidth(), 0,
+               this->getWidth() - this->scrollbar->getWidth() -this->getWidget()->getWidth(),
+                min(this->getHeight(), this->getWidget()->getHeight()));
+  }
 }
 
 } // namespace sombrero

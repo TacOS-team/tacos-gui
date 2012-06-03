@@ -80,11 +80,7 @@ class Panel : public sombrero::Container {
 
   void execUpdate() {
     if(this->getParent()) {
-      if((int)boutons.size() * heightFile > this->getParent()->getHeight()) {
-        this->setHeight(boutons.size() * heightFile);
-      } else {
-        this->setHeight(this->getParent()->getHeight());
-      }
+      this->setHeight(boutons.size() * heightFile);
 
       Container::execUpdate();
       
@@ -104,17 +100,6 @@ class Panel : public sombrero::Container {
       res.push_back(boutons[i]);
     }
     return res;
-  }
-
-  void draw() {
-    //printf("Panel::draw\n");
-    //this->clear();
-    if((int)boutons.size() * heightFile < this->getHeight()) {
-      pronFillRectangle(Application::getInstance()->d, this->pronWindow,
-               this->bgGC,
-               0, boutons.size() * heightFile, this->getWidth(),
-               this->getHeight()-boutons.size() * heightFile);
-    }
   }
 
 };

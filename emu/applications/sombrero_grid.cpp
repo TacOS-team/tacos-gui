@@ -99,6 +99,7 @@ void grid3() {
   sombrero::Image i(fileName);
 
   sombrero::HScrollPane scrollPane(&i);
+  scrollPane.setResizeWidget(false);
 
   g.add(&scrollPane);
   
