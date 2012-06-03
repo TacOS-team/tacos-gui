@@ -14,8 +14,8 @@
  */
 class BMPImageLoader {
  protected:
-  struct readColor_t { unsigned char g,r,b; };
-  struct writeColor_t { unsigned char b,g,r; };
+  struct readColor_t { unsigned char r, g, b; };
+  struct writeColor_t { unsigned char r, g, b; };
   writeColor_t *buff;
  public:
   BMPImageLoader();

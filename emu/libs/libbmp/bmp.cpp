@@ -58,6 +58,8 @@ char * BMPImageLoader::load(const std::string &fileName) {
   printf("width  : %d\n", this->width);
   printf("height : %d\n", this->height);
 
+  int pos = 0;
+
   for (int y = this->height - 1; y >= 0; y--) {
     for (int x = 0; x < this->width; x++) {
       printf("%d, %d : %d\n", x,y, y*this->width+x);
@@ -65,15 +67,13 @@ char * BMPImageLoader::load(const std::string &fileName) {
       writePixel.r = readPixel.r;
       writePixel.g = readPixel.g;
       writePixel.b = readPixel.b;
-      /*writePixel.r = readPixel.r;
-      writePixel.g = readPixel.g;
-      writePixel.b = readPixel.b;*/
       this->buff[y*this->width+x] = writePixel;
+      pos += 3;
     }
 
-    int pos = ftell(bmpfile);
     if (pos % 4 != 0) {
       fseek(bmpfile, 4 - pos % 4, SEEK_CUR);
+      pos += (4 - pos % 4);
     }
   }
 
