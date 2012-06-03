@@ -19,7 +19,7 @@ class Mirar :public has_slots<> {
     VentanaMirar *ventana; /**< la ventana sombrero que contene la aplicacion */
     sombrero::Grid *g;
     BotonSiguiente *siguiente;
-    BotonAnterior *anterior;
+    sombrero::Button *anterior;
     BotonInvertir *invertir;
     sombrero::Image *image;
     sombrero::ScrollPane *sp;
@@ -27,7 +27,7 @@ class Mirar :public has_slots<> {
     int corrienteArchivo;
 
   public:
-    Mirar(char * camino);
+    Mirar(std::string camino);
     ~Mirar();
 
     void inicializacionSombrero();
