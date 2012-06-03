@@ -48,6 +48,8 @@ class Bin : public Container {
    */
   Widget* getWidget();
 
+  std::vector<Widget*> getChildren();
+
 };
 
 } //namespace sombrero

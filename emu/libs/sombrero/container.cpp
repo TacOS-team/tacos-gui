@@ -9,13 +9,12 @@ Container::Container() {}
 
 Container::~Container() {}
 
-void Container::add(Widget *widget) {
-  this->children.push_back(widget);
-  widget->setParent(this);
-}
-
-void Container::remove(Widget *widget) {
-  this->children.erase(std::find(this->children.begin(), this->children.end(), widget));
+void Container::setParent(Widget *widget) {
+  Widget::setParent(widget);
+  vector<Widget*> children = this->getChildren();
+  for(vector<Widget*>::iterator it = children.begin(); it != children.end(); ++it) {
+    (*it)->setParent(this);
+  }
 }
 
 } //namespace sombrero

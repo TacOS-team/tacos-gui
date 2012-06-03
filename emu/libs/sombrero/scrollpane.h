@@ -22,10 +22,6 @@ class ScrollPane : public Bin {
    */
   VScrollBar scrollBar;
   /**
-   * The widget inside the scrollpane
-   */
-  Widget *widget;
-  /**
    * Initialises the scrollpane
    */
   void init();
@@ -46,6 +42,8 @@ class ScrollPane : public Bin {
   void execUpdate();
   // Slots
   void YMoved(int val);/** Slot called when the user moves the scrollbar */
+  
+  std::vector<Widget*> getChildren();
 };
 
 } // namespace sombrero

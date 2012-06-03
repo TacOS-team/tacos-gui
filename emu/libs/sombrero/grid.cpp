@@ -197,17 +197,22 @@ void Grid::attachNextTo(Widget *child, Widget *sibling, PositionType side, int w
 void Grid::setParent(Widget *parent) {
   //printf("Grid::setParent\n");
   Container::setParent(parent);
+  this->update();
+}
+
+std::vector<Widget*> Grid::getChildren() {
+  std::vector<Widget*> res;
   for(size_t currentY = 0; currentY < widgetsTab.size(); ++currentY) {
     for(size_t currentX = 0; currentX < widgetsTab[currentY].size(); ++currentX) {
       widgetWrapper *currentWrapper = widgetsTab[currentY][currentX];
       // We update the widget just once (the same wrapper can be in sevaral positions)
       if(currentWrapper != NULL && currentWrapper->x == (int)currentX
           && currentWrapper->y == (int)currentY) {
-        currentWrapper->widget->setParent(this);
+        res.push_back(currentWrapper->widget);
       }
     }
   }
-  this->update();
+  return res;
 }
 
 Grid::widgetWrapper::widgetWrapper(Widget* w) {

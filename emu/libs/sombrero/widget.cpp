@@ -232,7 +232,7 @@ void Widget::handleEventWindowCreated() {
 }
 
 void Widget::handleEventExpose() {
-  printf("handleEventExpose %x\n", this->pronWindow);
+  //printf("handleEventExpose %x\n", this->pronWindow);
   this->draw();
 }
 

@@ -180,6 +180,8 @@ class Grid : public Container {
    * @param Pointer to the parent container
    */
   virtual void setParent(Widget *parent);
+
+  std::vector<Widget*> getChildren();
 };
 
 } //namespace sombrero
