@@ -115,8 +115,9 @@ void Widget::setHeight(int height) {
 }
 
 void Widget::updatePronSize() {
-  if (this->lastAttributes.width != this->getWidth() ||
-      this->lastAttributes.height != this->getHeight()) {
+  if (this->isPronWindowCreated() &&
+      (this->lastAttributes.width != this->getWidth() ||
+       this->lastAttributes.height != this->getHeight())) {
     this->lastAttributes.width  = this->getWidth();
     this->lastAttributes.height = this->getHeight();
     this->resized();
@@ -163,8 +164,9 @@ void Widget::setY(int y) {
 }
 
 void Widget::updatePronPosition() {
-  if (this->lastAttributes.x != this->getX() ||
-      this->lastAttributes.y != this->getY()) {
+  if (this->isPronWindowCreated() &&
+      (this->lastAttributes.x != this->getX() ||
+       this->lastAttributes.y != this->getY())) {
     this->lastAttributes.x = this->getX();
     this->lastAttributes.y = this->getY();
     pronMoveWindowTo(Application::getInstance()->d, this->pronWindow,
@@ -173,7 +175,8 @@ void Widget::updatePronPosition() {
 }
 
 void Widget::updateBGColor() {
-  if (this->attributes.bgColor.getRGB24() != this->lastAttributes.bgColor.getRGB24()) {
+  if (this->isPronWindowCreated() &&
+      this->attributes.bgColor.getRGB24() != this->lastAttributes.bgColor.getRGB24()) {
     pron::PronWindowAttributes newAttr;
     newAttr.bgColor = this->attributes.bgColor;
     pron::pronSetWindowAttributes(Application::getInstance()->d, this->pronWindow, newAttr, pron::WIN_ATTR_BG_COLOR);
