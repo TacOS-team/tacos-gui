@@ -19,9 +19,11 @@ class Image : public Widget {
  private:
   unsigned int imageWidth; /**< The real image width */
   unsigned int imageHeight; /**< The real image height */
+  unsigned int nbComponents; /**< The number of components per pixel */
   int xOffset; /**< the X offset of the top left corner */
   int yOffset; /**< the Y offset of the top left corner */
   pron::Pixmap pixmap; /**< The pixmap where the image is put */
+  char * raw_image; /**< the buffer where the uncompressed image is locally stored */
   string filename; /**< the name of the file to open */
   void init(); /**< intializes the image and the pixmap */
    
@@ -54,6 +56,7 @@ class Image : public Widget {
 
   void setXOffset(int newXOffset);
   void setYOffset(int newYOffset);
+  void applyNegativeFilter();
 };
 
 }// namespace sombrero
