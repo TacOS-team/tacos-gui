@@ -53,6 +53,7 @@ void Window::add(Widget *widget) {
   widget->setWidth(this->getWidth());
   widget->setHeight(this->getHeight());
   Bin::add(widget);
+  widget->update();
 }
 
 } // namespace sombrero
