@@ -108,8 +108,8 @@ void Mirar::verAnterior() {
 }
 
 void Mirar::verInverso() {
-  this->image->reverseColors();
-  this->image->draw();
+//  this->image->reverseColors();
+//  this->image->draw();
 }
 
 void Mirar::correr() {

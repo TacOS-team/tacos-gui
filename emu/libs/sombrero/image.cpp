@@ -18,15 +18,9 @@ Image::~Image() {
 }
 
 void Image::draw() {
-  if (this->isReversed) {
-    pron::pronNegArea(Application::getInstance()->d, this->pixmap,
+  pron::pronCopyArea(Application::getInstance()->d, this->pixmap,
       this->pronWindow, Application::getInstance()->d->defaultGC, 0, 0,
       this->imageWidth, this->imageHeight, this->xOffset, this->yOffset);
-  } else {
-    pron::pronCopyArea(Application::getInstance()->d, this->pixmap,
-      this->pronWindow, Application::getInstance()->d->defaultGC, 0, 0,
-      this->imageWidth, this->imageHeight, this->xOffset, this->yOffset);
-  }
 }
 
 pron::Pixmap Image::getPixMap() {
@@ -34,7 +28,6 @@ pron::Pixmap Image::getPixMap() {
 }
 
 void Image::init() {
-  this->isReversed = false;
   this->xOffset = 0;
   this->yOffset = 0;
 
@@ -138,10 +131,6 @@ unsigned int Image::getImageWidth(){
 }
 unsigned int Image::getImageHeight(){
   return this->imageHeight;
-}
-
-void Image::reverseColors() {
-  this->isReversed = ! this->isReversed;
 }
 
 void Image::setXOffset(int newXOffset) {
