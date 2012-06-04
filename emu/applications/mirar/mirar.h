@@ -8,18 +8,15 @@
 #define MAIN_WINDOW_WIDTH 640
 #define MAIN_WINDOW_HEIGHT 480
 
-class BotonSiguiente;
-class BotonAnterior;
-class BotonInvertir;
 class VentanaMirar;
 
 class Mirar :public has_slots<> {
   private:
     VentanaMirar *ventana; /**< la ventana sombrero que contene la aplicacion */
     sombrero::Grid *g;
-    BotonSiguiente *siguiente;
+    sombrero::Button *siguiente;
     sombrero::Button *anterior;
-    BotonInvertir *invertir;
+    sombrero::Button *invertir;
     sombrero::Image *image;
     sombrero::VScrollPane *sp;
     std::vector<std::string> jpegArchivos; /**< los jpeg archivos que la aplicacion debe MIRAR */
