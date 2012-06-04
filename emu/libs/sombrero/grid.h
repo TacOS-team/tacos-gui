@@ -100,6 +100,10 @@ class Grid : public Container {
    */
   virtual void attach(widgetWrapper *wrapper);
 
+  line_t getWrappers();
+
+  void cleanTab();
+
  public:
   /**
    * Default constructor
@@ -113,10 +117,21 @@ class Grid : public Container {
   virtual void add(Widget *widget);
   /**
    * Removes a widget 
-   * @TODO unimplemented
    * @param widget The widget to remove
    */
   virtual void remove(Widget *widget);
+  /**
+   * Removes several completes row widget 
+   * @param position The row position
+   * @param nb       The number of rows
+   */
+  virtual void removeRows(int position, int nb);
+  /**
+   * Removes several completes row widget 
+   * @param position The row position
+   * @param nb       The number of rows
+   */
+  virtual void removeColumns(int position, int nb);
   /**
    * Adds a widget at the position (x,y) with specified width and height
    * @param widget The widget to insert
@@ -128,6 +143,7 @@ class Grid : public Container {
   virtual void attach(Widget *child, int x, int y, int width, int height);
   /**
    * Adds a widget at the position (x,y) with specified width and height
+   *  /!\ Warning : this can overlaps another widget !
    * @param child   The widget to insert
    * @param sibling The widget where the new widget will be placed near
    * @param side    Position where the child will be placed relatively to sibling

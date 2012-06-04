@@ -55,14 +55,10 @@ char * BMPImageLoader::load(const std::string &fileName) {
   readColor_t  readPixel;
   writeColor_t writePixel;
 
-  printf("width  : %d\n", this->width);
-  printf("height : %d\n", this->height);
-
   int pos = 0;
 
   for (int y = this->height - 1; y >= 0; y--) {
     for (int x = 0; x < this->width; x++) {
-      printf("%d, %d : %d\n", x,y, y*this->width+x);
       fread(&readPixel, sizeof(readPixel), 1, bmpfile);
       writePixel.r = readPixel.r;
       writePixel.g = readPixel.g;

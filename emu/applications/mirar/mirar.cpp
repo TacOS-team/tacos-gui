@@ -28,63 +28,6 @@ class VentanaMirar : public sombrero::Window {
     }
 };
 
-class BotonSiguiente : public sombrero::Button {
-  private:
-    Mirar * aplicacion;
-  protected:
-    void handleClick(int x, int y) {
-      sombrero::Button::handleClick(x, y);
-      //if (button == sombrero::leftButton) {
-        this->aplicacion->verSiguiente();
-      //}
-    }
-    
-  public:
-    BotonSiguiente(const char *text, Mirar *aplicacion) : sombrero::Button(text) {
-      this->aplicacion = aplicacion;
-    }
-};
-      
-class BotonAnterior : public sombrero::Button {
-  private:
-    Mirar * aplicacion;
-  protected:
-    void handleMouseDown(sombrero::MouseButton button, int x, int y) {
-      sombrero::Button::handleMouseDown(button, x, y);
-      if (button == sombrero::leftButton) {
-        this->aplicacion->verAnterior();
-      }
-    }
-    
-  public:
-    BotonAnterior(const char *text, Mirar *aplicacion) : sombrero::Button(text) {
-      this->aplicacion = aplicacion;
-    }
-};
-
-class BotonInvertir : public sombrero::Button {
-  private:
-    Mirar * aplicacion;
-  protected:
-    void handleMouseDown(sombrero::MouseButton button, int x, int y) {
-      sombrero::Button::handleMouseDown(button, x, y);
-      if (button == sombrero::leftButton) {
-        this->aplicacion->verInverso();
-      }
-    }
-    
-  public:
-    BotonInvertir(const char *text, Mirar *aplicacion) : sombrero::Button(text) {
-      this->aplicacion = aplicacion;
-    }
-};
-
-
-
-
-
-
-
 Mirar::Mirar(std::string camino) {
   sombrero::Directory *carpeta = new sombrero::Directory (camino);
   std::list<sombrero::FileInfo> archivos = carpeta->entryInfoList();
@@ -113,16 +56,19 @@ void Mirar::inicializacionSombrero() {
   sombrero::Application::getInstance()->init();
   this->ventana = new VentanaMirar("Mirar", 0, 0, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, this);
   this->g = new sombrero::Grid();
-  this->siguiente = new BotonSiguiente("Siguiente",this);
+  this->siguiente = new sombrero::Button("Siguiente");
   this->anterior = new sombrero::Button("Anterior");
-  this->anterior->clicked.connect(this, &Mirar::verAnterior);
-  this->invertir = new BotonInvertir("Invertir",this);
+  this->invertir = new sombrero::Button("Invertir");
   this->image = new sombrero::Image(this->jpegArchivos[this->corrienteArchivo]);
-  this->image->setXOffset((this->sp->getWidth() - this->image->getImageWidth()) / 2);
+  //this->image->setXOffset((this->sp->getWidth() - this->image->getImageWidth()) / 2);
   this->sp = new sombrero::VScrollPane(this->image);
 
-  ventana->add(g);
 
+  this->anterior->clicked.connect(this, &Mirar::verAnterior);
+  this->siguiente->clicked.connect(this, &Mirar::verSiguiente);
+  this->invertir->clicked.connect(this, &Mirar::verInverso);
+
+  ventana->add(g);
   g->attach(anterior,0,0,1,1);
   g->attachNextTo(this->siguiente,this->anterior,sombrero::POS_RIGHT,1,1);
   g->attachNextTo(this->invertir,this->siguiente,sombrero::POS_RIGHT,1,1);
@@ -146,7 +92,7 @@ void Mirar::verNuevo (bool siguiente) {
   this->sp->remove(this->image);
   delete this->image;
   this->image = new sombrero::Image(this->jpegArchivos[this->corrienteArchivo]);
-  this->image->setXOffset((this->sp->getWidth() - this->image->getImageWidth()) / 2);
+  //this->image->setXOffset((this->sp->getWidth() - this->image->getImageWidth()) / 2);
   this->sp->add(this->image);
   this->g->attach(this->sp,0,1,3,8);
   this->ventana->draw();
@@ -162,7 +108,7 @@ void Mirar::verAnterior() {
 }
 
 void Mirar::verInverso() {
-  this->image->reverseColors();
+  this->image->applyNegativeFilter();
   this->image->draw();
 }
 

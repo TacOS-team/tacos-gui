@@ -343,16 +343,6 @@ void Client::handle() {
       }
       break;
     }
-    case RQ_NEG_AREA: {
-      RqNegArea *rq = (RqNegArea*) Client::recvBuf;
-      Drawable *src = screen->getDrawable(rq->src);
-      Drawable *dst = screen->getDrawable(rq->dest);
-      GC *gc = GC::getGC(rq->gc);
-      if (src != NULL && dst != NULL && screen->prepareDrawing(dst, gc)) {
-        dst->negArea(rq->destX, rq->destY, src, rq->srcX, rq->srcY, rq->width, rq->height);
-      }
-      break;
-    }
   }
 }
 

@@ -18,15 +18,9 @@ Image::~Image() {
 }
 
 void Image::draw() {
-  if (this->isReversed) {
-    pron::pronNegArea(Application::getInstance()->d, this->pixmap,
+  pron::pronCopyArea(Application::getInstance()->d, this->pixmap,
       this->pronWindow, Application::getInstance()->d->defaultGC, 0, 0,
       this->imageWidth, this->imageHeight, this->xOffset, this->yOffset);
-  } else {
-    pron::pronCopyArea(Application::getInstance()->d, this->pixmap,
-      this->pronWindow, Application::getInstance()->d->defaultGC, 0, 0,
-      this->imageWidth, this->imageHeight, this->xOffset, this->yOffset);
-  }
 }
 
 pron::Pixmap Image::getPixMap() {
@@ -34,18 +28,17 @@ pron::Pixmap Image::getPixMap() {
 }
 
 void Image::init() {
-  this->isReversed = false;
   this->xOffset = 0;
   this->yOffset = 0;
 
   /* we will be using this uninitialized pointer later to store raw, uncompressd image */
-  char *raw_image = NULL;
+  this->raw_image = NULL;
 
   if(filename[filename.length()-1] == 'p') {
     BMPImageLoader bmpLoader;
-    raw_image = bmpLoader.load(filename);
+    this->raw_image = bmpLoader.load(filename);
 
-    if(raw_image == NULL) {
+    if(this->raw_image == NULL) {
         fprintf(stderr, "Error opening bmp file %s.\n", filename.c_str());
         exit(2);
     }
@@ -89,6 +82,7 @@ void Image::init() {
     
     this->imageWidth = cinfo.image_width;
     this->imageHeight = cinfo.image_height;
+    this->nbComponents = cinfo.num_components;
     this->setWidth(this->imageWidth);
     this->setHeight(this->imageHeight);
 
@@ -96,16 +90,15 @@ void Image::init() {
     jpeg_start_decompress(&cinfo);
 
     /* allocate memory to hold the uncompressed image */
-    raw_image = (char*) malloc(cinfo.output_width * cinfo.output_height * cinfo.num_components);
+    this->raw_image = (char*) malloc(cinfo.output_width * cinfo.output_height * cinfo.num_components);
     /* now actually read the jpeg into the raw buffer */
     row_pointer[0] = (unsigned char *) malloc(cinfo.output_width * cinfo.num_components);
     /* read one scan line at a time */
     while (cinfo.output_scanline < cinfo.image_height) {
       jpeg_read_scanlines(&cinfo, row_pointer, 1);
       for (unsigned int i = 0; i < cinfo.image_width * cinfo.num_components; i += cinfo.num_components) {
-        //for (unsigned int j = 0; j < cinfo.num_components; j++) {
         for (int j = cinfo.num_components - 1; j >= 0; j--) {
-          raw_image[location++] = row_pointer[0][i + j];
+          this->raw_image[location++] = row_pointer[0][i + j];
         }
       }
     }
@@ -116,8 +109,9 @@ void Image::init() {
     free(row_pointer[0]);
     fclose(infile);
   }
+  
   /* Create PronImage */
-  pron::PronImage image(this->imageWidth, this->imageHeight, pron::ZPixmap, raw_image, 24, 3, false);
+  pron::PronImage image(this->imageWidth, this->imageHeight, pron::ZPixmap, this->raw_image, 24, 3, false);
 
   /* Creates the image pixmap */
   pixmap = pron::pronCreatePixmap(Application::getInstance()->d,
@@ -140,10 +134,6 @@ unsigned int Image::getImageHeight(){
   return this->imageHeight;
 }
 
-void Image::reverseColors() {
-  this->isReversed = ! this->isReversed;
-}
-
 void Image::setXOffset(int newXOffset) {
   this->xOffset = newXOffset;
 }
@@ -151,5 +141,26 @@ void Image::setXOffset(int newXOffset) {
 void Image::setYOffset(int newYOffset) {
   this->yOffset = newYOffset;
 }
+
+void Image::applyNegativeFilter() {
+  unsigned long location = 0;
+  for (unsigned int h = 0 ; h < this->imageHeight; h++) {
+    for (unsigned int i = 0; i < this->imageWidth * this->nbComponents; i += this->nbComponents) {
+      for (int j = this->nbComponents - 1; j >= 0; j--) {
+        this->raw_image[location] = 255 - this->raw_image[location];
+        location++;
+      }
+    }
+  }
+  
+  /* Create PronImage */
+  pron::PronImage image(this->imageWidth, this->imageHeight, pron::ZPixmap, this->raw_image, 24, 3, false);
+  
+  /* Puts the image into the pixmap */
+  pron::pronPutImage(Application::getInstance()->d, pixmap,
+    Application::getInstance()->d->defaultGC, &image, 0, 0,
+    this->imageWidth, this->imageHeight, 0, 0);
+}
+
 
 } // namespace sombrero

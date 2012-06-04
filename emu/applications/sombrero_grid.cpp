@@ -109,8 +109,70 @@ void grid3() {
   sombrero::Application::getInstance()->sombrerun();
 }
 
+void gridRemove() {
+
+  sombrero::Application::getInstance()->init();
+  
+  // Window button
+
+  MyWindow w("Roxxing grid 2", 50, 50, 300, 100);
+  sombrero::Grid g;
+
+  sombrero::Label *l1 = new sombrero::Label("label1");
+  sombrero::Label *l2 = new sombrero::Label("label2");
+  sombrero::Label *ssl1 = new sombrero::Label("ss-label1");
+  sombrero::Label *ssl2 = new sombrero::Label("ss-label2");
+
+  g.attachNextTo(l1,NULL, sombrero::POS_LEFT,1,2);
+  g.attachNextTo(l2,l1, sombrero::POS_RIGHT,1,2);
+  g.attachNextTo(ssl1,l2, sombrero::POS_RIGHT,1,1);
+  g.attachNextTo(ssl2,ssl1, sombrero::POS_BOTTOM,1,1);
+  
+  w.add(&g);
+
+  /*g.removeColumns(1,1);
+  delete l2;*/
+
+  /*g.removeColumns(1,2);
+  delete l2;
+  delete ssl1;
+  delete ssl2;*/
+
+  /*g.removeColumns(0,1);
+  delete l1;*/
+
+  /*g.removeColumns(0,2);
+  delete l2;
+  delete l1;*/
+
+  /*g.remove(l1);
+  delete l1;*/
+
+  /*g.remove(l2);
+  delete l2;*/
+
+  g.remove(l1);
+  delete l1;
+  g.remove(l2);
+  delete l2;
+
+  //g.remove(ssl1);
+  //g.remove(ssl2);
+
+  //delete ssl1;
+  //delete ssl2;
+
+  /*g.removeRows(0,1);
+  delete ssl1;*/
+
+  /*g.removeRows(1,1);
+  delete ssl2;*/
+
+  sombrero::Application::getInstance()->sombrerun();
+}
+
 int main() {
-  grid3();
+  gridRemove();
   return 0;
 }
 

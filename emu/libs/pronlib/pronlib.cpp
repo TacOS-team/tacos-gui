@@ -387,18 +387,4 @@ void pronTextSize(Display *d, GC gc, const char *text, int length, int *width, i
   *height = res.height;
 }
 
-void pronRotateArea(Display *d, Drawable src, Drawable dest, GC gc, 
-    int srcX, int srcY, unsigned int width, 
-    unsigned int height, int destX, int destY, int angle) {
-  RqRotateArea rq(src, dest, gc, srcX, srcY, width, height, destX, destY, angle);
-  tsock_write(d->fd, &rq, sizeof(rq));
-}
-
-void pronNegArea(Display *d, Drawable src, Drawable dest, GC gc, 
-    int srcX, int srcY, unsigned int width, 
-    unsigned int height, int destX, int destY) {
-  RqNegArea rq(src, dest, gc, srcX, srcY, width, height, destX, destY);
-  tsock_write(d->fd, &rq, sizeof(rq));
-}
-
 } // namespace pron
