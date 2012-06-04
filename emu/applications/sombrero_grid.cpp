@@ -115,7 +115,7 @@ void gridRemove() {
   
   // Window button
 
-  MyWindow w("Roxxing grid 2", 50, 50, 300, 100);
+  MyWindow w("Roxxing grid 2", 50, 50, 572, 100);
   sombrero::Grid g;
 
   sombrero::Label *l1 = new sombrero::Label("label1");
@@ -151,10 +151,10 @@ void gridRemove() {
   /*g.remove(l2);
   delete l2;*/
 
-  g.remove(l1);
+  /*g.remove(l1);
   delete l1;
   g.remove(l2);
-  delete l2;
+  delete l2;*/
 
   //g.remove(ssl1);
   //g.remove(ssl2);

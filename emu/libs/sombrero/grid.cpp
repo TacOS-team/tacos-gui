@@ -156,10 +156,30 @@ void Grid::execUpdate() {
   float lineHeight  = (float)this->getHeight()/widgetsTab.size();
   std::vector<widgetWrapper*> wrappers = this->getWrappers();
   for(std::vector<widgetWrapper*>::iterator it = wrappers.begin(); it != wrappers.end(); ++it) {
-    (*it)->widget->setWidth (columnWidth * (*it)->width);
-    (*it)->widget->setHeight(lineHeight  * (*it)->height);
-    (*it)->widget->setX (columnWidth*(*it)->x);
-    (*it)->widget->setY (lineHeight*(*it)->y);
+    if((*it)->x == 0 || this->widgetsTab[(*it)->y][(*it)->x-1] == NULL) {
+      (*it)->widget->setX(columnWidth*(*it)->x);
+    } else {
+      (*it)->widget->setX(this->widgetsTab[(*it)->y][(*it)->x-1]->widget->getX()
+                        + this->widgetsTab[(*it)->y][(*it)->x-1]->widget->getWidth());
+    }
+    if((*it)->y == 0 || this->widgetsTab[(*it)->y-1][(*it)->x] == NULL) {
+      (*it)->widget->setY(lineHeight*(*it)->y);
+    } else {
+      (*it)->widget->setY(this->widgetsTab[(*it)->y-1][(*it)->x]->widget->getY()
+                        + this->widgetsTab[(*it)->y-1][(*it)->x]->widget->getHeight());
+    }
+    // If at the end of the line
+    if((*it)->x+(*it)->width == (int)this->nbColumns) {
+      (*it)->widget->setWidth(this->getX()+this->getWidth()-(*it)->widget->getX());
+    } else {
+      (*it)->widget->setWidth(columnWidth * (*it)->width);
+    }
+    // If at the end of the column
+    if((*it)->y+(*it)->height == (int)this->widgetsTab.size()) {
+      (*it)->widget->setHeight(this->getY()+this->getHeight()-(*it)->widget->getY());
+    } else {
+      (*it)->widget->setHeight(lineHeight * (*it)->height);
+    }
     // Sends the new informations to pron
     (*it)->widget->update();
   }
