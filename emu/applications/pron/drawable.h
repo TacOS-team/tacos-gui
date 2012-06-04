@@ -280,17 +280,6 @@ class Drawable {
    */
   void setPixel(int x, int y, int pixel);
 
-  /**
-   * reverse colors of a Drawable area into this Drawable.
-   * @param dstX The top-left x-coordinate of the destination area
-   * @param dstY The top-left y-coordinate of the destination area
-   * @param d The source Drawable
-   * @param srcX The top-left x-coordinate of the source area
-   * @param srcY The top-left y-coordinate of the source area
-   * @param width The width of the area
-   * @param height The height of the area
-   */
-  void negArea(int dstX, int dstY, Drawable *d, int srcX, int srcY, int width, int height);
 };
 
 #endif
