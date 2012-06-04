@@ -58,7 +58,7 @@ void VScrollBar::handleEventPointerMoved(pron::EventPointerMoved *mousePointerEv
 }
 
 void VScrollBar::handleClick(int x __attribute__((unused)), int y) {
-  //printf("ScrollBar::handleEventMouseButton\n");
+  //printf("VScrollBar::handleEventMouseButton\n");
   // If the click is above the thumb we step up
   if(y < this->thumb.getY()) {
     int newVal = (int)this->value - this->step;

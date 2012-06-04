@@ -1,6 +1,7 @@
 #include "doublescrollpane.h"
 
-static int factor = 100;
+static const int   factor = 100;
+static const float step   = 0.1;
 
 namespace sombrero {
 
@@ -51,6 +52,7 @@ void DoubleScrollPane::execUpdate() {
       int max = factor*(widgetWidth - maxWidth);
       this->hscrollbar->setRange(0, max);
       this->hscrollbar->setRatio(max * ((float)maxWidth/widgetWidth));
+      this->hscrollbar->setStep(max*step);
     } else {
       // If the widget is smaller, the scrollbar cannot be moved
       this->hscrollbar->setRange(0, 0);
@@ -64,6 +66,7 @@ void DoubleScrollPane::execUpdate() {
       int max = factor*(widgetHeight - maxHeight);
       this->vscrollbar->setRange(0, max);
       this->vscrollbar->setRatio(max * ((float)maxHeight/widgetHeight));
+      this->vscrollbar->setStep(max*step);
     } else {
       // If the widget is smaller, the scrollbar cannot be moved
       this->vscrollbar->setRange(0, 0);
