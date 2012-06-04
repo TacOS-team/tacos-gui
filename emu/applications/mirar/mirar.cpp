@@ -60,7 +60,7 @@ void Mirar::inicializacionSombrero() {
   this->anterior = new sombrero::Button("Anterior");
   this->invertir = new sombrero::Button("Invertir");
   this->image = new sombrero::Image(this->jpegArchivos[this->corrienteArchivo]);
-  this->image->setXOffset((this->sp->getWidth() - this->image->getImageWidth()) / 2);
+  //this->image->setXOffset((this->sp->getWidth() - this->image->getImageWidth()) / 2);
   this->sp = new sombrero::VScrollPane(this->image);
 
 
@@ -92,7 +92,7 @@ void Mirar::verNuevo (bool siguiente) {
   this->sp->remove(this->image);
   delete this->image;
   this->image = new sombrero::Image(this->jpegArchivos[this->corrienteArchivo]);
-  this->image->setXOffset((this->sp->getWidth() - this->image->getImageWidth()) / 2);
+  //this->image->setXOffset((this->sp->getWidth() - this->image->getImageWidth()) / 2);
   this->sp->add(this->image);
   this->g->attach(this->sp,0,1,3,8);
   this->ventana->draw();
@@ -108,8 +108,8 @@ void Mirar::verAnterior() {
 }
 
 void Mirar::verInverso() {
-//  this->image->reverseColors();
-//  this->image->draw();
+  this->image->applyNegativeFilter();
+  this->image->draw();
 }
 
 void Mirar::correr() {
