@@ -17,6 +17,7 @@ namespace sombrero {
       fprintf(stderr, "Sombrero : error while connecting to pron server\n");
       exit(1);
     }
+    Application::instance = this;
   }
 
   Application::~Application() {

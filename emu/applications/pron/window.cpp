@@ -351,33 +351,38 @@ void Window::deliverDeviceEvent(PronEvent *e, unsigned int size) {
 }
 
 void Window::raise() {
-  // Do nothing if we are the root window or already the last child of our parent
-  if (this->parent == NULL || this->parent->lastChild == this) {
+  // Do nothing if we are the root window
+  if (this->parent == NULL) {
     return;
   }
 
-  Window *sibling = this->nextSibling;
-  bool overlap = false;
-  for (; sibling != NULL; sibling = sibling->nextSibling) {
-    overlap = overlap || this->overlaps(sibling);
+  // Do nothing if we are already the last child of our parent
+  if (this->parent->lastChild != this) {
+    Window *sibling = this->nextSibling;
+    bool overlap = false;
+    for (; sibling != NULL; sibling = sibling->nextSibling) {
+      overlap = overlap || this->overlaps(sibling);
+    }
+
+    if (this->prevSibling == NULL) {
+      this->parent->firstChild = this->nextSibling;
+    } else {
+      this->prevSibling->nextSibling = this->nextSibling;  
+    }
+    if (this->nextSibling != NULL) {
+      this->nextSibling->prevSibling = this->prevSibling;
+    }
+    this->prevSibling = this->parent->lastChild;
+    this->nextSibling = NULL;
+    this->parent->lastChild->nextSibling = this;
+    this->parent->lastChild = this;
+
+    if (overlap) {
+      this->exposeArea(this->x, this->y, this->getWidth(), this->getHeight());
+    }
   }
 
-  if (this->prevSibling == NULL) {
-    this->parent->firstChild = this->nextSibling;
-  } else {
-    this->prevSibling->nextSibling = this->nextSibling;  
-  }
-  if (this->nextSibling != NULL) {
-    this->nextSibling->prevSibling = this->prevSibling;
-  }
-  this->prevSibling = this->parent->lastChild;
-  this->nextSibling = NULL;
-  this->parent->lastChild->nextSibling = this;
-  this->parent->lastChild = this;
-
-  if (overlap) {
-    this->exposeArea(this->x, this->y, this->getWidth(), this->getHeight());
-  }
+  this->parent->raise();
 }
 
 void Window::exposeArea(int x, int y, int width, int height) {

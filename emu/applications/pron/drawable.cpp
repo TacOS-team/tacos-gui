@@ -405,8 +405,22 @@ void Drawable::drawText(int x, int y, const char *text, int length,
   int textWidth, textHeight;
   font->textSize(text, length, &textWidth, &textHeight);
 
-  if (this->beforeDrawing(x, y, x + textWidth - 1, y + textHeight - 1)) {
+  /** @todo XXX Fix rapide mais sale car code dupliqué */
+  int textX = x, textY = y;
+  if (hpos == CENTER) {
+    textX -= textWidth / 2;
+  } else if (hpos == RIGHT) {
+    textX -= textWidth;
+  }
+
+  if (vpos == MIDDLE) {
+    textY -= textHeight / 2;
+  } else if (vpos == BOTTOM) {
+    textY -= textHeight;
+  }
+
+  if (this->beforeDrawing(textX, textY, textX + textWidth - 1, textY + textHeight - 1)) {
     font->drawText(this, x, y, text, length, hpos, vpos);
-    this->afterDrawing(x, y, x + textWidth - 1, y + textHeight - 1);
+    this->afterDrawing(textX, textY, textX + textWidth - 1, textY + textHeight - 1);
   }
 }
