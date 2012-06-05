@@ -309,9 +309,10 @@ void Mouse::updateFocusWin() {
 }
 
 bool Mouse::overlapsPointer(int x1, int y1, int x2, int y2) {
-  return !(x1 >= this->mouseX + PRON_MOUSE_POINTER_WIDTH ||
-      y1 >= this->mouseY + PRON_MOUSE_POINTER_HEIGHT ||
-      x2 < this->mouseX || y2 < this->mouseY);
+  return !(x1 >= this->mouseX - PRON_MOUSE_POINTER_WIDTH_SHIFT + PRON_MOUSE_POINTER_WIDTH ||
+      y1 >= this->mouseY - PRON_MOUSE_POINTER_HEIGHT_SHIFT + PRON_MOUSE_POINTER_HEIGHT ||
+      x2 < this->mouseX - PRON_MOUSE_POINTER_WIDTH_SHIFT ||
+      y2 < this->mouseY - PRON_MOUSE_POINTER_HEIGHT_SHIFT);
 }
 
 void Mouse::hidePointer() {
