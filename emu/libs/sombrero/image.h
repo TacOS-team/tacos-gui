@@ -38,6 +38,8 @@ class Image : public Widget {
    */
   unsigned int getLocation(unsigned int i, unsigned int j, unsigned int c, unsigned int currentWidth);
 
+  void sendPixmap (bool createNew);
+
    
  public:
   pron::Pixmap getPixMap();

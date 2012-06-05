@@ -23,13 +23,10 @@ void Image::draw() {
       this->imageWidth, this->imageHeight, this->xOffset, this->yOffset);
 }
 
-pron::Pixmap Image::getPixMap() {
-  return this->pixmap;
-}
-
 void Image::init() {
   this->xOffset = 0;
   this->yOffset = 0;
+  this->pixmap = 0;
 
   /* we will be using this uninitialized pointer later to store raw, uncompressd image */
   this->rawImage = NULL;
@@ -109,24 +106,35 @@ void Image::init() {
     free(row_pointer[0]);
     fclose(infile);
   }
+
+  this->sendPixmap(true);
+}
+
+void Image::sendPixmap(bool createNew) {
+  if (createNew) {
+    // if the pixmap has already been created
+    if (this->pixmap != 0) {
+      pron::pronClearWindow(Application::getInstance()->d, this->pronWindow);
+      pron::pronFreePixmap(Application::getInstance()->d, this->pixmap);
+    }
   
+    /* Creates the image pixmap */
+    this->pixmap = pron::pronCreatePixmap(Application::getInstance()->d,
+        this->imageWidth, this->imageHeight, 24);
+    if (this->pixmap == (unsigned int)-1) {
+      fprintf(stderr, "Error while creating the pixmap\n");
+      exit(2);
+    }
+  }
+
   /* Create PronImage */
   pron::PronImage image(this->imageWidth, this->imageHeight, pron::ZPixmap, this->rawImage, 24, 3, false);
-
-  /* Creates the image pixmap */
-  pixmap = pron::pronCreatePixmap(Application::getInstance()->d,
-    this->imageWidth, this->imageHeight, 24);
-  if (pixmap == (unsigned int)-1) {
-    fprintf(stderr, "Error while creating the pixmap\n");
-    exit(2);
-  }
 
   /* Puts the image into the pixmap */
   pron::pronPutImage(Application::getInstance()->d, pixmap,
     Application::getInstance()->d->defaultGC, &image, 0, 0,
     this->imageWidth, this->imageHeight, 0, 0);
 }
-
 
 void Image::applyNegativeFilter() {
   unsigned long location = 0;
@@ -138,14 +146,7 @@ void Image::applyNegativeFilter() {
       }
     }
   }
-  
-  /* Create PronImage */
-  pron::PronImage image(this->imageWidth, this->imageHeight, pron::ZPixmap, this->rawImage, 24, 3, false);
-  
-  /* Puts the image into the pixmap */
-  pron::pronPutImage(Application::getInstance()->d, pixmap,
-    Application::getInstance()->d->defaultGC, &image, 0, 0,
-    this->imageWidth, this->imageHeight, 0, 0);
+  this->sendPixmap(false);
 }
 
 unsigned int Image::getLocation(unsigned int i, unsigned int j, unsigned int c, unsigned int currentWidth) {
@@ -164,7 +165,7 @@ void Image::rotate(bool clockwise) {
         if (clockwise) {
           newRawImage[this->getLocation(i,j,c, newImageWidth)] = this->rawImage[this->getLocation(j, this->imageHeight - i -1, c, this->imageWidth)];
         } else {
-          newRawImage[this->getLocation(i,j,c, newImageWidth)] = this->rawImage[this->getLocation(j, this->imageHeight - i -1, c, this->imageWidth)];
+          newRawImage[this->getLocation(i,j,c, newImageWidth)] = this->rawImage[this->getLocation(this->imageWidth - j -1,i, c, this->imageWidth)];
         }
       }
     }
@@ -172,29 +173,12 @@ void Image::rotate(bool clockwise) {
 
   memcpy(this->rawImage,newRawImage,this->imageHeight * this->imageWidth * this->nbComponents * sizeof(char));
 
-  pron::pronClearWindow(Application::getInstance()->d, this->pronWindow);
-  pron::pronFreePixmap(Application::getInstance()->d, this->pixmap);
-
   this->imageWidth = newImageWidth;
   this->imageHeight = newImageHeight;
   this->setWidth (this->imageWidth);
   this->setHeight(this->imageHeight);
 
-  /* Create PronImage */
-  pron::PronImage image(this->imageWidth, this->imageHeight, pron::ZPixmap, this->rawImage, 24, 3, false);
-
-  /* Creates the image pixmap */
-  this->pixmap = pron::pronCreatePixmap(Application::getInstance()->d,
-    this->imageWidth, this->imageHeight, 24);
-  if (this->pixmap == (unsigned int)-1) {
-    fprintf(stderr, "Error while creating the pixmap\n");
-    exit(2);
-  }
-
-  /* Puts the image into the pixmap */
-  pron::pronPutImage(Application::getInstance()->d, this->pixmap,
-    Application::getInstance()->d->defaultGC, &image, 0, 0,
-    this->imageWidth, this->imageHeight, 0, 0);
+  this->sendPixmap(true);
 }
 
 unsigned int Image::getImageWidth(){
@@ -210,6 +194,10 @@ void Image::setXOffset(int newXOffset) {
 
 void Image::setYOffset(int newYOffset) {
   this->yOffset = newYOffset;
+}
+
+pron::Pixmap Image::getPixMap() {
+  return this->pixmap;
 }
 
 } // namespace sombrero
