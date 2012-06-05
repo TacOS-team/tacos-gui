@@ -96,7 +96,7 @@ void grid3() {
   MyWindow w("Roxxing grid 3", 50, 50, 300, 100);
   sombrero::Grid g;
   sombrero::Image i("../../ressources/images/tacos.jpg");
-  sombrero::Image handCursor("../../ressources/cursors/black_hand.bmp");
+  sombrero::Image handCursor("../../ressources/cursors/black_target.bmp");
 
   sombrero::DoubleScrollPane scrollPane(&i);
 
@@ -172,7 +172,7 @@ void gridRemove() {
 }
 
 int main() {
-  gridRemove();
+  grid3();
   return 0;
 }
 
