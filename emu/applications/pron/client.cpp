@@ -13,6 +13,7 @@
 #include <screen.h>
 #include <tsock.h>
 #include <window.h>
+#include <mouse.h>
 
 int Client::recvLen;
 char Client::recvBuf[MAX_MSG_SIZE];
@@ -327,9 +328,15 @@ void Client::handle() {
     case RQ_SET_CURSOR: {
       RqSetCursor *rq = (RqSetCursor*) Client::recvBuf;
       printf("set Cursor %d at window %u\n", rq->pixmap, rq->window);
-      Window *w = (Window*) screen->getDrawable(rq->window, D_WINDOW);
-      if (w != NULL) {
-        w->pointer = rq->pixmap;
+      Pixmap *newPointer = (Pixmap*) screen->getDrawable(rq->pixmap, D_PIXMAP);
+      if(newPointer != NULL && newPointer->getWidth()  == PRON_MOUSE_POINTER_WIDTH
+                            && newPointer->getHeight() == PRON_MOUSE_POINTER_HEIGHT) {
+        Window *w = (Window*) screen->getDrawable(rq->window, D_WINDOW);
+        if (w != NULL) {
+          w->pointer = rq->pixmap;
+        }
+      } else {
+        printf("Pointeur invalide (taille ou existence)\n");
       }
       break;
     }
