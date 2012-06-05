@@ -287,7 +287,7 @@ void Widget::handleEventMouseButton(pron::EventMouseButton *e) {
 void Widget::handleEventKeyPressed(pron::EventKeyPressed *e __attribute__((unused))) {
 }
 
-void Widget::handleEventKeyReleased() {
+void Widget::handleEventKeyReleased(pron::EventKeyReleased *e __attribute__((unused))) {
 }
 
 void Widget::handleEventDestroyWindow() {

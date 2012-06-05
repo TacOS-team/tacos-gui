@@ -23,9 +23,21 @@ class Image : public Widget {
   int xOffset; /**< the X offset of the top left corner */
   int yOffset; /**< the Y offset of the top left corner */
   pron::Pixmap pixmap; /**< The pixmap where the image is put */
-  char * raw_image; /**< the buffer where the uncompressed image is locally stored */
+  char * rawImage; /**< the buffer where the uncompressed image is locally stored */
   string filename; /**< the name of the file to open */
+
   void init(); /**< intializes the image and the pixmap */
+
+  /**
+   * Get the location in rawImage of the c'th component of the pixel located at column i, line j
+   * @param i The column number of the pixel
+   * @param j The line number of the pixel
+   * @param c The component of the pixel
+   * @param currentWidth The width of the image stored in rawImage
+   * @return The location in rawImage of the component
+   */
+  unsigned int getLocation(unsigned int i, unsigned int j, unsigned int c, unsigned int currentWidth);
+
    
  public:
   pron::Pixmap getPixMap();
@@ -56,6 +68,7 @@ class Image : public Widget {
 
   void setXOffset(int newXOffset);
   void setYOffset(int newYOffset);
+  void rotate(bool clockwise);
   void applyNegativeFilter();
 };
 

@@ -231,7 +231,7 @@ class Widget : public has_slots<> {
   /**
    * Handle for a keyReleased event
    */
-  virtual void handleEventKeyReleased();
+  virtual void handleEventKeyReleased(pron::EventKeyReleased *e);
   /**
    * Handle for a destroyWindow event
    */

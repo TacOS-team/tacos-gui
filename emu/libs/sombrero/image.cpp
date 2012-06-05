@@ -32,13 +32,13 @@ void Image::init() {
   this->yOffset = 0;
 
   /* we will be using this uninitialized pointer later to store raw, uncompressd image */
-  this->raw_image = NULL;
+  this->rawImage = NULL;
 
   if(filename[filename.length()-1] == 'p') {
     BMPImageLoader bmpLoader;
-    this->raw_image = bmpLoader.load(filename);
+    this->rawImage = bmpLoader.load(filename);
 
-    if(this->raw_image == NULL) {
+    if(this->rawImage == NULL) {
         fprintf(stderr, "Error opening bmp file %s.\n", filename.c_str());
         exit(2);
     }
@@ -90,7 +90,7 @@ void Image::init() {
     jpeg_start_decompress(&cinfo);
 
     /* allocate memory to hold the uncompressed image */
-    this->raw_image = (char*) malloc(cinfo.output_width * cinfo.output_height * cinfo.num_components);
+    this->rawImage = (char*) malloc(cinfo.output_width * cinfo.output_height * cinfo.num_components);
     /* now actually read the jpeg into the raw buffer */
     row_pointer[0] = (unsigned char *) malloc(cinfo.output_width * cinfo.num_components);
     /* read one scan line at a time */
@@ -98,7 +98,7 @@ void Image::init() {
       jpeg_read_scanlines(&cinfo, row_pointer, 1);
       for (unsigned int i = 0; i < cinfo.image_width * cinfo.num_components; i += cinfo.num_components) {
         for (int j = cinfo.num_components - 1; j >= 0; j--) {
-          this->raw_image[location++] = row_pointer[0][i + j];
+          this->rawImage[location++] = row_pointer[0][i + j];
         }
       }
     }
@@ -111,7 +111,7 @@ void Image::init() {
   }
   
   /* Create PronImage */
-  pron::PronImage image(this->imageWidth, this->imageHeight, pron::ZPixmap, this->raw_image, 24, 3, false);
+  pron::PronImage image(this->imageWidth, this->imageHeight, pron::ZPixmap, this->rawImage, 24, 3, false);
 
   /* Creates the image pixmap */
   pixmap = pron::pronCreatePixmap(Application::getInstance()->d,
@@ -123,6 +123,76 @@ void Image::init() {
 
   /* Puts the image into the pixmap */
   pron::pronPutImage(Application::getInstance()->d, pixmap,
+    Application::getInstance()->d->defaultGC, &image, 0, 0,
+    this->imageWidth, this->imageHeight, 0, 0);
+}
+
+
+void Image::applyNegativeFilter() {
+  unsigned long location = 0;
+  for (unsigned int h = 0 ; h < this->imageHeight; h++) {
+    for (unsigned int i = 0; i < this->imageWidth * this->nbComponents; i += this->nbComponents) {
+      for (int j = this->nbComponents - 1; j >= 0; j--) {
+        this->rawImage[location] = 255 - this->rawImage[location];
+        location++;
+      }
+    }
+  }
+  
+  /* Create PronImage */
+  pron::PronImage image(this->imageWidth, this->imageHeight, pron::ZPixmap, this->rawImage, 24, 3, false);
+  
+  /* Puts the image into the pixmap */
+  pron::pronPutImage(Application::getInstance()->d, pixmap,
+    Application::getInstance()->d->defaultGC, &image, 0, 0,
+    this->imageWidth, this->imageHeight, 0, 0);
+}
+
+unsigned int Image::getLocation(unsigned int i, unsigned int j, unsigned int c, unsigned int currentWidth) {
+  return this->nbComponents * (i + j * currentWidth) + c;
+}
+
+void Image::rotate(bool clockwise) {
+  char * newRawImage = (char *)malloc(this->imageHeight * this->imageWidth * this->nbComponents * sizeof(char));
+  
+  unsigned int newImageWidth = this->imageHeight;
+  unsigned int newImageHeight = this->imageWidth;
+
+  for (unsigned int i = 0; i < newImageWidth; i++) {
+    for (unsigned int j = 0; j < newImageHeight; j++) {
+      for (unsigned int c = 0; c < this->nbComponents; c++) {
+        if (clockwise) {
+          newRawImage[this->getLocation(i,j,c, newImageWidth)] = this->rawImage[this->getLocation(j, this->imageHeight - i -1, c, this->imageWidth)];
+        } else {
+          newRawImage[this->getLocation(i,j,c, newImageWidth)] = this->rawImage[this->getLocation(j, this->imageHeight - i -1, c, this->imageWidth)];
+        }
+      }
+    }
+  }
+
+  memcpy(this->rawImage,newRawImage,this->imageHeight * this->imageWidth * this->nbComponents * sizeof(char));
+
+  pron::pronClearWindow(Application::getInstance()->d, this->pronWindow);
+  pron::pronFreePixmap(Application::getInstance()->d, this->pixmap);
+
+  this->imageWidth = newImageWidth;
+  this->imageHeight = newImageHeight;
+  this->setWidth (this->imageWidth);
+  this->setHeight(this->imageHeight);
+
+  /* Create PronImage */
+  pron::PronImage image(this->imageWidth, this->imageHeight, pron::ZPixmap, this->rawImage, 24, 3, false);
+
+  /* Creates the image pixmap */
+  this->pixmap = pron::pronCreatePixmap(Application::getInstance()->d,
+    this->imageWidth, this->imageHeight, 24);
+  if (this->pixmap == (unsigned int)-1) {
+    fprintf(stderr, "Error while creating the pixmap\n");
+    exit(2);
+  }
+
+  /* Puts the image into the pixmap */
+  pron::pronPutImage(Application::getInstance()->d, this->pixmap,
     Application::getInstance()->d->defaultGC, &image, 0, 0,
     this->imageWidth, this->imageHeight, 0, 0);
 }
@@ -141,26 +211,5 @@ void Image::setXOffset(int newXOffset) {
 void Image::setYOffset(int newYOffset) {
   this->yOffset = newYOffset;
 }
-
-void Image::applyNegativeFilter() {
-  unsigned long location = 0;
-  for (unsigned int h = 0 ; h < this->imageHeight; h++) {
-    for (unsigned int i = 0; i < this->imageWidth * this->nbComponents; i += this->nbComponents) {
-      for (int j = this->nbComponents - 1; j >= 0; j--) {
-        this->raw_image[location] = 255 - this->raw_image[location];
-        location++;
-      }
-    }
-  }
-  
-  /* Create PronImage */
-  pron::PronImage image(this->imageWidth, this->imageHeight, pron::ZPixmap, this->raw_image, 24, 3, false);
-  
-  /* Puts the image into the pixmap */
-  pron::pronPutImage(Application::getInstance()->d, pixmap,
-    Application::getInstance()->d->defaultGC, &image, 0, 0,
-    this->imageWidth, this->imageHeight, 0, 0);
-}
-
 
 } // namespace sombrero
