@@ -18,8 +18,7 @@ class Window;
  * Main sombrero's class. Start sombrero, add / remove window...
  */
 class Application {
-
- private:
+ protected:
   static Application *instance; /**< Singleton instance of Application */
   /**
    * Private constructor (singleton)
