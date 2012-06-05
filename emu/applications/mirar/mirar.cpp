@@ -14,16 +14,33 @@ class VentanaMirar : public sombrero::Window {
     VentanaMirar(std::string title, int x, int y, int width, int height, Mirar *aplicacion)
         : sombrero::Window(title, x, y, width, height) {
       this->subscribeEvent(pron::EV_KEY_PRESSED);
+      this->subscribeEvent(pron::EV_KEY_RELEASED);
       this->aplicacion = aplicacion;
     }
 
     void handleEventKeyPressed(pron::EventKeyPressed *e) {
-      if (e->keysym == pron::PRONK_RIGHT) {
-        this->aplicacion->verSiguiente();
+      if (e->keysym == pron::PRONK_LCTRL) {
+        this->aplicacion->setCtrlDown(true);
+      } else if (e->keysym == pron::PRONK_RIGHT) {
+        if (this->aplicacion->getCtrlDown()) {
+          this->aplicacion->girarImage(true);
+        } else {
+          this->aplicacion->verSiguiente();
+        }
       } else if (e->keysym == pron::PRONK_LEFT) {
-        this->aplicacion->verAnterior();
+        if(this->aplicacion->getCtrlDown()) {
+          this->aplicacion->girarImage(false);
+        }
+        else {
+          this->aplicacion->verAnterior();
+        }
       } else if (e->keysym == pron::PRONK_SPACE) {
         this->aplicacion->verInverso();
+      }
+    }
+    void handleEventKeyReleased(pron::EventKeyReleased *e) {
+      if (e->keysym == pron::PRONK_LCTRL) {
+        this->aplicacion->setCtrlDown(false);
       }
     }
 };
@@ -43,6 +60,7 @@ Mirar::Mirar(std::string camino) {
   }
 
   this->corrienteArchivo = 0;
+  this->ctrlDown = false;
 
   if (this->jpegArchivos.size() > 0) {
     this->inicializacionSombrero();
@@ -60,7 +78,6 @@ void Mirar::inicializacionSombrero() {
   this->anterior = new sombrero::Button("Anterior");
   this->invertir = new sombrero::Button("Invertir");
   this->image = new sombrero::Image(this->jpegArchivos[this->corrienteArchivo]);
-  //this->image->setXOffset((this->sp->getWidth() - this->image->getImageWidth()) / 2);
   this->sp = new sombrero::VScrollPane(this->image);
 
 
@@ -92,7 +109,6 @@ void Mirar::verNuevo (bool siguiente) {
   this->sp->remove(this->image);
   delete this->image;
   this->image = new sombrero::Image(this->jpegArchivos[this->corrienteArchivo]);
-  //this->image->setXOffset((this->sp->getWidth() - this->image->getImageWidth()) / 2);
   this->sp->add(this->image);
   this->g->attach(this->sp,0,1,3,8);
   this->ventana->draw();
@@ -107,11 +123,22 @@ void Mirar::verAnterior() {
   this->verNuevo(false);
 }
 
-void Mirar::verInverso() {
-  //this->image->applyNegativeFilter();
-  //this->image->reverseImage();
-  this->image->rotateClockwise();
+void Mirar::girarImage(bool reloj) {
+  this->image->rotate(reloj);
   this->image->draw();
+}
+
+
+void Mirar::verInverso() {
+  this->image->applyNegativeFilter();
+  this->image->draw();
+}
+bool Mirar::getCtrlDown() {
+  return this->ctrlDown;
+}
+
+void Mirar::setCtrlDown(bool down) {
+  this->ctrlDown = down;
 }
 
 void Mirar::correr() {

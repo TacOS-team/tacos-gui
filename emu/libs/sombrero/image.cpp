@@ -152,8 +152,7 @@ unsigned int Image::getLocation(unsigned int i, unsigned int j, unsigned int c, 
   return this->nbComponents * (i + j * currentWidth) + c;
 }
 
-
-void Image::rotateClockwise() {
+void Image::rotate(bool clockwise) {
   char * newRawImage = (char *)malloc(this->imageHeight * this->imageWidth * this->nbComponents * sizeof(char));
   
   unsigned int newImageWidth = this->imageHeight;
@@ -162,10 +161,11 @@ void Image::rotateClockwise() {
   for (unsigned int i = 0; i < newImageWidth; i++) {
     for (unsigned int j = 0; j < newImageHeight; j++) {
       for (unsigned int c = 0; c < this->nbComponents; c++) {
-        newRawImage[this->getLocation(i,j,c, newImageWidth)] = this->rawImage[this->getLocation(j, this->imageHeight - i -1, c, this->imageWidth)];
-        //newRawImage[3 * (i + j * this->imageHeight) + c] = this->rawImage[3 * (j + (this->imageHeight - i - 1) * this->imageWidth) + c];
-        //newRawImage[this->accesMat(i,j,c)] = 255 - this->rawImage[this->accesMat(i, j, c)];
-        //newRawImage[this->accesMat(i,j,c)] = this->rawImage[this->accesMat(this->imageWidth - j,i - 1, c)];
+        if (clockwise) {
+          newRawImage[this->getLocation(i,j,c, newImageWidth)] = this->rawImage[this->getLocation(j, this->imageHeight - i -1, c, this->imageWidth)];
+        } else {
+          newRawImage[this->getLocation(i,j,c, newImageWidth)] = this->rawImage[this->getLocation(j, this->imageHeight - i -1, c, this->imageWidth)];
+        }
       }
     }
   }
@@ -193,32 +193,6 @@ void Image::rotateClockwise() {
 
   /* Puts the image into the pixmap */
   pron::pronPutImage(Application::getInstance()->d, this->pixmap,
-    Application::getInstance()->d->defaultGC, &image, 0, 0,
-    this->imageWidth, this->imageHeight, 0, 0);
-}
-
-
-
-
-void Image::reverseImage() {
-  char * newRawImage = (char *)malloc(this->imageHeight * this->imageWidth * this->nbComponents * sizeof(char));
-
-  unsigned long location = 0;
-  for (unsigned int h = 0 ; h < this->imageHeight; h++) {
-    for (unsigned int i = 0; i < this->imageWidth * this->nbComponents; i += this->nbComponents) {
-      for (int j = this->nbComponents - 1; j >= 0; j--) {
-        newRawImage[location] = this->rawImage[(this->imageWidth * this->imageHeight * this->nbComponents) - location - (this->nbComponents - j - 1)];
-        location++;
-      }
-    }
-  }
-  memcpy(this->rawImage,newRawImage,this->imageHeight * this->imageWidth * this->nbComponents * sizeof(char));
-  
-  /* Create PronImage */
-  pron::PronImage image(this->imageWidth, this->imageHeight, pron::ZPixmap, newRawImage, 24, 3, false);
-  
-  /* Puts the image into the pixmap */
-  pron::pronPutImage(Application::getInstance()->d, pixmap,
     Application::getInstance()->d->defaultGC, &image, 0, 0,
     this->imageWidth, this->imageHeight, 0, 0);
 }

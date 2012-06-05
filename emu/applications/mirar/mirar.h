@@ -21,6 +21,9 @@ class Mirar :public has_slots<> {
     sombrero::VScrollPane *sp;
     std::vector<std::string> jpegArchivos; /**< los jpeg archivos que la aplicacion debe MIRAR */
     int corrienteArchivo;
+    bool ctrlDown;
+    
+    void verNuevo (bool siguiente);
 
   public:
     Mirar(std::string camino);
@@ -30,8 +33,11 @@ class Mirar :public has_slots<> {
     void verSiguiente();
     void verAnterior();
     void verInverso();
-    void verNuevo (bool siguiente);
+    void girarImage(bool reloj);
     void correr();
+
+    bool getCtrlDown();
+    void setCtrlDown(bool down);
 };
   
 

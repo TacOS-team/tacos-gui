@@ -72,7 +72,7 @@ namespace sombrero {
             w->handleEventKeyPressed((pron::EventKeyPressed*) e);
             break;
           case pron::EV_KEY_RELEASED:
-            w->handleEventKeyReleased();
+            w->handleEventKeyReleased((pron::EventKeyReleased*) e);
             break;
           case pron::EV_DESTROY_WINDOW:
             w->handleEventDestroyWindow();

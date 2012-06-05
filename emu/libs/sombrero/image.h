@@ -37,6 +37,7 @@ class Image : public Widget {
    * @return The location in rawImage of the component
    */
   unsigned int getLocation(unsigned int i, unsigned int j, unsigned int c, unsigned int currentWidth);
+
    
  public:
   pron::Pixmap getPixMap();
@@ -67,8 +68,7 @@ class Image : public Widget {
 
   void setXOffset(int newXOffset);
   void setYOffset(int newYOffset);
-  void reverseImage();
-  void rotateClockwise();
+  void rotate(bool clockwise);
   void applyNegativeFilter();
 };
 
