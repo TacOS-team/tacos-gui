@@ -44,6 +44,7 @@ void Image::init() {
     this->imageHeight = bmpLoader.height;
     this->setWidth(bmpLoader.width);
     this->setHeight(bmpLoader.height);
+    this->nbComponents = 3;
   }
   else {
     /* these are standard libjpeg structures for reading (decompression) */
