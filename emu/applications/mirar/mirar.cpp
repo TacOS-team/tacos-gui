@@ -125,7 +125,10 @@ void Mirar::verAnterior() {
 
 void Mirar::girarImage(bool reloj) {
   this->image->rotate(reloj);
-  this->image->draw();
+  this->sp->remove(this->image);
+  this->sp->add(this->image);
+  this->g->attach(this->sp,0,1,3,8);
+  this->ventana->draw();
 }
 
 

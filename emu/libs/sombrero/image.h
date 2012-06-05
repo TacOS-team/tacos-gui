@@ -38,11 +38,14 @@ class Image : public Widget {
    */
   unsigned int getLocation(unsigned int i, unsigned int j, unsigned int c, unsigned int currentWidth);
 
+  /*
+   * Send a pixmap to pron
+   * @param createNew Indiquates if we need to allocate a new pixamp in pron or not 
+   */
   void sendPixmap (bool createNew);
 
    
  public:
-  pron::Pixmap getPixMap();
   /**
    * Image constructor
    * @param filename The name of the file to open
@@ -56,6 +59,23 @@ class Image : public Widget {
    * Image drawing stuff
    */
   void draw();
+  
+  /**
+   * Rotate the image of 90° or -90°
+   * @param clockwise Indiquates whether we rotate 90° or -90°
+   */
+  void rotate(bool clockwise);
+
+  /*
+   * Reverse colors of the image pixels
+   */
+  void applyNegativeFilter();
+  
+  /*
+   * Get the pixmap of the image
+   * @return The pron pixmap to return
+   */
+  pron::Pixmap getPixMap();
 
   /**
    * Gets the width of the image
@@ -68,10 +88,17 @@ class Image : public Widget {
    */
   unsigned int getImageHeight();
 
+  /**
+   * Set attribute xOffset
+   * @param newXOffset The new xOffset
+   */
   void setXOffset(int newXOffset);
+  
+  /**
+   * Set attribute xOffset
+   * @param newXOffset The new xOffset
+   */
   void setYOffset(int newYOffset);
-  void rotate(bool clockwise);
-  void applyNegativeFilter();
 };
 
 }// namespace sombrero

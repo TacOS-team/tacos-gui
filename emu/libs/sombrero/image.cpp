@@ -128,7 +128,7 @@ void Image::sendPixmap(bool createNew) {
   }
 
   /* Create PronImage */
-  pron::PronImage image(this->imageWidth, this->imageHeight, pron::ZPixmap, this->rawImage, 24, 3, false);
+  pron::PronImage image(this->imageWidth, this->imageHeight, pron::ZPixmap, this->rawImage, 24, this->nbComponents, false);
 
   /* Puts the image into the pixmap */
   pron::pronPutImage(Application::getInstance()->d, pixmap,
