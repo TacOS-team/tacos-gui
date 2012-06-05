@@ -108,7 +108,9 @@ void Mirar::verAnterior() {
 }
 
 void Mirar::verInverso() {
-  this->image->applyNegativeFilter();
+  //this->image->applyNegativeFilter();
+  //this->image->reverseImage();
+  this->image->rotateClockwise();
   this->image->draw();
 }
 
