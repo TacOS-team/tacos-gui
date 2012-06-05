@@ -50,29 +50,85 @@ Mouse::Mouse() {
   screen->getGC()->setFg(Color(0, 0, 0));
 
   // Interrieur noir
-  this->pointer->drawLine(1,  2,  1, 15);
-  this->pointer->drawLine(2,  3,  2, 14);
-  this->pointer->drawLine(3,  4,  3, 13);
-  this->pointer->drawLine(4,  5,  4, 13);
-  this->pointer->drawLine(5,  6,  5, 14);
-  this->pointer->drawLine(6,  7,  6, 16);
-  this->pointer->drawLine(7,  8,  7, 11);
-  this->pointer->drawLine(7, 15,  7, 17);
-  this->pointer->drawLine(8,  8,  8, 11);
-  this->pointer->drawLine(9, 10,  9, 11);
-  this->pointer->drawPoint(10, 10);
+  this->pointer->drawLine(PRON_MOUSE_POINTER_WIDTH_SHIFT  + 1,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 2,
+                          PRON_MOUSE_POINTER_WIDTH_SHIFT  + 1,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 15);
+  this->pointer->drawLine(PRON_MOUSE_POINTER_WIDTH_SHIFT  + 2,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 3,
+                          PRON_MOUSE_POINTER_WIDTH_SHIFT  + 2,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 14);
+  this->pointer->drawLine(PRON_MOUSE_POINTER_WIDTH_SHIFT  + 3,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 4,
+                          PRON_MOUSE_POINTER_WIDTH_SHIFT  + 3,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 13);
+  this->pointer->drawLine(PRON_MOUSE_POINTER_WIDTH_SHIFT  + 4,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 5,
+                          PRON_MOUSE_POINTER_WIDTH_SHIFT  + 4,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 13);
+  this->pointer->drawLine(PRON_MOUSE_POINTER_WIDTH_SHIFT  + 5,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 6,
+                          PRON_MOUSE_POINTER_WIDTH_SHIFT  + 5,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 14);
+  this->pointer->drawLine(PRON_MOUSE_POINTER_WIDTH_SHIFT  + 6,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 7,
+                          PRON_MOUSE_POINTER_WIDTH_SHIFT  + 6,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 16);
+  this->pointer->drawLine(PRON_MOUSE_POINTER_WIDTH_SHIFT  + 7,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 8,
+                          PRON_MOUSE_POINTER_WIDTH_SHIFT  + 7,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 11);
+  this->pointer->drawLine(PRON_MOUSE_POINTER_WIDTH_SHIFT  + 7,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 15,
+                          PRON_MOUSE_POINTER_WIDTH_SHIFT  + 7,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 17);
+  this->pointer->drawLine(PRON_MOUSE_POINTER_WIDTH_SHIFT  + 8,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 8,
+                          PRON_MOUSE_POINTER_WIDTH_SHIFT  + 8,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 11);
+  this->pointer->drawLine(PRON_MOUSE_POINTER_WIDTH_SHIFT  + 9,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 10,
+                          PRON_MOUSE_POINTER_WIDTH_SHIFT  + 9,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 11);
+  this->pointer->drawPoint(PRON_MOUSE_POINTER_WIDTH_SHIFT + 10,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 10);
 
   screen->getGC()->setFg(oldFg);
   // Contour blanc
-  this->pointer->drawLine(0,  0,  0, 17);
-  this->pointer->drawLine(0,  0, 12, 12);
-  this->pointer->drawLine(0, 17,  3, 14);
-  this->pointer->drawLine(4, 14,  5, 15);
-  this->pointer->drawLine(5, 16,  7, 18);
-  this->pointer->drawPoint(6, 18);
-  this->pointer->drawLine(8, 15,  8, 18);
-  this->pointer->drawLine(7, 12,  7, 14);
-  this->pointer->drawLine(8, 12, 12, 12);
+  this->pointer->drawLine(PRON_MOUSE_POINTER_WIDTH_SHIFT  + 0,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 0,
+                          PRON_MOUSE_POINTER_WIDTH_SHIFT  + 0,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 17);
+  this->pointer->drawLine(PRON_MOUSE_POINTER_WIDTH_SHIFT  + 0,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 0,
+                          PRON_MOUSE_POINTER_WIDTH_SHIFT  + 12,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 12);
+  this->pointer->drawLine(PRON_MOUSE_POINTER_WIDTH_SHIFT  + 0,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 17,
+                          PRON_MOUSE_POINTER_WIDTH_SHIFT  + 3,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 14);
+  this->pointer->drawLine(PRON_MOUSE_POINTER_WIDTH_SHIFT  + 4,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 14,
+                          PRON_MOUSE_POINTER_WIDTH_SHIFT  + 5,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 15);
+  this->pointer->drawLine(PRON_MOUSE_POINTER_WIDTH_SHIFT  + 5,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 16,
+                          PRON_MOUSE_POINTER_WIDTH_SHIFT  + 7,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 18);
+  this->pointer->drawPoint(PRON_MOUSE_POINTER_WIDTH_SHIFT + 6,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 18);
+  this->pointer->drawLine(PRON_MOUSE_POINTER_WIDTH_SHIFT  + 8,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 15,
+                          PRON_MOUSE_POINTER_WIDTH_SHIFT  + 8,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 18);
+  this->pointer->drawLine(PRON_MOUSE_POINTER_WIDTH_SHIFT  + 7,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 12,
+                          PRON_MOUSE_POINTER_WIDTH_SHIFT  + 7,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 14);
+  this->pointer->drawLine(PRON_MOUSE_POINTER_WIDTH_SHIFT  + 8,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 12,
+                          PRON_MOUSE_POINTER_WIDTH_SHIFT  + 12,
+                          PRON_MOUSE_POINTER_HEIGHT_SHIFT + 12);
 
   Mouse::defaultPointer = this->pointer->getId();
 }
@@ -262,11 +318,14 @@ void Mouse::hidePointer() {
   if (!this->pointerHidden) {
     Screen *screen = Screen::getInstance();
 
-    for (int y = 0; y < PRON_MOUSE_POINTER_HEIGHT; y++) {
-      for (int x = 0; x < PRON_MOUSE_POINTER_WIDTH; x++) {
-        if (x + this->pointerBackupX >= 0 && x + this->pointerBackupX < screen->width &&
-            y + this->pointerBackupY >= 0 && y + this->pointerBackupY < screen->height) {
-          void *destination = screen->getRoot()->pixelAddr(x + this->pointerBackupX, y + this->pointerBackupY);
+    for (int y = 0; y < PRON_MOUSE_POINTER_HEIGHT; ++y) {
+      for (int x = 0; x < PRON_MOUSE_POINTER_WIDTH; ++x) {
+        if (x + this->pointerBackupX - PRON_MOUSE_POINTER_WIDTH_SHIFT >= 0
+            && x + this->pointerBackupX - PRON_MOUSE_POINTER_WIDTH_SHIFT < screen->width
+            && y + this->pointerBackupY - PRON_MOUSE_POINTER_HEIGHT_SHIFT >= 0
+            && y + this->pointerBackupY - PRON_MOUSE_POINTER_HEIGHT_SHIFT < screen->height) {
+          void *destination = screen->getRoot()->pixelAddr(x + this->pointerBackupX - PRON_MOUSE_POINTER_WIDTH_SHIFT,
+                                                           y + this->pointerBackupY - PRON_MOUSE_POINTER_HEIGHT_SHIFT);
           void *source = this->pointerBackup->pixelAddr(x, y);
           memcpy(destination, source, screen->bytesPerPixel);
         }
@@ -285,13 +344,16 @@ void Mouse::showPointer() {
     this->pointerBackupX = this->mouseX;
     this->pointerBackupY = this->mouseY;
 
-    for (int y = 0; y < PRON_MOUSE_POINTER_HEIGHT; y++) {
-      for (int x = 0; x < PRON_MOUSE_POINTER_WIDTH; x++) {
-        if (x + this->mouseX >= 0 && x + this->mouseX < screen->width &&
-            y + this->mouseY >= 0 && y + this->mouseY < screen->height) {
+    for (int y = 0; y < PRON_MOUSE_POINTER_HEIGHT; ++y) {
+      for (int x = 0; x < PRON_MOUSE_POINTER_WIDTH; ++x) {
+        if (x + this->mouseX - PRON_MOUSE_POINTER_WIDTH_SHIFT >= 0
+            && x + this->mouseX - PRON_MOUSE_POINTER_WIDTH_SHIFT < screen->width
+            && y + this->mouseY - PRON_MOUSE_POINTER_HEIGHT_SHIFT >= 0
+            && y + this->mouseY - PRON_MOUSE_POINTER_HEIGHT_SHIFT < screen->height) {
           // Backup old pixel
           void *destination = this->pointerBackup->pixelAddr(x, y);
-          void *source = screen->getRoot()->pixelAddr(x + this->mouseX, y + this->mouseY);
+          void *source = screen->getRoot()->pixelAddr(x + this->mouseX - PRON_MOUSE_POINTER_WIDTH_SHIFT,
+                                                      y + this->mouseY - PRON_MOUSE_POINTER_HEIGHT_SHIFT);
           memcpy(destination, source, screen->bytesPerPixel);
 
           // Draw new pixel

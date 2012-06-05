@@ -96,7 +96,7 @@ void grid3() {
   MyWindow w("Roxxing grid 3", 50, 50, 300, 100);
   sombrero::Grid g;
   sombrero::Image i("../../ressources/images/tacos.jpg");
-  sombrero::Image handCursor("../../ressources/cursors/black_hand.bmp");
+  sombrero::Image handCursor("../../ressources/cursors/black_target.bmp");
 
   sombrero::DoubleScrollPane scrollPane(&i);
 
@@ -115,7 +115,7 @@ void gridRemove() {
   
   // Window button
 
-  MyWindow w("Roxxing grid 2", 50, 50, 300, 100);
+  MyWindow w("Roxxing grid 2", 50, 50, 572, 100);
   sombrero::Grid g;
 
   sombrero::Label *l1 = new sombrero::Label("label1");
@@ -151,10 +151,10 @@ void gridRemove() {
   /*g.remove(l2);
   delete l2;*/
 
-  g.remove(l1);
+  /*g.remove(l1);
   delete l1;
   g.remove(l2);
-  delete l2;
+  delete l2;*/
 
   //g.remove(ssl1);
   //g.remove(ssl2);
@@ -172,7 +172,7 @@ void gridRemove() {
 }
 
 int main() {
-  gridRemove();
+  grid3();
   return 0;
 }
 
