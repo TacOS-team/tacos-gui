@@ -103,6 +103,10 @@ void Grid::cleanTab() {
       ++currentX;
     }
   }
+  if(this->widgetsTab.size() == 0) {
+    this->widgetsTab.resize(1);
+    this->clear();
+  }
 }
 
 void Grid::remove(__attribute__((unused))Widget *widget) {

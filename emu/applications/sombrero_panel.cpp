@@ -35,7 +35,6 @@ class AppPanel : public sombrero::Application {
       printf("top window\n");
       windows[e->window] = new WindowItem(e->window, e->attributes.wm_title);
       this->grid.add(&(windows[e->window]->getButton()));
-      this->grid.draw();
       
       map<pron::Window, sombrero::Widget*>::iterator it = this->widgets.find(e->window);
       if (it != this->widgets.end()) {
@@ -60,13 +59,16 @@ class AppPanel : public sombrero::Application {
   std::map<pron::Window, sombrero::Widget*>& widgets;
 
   AppPanel()
-      : widgets(Application::getInstance()->widgets) {}
+      : widgets(Application::getInstance()->widgets) {
+  }
 
   void main() {
     this->init();
 
     sombrero::Window w("Panel", 0, 600 - 20, 800, 20, false);
     w.add(&this->grid);
+    
+    this->grid.clear();
 
     this->sombrerun();
   }
