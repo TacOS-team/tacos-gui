@@ -33,9 +33,6 @@ class MyWindow : public sombrero::Window {
 };
 
 void grid1() {
-
-  sombrero::Application::getInstance()->init();
-  
   // Window button
 
   MyWindow w("Roxxing grid", 50, 50, 300, 100);
@@ -63,8 +60,6 @@ void grid1() {
 }
 
 void grid2() {
-
-  sombrero::Application::getInstance()->init();
   
   // Window button
 
@@ -88,8 +83,6 @@ void grid2() {
 }
 
 void grid3() {
-
-  sombrero::Application::getInstance()->init();
   
   // Window button
 
@@ -110,8 +103,6 @@ void grid3() {
 }
 
 void gridRemove() {
-
-  sombrero::Application::getInstance()->init();
   
   // Window button
 
@@ -172,8 +163,6 @@ void gridRemove() {
 }
 
 void gridRemoveAll() {
-
-  sombrero::Application::getInstance()->init();
   
   // Window button
 

@@ -73,7 +73,6 @@ Mirar::Mirar(std::string camino) {
 }
 
 void Mirar::inicializacionSombrero() {
-  sombrero::Application::getInstance()->init();
   this->ventana = new VentanaMirar("Mirar", 0, 0, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, this);
   this->g = new sombrero::Grid();
   this->siguiente = new sombrero::Button("Siguiente");

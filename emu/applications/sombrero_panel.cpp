@@ -58,7 +58,6 @@ class AppPanel : public sombrero::Application {
  public:
   void sombrerun() {
     this->grid = new sombrero::Grid();
-    this->init();
 
     sombrero::Window w("Panel", 0, 600 - 20, 800, 20, false);
     w.add(this->grid);

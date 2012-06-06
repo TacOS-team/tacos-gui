@@ -10,9 +10,6 @@ int main(int argc, char **argv) {
     printf("usage : sombrero_image <filename>\n");
     return 1;
   }
- 
-  // Initialize sombrero 
-  sombrero::Application::getInstance()->init();
   
   // Window button
   string filename(argv[1]);
