@@ -6,7 +6,7 @@
 #include <stdlib.h>
 
 #define DEFAULT_FOLDER "ressources/images/wallpapers"
-#define TIMER_PERIOD 1000
+#define TIMER_PERIOD 10000
 
 using namespace std;
 using namespace sombrero;
@@ -28,18 +28,19 @@ class Wallpaper : public has_slots<> {
     while (1) {
       if (it->getFileName().find(".jpg") != std::string::npos) {
         printf("JPG FOUND !\n");
-        if (imageFound) {
-          delete i;
-        }
-        i = new Image(it->getAbsolutePath());
+        Image *i2 = new Image(it->getAbsolutePath()); // temporary image to improve image switching
         if (this->lolMode) {
           int effect = rand() % 4;
           if (effect == 1) {
-            i->applyNegativeFilter();
+            i2->applyNegativeFilter();
           } else if (effect == 2) {
-            i->applyPowerfullnessOfTheFonkFilter();
+            i2->applyPowerfullnessOfTheFonkFilter();
           }
         }
+        if (imageFound) {
+          delete i;
+        }
+        i = i2;
         w.add(i);
         i->draw();
         imageFound = true;
