@@ -3,9 +3,10 @@
 #include <vector>
 #include <fileinfo.h>
 #include <directory.h>
+#include <stdlib.h>
 
 #define DEFAULT_FOLDER "ressources/images/wallpapers"
-#define TIMER_PERIOD 10000
+#define TIMER_PERIOD 1000
 
 using namespace std;
 using namespace sombrero;
@@ -17,6 +18,7 @@ class Wallpaper : public has_slots<> {
   list<FileInfo>::iterator it;
   Image *i;
   Timer t;
+  bool lolMode;
   bool imageFound;
  public:
 
@@ -30,6 +32,14 @@ class Wallpaper : public has_slots<> {
           delete i;
         }
         i = new Image(it->getAbsolutePath());
+        if (this->lolMode) {
+          int effect = rand() % 4;
+          if (effect == 1) {
+            i->applyNegativeFilter();
+          } else if (effect == 2) {
+            i->applyPowerfullnessOfTheFonkFilter();
+          }
+        }
         w.add(i);
         i->draw();
         imageFound = true;
@@ -67,18 +77,35 @@ class Wallpaper : public has_slots<> {
       delete i;
     }
   }
+
+  void setLolMode(bool lolMode) {
+    this->lolMode = lolMode;
+  }
 };
 
 int main(int argc, char **argv) {
 
   FileInfo *f;
+  int opt;
+  bool lolmode = false;
+  string path = DEFAULT_FOLDER;
 
-  if (argc < 2) {
-    printf("using default folder : %s\n", DEFAULT_FOLDER);
-    f = new FileInfo(DEFAULT_FOLDER);
-  } else {
-    f = new FileInfo(argv[1]);
+  while ((opt = getopt(argc, argv, "[l][d:]")) != -1) {
+    switch (opt) {
+      case 'l':
+        lolmode = true;
+        break;
+      case 'd':
+         path = (string &) optarg;
+        break;
+      default:
+        fprintf(stderr, "Usage: %s [-l] [-d] directory\n",
+            argv[0]);
+        exit(EXIT_FAILURE);
+    }
   }
+
+    f = new FileInfo(path.c_str());
 
   if (!f->exists()) {
     fprintf(stderr, "error : file or folder doesn't exists");
@@ -94,6 +121,8 @@ int main(int argc, char **argv) {
   delete f;
 
   Wallpaper wp(d.entryInfoList());
+  wp.setLolMode (lolmode);
+  srand(time(NULL));
   
   Application::getInstance()->sombrerun();
 
