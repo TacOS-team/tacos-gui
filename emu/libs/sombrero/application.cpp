@@ -7,11 +7,8 @@ namespace sombrero {
 
 Application* Application::instance = NULL;
 
-void Application::init() {
-  sombrero_ascii_art();
-}
-
 Application::Application() {
+  sombrero_ascii_art();
   this->d = pron::pronConnect();
   if (d == NULL) {
     fprintf(stderr, "Sombrero : error while connecting to pron server\n");

@@ -6,8 +6,6 @@
 
 
 int main () {
-  sombrero::Application::getInstance()->init();
-
   sombrero::Window w1("Bouton 1", 0, 0, 100, 100);
   sombrero::Window w2("Bouton 2", 0, 0, 100, 100);
   sombrero::Window w3("Bouton 3", 0, 0, 100, 100);

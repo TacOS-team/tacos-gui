@@ -145,7 +145,6 @@ class Clock : public has_slots<> {
 };
 
 int main() {
-  sombrero::Application::getInstance()->init();
   sombrero::Window w("Whoohoo clock trop bien", 0, 0, WIDTH, HEIGHT);
   printf("window = %p\n", &w);
   sombrero::Canvas c(WIDTH, HEIGHT);

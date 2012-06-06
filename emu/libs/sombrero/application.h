@@ -45,10 +45,6 @@ class Application {
   static Application* getInstance();
   static void setInstance(Application* instance);
   /**
-   * Initialize Sombrero
-   */
-  void init();
-  /**
    * Lanches the application sombrero
    */
   virtual void sombrerun();
