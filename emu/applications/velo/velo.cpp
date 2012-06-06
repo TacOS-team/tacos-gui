@@ -50,7 +50,7 @@ class Panel : public sombrero::Container {
   void add(Widget *widget __attribute__((unused))) {}
   void remove(Widget *widget __attribute__((unused))) {}
 
-  void setFiles(list<FileInfo> fileList) {
+  void setFiles(vector<FileInfo> fileList) {
     //printf("Panel::setFiles\n");
     for(size_t i = 0; i < boutons.size(); ++i) {
       if(boutons[i] != currentButton){
@@ -68,7 +68,7 @@ class Panel : public sombrero::Container {
       newF->setText("..");
     }
     boutons.push_back(newF);
-    for(list<FileInfo>::iterator it = fileList.begin(); it != fileList.end(); ++it) {
+    for(vector<FileInfo>::iterator it = fileList.begin(); it != fileList.end(); ++it) {
       newF = new Fichier(it->getFileName());
       boutons.push_back(newF);
       newF->setParent(this);

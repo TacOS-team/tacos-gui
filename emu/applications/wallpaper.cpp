@@ -14,8 +14,8 @@ using namespace sombrero;
 class Wallpaper : public has_slots<> {
  private:
   Window w;
-  list<FileInfo> fl;
-  list<FileInfo>::iterator it;
+  vector<FileInfo> fl;
+  vector<FileInfo>::iterator it;
   Image *i;
   Timer t;
   bool lolMode;
@@ -59,7 +59,7 @@ class Wallpaper : public has_slots<> {
     }
   }
 
-  Wallpaper(list<FileInfo> l) 
+  Wallpaper(vector<FileInfo> l) 
       : w("Wallpaper", 0, 0, 800, 600, false), 
         fl(l), 
         it(fl.begin()), t(TIMER_PERIOD), imageFound(false) {

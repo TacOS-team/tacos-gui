@@ -20,7 +20,7 @@ void FileInfo::setFile(const std::string & filePath) {
   }
 }
 
-std::string FileInfo::getFileName() {
+std::string FileInfo::getFileName() const {
   char * currentBegining = (char*)this->absoluteFilePath.c_str();
   char * nextSlash;
   while((nextSlash = strstr(currentBegining, "/")) != NULL) {
