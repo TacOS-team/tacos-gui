@@ -34,8 +34,10 @@ class VentanaMirar : public sombrero::Window {
         else {
           this->aplicacion->verAnterior();
         }
-      } else if (e->keysym == pron::PRONK_SPACE) {
+      } else if (e->keysym == pron::PRONK_UP) {
         this->aplicacion->verInverso();
+      } else if (e->keysym == pron::PRONK_DOWN) {
+        this->aplicacion->verPoderDeLaFunk();
       }
     }
     void handleEventKeyReleased(pron::EventKeyReleased *e) {
@@ -128,10 +130,13 @@ void Mirar::girarImage(bool reloj) {
   this->ventana->draw();
 }
 
+void Mirar::verPoderDeLaFunk() {
+  this->image->applyNegativeFilter();
+  this->image->draw();
+}
 
 void Mirar::verInverso() {
   this->image->applyPowerfullnessOfTheFonkFilter();
-  //this->image->applyNegativeFilter();
   this->image->draw();
 }
 bool Mirar::getCtrlDown() {
