@@ -16,7 +16,6 @@ class Mirar :public has_slots<> {
     sombrero::Grid *g;
     sombrero::Button *siguiente;
     sombrero::Button *anterior;
-    sombrero::Button *invertir;
     sombrero::Image *image;
     sombrero::VScrollPane *sp;
     std::vector<std::string> jpegArchivos; /**< los jpeg archivos que la aplicacion debe MIRAR */
@@ -40,7 +39,5 @@ class Mirar :public has_slots<> {
     void setCtrlDown(bool down);
 };
   
-
-
 
 #endif // __MIRAR_H__

@@ -44,6 +44,14 @@ class Image : public Widget {
    */
   void sendPixmap (bool createNew);
 
+  /*
+   * Calculate the new value of the component for the fonk filter
+   * @param i the colomn number of the pixel
+   * @param j the line number of the pixel
+   * @param c the component of the pixel
+   * @param raw the raw image from where calculate
+   */
+  char calculateNewComp (unsigned int i, unsigned int j, unsigned int c, char * raw);
    
  public:
   /**
@@ -71,6 +79,11 @@ class Image : public Widget {
    */
   void applyNegativeFilter();
   
+  /*
+   * apply an awesome filter to the image
+   */
+  void applyPowerfullnessOfTheFonkFilter();
+
   /*
    * Get the pixmap of the image
    * @return The pron pixmap to return

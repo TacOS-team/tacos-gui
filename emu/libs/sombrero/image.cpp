@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <application.h>
 #include <bmp.h>
+#include <math.h>
 
 namespace sombrero {
 
@@ -171,7 +172,7 @@ void Image::rotate(bool clockwise) {
       }
     }
   }
-
+  
   memcpy(this->rawImage,newRawImage,this->imageHeight * this->imageWidth * this->nbComponents * sizeof(char));
 
   this->imageWidth = newImageWidth;
@@ -180,6 +181,71 @@ void Image::rotate(bool clockwise) {
   this->setHeight(this->imageHeight);
 
   this->sendPixmap(true);
+}
+
+
+char Image::calculateNewComp (unsigned int i, unsigned int j, unsigned int c, char * raw) {
+  int newComp = 0;
+  int blop = 1;
+
+  newComp += raw[this->getLocation(i,j,c,this->imageWidth)];
+  if (i + 1 < this->imageWidth) {
+    newComp += raw[this->getLocation(i+1,j,c,this->imageWidth)];
+    blop++;
+    if (j > 0) {
+      newComp += raw[this->getLocation(i+1,j-1,c,this->imageWidth)];
+      blop++;
+    }
+    if (j + 1 < this->imageHeight) {
+      newComp += raw[this->getLocation(i+1,j+1,c,this->imageWidth)];
+      blop++;
+    }
+  }
+  if (i > 0) {
+    newComp += raw[this->getLocation(i-1,j,c,this->imageWidth)];
+    blop++;
+    if (j > 0) {
+      newComp += raw[this->getLocation(i-1,j-1,c,this->imageWidth)];
+      blop++;
+    }
+    if (j + 1 < this->imageHeight) {
+      newComp += raw[this->getLocation(i-1,j+1,c,this->imageWidth)];
+      blop++;
+    }
+  }
+  if (j > 0) {
+    newComp += raw[this->getLocation(i,j-1,c,this->imageWidth)];
+    blop++;
+  } 
+  if (j + 1 < this->imageHeight) {
+    newComp += raw[this->getLocation(i,j+1,c,this->imageWidth)];
+    blop++;
+  }
+
+  newComp /= blop;
+
+  return (char)newComp;
+}
+
+void Image::applyPowerfullnessOfTheFonkFilter() {
+  char * newRawImage = (char *)malloc(this->imageHeight * this->imageWidth * this->nbComponents * sizeof(char));
+  char * rawImages [2]= {newRawImage,this->rawImage};
+  int currentRawImage = 0;
+  
+  unsigned int nbPass = 4;
+  for (unsigned int pass = 0; pass < nbPass; pass++) {
+    for (unsigned int i = 0; i < this->imageWidth; i++) {
+      for (unsigned int j = 0; j < this->imageHeight; j++) {
+        for (unsigned int c = 0; c < this->nbComponents; c++) {
+          rawImages[currentRawImage][this->getLocation(i,j,c, this->imageWidth)] = this->calculateNewComp(i,j,c,rawImages[(currentRawImage + 1) % 2]);
+        }
+      }
+    }
+    currentRawImage = (currentRawImage + 1) % 2;
+  }
+  memcpy(rawImages[currentRawImage],rawImages[(currentRawImage + 1) % 2],this->imageHeight * this->imageWidth * this->nbComponents * sizeof(char));
+
+  this->sendPixmap(false);
 }
 
 unsigned int Image::getImageWidth(){
