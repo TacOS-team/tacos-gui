@@ -1,0 +1,82 @@
+\documentclass[xcolor=table,12pt]{beamer}
+
+\usepackage{beamerthemesplit}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+\usepackage{color}
+\usepackage[table]{xcolor}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{xcolor}            % pour définir plus de couleurs 
+\usepackage{graphicx}          % pour insérer des figures
+
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\definecolor{macouleur}{HTML}{0080DB}
+
+%Colors
+
+
+\definecolor{light_grey}{HTML}{F0F0F0}
+\definecolor{dark_grey}{HTML}{CACACA} % le tuning
+\rowcolors{1}{light_grey}{white}
+\definecolor{red}{rgb}{1., 0., 0.}
+\definecolor{green}{rgb}{0., 1., 0.}
+\definecolor{orange}{rgb}{1., 0.39, 0.}
+
+\title{Tacos GUI}
+
+
+\author[Tacos GUI Team]{
+\footnotesize
+Nicolas Hug \texttt{<hug@etud.insa-toulouse.fr>}\\
+Julien Marchand \texttt{<jmarchan@etud.insa-toulouse.fr>}\\
+Benoît Morgan \texttt{<morgan@etud.insa-toulouse.fr>}\\
+Adrien Sulpice \texttt{<sulpice@etud.insa-toulouse.fr>}\\
+\normalsize
+}
+
+\institute{INSA de Toulouse}
+\date{\today}
+
+\begin{document}
+\setbeamercolor{structure}{fg=macouleur}
+
+\frame{\titlepage}
+
+\frame{
+  \frametitle{Plan}
+  \setcounter{tocdepth}{1}
+  \tableofcontents
+}
+
+\author{Benoît Morgan \texttt{<morgan@etud.insa-toulouse.fr>}}
+\section{Architecture du projet}
+\input{architecture.tex}
+
+\author{Nicolas Hug \texttt{<hug@etud.insa-toulouse.fr>}}
+\section{Méthodologie}
+\input{methodologie.tex}
+
+\author{Julien Marchand \texttt{<jmarchan@etud.insa-toulouse.fr>}}
+\section{pron}
+\input{pron.tex}
+
+\author{Adrien Sulpice \texttt{<sulpice@etud.insa-toulouse.fr>}}
+\section{guacamole}
+\input{guacamole.tex}
+
+\author{Benoît Morgan \texttt{<morgan@etud.insa-toulouse.fr>}}
+\section{sombrero}
+\input{sombrero.tex}
+
+\author{Nicolas Hug \texttt{<hug@etud.insa-toulouse.fr>}}
+\section{Apports à TacOS}
+\input{apports.tex}
+
+\end{document}
