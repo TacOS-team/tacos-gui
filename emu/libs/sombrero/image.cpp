@@ -247,8 +247,35 @@ void Image::applyPowerfullnessOfTheFonkFilter() {
   if (currentRawImage == 0) {
     memcpy(rawImages[1],rawImages[0],this->imageHeight * this->imageWidth * this->nbComponents * sizeof(char));
   }
-
+  
+  memcpy(this->rawImage, newRawImage,this->imageHeight * this->imageWidth * this->nbComponents * sizeof(char));
   this->sendPixmap(false);
+}
+
+char Image::calculateNewComp(unsigned int i, unsigned int j, unsigned int c, char * raw, unsigned int rawWidth, unsigned int rawHeight, int ** convMat, unsigned int convMatSize) {
+  int newComp = 0;
+  int middle = 0;
+  int realI = 0;
+  int realJ = 0;
+  int zob = 0;
+  if ((convMatSize % 2) != 1) {
+    printf("size of the convolution matrix must be odd\n");
+  } else {
+    middle = (convMatSize / 2);
+    for (unsigned int convI = 0; convI < convMatSize; convI++) {
+      for (unsigned int convJ = 0; convJ < convMatSize; convJ++) {
+        realI = i - (middle - convI);
+        realJ = j - (middle - convJ);
+        if (realI >= 0 && realI < (int)rawWidth && realJ >= 0 && realJ < (int)rawHeight) {
+          newComp += raw[this->getLocation(realI,realJ,c, rawWidth)] * convMat[convI][convJ];
+          zob += convMat[convI][convJ];
+        }
+      }
+    }
+  }
+  newComp /= zob;
+
+  return (char)newComp;
 }
 
 unsigned int Image::getImageWidth(){

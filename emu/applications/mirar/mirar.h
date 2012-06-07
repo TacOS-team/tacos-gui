@@ -32,7 +32,7 @@ class Mirar :public has_slots<> {
     void verSiguiente();
     void verAnterior();
     void verInverso();
-    void verPoderDeLaFunk();
+    void verPoderDeLaFonk();
     void girarImage(bool reloj);
     void correr();
 

@@ -29,6 +29,8 @@ class ScrollBar : public Widget {
 
   };
 
+  pron::GC scrollGC; /**< The background GC */
+
   Thumb thumb;/** The thumb of the scrollbar */
   int thumbPosition;/** The current thumb position on the scrollbar */
   unsigned int value;/** The current value of the scrollbar */

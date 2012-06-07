@@ -24,25 +24,44 @@ void VScrollBar::execUpdate() {
 void VScrollBar::draw() {
   /*printf("draw vscrollbar (x, y, w, h) : %d, %d, %d, %d\n", this->getX(),
     this->getY(), this->getWidth(), this->getHeight());*/
-  pron::pronClearWindow(Application::getInstance()->d, this->pronWindow);
 
-  // Background of the scrollbar
+  // Background under the scrollbar
   pron::pronFillRectangle(Application::getInstance()->d, this->pronWindow,
-    Application::getInstance()->d->defaultGC, 0,this->getMinThumbPosition(),
-    this->getWidth(), this->getMaxThumbLength());
+    this->bgGC, this->marginSize, this->getMinThumbPosition(),
+    this->getWidth()-2*this->marginSize, this->thumbPosition-this->getMinThumbPosition());
+  // Background above the scrollbar
+  pron::pronFillRectangle(Application::getInstance()->d, this->pronWindow,
+    this->bgGC, this->marginSize, this->thumbPosition+this->thumb.getHeight(),
+    this->getWidth()-2*this->marginSize, this->getHeight()-this->thumbPosition-this->thumb.getHeight()-this->getMinThumbPosition());
   // Draws the margin
-  pron::pronDrawRect(Application::getInstance()->d, this->pronWindow,
-    Application::getInstance()->d->defaultGC, 0,0,
-    this->getWidth(), this->getHeight());
+  for(int i = 0; i < this->marginSize; ++i) {
+    pron::pronDrawRect(Application::getInstance()->d, this->pronWindow,
+      this->bgGC, i, this->getMinThumbPosition()+i,
+      this->getWidth()-2*i, this->getHeight()-2*this->getMinThumbPosition()-2*i);
+  }
+  // Background top button
+  pron::pronFillRectangle(Application::getInstance()->d, this->pronWindow,
+    this->scrollGC, 0,0,
+    this->getWidth(), this->getMinThumbPosition()-1);
+  pron::pronDrawLine(Application::getInstance()->d, this->pronWindow, this->fgGC,
+    0, this->getMinThumbPosition()-1,
+    this->getWidth(), this->getMinThumbPosition()-1);
+  // Background bottom button
+  pron::pronFillRectangle(Application::getInstance()->d, this->pronWindow,
+    this->scrollGC, 0, this->getHeight()-this->getMinThumbPosition(),
+    this->getWidth(), this->getMinThumbPosition());
+  pron::pronDrawLine(Application::getInstance()->d, this->pronWindow, this->fgGC,
+    0, this->getHeight()-this->getMinThumbPosition(),
+    this->getWidth(), this->getHeight()-this->getMinThumbPosition());
 
   int buttonCenter = this->getWidth()/2;
 
   // Draws the arrows
   for(int i = 0; i < this->buttonSize - 3 && (i * 2 + 6 + this->marginSize) < this->getWidth(); ++i) {
-    pron::pronDrawLine(Application::getInstance()->d, this->pronWindow, Application::getInstance()->d->defaultGC,
+    pron::pronDrawLine(Application::getInstance()->d, this->pronWindow, this->fgGC,
       buttonCenter - i, this->marginSize + 1 + i, 
       buttonCenter + i, this->marginSize + 1 + i);
-    pron::pronDrawLine(Application::getInstance()->d, this->pronWindow, Application::getInstance()->d->defaultGC,
+    pron::pronDrawLine(Application::getInstance()->d, this->pronWindow, this->fgGC,
       buttonCenter - i, this->getHeight() - this->marginSize - 1 - i, 
       buttonCenter + i, this->getHeight() - this->marginSize - 1 - i);
   }
