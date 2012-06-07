@@ -258,8 +258,8 @@ void Image::applyPowerfullnessOfTheFonkFilter() {
 unsigned char Image::calculateNewComp(unsigned int i, unsigned int j, unsigned int c, unsigned char * raw, unsigned int rawWidth, unsigned int rawHeight, int ** convMat, unsigned int convMatSize) {
   int newComp = 0;
   int middle = (convMatSize / 2);
-  int realI = 0;
-  int realJ = 0;
+  int realI = 0; // The column number of the current adjacent pixel
+  int realJ = 0; // The column number of the current adjacent pixel
   int sum = 0;
   if ((convMatSize % 2) != 1) {
     printf("size of the convolution matrix must be odd\n");
@@ -280,7 +280,7 @@ unsigned char Image::calculateNewComp(unsigned int i, unsigned int j, unsigned i
   return (unsigned char)newComp;
 }
 
-void Image::applyTestEffect() {
+void Image::applyGaussianBlurFilter() {
   unsigned char * newRawImage = (unsigned char *)malloc(this->imageHeight * this->imageWidth * this->nbComponents * sizeof(unsigned char));
   int ** convMat;
   unsigned int convMatSize = 3;
@@ -288,13 +288,6 @@ void Image::applyTestEffect() {
   for (unsigned int i = 0; i < convMatSize; i++) {
     *(convMat + i) = (int *)malloc(convMatSize * sizeof(int));
   }
-
-  for (unsigned int i = 0; i < convMatSize; i++) {
-    for (unsigned int j = 0; j < convMatSize; j++) {
-      convMat[i][j] = -1;
-    }
-  }
-  convMat[1][1] = 8;
 
   convMat[0][0] = 1;
   convMat[1][0] = 2;

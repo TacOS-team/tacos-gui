@@ -98,7 +98,7 @@ class Image : public Widget {
    */
   void applyPowerfullnessOfTheFonkFilter();
 
-  void applyTestEffect();
+  void applyGaussianBlurFilter();
 
   /*
    * Get the pixmap of the image
