@@ -14,6 +14,7 @@ void FileInfo::setFile(const std::string & filePath) {
   this->filePath = filePath;
   if(stat(filePath.c_str(), &this->fileStats) != 0) {
     this->fileExists = false;
+    this->absoluteFilePath = "";
   } else {
     this->fileExists = true;
     this->absoluteFilePath = realpath(filePath.c_str(), NULL);
@@ -21,6 +22,9 @@ void FileInfo::setFile(const std::string & filePath) {
 }
 
 std::string FileInfo::getFileName() const {
+  if (this->absoluteFilePath == "") {
+    return "";
+  }
   char * currentBegining = (char*)this->absoluteFilePath.c_str();
   char * nextSlash;
   while((nextSlash = strstr(currentBegining, "/")) != NULL) {

@@ -7,7 +7,7 @@
 #include <unistd.h>
 
 #define DEFAULT_FOLDER "ressources/images/wallpapers"
-#define TIMER_PERIOD 10000
+#define TIMER_PERIOD 1000
 
 using namespace std;
 using namespace sombrero;
@@ -36,6 +36,9 @@ class Wallpaper : public has_slots<> {
             i2->applyNegativeFilter();
           } else if (effect == 2) {
             i2->applyPowerfullnessOfTheFonkFilter();
+            for (unsigned int i = 0; i < 3; i++) {
+              i2->applyGaussianBlurFilter();
+            }
           }
         }
         if (imageFound) {
@@ -107,7 +110,7 @@ int main(int argc, char **argv) {
     }
   }
 
-    f = new FileInfo(path.c_str());
+  f = new FileInfo(path.c_str());
 
   if (!f->exists()) {
     fprintf(stderr, "error : file or folder doesn't exists\n");
