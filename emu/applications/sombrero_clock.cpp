@@ -1,14 +1,15 @@
 #include <vector>
 #include "sombrero.h"
 #define PI 3.14159f
-#define WIDTH 320
-#define HEIGHT 320
+
+#define WIDTH 280
+#define HEIGHT 280
 
 using namespace std;
 using namespace sombrero;
 
 float my_cos(float angle) {
-	float angle_radians = angle * (2 * PI)/360;
+	float angle_radians = angle * (2 * PI) / 360;
 	float result;
 	
 	asm("fcos" : "=t" (result) : "0" (angle_radians));
@@ -17,7 +18,7 @@ float my_cos(float angle) {
 }
 
 float my_sin(float angle) {
-	float angle_radians = angle * (2 * PI)/360;
+	float angle_radians = angle * (2 * PI) / 360;
 	float result;
 	
 	asm("fsin" : "=t" (result) : "0" (angle_radians));
@@ -51,18 +52,19 @@ class Clock : public has_slots<> {
   }
   
   void draw() {
-    Color c(255, 77, 182);
     Point p = zero;
     struct tm *date;
     time_t timer;
     
     this->canvas.clear();
 
+    Color c(0x30, 0x30, 0x99);
     for (int minute = 0; minute < 60; minute++) {
       p = this->rotate(p, (float) 360 / 60);
       this->drawPoint(p, c);
     }
 
+    c = Color(0x50, 0x50, 0xff);
     for (int heure = 0; heure < 12; heure++) {
       p = this->rotate(p, (float) 360 / 12);
       this->fillRect(p - Point(1, 1), p + Point(1, 1), c);
@@ -132,7 +134,7 @@ class Clock : public has_slots<> {
   }
 
   void drawAiguille(vector<Point> aiguille, float angle) {
-    Color c(255, 77, 182);
+    Color c(50, 50, 50);
     vector<Point> tmp = aiguille;
 
     for (unsigned int point = 0; point < aiguille.size(); point++) {
