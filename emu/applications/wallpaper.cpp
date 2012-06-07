@@ -81,12 +81,12 @@ int main(int argc, char **argv) {
   }
 
   if (!f->exists()) {
-    fprintf(stderr, "error : file or folder doesn't exists");
+    fprintf(stderr, "error : file or folder doesn't exists\n");
     return 1;
   }
   
   if (!f->isDir()) {
-    fprintf(stderr, "error : not a folder");
+    fprintf(stderr, "error : not a folder\n");
     return 1;
   }
 

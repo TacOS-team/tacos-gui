@@ -24,6 +24,16 @@ class Window : public Bin {
   
  public:
   /**
+   * Window init
+   * @param title The title of the window (displayed by the WM)
+   * @param x
+   * @param y
+   * @param width
+   * @param height
+   * @param decorate Whether the WM should decorate the window or not
+   */
+  void init(std::string title, int x, int y, int width, int height, bool decorate);
+  /**
    * The window constructor 
    * @param title The title of the window (displayed by the WM)
    * @param x
