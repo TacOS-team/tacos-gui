@@ -5,6 +5,9 @@
 #define TEMP_NAM_PREFIX "cuad"
 #define TEMP_NAM_FOLDER "/tmp"
 
+#define IMAGE_WIDTH 600
+#define IMAGE_HEIGHT 600
+
 class CoolCanvas;
 class ColorPickerWindow;
 
@@ -41,6 +44,7 @@ class Cuadraw : public has_slots<> {
   sombrero::Window *w; /**< The main window */
   CoolCanvas *c; /**< The canvas of the where to draw */
   sombrero::Grid *g; /**< The sombrero grid */
+  sombrero::DoubleScrollPane *sp; /**< The scrollpane */
   sombrero::Button *bp; /**< Pixel brush button */
   sombrero::Button *bl; /**< Line brush button */
   sombrero::Button *bc; /**< Circle brush button */

@@ -113,7 +113,10 @@ void Cuadraw::initSombrero() {
   this->bfr->clicked.connect(this, &Cuadraw::doFillRectClicked);
   this->bcp = new sombrero::Button("More Colors");
   this->bcp->clicked.connect(this, &Cuadraw::doColorPickerWindow);
-  this->c = new CoolCanvas(500, 500);
+  this->c = new CoolCanvas(IMAGE_WIDTH, IMAGE_HEIGHT);
+  this->c->setWidth(IMAGE_WIDTH);
+  this->c->setHeight(IMAGE_HEIGHT);
+  this->sp = new sombrero::DoubleScrollPane(this->c);
   this->cp = new sombrero::ColorPicker(10);
   this->g->add(this->bp);
   this->g->newLine();
@@ -128,7 +131,7 @@ void Cuadraw::initSombrero() {
   this->g->add(this->bfr);
   this->g->newLine();
   this->g->add(this->bcp);
-  this->g->attach(this->c, 1, 0, 6, 6);
+  this->g->attach(this->sp, 1, 0, 6, 6);
   this->g->attach(this->cp, 1, 6, 6, 1);
   // Color changed 
   this->cp->colorChanged.connect(this, &Cuadraw::doColorChanged);
