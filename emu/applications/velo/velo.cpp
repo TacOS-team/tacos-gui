@@ -75,6 +75,7 @@ class Panel : public sombrero::Container {
       newF->open.connect(this, &Panel::openSlot);
     }
     //printf("Panel::setFiles avant update\n");
+    this->setY(0);
     this->update();
   }
 
@@ -125,6 +126,7 @@ class MyWindow : public Window {
     if(d2.getInformations().isDir()) {
       d = d2;
       p->setFiles(d.entryInfoList());
+      scrollpane->resetScroll();// @TODO DEGUEU !!!
       l->setText(d.getInformations().getAbsolutePath());
     } else if(d2.getInformations().isFile()) {
       /*if(fork() == 0) {

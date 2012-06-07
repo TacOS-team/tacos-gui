@@ -90,6 +90,11 @@ class ScrollPane : public Bin {
    *   (on width or height depending if vertical or horizontal)
    */
   virtual void setWidgetPosition(int position) = 0;
+  /**
+   * Resets the value of the scrollbar
+   * @TODO DEUGUE !!!
+   */
+  void resetScroll();
   
 };
 
