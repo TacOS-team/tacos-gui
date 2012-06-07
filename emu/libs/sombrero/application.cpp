@@ -48,10 +48,7 @@ void Application::sombrerun() {
   }*/
   while (1) {
     if (!pron::pronNextEvent(this->d, e)) {
-      if (errno == EINTR) {
-        continue;
-      }
-      fprintf(stderr, "lol pron has closed the connection.\n");
+      fprintf(stderr, "pron has closed the connection, exiting.\n");
       exit(1);
     }
 
