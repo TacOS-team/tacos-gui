@@ -4,6 +4,7 @@
 #include <fileinfo.h>
 #include <directory.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #define DEFAULT_FOLDER "ressources/images/wallpapers"
 #define TIMER_PERIOD 10000
