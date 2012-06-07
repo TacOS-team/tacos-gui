@@ -238,13 +238,12 @@ void debug(const char * format, ...) {
 }
 
 int exec_elf(char* cmdline, int orphan __attribute__((unused))) {
-  int pid = fork();
-  if(pid < 0) {
+  char cmdline2[strlen(cmdline) + 3];
+  if (strcpy(cmdline2, cmdline) == NULL) {
     return -1;
-  } else if(pid == 0) {
-    char * arg [] = { NULL};
-    execv(cmdline, arg);
-    exit(0);
   }
-  return pid;
+  if (strcat(cmdline2, " &") == NULL) {
+    return -1;
+  }
+  return system(cmdline2);
 }

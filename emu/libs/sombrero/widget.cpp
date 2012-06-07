@@ -32,7 +32,7 @@ void Widget::init() {
   this->attributes.bgColor.setG(-1.);
   this->attributes.bgColor.setB(-1.);
   // Initialiazes GC
-  Color cb(0, 0, 0);
+  Color cb(40, 40, 40);
   Color cw(255, 255, 255);
   pron::PronGCValues values;
   values.bg = cw;

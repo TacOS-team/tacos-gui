@@ -70,8 +70,6 @@ void Application::sombrerun() {
       this->keyReleased((pron::EventKeyReleased*) e);
     }
 
-
-
     //printf("event received %d\n", e->window);
 
     map<pron::Window, Widget*>::iterator it = Application::getInstance()->widgets.find(e->window);
