@@ -24,11 +24,17 @@ class ColorButton : public Button {
     this->setBGColor(c);
   }
   void handleMouseDown(sombrero::MouseButton b __attribute__((unused)), int x __attribute__((unused)), int y __attribute__((unused))) {
-    cp->setCurrentColor(this->c, colorComponent);
+    cp->notifyCurrentColor(this->c, colorComponent);
   }
 };
 
-void ColorPicker::setCurrentColor(Color c, int colorComponent) {
+void ColorPicker::setCurrentColor(Color c) {
+  this->c = c;
+  this->lcolor.setBGColor(this->c);
+  this->lcolor.draw();
+}
+
+void ColorPicker::notifyCurrentColor(Color c, int colorComponent) {
 
   switch (colorComponent) {
     case C_RED: 

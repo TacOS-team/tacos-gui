@@ -6,9 +6,36 @@
 #define TEMP_NAM_FOLDER "/tmp"
 
 class CoolCanvas;
+class ColorPickerWindow;
 
 class Cuadraw : public has_slots<> {
  private:
+  
+  class CoolCanvas : public sombrero::Canvas {
+   private:
+   protected:
+   public:
+    CoolCanvas(int width, int height);
+    // Signals
+    signal3<sombrero::MouseButton, int, int> mouseClicked;
+    signal3<sombrero::MouseButton, int, int> mouseReleased;
+    
+    /**
+     * Handles mouse down
+     * @param b Mouse button
+     * @param x X coordinate
+     * @param y Y coodinate
+     */
+    void handleMouseDown(sombrero::MouseButton b, int x, int y);
+    /**
+     * Handles mouse released
+     * @param b Mouse button
+     * @param x X coordinate
+     * @param y Y coodinate
+     */
+    void handleMouseReleased(sombrero::MouseButton b, int x, int y);
+  };
+
   FILE *fileIn; /**< The input file */
   FILE *fileOut; /**< The output file */
   sombrero::Window *w; /**< The main window */
@@ -20,7 +47,9 @@ class Cuadraw : public has_slots<> {
   sombrero::Button *bfc; /**< Fill circle brush button */
   sombrero::Button *br; /**< Rect brush button */
   sombrero::Button *bfr; /**< Fill Rect brush button */
+  sombrero::Button *bcp; /**< Color picker button */
   sombrero::ColorPicker *cp; /**< Color picker */
+  ColorPickerWindow *wcp; /**< Color picker window */
   bool mouseDown; /**< Mouse down in canvas */
   int downX; /**< Last mouse down x */
   int downY; /**< Last mouse down y */
@@ -194,5 +223,9 @@ class Cuadraw : public has_slots<> {
    * @param c Color to use
    */
   void doColorChanged(Color c);
+  /**
+   * Opens a color picker window to select more colors
+   */
+  void doColorPickerWindow();
 };
 #endif//__CUADRAW_H__

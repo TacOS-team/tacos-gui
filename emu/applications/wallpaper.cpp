@@ -4,6 +4,7 @@
 #include <fileinfo.h>
 #include <directory.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #define DEFAULT_FOLDER "ressources/images/wallpapers"
 #define TIMER_PERIOD 10000
@@ -109,12 +110,12 @@ int main(int argc, char **argv) {
     f = new FileInfo(path.c_str());
 
   if (!f->exists()) {
-    fprintf(stderr, "error : file or folder doesn't exists");
+    fprintf(stderr, "error : file or folder doesn't exists\n");
     return 1;
   }
   
   if (!f->isDir()) {
-    fprintf(stderr, "error : not a folder");
+    fprintf(stderr, "error : not a folder\n");
     return 1;
   }
 

@@ -65,6 +65,7 @@ Mirar::Mirar(std::string camino) {
   this->ctrlDown = false;
 
   if (this->jpegArchivos.size() > 0) {
+    sort(this->jpegArchivos.begin(), this->jpegArchivos.end());
     this->inicializacionSombrero();
   } else {
     printf("Noy hay ninguna archivo jpeg hombre !\n");
