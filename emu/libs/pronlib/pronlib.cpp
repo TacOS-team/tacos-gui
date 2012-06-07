@@ -39,7 +39,7 @@ int Display::read(PronMessage *msg, size_t len) {
     stop = true;
     sizeRead = tsock_read(this->fd, msg, len);
 
-    if (errno == EINTR) {
+    if (sizeRead <= 0 && errno == EINTR) {
       // We got interrupted, retry
       stop = false;
     } else {
