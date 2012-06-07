@@ -19,13 +19,13 @@ namespace sombrero {
       string text; /**< Text buffer */
       unsigned int display; /**< Position of the first displayed character */
       unsigned int cursor; /**< Cursor position in the buffer */
+      bool multiLine; /**< Whether the textbox can contain multiple lines or not. */
 
     public:
       /**
        * Constructor.
-       * @param parent The parent widget, must be a container.
        */
-      Textbox();
+      Textbox(bool multiLine = true);
 
       /**
        * Destructor.
@@ -35,18 +35,28 @@ namespace sombrero {
       /**
        * The handle for an expose event
        */
-      void handleEventExpose() ;
+      void handleEventExpose();
 
       /**
        * The handle for a key pressed event
        * @param e A pointer to the event (will give details of the key pressed)
        */
-      void handleEventKeyPressed(pron::PronEvent *e) ;
+      void handleEventKeyPressed(pron::EventKeyPressed *keyPressed);
 
       /**
        * Draws the textbox.
        */
       void draw();
+
+      /**
+       * Returns the text in the textbox.
+       */
+      string getText();
+  
+      /**
+       * Signals
+       */
+      signal0<> submitted;
 
       static const int MARGIN_TOP = 4;
       static const int MARGIN_RIGHT = 4;
