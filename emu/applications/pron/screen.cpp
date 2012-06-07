@@ -115,13 +115,13 @@ bool Screen::prepareDrawing(Drawable *d, GC *gc) {
 }
 
 void Screen::traceWindows() {
-  this->tree->getRoot()->traceWindowsRec("");
-  /*printf("TraceWindow : ");
+  //this->tree->getRoot()->traceWindowsRec("");
+  /*debug("TraceWindow : ");
   for (WindowsTree::IteratorDFS it = tree->beginDFS() ; it != tree->endDFS(); it++) {
-    printf("%d ", it->getId());
+    debug("%d ", it->getId());
   }
   */
-  printf("\n");
+  //debug("\n");
 }
 
 void Screen::destroy(Window * w) {
