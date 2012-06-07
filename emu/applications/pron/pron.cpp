@@ -60,9 +60,6 @@ void PronInit() {
   unlink("/tmp/pron.sock");
   clientsFd = tsock_listen("/tmp/pron.sock");
   tsock_set_nonblocking(clientsFd);
-
-  string welcome = "Welcome to pron!";
-  screen->getRoot()->drawText(10, 8, welcome.c_str(), welcome.length());
 }
 
 /**
