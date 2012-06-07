@@ -87,8 +87,10 @@ class AppPanel : public sombrero::Application, public has_slots<> {
   
   void submitted() {
     printf("exécution de ...\n");
-    exec_elf((char *)lw->getTextbox()->getText().c_str(), 0);
-    delete lw;
+    if (lw->getTextbox()->getText().length() > 0) {
+      exec_elf((char *)lw->getTextbox()->getText().c_str(), 0);
+      delete lw;
+    }
   }
 
  public:
