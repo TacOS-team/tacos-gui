@@ -2,6 +2,7 @@
 #include <pronlib.h>
 #include <sombrero.h>
 #include <map>
+#include <elf.h>
 
 class AppPanel : public sombrero::Application {
  private:
@@ -58,7 +59,10 @@ class AppPanel : public sombrero::Application {
   }
 
   void keyPressed(pron::EventKeyPressed *e __attribute__((unused))) {
-    printf("KEY PRESSED\n");
+    if (e->keysym == pron::PRONK_F1 && (e->modifiers & pron::KMOD_LCTRL)) {
+      string path("build/applications/velo");
+      exec_elf((char *)path.c_str(), 0);
+    }
   }
 
   void keyReleased(pron::EventKeyReleased *e __attribute__((unused))) {
