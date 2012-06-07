@@ -27,7 +27,7 @@ void VScrollBar::draw() {
 
   // Background under the scrollbar
   pron::pronFillRectangle(Application::getInstance()->d, this->pronWindow,
-    this->bgGC, this->marginSize,this->getMinThumbPosition(),
+    this->bgGC, this->marginSize, this->getMinThumbPosition(),
     this->getWidth()-2*this->marginSize, this->thumbPosition-this->getMinThumbPosition());
   // Background above the scrollbar
   pron::pronFillRectangle(Application::getInstance()->d, this->pronWindow,
@@ -36,7 +36,7 @@ void VScrollBar::draw() {
   // Draws the margin
   for(int i = 0; i < this->marginSize; ++i) {
     pron::pronDrawRect(Application::getInstance()->d, this->pronWindow,
-      this->bgGC, i,this->getMinThumbPosition()+i,
+      this->bgGC, i, this->getMinThumbPosition()+i,
       this->getWidth()-2*i, this->getHeight()-2*this->getMinThumbPosition()-2*i);
   }
   // Background top button
@@ -48,7 +48,7 @@ void VScrollBar::draw() {
     this->getWidth(), this->getMinThumbPosition()-1);
   // Background bottom button
   pron::pronFillRectangle(Application::getInstance()->d, this->pronWindow,
-    this->scrollGC, 0,this->getHeight()-this->getMinThumbPosition(),
+    this->scrollGC, 0, this->getHeight()-this->getMinThumbPosition(),
     this->getWidth(), this->getMinThumbPosition());
   pron::pronDrawLine(Application::getInstance()->d, this->pronWindow, this->fgGC,
     0, this->getHeight()-this->getMinThumbPosition(),

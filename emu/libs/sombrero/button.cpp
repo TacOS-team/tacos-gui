@@ -36,12 +36,13 @@ void Button::draw() {
   /*printf("draw button (x, y, w, h) : %d, %d, %d, %d\n", this->getX(), this->getY(),
   this->getWidth(), this->getHeight());*/
   // We can clear the window
-  this->clear();
 
   if(this->isDown) {
     pron::pronFillRectangle(Application::getInstance()->d, this->pronWindow,
       this->bgGC, 0, 0,
       this->getWidth(), this->getHeight());
+  } else {
+    this->clear();
   }
   // Draws the line 
   pron::pronDrawRect(Application::getInstance()->d, this->pronWindow,

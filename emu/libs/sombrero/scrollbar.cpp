@@ -4,7 +4,7 @@
 
 namespace sombrero {
 
-ScrollBar::Thumb::Thumb() : Button("0") {
+ScrollBar::Thumb::Thumb() : Button("") {
 
 }
 
