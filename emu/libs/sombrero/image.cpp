@@ -298,7 +298,7 @@ void Image::applyGaussianBlurFilter() {
   convMat[0][2] = 1;
   convMat[1][2] = 2;
   convMat[2][2] = 1;
-
+  
   for (unsigned int i = 0; i < this->imageWidth; i++) {
     for (unsigned int j = 0; j < this->imageHeight; j++) {
       for (unsigned int c = 0; c < this->nbComponents; c++) {

@@ -57,7 +57,7 @@ Mirar::Mirar(std::string camino) {
   printf("Puedo ver los archivos siguientes :\n");
   for (std::vector<sombrero::FileInfo>::iterator it = archivos.begin(); it != archivos.end(); it++) {
     file = it->getAbsolutePath();
-    if ((int)file.find(".jpg") != -1) {
+    if (file.find(".jpg") != std::string::npos) {
       printf("%s\n",file.c_str());
       this->jpegArchivos.push_back(file);
     }
