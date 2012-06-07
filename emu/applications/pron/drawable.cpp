@@ -42,38 +42,6 @@ void Drawable::afterDrawing(int x1 __attribute__((unused)),
     int y2 __attribute__((unused))) {
 }
 
-int Drawable::getType() {
-  return this->type;
-}
-
-Screen* Drawable::getScreen() {
-  return this->screen;
-}
-
-unsigned int Drawable::getId() const {
-  return this->id;
-}
-
-Client* Drawable::getCreator() {
-  return this->creator;
-}
-
-int Drawable::getWidth() {
-  return this->width;
-}
-
-void Drawable::setWidth(int width) {
-  this->width = width;
-}
-
-int Drawable::getHeight() {
-  return this->height;
-}
-
-void Drawable::setHeight(int height) {
-  this->height = height;
-}
-
 void Drawable::reduce(int &x, int &y, int &width, int &height) {
   if (x < 0) {
     width += x;

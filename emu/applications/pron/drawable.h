@@ -121,49 +121,65 @@ class Drawable {
    * Returns the type of the drawable (window or pixmap).
    * @return the type of the drawable
    */
-  int getType();
+  int getType() {
+    return this->type;
+  }
 
   /**
    * Returns the screen the drawable belongs to.
    * @return the screen the drawable belongs to
    */
-  Screen* getScreen();
+  Screen* getScreen() {
+    return this->screen;
+  }
 
   /**
    * Returns the id of the drawable.
    * @return the id of the drawable
    */
-  unsigned int getId() const;
+  unsigned int getId() const {
+    return this->id;
+  }
 
   /**
    * Returns the creator of the drawable.
    * @return the creator of the drawable
    */
-  Client* getCreator();
+  Client* getCreator() {
+    return this->creator;
+  }
 
   /**
    * Returns the width of the drawable.
    * @return the width of the drawable
    */
-  int getWidth();
+  int getWidth() {
+    return this->width;
+  }
 
   /**
    * Sets the width of the drawable.
    * @param width The new width of the drawable
    */
-  void setWidth(int width);
+  void setWidth(int width) {
+    this->width = width;
+  }
 
   /**
    * Returns the height of the drawable.
    * @return the height of the drawable
    */
-  int getHeight();
+  int getHeight() {
+    return this->height;
+  }
 
   /**
    * Sets the height of the drawable.
    * @param height The new height of the drawable
    */
-  void setHeight(int height);
+  void setHeight(int height) {
+    this->height = height;
+  }
 
   /**
    * Draws a point at (x, y), using the current graphics context.

@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #include <windowsTree.h>
+#include <window.h>
 
 /* WindowsTree methods */
 
@@ -20,7 +21,6 @@ Window * WindowsTree::getRoot() {
 void WindowsTree::setRoot(Window * newRoot) {
   this->root = newRoot;
 }
-
 
 WindowsTree::IteratorBFS WindowsTree::beginBFS() {
   WindowsTree::IteratorBFS it(this->root);

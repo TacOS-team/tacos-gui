@@ -1,5 +1,4 @@
-                                                                   
-                                                                       #ifndef __MOUSE_H__
+#ifndef __MOUSE_H__
 #define __MOUSE_H__
 
 /**
@@ -53,7 +52,13 @@ class Mouse {
    * Returns the unique Mouse instance (singleton). Creates it if necessary.
    * @return the unique Mouse instance (singleton)
    */
-  static Mouse* getInstance();
+  static Mouse* getInstance() {
+    if (Mouse::instance == NULL) {
+      Mouse::instance = new Mouse();
+    }
+
+    return Mouse::instance;
+  }
 
   /**
    * Reads events from the mouse and handles them.
@@ -79,7 +84,12 @@ class Mouse {
    * @param y2 The maximum y-coordinate of the area
    * @return whether the area overlaps the pointer area or not.
    */
-  bool overlapsPointer(int x1, int y1, int x2, int y2);
+  bool overlapsPointer(int x1, int y1, int x2, int y2) {
+    return !(x1 >= this->mouseX - PRON_MOUSE_POINTER_WIDTH_SHIFT + PRON_MOUSE_POINTER_WIDTH ||
+        y1 >= this->mouseY - PRON_MOUSE_POINTER_HEIGHT_SHIFT + PRON_MOUSE_POINTER_HEIGHT ||
+        x2 < this->mouseX - PRON_MOUSE_POINTER_WIDTH_SHIFT ||
+        y2 < this->mouseY - PRON_MOUSE_POINTER_HEIGHT_SHIFT);
+  }
 
   /**
    * Hides the pointer by restoring the area under the mouse pointer.
@@ -105,49 +115,65 @@ class Mouse {
    * Returns the x position of the mouse.
    * @return the x position of the mouse
    */
-  int getMouseX();
+  int getMouseX() {
+    return this->mouseX;
+  }
 
   /**
    * Returns the y position of the mouse.
    * @return the y position of the mouse
    */
-  int getMouseY();
+  int getMouseY() {
+    return this->mouseY;
+  }
 
   /**
    * Returns the state of button 1 (left button).
    * @return the state of button 1 (left button)
    */
-  bool getMouseB1();
+  bool getMouseB1() {
+    return this->mouseB1;
+  }
 
   /**
    * Returns the state of button 2 (right button).
    * @return the state of button 2 (right button)
    */
-  bool getMouseB2();
+  bool getMouseB2() {
+    return this->mouseB2;
+  }
 
   /**
    * Returns the state of button 3.
    * @return the state of button 3
    */
-  bool getMouseB3();
+  bool getMouseB3() {
+    return this->mouseB3;
+  }
 
   /**
    * Returns the state of button 4.
    * @return the state of button 4
    */
-  bool getMouseB4();
+  bool getMouseB4() {
+    return this->mouseB4;
+  }
 
   /**
    * Returns the state of button 5.
    * @return the state of button 5
    */
-  bool getMouseB5();
+  bool getMouseB5() {
+    return this->mouseB5;
+  }
 
   /**
    * Returns the state of button 6.
    * @return the state of button 6
    */
-  bool getMouseB6();
+  bool getMouseB6() {
+    return this->mouseB6;
+  }
 };
 
 #endif

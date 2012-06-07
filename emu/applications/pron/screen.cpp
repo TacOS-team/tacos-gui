@@ -3,7 +3,6 @@
  * Screen class implementation.
  */
 
-#include <algorithm>
 #include <dirent.h>
 #include <fcntl.h>
 //#include <math.h>
@@ -61,30 +60,6 @@ Screen::Screen(int width, int height, int bitsPerPixel) {
   this->tree = new WindowsTree();
 }
 
-Screen* Screen::getInstance(int width, int height, int bitsPerPixel) {
-  if (Screen::instance == NULL) {
-    Screen::instance = new Screen(width, height, bitsPerPixel);
-  }
-  return instance;
-}
-
-Screen* Screen::getInstance() {
-  return instance;
-}
-
-void Screen::setClippingCheck(bool clippingCheck) {
-  this->clippingCheck = clippingCheck;
-}
-
-bool Screen::isValid(int x, int y) {
-  return (x >= 0 && x < this->width && y >= 0 && y < this->height &&
-      (!this->clippingCheck || this->clipZone->contains(x, y)));
-}
-
-void* Screen::pixelAddr(int x, int y) {
-  return this->videoBuffer + (y * this->width + x) * this->bytesPerPixel;
-}
-
 Drawable* Screen::getDrawable(unsigned int id, int drawableType) {
   for (unsigned int i = 0; i < this->drawables.size(); i++) {
     if (drawables[i]->getId() == id) {
@@ -101,54 +76,6 @@ Drawable* Screen::getDrawable(unsigned int id) {
     }
   }
   return NULL;
-}
-
-void Screen::addDrawable(Drawable *d) {
-  this->drawables.push_back(d);
-}
-
-void Screen::removeDrawable(Drawable *d) {
-  this->drawables.erase(std::find(this->drawables.begin(), this->drawables.end(), d));
-}
-
-Window* Screen::getMouseWin() {
-  return this->mouseWin;
-}
-
-void Screen::setMouseWin(Window *mouseWin) {
-  this->mouseWin = mouseWin;
-}
-
-Window* Screen::getGrabWin() {
-  return this->grabWin;
-}
-
-void Screen::setGrabWin(Window *grabWin) {
-  this->grabWin = grabWin;
-}
-
-Window* Screen::getFocusWin() {
-  return this->focusWin;
-}
-
-void Screen::setFocusWin(Window *focusWin) {
-  this->focusWin = focusWin;
-}
-
-Window* Screen::getRoot() {
-  return this->tree->getRoot();
-}
-
-Window* Screen::getClipWin() {
-  return this->clipWin;
-}
-
-ClipZone* Screen::getClipZone() {
-  return this->clipZone;
-}
-
-void Screen::printClipZone() {
-  this->clipZone->print();
 }
 
 void Screen::setClipWin(Window *w) {
@@ -197,14 +124,6 @@ void Screen::traceWindows() {
   printf("\n");
 }
 
-GC* Screen::getGC(){
-  return this->gc;
-}
-
-void Screen::setGC(GC *gc){
-  this->gc = gc;
-}
-
 void Screen::destroy(Window * w) {
   for (WindowsTree::IteratorBFS it = this->tree->beginBFS(w); it != this->tree->endBFS(); it++) {
     EventDestroyWindow eventDestroyWindow(it->getId());
@@ -212,17 +131,8 @@ void Screen::destroy(Window * w) {
   }
 }
 
-void Screen::reparent (Window * child, Window * newParent) {
+void Screen::reparent(Window * child, Window * newParent) {
   child->reparent(newParent);
   this->setClipWin(NULL);
   //this->traceWindows();
-}
-
-Font* Screen::getFont(int id) {
-  if (id < 0 || id >= (int) this->fonts.size()) {
-    fprintf(stderr, "Invalid font %d.\n", id);
-    return this->fonts[0];
-  }
-  
-  return this->fonts[id];
 }

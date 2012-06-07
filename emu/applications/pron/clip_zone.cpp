@@ -150,7 +150,3 @@ void ClipZone::print() {
   }
   printf("###############################\n");
 }
-
-vector<ClipRect*>& ClipZone::getClipRects() {
-  return this->clipRects;
-}

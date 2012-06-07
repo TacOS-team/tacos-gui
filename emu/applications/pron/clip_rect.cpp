@@ -76,7 +76,3 @@ vector<ClipRect*> ClipRect::split(ClipRect *obscurer) {
 
   return splittedRect;
 }
-
-bool ClipRect::contains(int x, int y) {
-  return (x >= this->x && x < this->x + this->width && y >= this->y && y < this->y + this->height);
-}

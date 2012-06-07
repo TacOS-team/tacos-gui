@@ -2,6 +2,7 @@
 #define __CLIENT_H__
 
 #include <vector>
+#include <tsock.h>
 
 /**
  * @file client.h
@@ -42,7 +43,9 @@ public:
    * @param data The message buffer
    * @param size The size of the message
    */
-  void send(void *data, unsigned int size);
+  void send(void *data, unsigned int size) {
+    tsock_write(this->fd, data, size);
+  }
 
 private:
   static char recvBuf[MAX_MSG_SIZE]; /**< Buffer that temporary stores new messages received from this client */
