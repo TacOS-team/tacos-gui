@@ -14,16 +14,23 @@ namespace sombrero {
 
   void Textbox::handleEventKeyPressed(pron::EventKeyPressed *keyPressed) {
     if (keyPressed->ch != 0) {
-      if ((keyPressed->ch != '\r' || this->multiLine)) {
-        this->text.insert(this->cursor, 1, keyPressed->ch);
-        this->cursor++;
-        this->draw();
+      if (keyPressed->ch == '\r' && !this->multiLine) {
+        this->submitted();
+        return;
       }
+      
+      this->text.insert(this->cursor, 1, keyPressed->ch);
+      this->cursor++;
+      this->draw();
     }
   }
 
   void Textbox::handleEventExpose() {
     this->draw();
+  }
+      
+  string Textbox::getText() {
+    return this->text;
   }
 
   void Textbox::draw() {
@@ -47,17 +54,21 @@ namespace sombrero {
       if (this->text[i] == '\r' || i == cursor - 1) {
         // Draw line if we have a line feed or we reached the end of the text...
         pronDrawText(Application::getInstance()->d, this->pronWindow, Application::getInstance()->d->defaultGC, MARGIN_LEFT, MARGIN_TOP + lines * textHeight, cur.c_str(), cur.size());
-        lines++;
-        begin = i + 1;
-      } else if (textWidth >= this->getWidth() - MARGIN_RIGHT) {
-        // ... or if we must break the line
-        if (!this->multiLine) {
+        if (this->multiLine) {
+          lines++;
+          begin = i + 1;
+        } else {
           break;
         }
-
+      } else if (textWidth >= this->getWidth() - MARGIN_RIGHT) {
+        // ... or if we must break the line
         pronDrawText(Application::getInstance()->d, this->pronWindow, Application::getInstance()->d->defaultGC, MARGIN_LEFT, MARGIN_TOP + lines * textHeight, cur.c_str(), cur.size() - 1);
-        lines++;
-        begin = i;
+        if (this->multiLine) {
+          lines++;
+          begin = i;
+        } else {
+          break;
+        }
       }
     }
   }

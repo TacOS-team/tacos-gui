@@ -48,6 +48,16 @@ namespace sombrero {
        */
       void draw();
 
+      /**
+       * Returns the text in the textbox.
+       */
+      string getText();
+  
+      /**
+       * Signals
+       */
+      signal0<> submitted;
+
       static const int MARGIN_TOP = 4;
       static const int MARGIN_RIGHT = 4;
       static const int MARGIN_BOTTOM = 4;
