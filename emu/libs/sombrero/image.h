@@ -23,7 +23,7 @@ class Image : public Widget {
   int xOffset; /**< the X offset of the top left corner */
   int yOffset; /**< the Y offset of the top left corner */
   pron::Pixmap pixmap; /**< The pixmap where the image is put */
-  char * rawImage; /**< the buffer where the uncompressed image is locally stored */
+  unsigned char * rawImage; /**< the buffer where the uncompressed image is locally stored */
   string filename; /**< the name of the file to open */
 
   void init(); /**< intializes the image and the pixmap */
@@ -51,9 +51,21 @@ class Image : public Widget {
    * @param c the component of the pixel
    * @param raw the raw image from where calculate
    */
-  char calculateFonkNewComp (unsigned int i, unsigned int j, unsigned int c, char * raw);
+  unsigned char calculateFonkNewComp (unsigned int i, unsigned int j, unsigned int c, unsigned char * raw);
 
-  char calculateNewComp(unsigned int i, unsigned int j, unsigned int c, char * raw, unsigned int rawWidth, unsigned int rawHeight, int ** convMat, unsigned int convMatSize);
+  /*
+   * Calculate the new value of a pixel component from a convolution matrix
+   * @param i The column number of the pixel
+   * @param j The line number of the pixel
+   * @param c The the component of the pixel
+   * @param raw The rawImage on which the matrix will be applied
+   * @param rawWidth The width of the image stored in raw
+   * @param rawHeight The height of the image stored in raw
+   * @param convMat the convolution matrix
+   * @param convMatSize the size of the convolution matrix
+   * @return the new value of the component
+   */
+  unsigned char calculateNewComp(unsigned int i, unsigned int j, unsigned int c, unsigned char * raw, unsigned int rawWidth, unsigned int rawHeight, int ** convMat, unsigned int convMatSize);
    
  public:
   /**
@@ -85,6 +97,8 @@ class Image : public Widget {
    * apply an awesome filter to the image
    */
   void applyPowerfullnessOfTheFonkFilter();
+
+  void applyGaussianBlurFilter();
 
   /*
    * Get the pixmap of the image

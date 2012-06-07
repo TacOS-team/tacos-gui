@@ -34,7 +34,7 @@ void Image::init() {
 
   if(filename[filename.length()-1] == 'p') {
     BMPImageLoader bmpLoader;
-    this->rawImage = bmpLoader.load(filename);
+    this->rawImage = (unsigned char *)bmpLoader.load(filename);
 
     if(this->rawImage == NULL) {
         fprintf(stderr, "Error opening bmp file %s.\n", filename.c_str());
@@ -89,7 +89,7 @@ void Image::init() {
     jpeg_start_decompress(&cinfo);
 
     /* allocate memory to hold the uncompressed image */
-    this->rawImage = (char*) malloc(cinfo.output_width * cinfo.output_height * cinfo.num_components);
+    this->rawImage = (unsigned char*) malloc(cinfo.output_width * cinfo.output_height * cinfo.num_components);
     /* now actually read the jpeg into the raw buffer */
     row_pointer[0] = (unsigned char *) malloc(cinfo.output_width * cinfo.num_components);
     /* read one scan line at a time */
@@ -130,7 +130,7 @@ void Image::sendPixmap(bool createNew) {
   }
 
   /* Create PronImage */
-  pron::PronImage image(this->imageWidth, this->imageHeight, pron::ZPixmap, this->rawImage, 24, this->nbComponents, false);
+  pron::PronImage image(this->imageWidth, this->imageHeight, pron::ZPixmap, (char *)this->rawImage, 24, this->nbComponents, false);
 
   /* Puts the image into the pixmap */
   pron::pronPutImage(Application::getInstance()->d, pixmap,
@@ -156,7 +156,7 @@ unsigned int Image::getLocation(unsigned int i, unsigned int j, unsigned int c, 
 }
 
 void Image::rotate(bool clockwise) {
-  char * newRawImage = (char *)malloc(this->imageHeight * this->imageWidth * this->nbComponents * sizeof(char));
+  unsigned char * newRawImage = (unsigned char *)malloc(this->imageHeight * this->imageWidth * this->nbComponents * sizeof(unsigned char));
   
   unsigned int newImageWidth = this->imageHeight;
   unsigned int newImageHeight = this->imageWidth;
@@ -173,7 +173,7 @@ void Image::rotate(bool clockwise) {
     }
   }
   
-  memcpy(this->rawImage,newRawImage,this->imageHeight * this->imageWidth * this->nbComponents * sizeof(char));
+  memcpy(this->rawImage,newRawImage,this->imageHeight * this->imageWidth * this->nbComponents * sizeof(unsigned char));
 
   this->imageWidth = newImageWidth;
   this->imageHeight = newImageHeight;
@@ -184,41 +184,41 @@ void Image::rotate(bool clockwise) {
 }
 
 
-char Image::calculateFonkNewComp (unsigned int i, unsigned int j, unsigned int c, char * raw) {
+unsigned char Image::calculateFonkNewComp (unsigned int i, unsigned int j, unsigned int c, unsigned char * raw) {
   int newComp = 0;
   int blop = 1;
 
-  newComp += raw[this->getLocation(i,j,c,this->imageWidth)];
+  newComp += (char)raw[this->getLocation(i,j,c,this->imageWidth)];
   if (i + 1 < this->imageWidth) {
-    newComp += raw[this->getLocation(i+1,j,c,this->imageWidth)];
+    newComp += (char)raw[this->getLocation(i+1,j,c,this->imageWidth)];
     blop++;
     if (j > 0) {
-      newComp += raw[this->getLocation(i+1,j-1,c,this->imageWidth)];
+      newComp += (char)raw[this->getLocation(i+1,j-1,c,this->imageWidth)];
       blop++;
     }
     if (j + 1 < this->imageHeight) {
-      newComp += raw[this->getLocation(i+1,j+1,c,this->imageWidth)];
+      newComp += (char)raw[this->getLocation(i+1,j+1,c,this->imageWidth)];
       blop++;
     }
   }
   if (i > 0) {
-    newComp += raw[this->getLocation(i-1,j,c,this->imageWidth)];
+    newComp += (char)raw[this->getLocation(i-1,j,c,this->imageWidth)];
     blop++;
     if (j > 0) {
-      newComp += raw[this->getLocation(i-1,j-1,c,this->imageWidth)];
+      newComp += (char)raw[this->getLocation(i-1,j-1,c,this->imageWidth)];
       blop++;
     }
     if (j + 1 < this->imageHeight) {
-      newComp += raw[this->getLocation(i-1,j+1,c,this->imageWidth)];
+      newComp += (char)raw[this->getLocation(i-1,j+1,c,this->imageWidth)];
       blop++;
     }
   }
   if (j > 0) {
-    newComp += raw[this->getLocation(i,j-1,c,this->imageWidth)];
+    newComp += (char)raw[this->getLocation(i,j-1,c,this->imageWidth)];
     blop++;
   } 
   if (j + 1 < this->imageHeight) {
-    newComp += raw[this->getLocation(i,j+1,c,this->imageWidth)];
+    newComp += (char)raw[this->getLocation(i,j+1,c,this->imageWidth)];
     blop++;
   }
 
@@ -227,9 +227,12 @@ char Image::calculateFonkNewComp (unsigned int i, unsigned int j, unsigned int c
   return (char)newComp;
 }
 
+/*
+ * Using a convolution matrix would be better but we need signed operations to apply the weird aweseome effect
+ */
 void Image::applyPowerfullnessOfTheFonkFilter() {
-  char * newRawImage = (char *)malloc(this->imageHeight * this->imageWidth * this->nbComponents * sizeof(char));
-  char * rawImages [2]= {newRawImage,this->rawImage}; // used to avoid memcpy at each loop
+  unsigned char * newRawImage = (unsigned char *)malloc(this->imageHeight * this->imageWidth * this->nbComponents * sizeof(unsigned char));
+  unsigned char * rawImages [2]= {newRawImage,this->rawImage}; // used to avoid memcpy at each loop
   int currentRawImage = 0;
   
   unsigned int nbPass = 4;
@@ -245,37 +248,67 @@ void Image::applyPowerfullnessOfTheFonkFilter() {
   }
   // We memcpy only if we have to
   if (currentRawImage == 0) {
-    memcpy(rawImages[1],rawImages[0],this->imageHeight * this->imageWidth * this->nbComponents * sizeof(char));
+    memcpy(rawImages[1],rawImages[0],this->imageHeight * this->imageWidth * this->nbComponents * sizeof(unsigned char));
   }
   
-  memcpy(this->rawImage, newRawImage,this->imageHeight * this->imageWidth * this->nbComponents * sizeof(char));
+  memcpy(this->rawImage, newRawImage,this->imageHeight * this->imageWidth * this->nbComponents * sizeof(unsigned char));
   this->sendPixmap(false);
 }
 
-char Image::calculateNewComp(unsigned int i, unsigned int j, unsigned int c, char * raw, unsigned int rawWidth, unsigned int rawHeight, int ** convMat, unsigned int convMatSize) {
+unsigned char Image::calculateNewComp(unsigned int i, unsigned int j, unsigned int c, unsigned char * raw, unsigned int rawWidth, unsigned int rawHeight, int ** convMat, unsigned int convMatSize) {
   int newComp = 0;
-  int middle = 0;
-  int realI = 0;
-  int realJ = 0;
-  int zob = 0;
+  int middle = (convMatSize / 2);
+  int realI = 0; // The column number of the current adjacent pixel
+  int realJ = 0; // The column number of the current adjacent pixel
+  int sum = 0;
   if ((convMatSize % 2) != 1) {
     printf("size of the convolution matrix must be odd\n");
   } else {
-    middle = (convMatSize / 2);
     for (unsigned int convI = 0; convI < convMatSize; convI++) {
       for (unsigned int convJ = 0; convJ < convMatSize; convJ++) {
         realI = i - (middle - convI);
         realJ = j - (middle - convJ);
         if (realI >= 0 && realI < (int)rawWidth && realJ >= 0 && realJ < (int)rawHeight) {
           newComp += raw[this->getLocation(realI,realJ,c, rawWidth)] * convMat[convI][convJ];
-          zob += convMat[convI][convJ];
+          sum += abs(convMat[convI][convJ]);
         }
       }
     }
   }
-  newComp /= zob;
+  
+  newComp /= sum;
+  return (unsigned char)newComp;
+}
 
-  return (char)newComp;
+void Image::applyGaussianBlurFilter() {
+  unsigned char * newRawImage = (unsigned char *)malloc(this->imageHeight * this->imageWidth * this->nbComponents * sizeof(unsigned char));
+  int ** convMat;
+  unsigned int convMatSize = 3;
+  convMat = (int **)malloc(convMatSize * sizeof(int *));
+  for (unsigned int i = 0; i < convMatSize; i++) {
+    *(convMat + i) = (int *)malloc(convMatSize * sizeof(int));
+  }
+
+  convMat[0][0] = 1;
+  convMat[1][0] = 2;
+  convMat[2][0] = 1;
+  convMat[0][1] = 2;
+  convMat[1][1] = 4;
+  convMat[2][1] = 2;
+  convMat[0][2] = 1;
+  convMat[1][2] = 2;
+  convMat[2][2] = 1;
+
+  for (unsigned int i = 0; i < this->imageWidth; i++) {
+    for (unsigned int j = 0; j < this->imageHeight; j++) {
+      for (unsigned int c = 0; c < this->nbComponents; c++) {
+        newRawImage[this->getLocation(i,j,c, this->imageWidth)] = calculateNewComp(i, j, c, this->rawImage, this->imageWidth, this->imageHeight, convMat, convMatSize);;
+      }
+    }
+  }
+  
+  memcpy(this->rawImage, newRawImage,this->imageHeight * this->imageWidth * this->nbComponents * sizeof(unsigned char));
+  this->sendPixmap(false);
 }
 
 unsigned int Image::getImageWidth(){
