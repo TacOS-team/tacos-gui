@@ -38,11 +38,16 @@ class ColorPicker : public Grid {
    */
   void init();
   /**
-   * Sets the current color
+   * Sets the current color and send colorChanged signal
    * @param c current color
    * @param c colorComponent
    */
-  void setCurrentColor(Color c, int colorComponent);
+  void notifyCurrentColor(Color c, int colorComponent);
+  /**
+   * Sets the current color without notifiying users
+   * @param c The color
+   */
+  void setCurrentColor(Color c);
 };
 
 } // namespace sombrero

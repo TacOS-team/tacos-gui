@@ -4,9 +4,8 @@
 
 namespace sombrero {
 
-Window::Window(std::string title, int x, int y,
-    int width, int height, bool decorate)
-    : Bin() {
+void Window::init(std::string title, int x, int y,
+    int width, int height, bool decorate) {
   this->setX(x);
   this->setY(y);
   this->setWidth(width);
@@ -34,6 +33,12 @@ Window::Window(std::string title, int x, int y,
   this->subscribeEvent(pron::EV_EXPOSE);
   this->subscribeEvent(pron::EV_DESTROY_WINDOW);
   this->subscribeEvent(pron::EV_RESIZE_WINDOW);
+}
+
+Window::Window(std::string title, int x, int y,
+    int width, int height, bool decorate)
+    : Bin() {
+  init(title, x, y, width, height, decorate);
 }
 
 Window::~Window() {}
