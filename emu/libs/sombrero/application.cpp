@@ -37,6 +37,14 @@ void Application::windowDestroyed(pron::EventDestroyWindow *e __attribute__((unu
 
 }
 
+void Application::keyPressed(pron::EventKeyPressed *e __attribute__((unused))) {
+
+}
+
+void Application::keyReleased(pron::EventKeyReleased *e __attribute__((unused))) {
+
+}
+
 // Call every handleEvent*** method for the given events
 // handleEvent*** can be redefined in the child classes
 void Application::sombrerun() {
@@ -56,7 +64,13 @@ void Application::sombrerun() {
       this->windowCreated((pron::EventWindowCreated*) e);
     } else if (e->type == pron::EV_DESTROY_WINDOW) {
       this->windowDestroyed((pron::EventDestroyWindow*) e);
+    } else if (e->type == pron::EV_KEY_PRESSED) {
+      this->keyPressed((pron::EventKeyPressed*) e);
+    } else if (e->type == pron::EV_KEY_RELEASED) {
+      this->keyReleased((pron::EventKeyReleased*) e);
     }
+
+
 
     //printf("event received %d\n", e->window);
 

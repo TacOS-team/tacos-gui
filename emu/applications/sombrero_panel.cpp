@@ -39,8 +39,10 @@ class AppPanel : public sombrero::Application {
       map<pron::Window, sombrero::Widget*>::iterator it = this->widgets.find(e->window);
       if (it != this->widgets.end()) {
         it->second->subscribeEvent(pron::EV_DESTROY_WINDOW);
+        it->second->subscribeEvent(pron::EV_KEY_PRESSED);
+        it->second->subscribeEvent(pron::EV_KEY_RELEASED);
       } else { 
-        pron::pronSelectInput(this->d, e->window, PRON_EVENTMASK(pron::EV_DESTROY_WINDOW));
+        pron::pronSelectInput(this->d, e->window, PRON_EVENTMASK(pron::EV_DESTROY_WINDOW) | PRON_EVENTMASK(pron::EV_KEY_PRESSED) | PRON_EVENTMASK(pron::EV_KEY_RELEASED));
       }
     }
   }
@@ -55,6 +57,14 @@ class AppPanel : public sombrero::Application {
     }
   }
 
+  void keyPressed(pron::EventKeyPressed *e __attribute__((unused))) {
+    printf("KEY PRESSED\n");
+  }
+
+  void keyReleased(pron::EventKeyReleased *e __attribute__((unused))) {
+    printf("KEY RELEASED\n");
+  }
+
  public:
   void sombrerun() {
     this->grid = new sombrero::Grid();
@@ -65,7 +75,7 @@ class AppPanel : public sombrero::Application {
     this->grid->clear();
 
     pron::pronSelectInput(this->d, this->d->rootWindow,
-        PRON_EVENTMASK(pron::EV_WINDOW_CREATED) | PRON_EVENTMASK(pron::EV_DESTROY_WINDOW));
+        PRON_EVENTMASK(pron::EV_WINDOW_CREATED) | PRON_EVENTMASK(pron::EV_DESTROY_WINDOW) | PRON_EVENTMASK(pron::EV_KEY_PRESSED) | PRON_EVENTMASK(pron::EV_KEY_RELEASED));
 
     Application::sombrerun();
   }
