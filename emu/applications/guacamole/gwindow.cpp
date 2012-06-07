@@ -18,6 +18,7 @@ GWindow::GWindow (Window w, const PronWindowAttributes & attributes, bool decora
   this->attributes  = attributes;
   this->display     = display;
   this->isMaximised = false;
+  this->isFullscreen = false;
 
   if (raisedWindow == NULL) {
     raisedWindow = this;
@@ -31,11 +32,11 @@ GWindow::GWindow (Window w, const PronWindowAttributes & attributes, bool decora
   if (decorate) {
     this->parent = pronCreateWindow(display, display->rootWindow,
         decoratedX, decoratedY, decoratedWidth, decoratedHeight);
-    
+
     // Abonnement aux évènements souris de la fenêtre de décoration
     pronSelectInput(display, this->parent,
-        PRON_EVENTMASK(EV_MOUSE_BUTTON) | PRON_EVENTMASK(EV_EXPOSE));
-    
+        PRON_EVENTMASK(EV_MOUSE_BUTTON) | PRON_EVENTMASK(EV_EXPOSE) | PRON_EVENTMASK(EV_KEY_PRESSED));
+
     pronReparentWindow(display, w, this->parent);
     pronMoveWindow(display, w, borderSize, titleBarSize);
     pronDontPropagateEvent(display, w, PRON_EVENTMASK(EV_MOUSE_BUTTON));
@@ -118,7 +119,7 @@ void GWindow::decorate() {
         0, 0, this->parentAttributes.width, titleBarSize);
     pronDrawRect(display, this->parent, borderGC,
         0, 0, this->parentAttributes.width, titleBarSize);
-   
+
     pronDrawText(display, this->parent, whiteGC, 5, titleBarSize / 2,
         this->attributes.wm_title, strlen(this->attributes.wm_title),
         LEFT, MIDDLE);
@@ -205,7 +206,7 @@ void GWindow::resize(int width, int height) {
 
     //printf("%d %d %d %d\n",attr.minHeight, attr.minWidth, height, width);
 
-    if (!this->isMaximised) {
+    if (!this->isMaximised && !this->isFullscreen) {
       pronResizeWindow(display, this->parent, width, height);
       pronMoveWindow(display, this->closeButton,
           width - this->parentAttributes.width, 0);
@@ -246,7 +247,7 @@ void GWindow::maximise() {
       // @todo XXX ??????
       this->attributes = windowAttributes;
       pronGetWindowAttributes(display, this->parent, &this->parentAttributes);
-      
+
       // Backup old attributes
       this->oldParentAttributes = this->parentAttributes;
 
@@ -254,7 +255,7 @@ void GWindow::maximise() {
       pronUnmapWindow(display, this->parent);
       // Resize decoration window
       this->resize(GWindowsManager::getInstance()->getRootWindowAttributes().width,
-        GWindowsManager::getInstance()->getRootWindowAttributes().height);
+          GWindowsManager::getInstance()->getRootWindowAttributes().height);
       // Resize inner window
       pronResizeWindow(display, this->window,
           this->attributes.width, this->attributes.height);
@@ -264,7 +265,7 @@ void GWindow::maximise() {
       this->raise();
       // Show updated window
       pronMapWindow(display, this->parent);
-      
+
       this->isMaximised = true;
     } else {
       this->isMaximised = false;
@@ -280,7 +281,62 @@ void GWindow::maximise() {
       pronMoveWindowTo(display, this->parent, this->oldParentAttributes.x, this->oldParentAttributes.y);
       // Show updated window
       pronMapWindow(display, this->parent);
-      
+
+      // On en profite pour mettre tous les attributs à jour
+      // @todo XXX ??????
+      this->attributes = windowAttributes;
+      pronGetWindowAttributes(display, this->parent, &this->parentAttributes);
+    }
+  }
+}
+void GWindow::fullscreen() {
+  int offset = -22;
+  // We first retrieve the attributes of the window that has to be resized
+  // so that we can know if the window is resizable
+  PronWindowAttributes windowAttributes;
+  pronGetWindowAttributes(this->display, this->window, &windowAttributes);
+
+  if (windowAttributes.isResizable && windowAttributes.maxHeight == -1 && windowAttributes.maxWidth == -1) {
+    if (!this->isFullscreen) {
+      // On en profite pour mettre tous les attributs à jour
+      // @todo XXX ??????
+      this->attributes = windowAttributes;
+      pronGetWindowAttributes(display, this->parent, &this->parentAttributes);
+
+      // Backup old attributes
+      this->oldParentAttributes = this->parentAttributes;
+
+      // Hide window during update
+      pronUnmapWindow(display, this->parent);
+      // Resize decoration window
+      this->resize(GWindowsManager::getInstance()->getRootWindowAttributes().width,
+          GWindowsManager::getInstance()->getRootWindowAttributes().height - offset);
+      // Resize inner window
+      pronResizeWindow(display, this->window,
+          this->attributes.width, this->attributes.height);
+      // Move to the top-left corner of the screen
+      pronMoveWindowTo(display, this->parent, 0, offset);
+      // Put the window on top
+      this->raise();
+      // Show updated window
+      pronMapWindow(display, this->parent);
+
+      this->isFullscreen = true;
+    } else {
+      this->isFullscreen = false;
+
+      // Hide window during update
+      pronUnmapWindow(display, this->parent);
+      // Resize decoration window
+      this->resize(this->oldParentAttributes.width, this->oldParentAttributes.height);
+      // Resize inner window
+      pronResizeWindow(display, this->window,
+          this->attributes.width, this->attributes.height);
+      // Move to old position 
+      pronMoveWindowTo(display, this->parent, this->oldParentAttributes.x, this->oldParentAttributes.y);
+      // Show updated window
+      pronMapWindow(display, this->parent);
+
       // On en profite pour mettre tous les attributs à jour
       // @todo XXX ??????
       this->attributes = windowAttributes;

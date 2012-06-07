@@ -9,6 +9,7 @@ using namespace pron;
 class GWindow {
  protected:
   bool isMaximised;
+  bool isFullscreen;
 
  public:
   Window window;
@@ -31,6 +32,7 @@ class GWindow {
   void resize(int width, int height);
   void move(int xMove, int yMove);
   void maximise();
+  void fullscreen();
   void destroy();
   void raise();
 };

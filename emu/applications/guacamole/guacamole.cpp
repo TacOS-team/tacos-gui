@@ -84,6 +84,13 @@ int main() {
       }
       case EV_KEY_PRESSED : {
         EventKeyPressed *keyPressed = (EventKeyPressed*) e;
+        if (keyPressed->keysym == pron::PRONK_F10) {
+          printf("F10 PRESSED OMG I HAVE TO GO FULLSCREEN\n");
+          GWindow *w = GWindowsManager::getInstance()->getGWindow(keyPressed->window);
+          if (w != NULL) {
+            w->fullscreen();
+          }
+        }
         printf("Key pressed : %d\n", keyPressed->keysym);
         break;
       }
