@@ -94,14 +94,6 @@ Window::~Window() {
   }
 }
 
-bool Window::operator==(const Window &w) const {
-  return this->getId() == w.getId();
-}
-
-bool Window::operator!=(const Window &w) const {
-  return !(*this == w);
-}
-
 void Window::unmap() {
   // Can't unmap root window
   if (this->parent == NULL) {
@@ -185,10 +177,6 @@ void Window::map() {
   Mouse::getInstance()->updateMouseWin();
 }
 
-void* Window::pixelAddr(int x, int y) {
-  return this->getScreen()->pixelAddr(this->x + x, this->y + y);
-}
-
 void Window::clear(int x, int y, int width, int height, bool sendExposureEvent) {
   Color oldFg = this->getScreen()->getGC()->getFg();
   this->getScreen()->getGC()->setFg(this->bgColor);
@@ -209,10 +197,6 @@ void Window::clear(int x, int y, int width, int height, bool sendExposureEvent) 
     EventExpose expose(this->getId(), x, y, width, height);
     this->deliverEvent(&expose, sizeof(expose));
   }
-}
-
-void Window::clear(bool sendExposureEvent) {
-  this->clear(0, 0, this->getWidth(), this->getHeight(), sendExposureEvent);
 }
 
 PronWindowAttributes Window::getAttributes() {
@@ -403,33 +387,6 @@ void Window::exposeArea(int x, int y, int width, int height) {
   }
 }
 
-bool Window::overlaps(Window *w) {
-  return !(w->x >= this->x + this->getWidth() || w->y >= this->y + this->getHeight() || w->x + w->getWidth() <= this->x || w->y + w->getHeight() <= this->y);
-}
-
-bool Window::contains(int x, int y) {
-  return this->getX() <= x &&
-      this->getY() <= y &&
-      this->getX() + this->getWidth() > x &&
-      this->getY() + this->getHeight() > y;
-}
-
-int Window::getX() {
-  return this->x;
-}
-
-void Window::setX(int x) {
-  this->x = x;
-}
-
-int Window::getY(){
-  return this->y;
-}
-
-void Window::setY(int y) {
-  this->y = y;
-}
-
 void Window::reparent(Window *w) {
   if (this->prevSibling != NULL) {
     this->prevSibling->nextSibling = this->nextSibling;
@@ -503,10 +460,6 @@ void Window::move(int dx, int dy) {
   }
 }
 
-void Window::moveTo(int x, int y) {
-  this->move(this->parent->x + x - this->x, this->parent->y + y - this->y);
-}
-
 void Window::resize(int width, int height) {
   bool isMapped = this->realized();
 
@@ -525,14 +478,6 @@ void Window::resize(int width, int height) {
   EventResizeWindow eventResizeWindow(width, height);
   eventResizeWindow.window = this->getId();
   this->deliverWindowEvent(&eventResizeWindow, sizeof(eventResizeWindow));
-}
-
-bool Window::realized() {
-  return this->mapped && this->unmappedParents == 0;
-}
-
-inline bool Window::isValid(int x, int y) {
-  return this->getScreen()->isValid(this->x + x, this->y + y);
 }
 
 ClipState Window::beforeDrawing(int x1, int y1, int x2, int y2) {
@@ -583,4 +528,3 @@ void Window::traceWindowsRec(string prefix) {
     currentChild->traceWindowsRec(prefix + "--");
   }
 }
-

@@ -9,6 +9,7 @@
 
 #include <drawable.h>
 #include <pixmap.h>
+#include <screen.h>
 
 using namespace std;
 

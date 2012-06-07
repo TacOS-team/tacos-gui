@@ -6,9 +6,10 @@
  * WindowsTree class definition.
  */
 
-#include <window.h>
 #include <queue>
 #define END_OF_TREE NULL /**< Indicates that we have reached the end of the tree */
+
+class Window;
 
 using namespace std;
 

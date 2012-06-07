@@ -195,7 +195,6 @@ void Mouse::handleMotion(mousestate_t *state) {
 }
 
 void Mouse::handleButton(mousestate_t *state) {
-
   Screen *screen = Screen::getInstance();
 
   // We get the window which consairns the event
@@ -308,13 +307,6 @@ void Mouse::updateFocusWin() {
   screen->setFocusWin(newFocusWin);
 }
 
-bool Mouse::overlapsPointer(int x1, int y1, int x2, int y2) {
-  return !(x1 >= this->mouseX - PRON_MOUSE_POINTER_WIDTH_SHIFT + PRON_MOUSE_POINTER_WIDTH ||
-      y1 >= this->mouseY - PRON_MOUSE_POINTER_HEIGHT_SHIFT + PRON_MOUSE_POINTER_HEIGHT ||
-      x2 < this->mouseX - PRON_MOUSE_POINTER_WIDTH_SHIFT ||
-      y2 < this->mouseY - PRON_MOUSE_POINTER_HEIGHT_SHIFT);
-}
-
 void Mouse::hidePointer() {
   if (!this->pointerHidden) {
     Screen *screen = Screen::getInstance();
@@ -370,43 +362,4 @@ void Mouse::showPointer() {
 
     this->pointerHidden = false;
   }
-}
-
-Mouse* Mouse::getInstance() {
-  if (Mouse::instance == NULL) {
-    Mouse::instance = new Mouse();
-  }
-  return Mouse::instance;
-}
-
-int Mouse::getMouseX() {
-  return this->mouseX;
-}
-
-int Mouse::getMouseY() {
-  return this->mouseY;
-}
-
-bool Mouse::getMouseB1() {
-  return this->mouseB1;
-}
-
-bool Mouse::getMouseB2() {
-  return this->mouseB2;
-}
-
-bool Mouse::getMouseB3() {
-  return this->mouseB3;
-}
-
-bool Mouse::getMouseB4() {
-  return this->mouseB4;
-}
-
-bool Mouse::getMouseB5() {
-  return this->mouseB5;
-}
-
-bool Mouse::getMouseB6() {
-  return this->mouseB6;
 }
