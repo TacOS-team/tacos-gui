@@ -131,12 +131,12 @@ void Mirar::girarImage(bool reloj) {
 }
 
 void Mirar::verPoderDeLaFonk() {
-  this->image->applyNegativeFilter();
+  this->image->applyPowerfullnessOfTheFonkFilter();
   this->image->draw();
 }
 
 void Mirar::verInverso() {
-  this->image->applyPowerfullnessOfTheFonkFilter();
+  this->image->applyTestEffect();
   this->image->draw();
 }
 bool Mirar::getCtrlDown() {
