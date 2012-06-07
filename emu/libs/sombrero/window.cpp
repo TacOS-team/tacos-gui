@@ -44,6 +44,7 @@ Window::Window(std::string title, int x, int y,
 Window::~Window() {}
 
 void Window::handleEventResizeWindow(int width, int height) {
+  Bin::handleEventResizeWindow(width, height);
   Widget *w = this->getWidget();
   if(w != NULL) {
     w->setWidth(width);

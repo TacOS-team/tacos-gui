@@ -23,6 +23,7 @@ class VentanaPresentacion : public sombrero::Window {
       } else if (e->keysym == pron::PRONK_LEFT) {
         this->aplicacion->verNuevo(false);
       }
+      Window::handleEventKeyPressed(e);
     }
 };
 
