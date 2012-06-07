@@ -3,6 +3,7 @@
  * Implementation of the pronlib.
  */
 #include <color.h>
+#include <errno.h>
 #include <stdio.h>
 #include <unistd.h>
 
@@ -31,17 +32,28 @@ int Display::newResourceId() {
 }
 
 int Display::read(PronMessage *msg, size_t len) {
-  int sizeRead = tsock_read(this->fd, msg, len);
+  int sizeRead;
+  bool stop = false;
 
-  if (sizeRead < 0) {
-    /** @todo handle read error? */
-    //perror("Failed to read from server");
-  } else if (sizeRead == 0) {
-    /** @todo handle server disconnection */
-    fprintf(stderr, "Server has closed the connection\n");
-  } else if ((msg->type & ER_PREFIX) == ER_PREFIX) {
-    /** @todo trigger error handler */
-    fprintf(stderr, "Received error message from server: %x\n", msg->type);
+  while (!stop) {
+    stop = true;
+    sizeRead = tsock_read(this->fd, msg, len);
+
+    if (errno == EINTR) {
+      // We got interrupted, retry
+      stop = false;
+    } else {
+      if (sizeRead < 0) {
+        /** @todo handle read error? */
+        //perror("Failed to read from server");
+      } else if (sizeRead == 0) {
+        /** @todo handle server disconnection */
+        fprintf(stderr, "Server has closed the connection.\n");
+      } else if ((msg->type & ER_PREFIX) == ER_PREFIX) {
+        /** @todo trigger error handler */
+        fprintf(stderr, "Received error message from server: %x.\n", msg->type);
+      }
+    }
   }
 
   return sizeRead;
@@ -56,7 +68,10 @@ int Display::read(MessageType type, void *buffer, size_t len) {
     msgRead = (PronMessage*) malloc(MAX_MSG_SIZE);
     sizeRead = this->read(msgRead, MAX_MSG_SIZE);
 
-    if (sizeRead > 0) {
+    if (sizeRead == 0) {
+      // Connection closed
+      stop = true;
+    } else if (sizeRead > 0) {
       if (msgRead->type == type) {
         memcpy(buffer, msgRead, len);
         free(msgRead);
@@ -65,7 +80,7 @@ int Display::read(MessageType type, void *buffer, size_t len) {
         printf("Queuing event...\n");
         this->queuedEvents.push(pair<int, PronEvent*>(sizeRead, (PronEvent*) msgRead));
       } else {
-        fprintf(stderr, "Wrong message type (expected %x, got %x)\n", type, msgRead->type);
+        fprintf(stderr, "Wrong message type (expected %x, got %x).\n", type, msgRead->type);
         free(msgRead);
         stop = true;
       }
@@ -88,7 +103,7 @@ bool Display::getNextEvent(PronEvent *e) {
       if ((e->type & EV_PREFIX) == EV_PREFIX) {
         ok = true;
       } else {
-        fprintf(stderr, "Wrong message type (expected event, got %x)\n", e->type);
+        fprintf(stderr, "Wrong message type (expected event, got %x).\n", e->type);
       }
     }
   }
@@ -230,7 +245,7 @@ void pronGetWindowAttributes(Display *d, Window w, PronWindowAttributes *attr) {
 
 void pronSetWindowAttributes(Display * d, Window w, const PronWindowAttributes & newAttr, unsigned int mask) {  
   RqSetWindowAttributes rq(w,newAttr,mask);
-  tsock_write(d->fd,&rq,sizeof(RqSetWindowAttributes));
+  tsock_write(d->fd, &rq, sizeof(RqSetWindowAttributes));
 }
 
 void pronSelectInput(Display *d, Window w, uint32_t eventMask) {
@@ -285,7 +300,7 @@ void pronPutImage(Display *d, Drawable dr, GC gc, PronImage *image,
     int srcX, int srcY, int width, int height, int destX, int destY) {
   // We have to check if the rectangle the client wants to send enters 
   // in the source image
-  if((srcX + width > image->width) || (srcY + height > image->height)) {
+  if ((srcX + width > image->width) || (srcY + height > image->height)) {
     fprintf(stderr, "Subimage is too large\n");
     return;
   }
@@ -345,13 +360,14 @@ void pronResizeWindow(Display *d, unsigned int w, int width, int height) {
 }
 
 Pixmap pronCreatePixmap(Display *d, int width, int height, int depth) {
-  if(depth == 24/* || Other available depths*/) {
+  if (depth == 24/* || Other available depths*/) {
     Pixmap p = (Pixmap) d->newResourceId();
     RqCreatePixmap rq(p, width, height, depth);
     tsock_write(d->fd, &rq, sizeof(rq));
 
     return p;
   }
+
   return -1;
 }
 

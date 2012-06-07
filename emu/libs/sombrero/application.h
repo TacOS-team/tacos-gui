@@ -33,6 +33,10 @@ class Application {
 
   virtual void windowDestroyed(pron::EventDestroyWindow *e);
 
+  virtual void keyPressed(pron::EventKeyPressed *e);
+
+  virtual void keyReleased(pron::EventKeyReleased *e);
+
  public:
   pron::Display *d; /**< Pron display */
   std::map<pron::Window, Widget*> widgets; /**< A map with every pron::Window associated to a widget */
