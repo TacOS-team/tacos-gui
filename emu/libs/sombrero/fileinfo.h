@@ -28,7 +28,7 @@ class FileInfo {
 
   void setFile(const std::string & filePath);
 
-  std::string getFileName();
+  std::string getFileName() const;
   std::string getAbsolutePath();
 
   bool exists();

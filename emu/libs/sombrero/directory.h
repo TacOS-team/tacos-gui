@@ -7,7 +7,7 @@
 
 #include <string>
 #include <fileinfo.h>
-#include <list>
+#include <vector>
 
 
 namespace sombrero {
@@ -29,8 +29,8 @@ class Directory {
   bool cd(const std::string & dirPath);
   bool cdUp();
 
-  std::list<std::string> entryList();
-  std::list<FileInfo> entryInfoList();
+  std::vector<std::string> entryList(bool sorted = true);
+  std::vector<FileInfo> entryInfoList(bool sorted = true);
 };
 
 } // namespace sombrero

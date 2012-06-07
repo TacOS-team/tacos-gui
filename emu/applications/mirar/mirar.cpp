@@ -49,11 +49,11 @@ class VentanaMirar : public sombrero::Window {
 
 Mirar::Mirar(std::string camino) {
   sombrero::Directory *carpeta = new sombrero::Directory (camino);
-  std::list<sombrero::FileInfo> archivos = carpeta->entryInfoList();
+  std::vector<sombrero::FileInfo> archivos = carpeta->entryInfoList();
   std::string file ;
 
   printf("Puedo ver los archivos siguientes :\n");
-  for (std::list<sombrero::FileInfo>::iterator it = archivos.begin(); it != archivos.end(); it++) {
+  for (std::vector<sombrero::FileInfo>::iterator it = archivos.begin(); it != archivos.end(); it++) {
     file = it->getAbsolutePath();
     if ((int)file.find(".jpg") != -1) {
       printf("%s\n",file.c_str());
