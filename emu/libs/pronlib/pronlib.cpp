@@ -21,8 +21,8 @@ Display::Display(int fd, RespWelcome *welcome) {
   this->endId = welcome->endId;
   this->curId = this->startId;
   PronGCValues values;
-  values.fg = Color(255, 77, 182);
-  values.bg = Color(0, 0, 0);
+  values.fg = Color(0x40, 0x40, 0x40);
+  values.bg = Color(0xdb, 0xdb, 0xdf);
   values.font_num = 0;
   this->defaultGC = pronCreateGC(this, values, GC_VAL_FG | GC_VAL_BG | GC_VAL_FONTNUM);
 }
