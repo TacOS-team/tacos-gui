@@ -184,7 +184,7 @@ void Image::rotate(bool clockwise) {
 }
 
 
-char Image::calculateNewComp (unsigned int i, unsigned int j, unsigned int c, char * raw) {
+char Image::calculateFonkNewComp (unsigned int i, unsigned int j, unsigned int c, char * raw) {
   int newComp = 0;
   int blop = 1;
 
@@ -229,7 +229,7 @@ char Image::calculateNewComp (unsigned int i, unsigned int j, unsigned int c, ch
 
 void Image::applyPowerfullnessOfTheFonkFilter() {
   char * newRawImage = (char *)malloc(this->imageHeight * this->imageWidth * this->nbComponents * sizeof(char));
-  char * rawImages [2]= {newRawImage,this->rawImage};
+  char * rawImages [2]= {newRawImage,this->rawImage}; // used to avoid memcpy at each loop
   int currentRawImage = 0;
   
   unsigned int nbPass = 4;
@@ -237,13 +237,16 @@ void Image::applyPowerfullnessOfTheFonkFilter() {
     for (unsigned int i = 0; i < this->imageWidth; i++) {
       for (unsigned int j = 0; j < this->imageHeight; j++) {
         for (unsigned int c = 0; c < this->nbComponents; c++) {
-          rawImages[currentRawImage][this->getLocation(i,j,c, this->imageWidth)] = this->calculateNewComp(i,j,c,rawImages[(currentRawImage + 1) % 2]);
+          rawImages[currentRawImage][this->getLocation(i,j,c, this->imageWidth)] = this->calculateFonkNewComp(i,j,c,rawImages[(currentRawImage + 1) % 2]);
         }
       }
     }
     currentRawImage = (currentRawImage + 1) % 2;
   }
-  memcpy(rawImages[currentRawImage],rawImages[(currentRawImage + 1) % 2],this->imageHeight * this->imageWidth * this->nbComponents * sizeof(char));
+  // We memcpy only if we have to
+  if (currentRawImage == 0) {
+    memcpy(rawImages[1],rawImages[0],this->imageHeight * this->imageWidth * this->nbComponents * sizeof(char));
+  }
 
   this->sendPixmap(false);
 }

@@ -51,7 +51,7 @@ class Image : public Widget {
    * @param c the component of the pixel
    * @param raw the raw image from where calculate
    */
-  char calculateNewComp (unsigned int i, unsigned int j, unsigned int c, char * raw);
+  char calculateFonkNewComp (unsigned int i, unsigned int j, unsigned int c, char * raw);
    
  public:
   /**
