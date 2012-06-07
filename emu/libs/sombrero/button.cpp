@@ -39,8 +39,8 @@ void Button::draw() {
 
   if(this->isDown) {
     pron::pronFillRectangle(Application::getInstance()->d, this->pronWindow,
-      this->bgGC, 0, 0,
-      this->getWidth(), this->getHeight());
+      this->bgGC, 1, 1,
+      this->getWidth()-2, this->getHeight()-2);
   } else {
     this->clear();
   }
