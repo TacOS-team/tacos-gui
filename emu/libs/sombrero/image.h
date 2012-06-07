@@ -52,6 +52,8 @@ class Image : public Widget {
    * @param raw the raw image from where calculate
    */
   char calculateFonkNewComp (unsigned int i, unsigned int j, unsigned int c, char * raw);
+
+  char calculateNewComp(unsigned int i, unsigned int j, unsigned int c, char * raw, unsigned int rawWidth, unsigned int rawHeight, int ** convMat, unsigned int convMatSize);
    
  public:
   /**
