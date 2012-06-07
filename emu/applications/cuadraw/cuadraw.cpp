@@ -21,6 +21,7 @@ class ColorPickerWindow : public sombrero::Window {
       : Window(title, x, y, width, height, decorate), cp(30) {
     add(&cp);
   }
+  void handleEventDestroyWindow() {}
 };
 
 Cuadraw::CoolCanvas::CoolCanvas(int width, int height) : sombrero::Canvas(width, height) {

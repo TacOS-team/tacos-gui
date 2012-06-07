@@ -40,6 +40,7 @@ class AppPanel : public sombrero::Application, public has_slots<> {
     sombrero::Textbox* getTextbox() {
       return &tb;
     }
+    void handleEventDestroyWindow() {}
   };
 
   std::map<pron::Window, WindowItem*> windows;
