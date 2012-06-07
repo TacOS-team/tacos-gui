@@ -24,10 +24,6 @@ class Cube : public has_slots<> {
         );
       }
 
-      this->canvas.drawEllipse(50, 50, 20, 10);
-
-      this->canvas.fillEllipse(150, 50, 10, 20);
-
       this->canvas.draw();
     }
 
