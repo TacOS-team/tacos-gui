@@ -4,7 +4,7 @@
 #include <map>
 #include <elf.h>
 
-class AppPanel : public sombrero::Application {
+class AppPanel : public sombrero::Application, public has_slots<> {
  private:
   class WindowItem : public has_slots<> {
     private:
@@ -27,8 +27,25 @@ class AppPanel : public sombrero::Application {
       }
   };
 
+  class LauncherWindow : public sombrero::Window {
+   private:
+    sombrero::Textbox tb;
+   protected:
+   public:
+    LauncherWindow(std::string title, int x, int y,
+        int width, int height, bool decorate = true) 
+        : Window(title, x, y, width, height, decorate), tb(false) {
+      add(&tb);
+    }
+    sombrero::Textbox* getTextbox() {
+      return &tb;
+    }
+  };
+
   std::map<pron::Window, WindowItem*> windows;
   sombrero::Grid *grid;
+
+  LauncherWindow *lw; /**< Launcher window */
 
   void windowCreated(pron::EventWindowCreated *e) {
     printf("Window created! (%x)\n", e->window);
@@ -41,9 +58,8 @@ class AppPanel : public sombrero::Application {
       if (it != this->widgets.end()) {
         it->second->subscribeEvent(pron::EV_DESTROY_WINDOW);
         it->second->subscribeEvent(pron::EV_KEY_PRESSED);
-        it->second->subscribeEvent(pron::EV_KEY_RELEASED);
       } else { 
-        pron::pronSelectInput(this->d, e->window, PRON_EVENTMASK(pron::EV_DESTROY_WINDOW) | PRON_EVENTMASK(pron::EV_KEY_PRESSED) | PRON_EVENTMASK(pron::EV_KEY_RELEASED));
+        pron::pronSelectInput(this->d, e->window, PRON_EVENTMASK(pron::EV_DESTROY_WINDOW) | PRON_EVENTMASK(pron::EV_KEY_PRESSED));
       }
     }
   }
@@ -63,10 +79,16 @@ class AppPanel : public sombrero::Application {
       string path("build/applications/velo");
       exec_elf((char *)path.c_str(), 0);
     }
+    if (e->keysym == pron::PRONK_F2 && (e->modifiers & pron::KMOD_LCTRL)) {
+      lw = new LauncherWindow("Launcher", 40, 40, 160, 20, true);
+      lw->getTextbox()->submitted.connect(this, &AppPanel::submitted);
+    }
   }
-
-  void keyReleased(pron::EventKeyReleased *e __attribute__((unused))) {
-    printf("KEY RELEASED\n");
+  
+  void submitted() {
+    printf("exécution de ...\n");
+    exec_elf((char *)lw->getTextbox()->getText().c_str(), 0);
+    delete lw;
   }
 
  public:
@@ -79,7 +101,7 @@ class AppPanel : public sombrero::Application {
     this->grid->clear();
 
     pron::pronSelectInput(this->d, this->d->rootWindow,
-        PRON_EVENTMASK(pron::EV_WINDOW_CREATED) | PRON_EVENTMASK(pron::EV_DESTROY_WINDOW) | PRON_EVENTMASK(pron::EV_KEY_PRESSED) | PRON_EVENTMASK(pron::EV_KEY_RELEASED));
+        PRON_EVENTMASK(pron::EV_WINDOW_CREATED) | PRON_EVENTMASK(pron::EV_DESTROY_WINDOW) | PRON_EVENTMASK(pron::EV_KEY_PRESSED));
 
     Application::sombrerun();
   }
