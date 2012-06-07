@@ -7,7 +7,7 @@
 #include <unistd.h>
 
 #define DEFAULT_FOLDER "ressources/images/wallpapers"
-#define TIMER_PERIOD 1000
+#define TIMER_PERIOD 10000
 
 using namespace std;
 using namespace sombrero;
@@ -50,12 +50,11 @@ class Wallpaper : public has_slots<> {
         imageFound = true;
         stop = true;
       }
-      if (it != fl.end() ){
-        ++it;
+      if (++it != fl.end() ){
       } else if (imageFound) {
         it = fl.begin();
       } else {
-        fprintf(stderr, "The is no file in the folder, exiting\n");
+        fprintf(stderr, "There is no file in the folder, exiting\n");
         exit(1);
       }
       if (stop) {

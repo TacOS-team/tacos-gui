@@ -64,4 +64,9 @@ std::vector<Widget*> ScrollPane::getChildren() {
   return res;
 }
 
+void ScrollPane::resetScroll() {
+  this->scrollbar->setValue(0);
+  this->positionChanged(0);
+}
+
 } // namespace sombrero

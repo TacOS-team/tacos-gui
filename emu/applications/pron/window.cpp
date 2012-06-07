@@ -509,8 +509,8 @@ void Window::afterDrawing(int x1 __attribute__((unused)),
   Mouse::getInstance()->showPointer();
 }
 
-void Window::traceWindowsRec(string prefix) {
-  printf("%s%-6x (p: %-6x, fc: %-6x, lc: %-6x, ps: %-6x, ns: %-6x\n",
+void Window::traceWindowsRec(string prefix __attribute__((unused))) {
+  /*printf("%s%-6x (p: %-6x, fc: %-6x, lc: %-6x, ps: %-6x, ns: %-6x\n",
         prefix.c_str(),
         this->getId(),
         this->parent == NULL ? 0 : this->parent->getId(),
@@ -531,5 +531,5 @@ void Window::traceWindowsRec(string prefix) {
         this->unmappedParents);
   for (Window *currentChild = this->firstChild; currentChild != NULL; currentChild = currentChild->nextSibling) {
     currentChild->traceWindowsRec(prefix + "--");
-  }
+  }*/
 }

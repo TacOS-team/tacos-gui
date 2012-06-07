@@ -49,7 +49,7 @@ void Client::handle() {
     // Read error (mostly EGAIN)
     return;
   } else if (Client::recvLen == 0) {
-    printf("Client %d (fd %d) has disconnected.\n", this->id, this->fd);
+    //debug("Client %d (fd %d) has disconnected.\n", this->id, this->fd);
     delete this;
   }
 
@@ -64,7 +64,7 @@ void Client::handle() {
       break;
     }
     case RQ_GOODBYE: {
-      printf("RQ_GOODBYE from fd %d\n", this->fd);
+      //debug("RQ_GOODBYE from fd %d\n", this->fd);
       tsock_close(this->fd);
       delete this;
       break;
@@ -326,7 +326,6 @@ void Client::handle() {
     }
     case RQ_SET_CURSOR: {
       RqSetCursor *rq = (RqSetCursor*) Client::recvBuf;
-      printf("set Cursor %d at window %u\n", rq->pixmap, rq->window);
       Pixmap *newPointer = (Pixmap*) screen->getDrawable(rq->pixmap, D_PIXMAP);
       if(newPointer != NULL && newPointer->getWidth()  == PRON_MOUSE_POINTER_WIDTH
                             && newPointer->getHeight() == PRON_MOUSE_POINTER_HEIGHT) {
