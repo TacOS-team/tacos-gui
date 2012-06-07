@@ -9,12 +9,12 @@
 #include <proto/events.h>
 #include <vector>
 #include <drawable.h>
+#include <screen.h>
 #include <string>
 
 using namespace std;
 using namespace pron;
 
-class Screen;
 class Client;
 class Pixmap;
 
@@ -98,7 +98,9 @@ class Window : public Drawable {
    * @param x The x-coordinate of the pixel
    * @param y The y-coordinate of the pixel
    */ 
-  void* pixelAddr(int x, int y);
+  void* pixelAddr(int x, int y) {
+    return this->getScreen()->pixelAddr(this->x + x, this->y + y);
+  }
   
   /**
    * Returns true if we can draw at position (x, y).
@@ -106,7 +108,9 @@ class Window : public Drawable {
    * @param y The y-coordinate of the point to check
    * @return true if we can draw at position (x, y)
    */
-  bool isValid(int x, int y);
+  bool isValid(int x, int y) {
+    return this->getScreen()->isValid(this->x + x, this->y + y);
+  }
 
   /**
    * Callback function called before drawing.
@@ -133,14 +137,18 @@ class Window : public Drawable {
    * @param w The window to compare with
    * @return true if the windows are the same
    */
-  bool operator==(const Window &w) const;
-  
+  bool operator==(const Window &w) const {
+    return this->getId() == w.getId();
+  }
+
   /**
    * Operator !=.
    * @param w The window to compare with
    * @return true if the windows are the different
    */
-  bool operator!=(const Window &w) const;
+  bool operator!=(const Window &w) const {
+    return !(*this == w);
+  }
 
   /**
    * Maps this window (shows it on the screen).
@@ -156,7 +164,9 @@ class Window : public Drawable {
    * Clears this window.
    * @param sendExposureEvent Whether to send an exposure event or not
    */
-  void clear(bool sendExposureEvent = true);
+  void clear(bool sendExposureEvent = true) {
+    this->clear(0, 0, this->getWidth(), this->getHeight(), sendExposureEvent);
+  }
 
   /**
    * Clears an area of this window.
@@ -217,7 +227,9 @@ class Window : public Drawable {
    * @param x The new x-coordinate, relative to the parent window
    * @param y The new y-coordinate, relative to the parent window
    */
-  void moveTo(int x, int y);
+  void moveTo(int x, int y) {
+    this->move(this->parent->x + x - this->x, this->parent->y + y - this->y);
+  }
 
   /**
    * Resizes a window.
@@ -266,37 +278,52 @@ class Window : public Drawable {
    * @param y The y-coordinate of the point to check
    * @return true when the window contains (x,y)
    */
-  bool contains(int x, int y);
+  bool contains(int x, int y) {
+    return this->getX() <= x &&
+      this->getY() <= y &&
+      this->getX() + this->getWidth() > x &&
+      this->getY() + this->getHeight() > y;
+  }
 
   /**
    * Returns true when the window and all its parents are mapped.
    * @return true if the window and all its parent are mapped.
    */
-  bool realized();
+  bool realized() {
+    return this->mapped && this->unmappedParents == 0;
+  }
 
   /**
    * Returns the x-coordinate of the top-left corner of the window.
    * @return the x-coordinate of the top-left corner of the window
    */
-  int getX();
+  int getX() {
+    return this->x;
+  }
 
   /**
    * Sets the x-coordinate of the top-left corner of the window.
    * @param x The x-coordinate of the top-left corner of the window
    */
-  void setX(int x);
+  void setX(int x) {
+    this->x = x;
+  }
 
   /**
    * Returns the y-coordinate of the top-left corner of the window.
    * @return the y-coordinate of the top-left corner of the window.
    */
-  int getY();
+  int getY() {
+    return this->y;
+  }
 
   /**
    * Sets the y-coordinate of the top-left corner of the window.
    * @param y The y-coordinate of the top-left corner of the window
    */
-  void setY(int y);
+  void setY(int y) {
+    this->y = y;
+  }
 
   /**
    * Sets a new parent to the window.
@@ -337,7 +364,9 @@ class Window : public Drawable {
    * @param w The window to check
    * @return true if w overlaps this window
    */
-  bool overlaps(Window *w);
+  bool overlaps(Window *w) {
+    return !(w->x >= this->x + this->getWidth() || w->y >= this->y + this->getHeight() || w->x + w->getWidth() <= this->x || w->y + w->getHeight() <= this->y);
+  }
 };
 
 #endif

@@ -76,7 +76,9 @@ public:
    * Returns the set of rectangles that composes the clipping zone.
    * @return the set of rectangles that composes the clipping zone.
    */
-  vector<ClipRect*>& getClipRects();
+  vector<ClipRect*>& getClipRects() {
+    return this->clipRects;
+  }
 
 private:
   vector<ClipRect*> clipRects; /**< Set of rectangles composing the clipping zone */

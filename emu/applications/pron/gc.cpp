@@ -79,23 +79,15 @@ void GC::setValues(const PronGCValues &values, unsigned int mask) {
     this->font_num = values.font_num;
   }
 }
-
-void GC::setFg(Color c) {
-  this->fg = c;
-  this->fgValue = c.getRGB(Screen::getInstance()->bitsPerPixel);
-}
-
+  
 void GC::setBg(Color c) {
   this->bg = c;
   this->bgValue = c.getRGB(Screen::getInstance()->bitsPerPixel);
 }
 
-Color GC::getFg() {
-  return this->fg;
-}
-
-Color GC::getBg() {
-  return this->bg;
+void GC::setFg(Color c) {
+  this->fg = c;
+  this->fgValue = c.getRGB(Screen::getInstance()->bitsPerPixel);
 }
 
 void GC::destroy() {

@@ -11,7 +11,6 @@
 #include <pixmap.h>
 #include <pron_proto.h>
 #include <screen.h>
-#include <tsock.h>
 #include <window.h>
 #include <mouse.h>
 
@@ -351,8 +350,4 @@ void Client::handle() {
       break;
     }
   }
-}
-
-void Client::send(void *data, unsigned int size) {
-  tsock_write(this->fd, data, size);
 }

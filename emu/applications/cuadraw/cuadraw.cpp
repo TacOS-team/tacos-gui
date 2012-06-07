@@ -8,27 +8,6 @@ int abs(int val) {
   return (val > 0) ? val : -val;
 }
 
-class CoolCanvas : public sombrero::Canvas {
- private:
- protected:
- public:
-  CoolCanvas(int width, int height) : Canvas(width, height) {
-    this->subscribeEvent(pron::EV_MOUSE_BUTTON);
-    this->subscribeEvent(pron::EV_POINTER_MOVED);
-  }
-  // Signals
-  signal3<sombrero::MouseButton, int, int> mouseClicked;
-  signal3<sombrero::MouseButton, int, int> mouseReleased;
-  
-  void handleMouseDown(sombrero::MouseButton b, int x, int y) {
-    this->mouseClicked(b, x, y);
-  }
-  void handleMouseReleased(sombrero::MouseButton b, int x, int y) {
-    this->mouseReleased(b, x, y);
-  }
-
-};
-
 class ColorPickerWindow : public sombrero::Window {
  private:
   sombrero::ColorPicker cp;
@@ -43,6 +22,18 @@ class ColorPickerWindow : public sombrero::Window {
     add(&cp);
   }
 };
+
+Cuadraw::CoolCanvas::CoolCanvas(int width, int height) : sombrero::Canvas(width, height) {
+  this->subscribeEvent(pron::EV_MOUSE_BUTTON);
+  this->subscribeEvent(pron::EV_POINTER_MOVED);
+}
+
+void Cuadraw::CoolCanvas::handleMouseDown(sombrero::MouseButton b, int x, int y) {
+  this->mouseClicked(b, x, y);
+}
+void Cuadraw::CoolCanvas::handleMouseReleased(sombrero::MouseButton b, int x, int y) {
+  this->mouseReleased(b, x, y);
+}
 
 void Cuadraw::clearSignals() {
   c->mouseClicked.disconnect_all();
@@ -159,7 +150,9 @@ void Cuadraw::doColorPickerWindow() {
 void Cuadraw::doColorChanged(Color c) {
   this->c->setFGColor(c);
   this->cp->setCurrentColor(c);
-  this->wcp->getColorPicker()->setCurrentColor(c);
+  if (this->wcp != NULL) {
+    this->wcp->getColorPicker()->setCurrentColor(c);
+  }
 }
 
 void Cuadraw::doPixelClicked(){

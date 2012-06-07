@@ -10,6 +10,32 @@ class ColorPickerWindow;
 
 class Cuadraw : public has_slots<> {
  private:
+  
+  class CoolCanvas : public sombrero::Canvas {
+   private:
+   protected:
+   public:
+    CoolCanvas(int width, int height);
+    // Signals
+    signal3<sombrero::MouseButton, int, int> mouseClicked;
+    signal3<sombrero::MouseButton, int, int> mouseReleased;
+    
+    /**
+     * Handles mouse down
+     * @param b Mouse button
+     * @param x X coordinate
+     * @param y Y coodinate
+     */
+    void handleMouseDown(sombrero::MouseButton b, int x, int y);
+    /**
+     * Handles mouse released
+     * @param b Mouse button
+     * @param x X coordinate
+     * @param y Y coodinate
+     */
+    void handleMouseReleased(sombrero::MouseButton b, int x, int y);
+  };
+
   FILE *fileIn; /**< The input file */
   FILE *fileOut; /**< The output file */
   sombrero::Window *w; /**< The main window */

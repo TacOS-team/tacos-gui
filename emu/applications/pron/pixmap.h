@@ -6,9 +6,8 @@
  * Pixmap class definition.
  */
 
-#include <pixmap.h>
 #include <drawable.h>
-#include <screen.h>
+#include <pixmap.h>
 
 class Drawable;
 class Screen;

@@ -78,13 +78,17 @@ class GC {
    * Returns the background color.
    * @return The background color
    */
-  Color getBg();
+  Color getBg() {
+    return this->bg;
+  }
   
   /**
    * Returns the foreground color.
    * @return The foreground color
    */
-  Color getFg();
+  Color getFg() {
+    return this->fg;
+  }
 
   /**
    * Destroys the graphics context.
