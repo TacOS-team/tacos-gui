@@ -1,5 +1,7 @@
 #include "scrollbar.h"
 
+#include "application.h"
+
 namespace sombrero {
 
 ScrollBar::Thumb::Thumb() : Button("0") {
@@ -20,8 +22,15 @@ ScrollBar::ScrollBar() : thumb() {
   this->min   = 0;
   this->max   = 10;
   this->value = this->min;
-  this->marginSize = 2;
+  this->marginSize = 1;
   this->buttonSize = 10;
+
+  Color bg(0x20, 0x20, 0x20);
+  Color fg(0xdb, 0xdb, 0xdb);
+  pron::PronGCValues values;
+  values.bg = bg;
+  values.fg = fg;
+  this->scrollGC = pron::pronCreateGC(Application::getInstance()->d, values, pron::GC_VAL_FG | pron::GC_VAL_BG);
 }
 
 int ScrollBar::getValue() {
