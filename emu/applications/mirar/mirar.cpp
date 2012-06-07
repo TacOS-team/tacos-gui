@@ -34,8 +34,10 @@ class VentanaMirar : public sombrero::Window {
         else {
           this->aplicacion->verAnterior();
         }
-      } else if (e->keysym == pron::PRONK_SPACE) {
+      } else if (e->keysym == pron::PRONK_UP) {
         this->aplicacion->verInverso();
+      } else if (e->keysym == pron::PRONK_DOWN) {
+        this->aplicacion->verPoderDeLaFunk();
       }
     }
     void handleEventKeyReleased(pron::EventKeyReleased *e) {
@@ -63,6 +65,7 @@ Mirar::Mirar(std::string camino) {
   this->ctrlDown = false;
 
   if (this->jpegArchivos.size() > 0) {
+    sort(this->jpegArchivos.begin(), this->jpegArchivos.end());
     this->inicializacionSombrero();
   } else {
     printf("Noy hay ninguna archivo jpeg hombre !\n");
@@ -71,26 +74,22 @@ Mirar::Mirar(std::string camino) {
 }
 
 void Mirar::inicializacionSombrero() {
-  sombrero::Application::getInstance()->init();
   this->ventana = new VentanaMirar("Mirar", 0, 0, MAIN_WINDOW_WIDTH, MAIN_WINDOW_HEIGHT, this);
   this->g = new sombrero::Grid();
   this->siguiente = new sombrero::Button("Siguiente");
   this->anterior = new sombrero::Button("Anterior");
-  this->invertir = new sombrero::Button("Invertir");
   this->image = new sombrero::Image(this->jpegArchivos[this->corrienteArchivo]);
   this->sp = new sombrero::VScrollPane(this->image);
 
 
   this->anterior->clicked.connect(this, &Mirar::verAnterior);
   this->siguiente->clicked.connect(this, &Mirar::verSiguiente);
-  this->invertir->clicked.connect(this, &Mirar::verInverso);
 
   ventana->add(g);
   g->attach(anterior,0,0,1,1);
   g->attachNextTo(this->siguiente,this->anterior,sombrero::POS_RIGHT,1,1);
-  g->attachNextTo(this->invertir,this->siguiente,sombrero::POS_RIGHT,1,1);
   this->g->newLine();
-  this->g->attach(this->sp,0,1,3,8);
+  this->g->attach(this->sp,0,1,2,15);
   this->ventana->draw();
 }
 
@@ -110,7 +109,7 @@ void Mirar::verNuevo (bool siguiente) {
   delete this->image;
   this->image = new sombrero::Image(this->jpegArchivos[this->corrienteArchivo]);
   this->sp->add(this->image);
-  this->g->attach(this->sp,0,1,3,8);
+  this->g->attach(this->sp,0,1,2,15);
   this->ventana->draw();
 }
 
@@ -125,12 +124,19 @@ void Mirar::verAnterior() {
 
 void Mirar::girarImage(bool reloj) {
   this->image->rotate(reloj);
+  this->sp->remove(this->image);
+  this->sp->add(this->image);
+  this->g->attach(this->sp,0,1,2,15);
+  this->ventana->draw();
+}
+
+void Mirar::verPoderDeLaFunk() {
+  this->image->applyNegativeFilter();
   this->image->draw();
 }
 
-
 void Mirar::verInverso() {
-  this->image->applyNegativeFilter();
+  this->image->applyPowerfullnessOfTheFonkFilter();
   this->image->draw();
 }
 bool Mirar::getCtrlDown() {

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <application.h>
 #include <bmp.h>
+#include <math.h>
 
 namespace sombrero {
 
@@ -23,13 +24,10 @@ void Image::draw() {
       this->imageWidth, this->imageHeight, this->xOffset, this->yOffset);
 }
 
-pron::Pixmap Image::getPixMap() {
-  return this->pixmap;
-}
-
 void Image::init() {
   this->xOffset = 0;
   this->yOffset = 0;
+  this->pixmap = 0;
 
   /* we will be using this uninitialized pointer later to store raw, uncompressd image */
   this->rawImage = NULL;
@@ -47,6 +45,7 @@ void Image::init() {
     this->imageHeight = bmpLoader.height;
     this->setWidth(bmpLoader.width);
     this->setHeight(bmpLoader.height);
+    this->nbComponents = 3;
   }
   else {
     /* these are standard libjpeg structures for reading (decompression) */
@@ -109,24 +108,35 @@ void Image::init() {
     free(row_pointer[0]);
     fclose(infile);
   }
-  
-  /* Create PronImage */
-  pron::PronImage image(this->imageWidth, this->imageHeight, pron::ZPixmap, this->rawImage, 24, 3, false);
 
-  /* Creates the image pixmap */
-  pixmap = pron::pronCreatePixmap(Application::getInstance()->d,
-    this->imageWidth, this->imageHeight, 24);
-  if (pixmap == (unsigned int)-1) {
-    fprintf(stderr, "Error while creating the pixmap\n");
-    exit(2);
+  this->sendPixmap(true);
+}
+
+void Image::sendPixmap(bool createNew) {
+  if (createNew) {
+    // if the pixmap has already been created
+    if (this->pixmap != 0) {
+      pron::pronClearWindow(Application::getInstance()->d, this->pronWindow);
+      pron::pronFreePixmap(Application::getInstance()->d, this->pixmap);
+    }
+  
+    /* Creates the image pixmap */
+    this->pixmap = pron::pronCreatePixmap(Application::getInstance()->d,
+        this->imageWidth, this->imageHeight, 24);
+    if (this->pixmap == (unsigned int)-1) {
+      fprintf(stderr, "Error while creating the pixmap\n");
+      exit(2);
+    }
   }
+
+  /* Create PronImage */
+  pron::PronImage image(this->imageWidth, this->imageHeight, pron::ZPixmap, this->rawImage, 24, this->nbComponents, false);
 
   /* Puts the image into the pixmap */
   pron::pronPutImage(Application::getInstance()->d, pixmap,
     Application::getInstance()->d->defaultGC, &image, 0, 0,
     this->imageWidth, this->imageHeight, 0, 0);
 }
-
 
 void Image::applyNegativeFilter() {
   unsigned long location = 0;
@@ -138,14 +148,7 @@ void Image::applyNegativeFilter() {
       }
     }
   }
-  
-  /* Create PronImage */
-  pron::PronImage image(this->imageWidth, this->imageHeight, pron::ZPixmap, this->rawImage, 24, 3, false);
-  
-  /* Puts the image into the pixmap */
-  pron::pronPutImage(Application::getInstance()->d, pixmap,
-    Application::getInstance()->d->defaultGC, &image, 0, 0,
-    this->imageWidth, this->imageHeight, 0, 0);
+  this->sendPixmap(false);
 }
 
 unsigned int Image::getLocation(unsigned int i, unsigned int j, unsigned int c, unsigned int currentWidth) {
@@ -164,37 +167,88 @@ void Image::rotate(bool clockwise) {
         if (clockwise) {
           newRawImage[this->getLocation(i,j,c, newImageWidth)] = this->rawImage[this->getLocation(j, this->imageHeight - i -1, c, this->imageWidth)];
         } else {
-          newRawImage[this->getLocation(i,j,c, newImageWidth)] = this->rawImage[this->getLocation(j, this->imageHeight - i -1, c, this->imageWidth)];
+          newRawImage[this->getLocation(i,j,c, newImageWidth)] = this->rawImage[this->getLocation(this->imageWidth - j -1,i, c, this->imageWidth)];
         }
       }
     }
   }
-
+  
   memcpy(this->rawImage,newRawImage,this->imageHeight * this->imageWidth * this->nbComponents * sizeof(char));
-
-  pron::pronClearWindow(Application::getInstance()->d, this->pronWindow);
-  pron::pronFreePixmap(Application::getInstance()->d, this->pixmap);
 
   this->imageWidth = newImageWidth;
   this->imageHeight = newImageHeight;
   this->setWidth (this->imageWidth);
   this->setHeight(this->imageHeight);
 
-  /* Create PronImage */
-  pron::PronImage image(this->imageWidth, this->imageHeight, pron::ZPixmap, this->rawImage, 24, 3, false);
+  this->sendPixmap(true);
+}
 
-  /* Creates the image pixmap */
-  this->pixmap = pron::pronCreatePixmap(Application::getInstance()->d,
-    this->imageWidth, this->imageHeight, 24);
-  if (this->pixmap == (unsigned int)-1) {
-    fprintf(stderr, "Error while creating the pixmap\n");
-    exit(2);
+
+char Image::calculateFonkNewComp (unsigned int i, unsigned int j, unsigned int c, char * raw) {
+  int newComp = 0;
+  int blop = 1;
+
+  newComp += raw[this->getLocation(i,j,c,this->imageWidth)];
+  if (i + 1 < this->imageWidth) {
+    newComp += raw[this->getLocation(i+1,j,c,this->imageWidth)];
+    blop++;
+    if (j > 0) {
+      newComp += raw[this->getLocation(i+1,j-1,c,this->imageWidth)];
+      blop++;
+    }
+    if (j + 1 < this->imageHeight) {
+      newComp += raw[this->getLocation(i+1,j+1,c,this->imageWidth)];
+      blop++;
+    }
+  }
+  if (i > 0) {
+    newComp += raw[this->getLocation(i-1,j,c,this->imageWidth)];
+    blop++;
+    if (j > 0) {
+      newComp += raw[this->getLocation(i-1,j-1,c,this->imageWidth)];
+      blop++;
+    }
+    if (j + 1 < this->imageHeight) {
+      newComp += raw[this->getLocation(i-1,j+1,c,this->imageWidth)];
+      blop++;
+    }
+  }
+  if (j > 0) {
+    newComp += raw[this->getLocation(i,j-1,c,this->imageWidth)];
+    blop++;
+  } 
+  if (j + 1 < this->imageHeight) {
+    newComp += raw[this->getLocation(i,j+1,c,this->imageWidth)];
+    blop++;
   }
 
-  /* Puts the image into the pixmap */
-  pron::pronPutImage(Application::getInstance()->d, this->pixmap,
-    Application::getInstance()->d->defaultGC, &image, 0, 0,
-    this->imageWidth, this->imageHeight, 0, 0);
+  newComp /= blop;
+
+  return (char)newComp;
+}
+
+void Image::applyPowerfullnessOfTheFonkFilter() {
+  char * newRawImage = (char *)malloc(this->imageHeight * this->imageWidth * this->nbComponents * sizeof(char));
+  char * rawImages [2]= {newRawImage,this->rawImage}; // used to avoid memcpy at each loop
+  int currentRawImage = 0;
+  
+  unsigned int nbPass = 4;
+  for (unsigned int pass = 0; pass < nbPass; pass++) {
+    for (unsigned int i = 0; i < this->imageWidth; i++) {
+      for (unsigned int j = 0; j < this->imageHeight; j++) {
+        for (unsigned int c = 0; c < this->nbComponents; c++) {
+          rawImages[currentRawImage][this->getLocation(i,j,c, this->imageWidth)] = this->calculateFonkNewComp(i,j,c,rawImages[(currentRawImage + 1) % 2]);
+        }
+      }
+    }
+    currentRawImage = (currentRawImage + 1) % 2;
+  }
+  // We memcpy only if we have to
+  if (currentRawImage == 0) {
+    memcpy(rawImages[1],rawImages[0],this->imageHeight * this->imageWidth * this->nbComponents * sizeof(char));
+  }
+
+  this->sendPixmap(false);
 }
 
 unsigned int Image::getImageWidth(){
@@ -210,6 +264,10 @@ void Image::setXOffset(int newXOffset) {
 
 void Image::setYOffset(int newYOffset) {
   this->yOffset = newYOffset;
+}
+
+pron::Pixmap Image::getPixMap() {
+  return this->pixmap;
 }
 
 } // namespace sombrero

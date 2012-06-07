@@ -17,8 +17,6 @@ class MouseClicked : public has_slots<> {
 };
 
 int main() {
-  sombrero::Application::getInstance()->init();
-  
   // Window button
 
   sombrero::Window w("Bouton", 0, 0, 300, 20);

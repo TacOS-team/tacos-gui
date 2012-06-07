@@ -29,6 +29,10 @@ class Application {
    */
   ~Application();
 
+  virtual void windowCreated(pron::EventWindowCreated *e);
+
+  virtual void windowDestroyed(pron::EventDestroyWindow *e);
+
  public:
   pron::Display *d; /**< Pron display */
   std::map<pron::Window, Widget*> widgets; /**< A map with every pron::Window associated to a widget */
@@ -39,14 +43,11 @@ class Application {
    * @return Application static instance
    */
   static Application* getInstance();
-  /**
-   * Initialize Sombrero
-   */
-  void init();
+  static void setInstance(Application* instance);
   /**
    * Lanches the application sombrero
    */
-  void sombrerun();
+  virtual void sombrerun();
 };
 
 } // namespace sombrero
