@@ -109,6 +109,7 @@ void Window::unmap() {
 
   Window *mouseWin = this->getScreen()->getMouseWin();
   Window *clipWin = this->getScreen()->getClipWin();
+  Window *focusWin = this->getScreen()->getFocusWin();
 
   for (WindowsTree::IteratorBFS it = this->getScreen()->tree->beginBFS(this); it != this->getScreen()->tree->endBFS(); it++) {
     // Update clipWin/mouseWin/focusWin
@@ -118,6 +119,10 @@ void Window::unmap() {
 
     if (mouseWin != NULL && *mouseWin == *it) {
       Mouse::getInstance()->updateMouseWin();
+    }
+
+    if (focusWin != NULL && *focusWin == *it) {
+      Mouse::getInstance()->updateFocusWin();
     }
 
     // Update all children
