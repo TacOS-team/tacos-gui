@@ -5,7 +5,7 @@
 #define TEMP_NAM_PREFIX "cuad"
 #define TEMP_NAM_FOLDER "/tmp"
 
-#define IMAGE_WIDTH 600
+#define IMAGE_WIDTH 800
 #define IMAGE_HEIGHT 600
 
 class CoolCanvas;
