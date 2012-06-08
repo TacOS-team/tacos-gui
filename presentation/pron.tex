@@ -2,9 +2,106 @@
 \frame{
   \frametitle{pron}
 
-  \begin{block}{LOL}
+  \begin{block}{Rôle et fonctionnalités}
     \begin{itemize}
-      \item va y'avoir des trucs à dire
+      \item Système de fenêtrage ("serveur graphique")
+      \item Permet aux clients (applications) de créer des fenêtres (zones de dessin rectangulaires)
+      \item Propose des primitives de dessin basiques (point, ligne, rectangle, ellipse, texte...)
+      \item Dialogue avec les périphériques
+        \begin{itemize}
+          \item entrée : clavier, souris (gestion des événements)
+          \item sortie : écran
+        \end{itemize}
+    \end{itemize}
+  \end{block}
+}
+
+\subsection{pron}
+\frame{
+  \frametitle{pron}
+
+  \begin{block}{Architecture}
+    \begin{itemize}
+      \item Screen
+      \item Drawable
+      \item GC
+      \item Client
+      \item Keyboard/Mouse
+    \end{itemize}
+  \end{block}
+}
+
+\subsection{pron}
+\frame{
+  \frametitle{pron}
+
+  \begin{block}{Drawable}
+    \begin{itemize}
+      \item Entité dans laquelle on peut dessiner
+      \item Toutes les méthodes de dessin sont polymorphes et acceptent des Drawable
+      \item Deux types :
+        \begin{itemize}
+          \item Window : fenêtre affichée à l'écran. Elle n'est pas stockée en mémoire : si elle est obscurcie, l'application qui l'a créée doit la redessiner (entièrement ou en partie).
+          \item Pixmap : zone de dessin stockée en mémoire. Elle peut être copiée dans une Window à tout moment.
+        \end{itemize}
+    \end{itemize}
+  \end{block}
+}
+
+\subsection{pron}
+\frame{
+  \frametitle{pron}
+
+  \begin{block}{Window}
+    \begin{itemize}
+      \item Fenêtre (zone de dessin rectangulaire) affichée à l'écran.
+      \item Forment un arbre n-aire, l'ordre des fils d'une fenêtre détermine leur profondeur à l'intérieur de cette fenêtre
+      \item Une fenêtre ne peut pas dessiner :
+        \begin{itemize}
+          \item En dehors de son père
+          \item Dans une zone occupée par une soeur de pronfondeur inférieure
+        \end{itemize}
+      \item Gestion d'une zone de clipping
+    \end{itemize}
+  \end{block}
+}
+
+\subsection{pron}
+\frame{
+  \frametitle{pron}
+
+  \begin{block}{GC (Graphical context)}
+    \begin{itemize}
+      \item Contexte graphique
+      \item Contient les paramètres de dessin à un instant donné :
+        \begin{itemize}
+          \item Couleur d'avant-plan
+          \item Couleur d'arrière-plan
+          \item Police de caractères utilisée
+          \item ...
+        \end{itemize}
+      \item Les primitives de dessin utilisent le contexte graphique courant, préparé avant leur appel
+    \end{itemize}
+  \end{block}
+}
+
+\subsection{pron}
+\frame{
+  \frametitle{pronlib}
+
+  \begin{block}{}
+    \begin{itemize}
+      \item Librairie cliente de pron
+      \item Permet aux applications d'interagir avec le serveur graphique :
+      \begin{itemize}
+        \item Connexion
+        \item Création
+      \end{itemize}
+      \item Librairie relativement bas niveau
+        \begin{itemize}
+          \item Une primitive de la pronlib correspond grosso-modo à un appel de méthode de pron 
+          \item Rien d'"intelligent"
+        \end{itemize}
     \end{itemize}
   \end{block}
 }
