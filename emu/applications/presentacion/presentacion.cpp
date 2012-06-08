@@ -36,7 +36,7 @@ Presentacion::Presentacion(std::string camino) {
   for (std::vector<sombrero::FileInfo>::iterator it = archivos.begin(); it != archivos.end(); it++) {
     file = it->getAbsolutePath();
     if (file.find(".jpg") != std::string::npos) {
-      printf("%s\n",file.c_str());
+      //printf("%s\n",file.c_str());
       this->jpegArchivos.push_back(file);
     }
   }
