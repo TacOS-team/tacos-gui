@@ -73,7 +73,7 @@ int main() {
 
     switch (e->type) {
       case EV_WINDOW_CREATED : {
-        debug("EVENT_WINDOW_CREATED reçu\n");
+        //debug("EVENT_WINDOW_CREATED reçu\n");
         EventWindowCreated *windowCreated = (EventWindowCreated*) e;
 
         // we don't want to add a window that is already known
@@ -86,7 +86,7 @@ int main() {
       case EV_KEY_PRESSED : {
         EventKeyPressed *keyPressed = (EventKeyPressed*) e;
         if (keyPressed->keysym == pron::PRONK_F10) {
-          printf("F10 PRESSED OMG I HAVE TO GO FULLSCREEN\n");
+          //printf("F10 PRESSED OMG I HAVE TO GO FULLSCREEN\n");
           GWindow *w = GWindowsManager::getInstance()->getGWindow(keyPressed->window);
           if (w != NULL) {
             w->fullscreen();
@@ -105,12 +105,12 @@ int main() {
       }
       case EV_KEY_RELEASED : {
         EventKeyReleased *keyReleased = (EventKeyReleased*) e;
-        printf("Key released : %d\n", keyReleased->keysym);
+        //printf("Key released : %d\n", keyReleased->keysym);
         break;
       }
       case EV_DESTROY_WINDOW : {
         EventDestroyWindow *destroyWindowEvent = (EventDestroyWindow*) e;
-        printf("DestroyWindow event received for %d\n", destroyWindowEvent->window);
+        //printf("DestroyWindow event received for %d\n", destroyWindowEvent->window);
 
         // Sending destroy request for the parent window
         GWindow *pgwin = GWindowsManager::getInstance()->getGWindow(destroyWindowEvent->window);

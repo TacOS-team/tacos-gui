@@ -66,7 +66,7 @@ class AppPanel : public sombrero::Application, public has_slots<> {
   }
 
   void windowDestroyed(pron::EventDestroyWindow *e) {
-    printf("Window destroyed! (%x)\n", e->window);
+    //printf("Window destroyed! (%x)\n", e->window);
     map<pron::Window, WindowItem*>::iterator it = this->windows.find(e->window);
     if (it != this->windows.end()) {
       this->grid->remove(&(it->second->getButton()));
@@ -76,12 +76,13 @@ class AppPanel : public sombrero::Application, public has_slots<> {
   }
 
   void keyPressed(pron::EventKeyPressed *e __attribute__((unused))) {
-    if (e->keysym == pron::PRONK_F1 && (e->modifiers & pron::KMOD_LCTRL)) {
+    static int i = 0;
+    if (++i%2 == 0 && e->keysym == pron::PRONK_F1 && (e->modifiers & pron::KMOD_LCTRL)) {
       string path("build/applications/velo");
       exec_elf((char *)path.c_str(), 0);
     }
-    if (e->keysym == pron::PRONK_F2 && (e->modifiers & pron::KMOD_LCTRL)) {
-      lw = new LauncherWindow("Launcher", 40, 40, 160, 20, true);
+    if (i%2 == 0 && e->keysym == pron::PRONK_F2 && (e->modifiers & pron::KMOD_LCTRL)) {
+      lw = new LauncherWindow("Launcher", 40, 40, 160, 20, false);
       lw->getTextbox()->submitted.connect(this, &AppPanel::submitted);
     }
   }

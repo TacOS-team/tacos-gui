@@ -7,7 +7,7 @@
 #include <unistd.h>
 
 #define DEFAULT_FOLDER "ressources/images/wallpapers"
-#define TIMER_PERIOD 10000
+#define TIMER_PERIOD 30000
 
 using namespace std;
 using namespace sombrero;
