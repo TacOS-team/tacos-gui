@@ -85,7 +85,7 @@ void init_sdl() {
   SDL_EventState(SDL_KEYUP, SDL_ENABLE);
   SDL_EnableUNICODE(SDL_ENABLE);
   SDL_ShowCursor(SDL_DISABLE);
-  SDL_WM_SetCaption("TacOS Emulator", "TacOS Emulator");
+  SDL_WM_SetCaption("Présentation TacOS-GUI", "Présentation TacOS-GUI");
 
   SDL_mutexV(mutex);
 
