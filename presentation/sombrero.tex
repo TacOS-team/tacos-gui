@@ -1,8 +1,52 @@
-\subsection{sombrero}
+\subsection{Les Widgets}
 \frame{
-  \frametitle{sombrero}
+  \frametitle{Les widgets}
 
   \begin{itemize}
-    \item GTK a du souci à se faire
+    \item Widget :
+      \begin{itemize}
+        \item Bouton
+        \item TextArea
+        \item Label
+        \item Fenêtre
+        \item Conteneur
+      \end{itemize}
+    \item Permettent de créer des applications graphiques facilement
+  \end{itemize}
+}
+
+\subsection{Fonctionnement}
+\frame{
+  \frametitle{Fonctionnement}
+  \begin{itemize}
+      \item 1 widget - 1 pronWindow
+      \item Application sombrero :
+        \begin{itemize}
+          \item Tourne en boucle infinie
+          \item Capture tous les événements pron liés à une application
+          \item Appelle le handle lié à l'événement
+        \end{itemize}
+  \end{itemize}
+}
+
+\frame{
+  \frametitle{Fonctionnement}
+  \begin{itemize}
+    \item Classe parente Widget
+    \item Handles d'événements : méthodes virtuelles
+    \item Redéfinies dans les classes filles (Bouton, TextArea...)
+    \item Utilisation de signaux  (sigslot)
+  \end{itemize}
+}
+
+\subsection{Utilisation}
+\frame{
+  \frametitle{Utilisation}
+  \begin{itemize}
+    \item Possibilité de :
+      \begin{itemize}
+        \item associer la réception d'un signal à une fonction (callback)
+        \item créer une nouvelle classe héritant d'un widget
+      \end{itemize}
   \end{itemize}
 }
