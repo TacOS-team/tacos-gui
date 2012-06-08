@@ -30,6 +30,7 @@ class GWindowsManager {
   // Get the guacamole window from a window id
   // matches if it is the id of the window or of the decorator
   GWindow* getGWindow(Window w);
+  GWindow* get(unsigned int wnum);
   static void init(Window rootWindow);
   PronWindowAttributes & getRootWindowAttributes();
 

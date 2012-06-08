@@ -63,6 +63,14 @@ GWindow* GWindowsManager::getGWindow(Window w) {
   return NULL;
 }
 
+GWindow* GWindowsManager::get(unsigned int wnum) {
+  if (this->windowsList.size() == 0) {
+    return NULL;
+  }
+
+  return this->windowsList[wnum % this->windowsList.size()];
+}
+
 PronWindowAttributes & GWindowsManager::getRootWindowAttributes() {
   return this->rootWindowAttributes;
 }

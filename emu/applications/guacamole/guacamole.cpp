@@ -20,6 +20,7 @@ int mouseLastYPosition = -1;
 int mouseActualXPosition = -1;
 int mouseActualYPosition = -1;
 bool moving = false, resizing = false;
+unsigned int w_num = 0;
 
 void handleMouseMove() {
   int xMove = mouseLastXPosition - mouseActualXPosition;
@@ -91,6 +92,14 @@ int main() {
             w->fullscreen();
           }
         }
+
+        if (keyPressed->keysym == pron::PRONK_TAB && (keyPressed->modifiers & pron::PRONK_F11)) {
+          GWindow *w = GWindowsManager::getInstance()->get(w_num++);
+          if (w != NULL) {
+            w->raise();
+          }
+        }
+
         printf("Key pressed : %d\n", keyPressed->keysym);
         break;
       }
