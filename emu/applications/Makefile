@@ -1,7 +1,9 @@
 SRCS = *.c *.cpp
-APPS = cube_graph cube_graph_mouse zen_graph pong snake_graph pouet clock_graph pron_cube pron_pong pron_cube_mouse pron_snake pron_cube_tuning sombrero_cube sombrero_textbox sombrero_button sombrero_checkbox sombrero_grid jpegviewer sombrero_image sombrero_radioButton wallpaper sombrero_clock sombrero_panel pronterm
+APPS = pron_cube_tuning sombrero_cube wallpaper sombrero_clock sombrero_panel pronterm
+#cube_graph cube_graph_mouse zen_graph pong snake_graph pouet clock_graph pron_cube pron_pong pron_cube_mouse pron_snake pron_cube_tuning sombrero_cube sombrero_textbox sombrero_button sombrero_checkbox sombrero_grid jpegviewer sombrero_image sombrero_radioButton wallpaper sombrero_clock sombrero_panel
 
-SUBDIRS = guacamole pron pron_danny velo cuadraw mirar presentacion
+SUBDIRS = guacamole pron velo cuadraw mirar presentacion
+#guacamole pron pron_danny velo cuadraw mirar presentacion
 
 all: $(addprefix $(BUILDDIRAPPS)/, $(APPS))
 	@for i in $(SUBDIRS); do \

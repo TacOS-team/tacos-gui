@@ -4,7 +4,7 @@ all: presentation.tex
 open : all
 	evince presentation.pdf
 
-images:
+images: all
 	convert -resize 800x600 -quality 100 -density 400 presentation.pdf presentation_jpg/presentation.jpg
 
 clean:
