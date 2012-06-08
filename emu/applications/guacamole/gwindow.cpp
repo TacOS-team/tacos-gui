@@ -243,6 +243,9 @@ void GWindow::maximise() {
 
   if (windowAttributes.isResizable && windowAttributes.maxHeight == -1 && windowAttributes.maxWidth == -1) {
     if (!this->isMaximised) {
+      if(this->isFullscreen) {
+        this->fullscreen();
+      }
       // On en profite pour mettre tous les attributs à jour
       // @todo XXX ??????
       this->attributes = windowAttributes;
@@ -298,6 +301,9 @@ void GWindow::fullscreen() {
 
   if (windowAttributes.isResizable && windowAttributes.maxHeight == -1 && windowAttributes.maxWidth == -1) {
     if (!this->isFullscreen) {
+      if(this->isMaximised) {
+        this->maximise();
+      }
       // On en profite pour mettre tous les attributs à jour
       // @todo XXX ??????
       this->attributes = windowAttributes;
