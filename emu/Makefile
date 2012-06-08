@@ -58,4 +58,18 @@ depend:
 		printf "\033[1m<<< [$$i]\033[0m\n"; \
 	done
 
+export PATH := build/applications:$(PATH)
+export LANG := fr_FR@euro
+
+run:
+	export PATH
+	export LANG
+	pron &
+	sleep 1
+	guacamole &
+	sleep 1
+	wallpaper &
+	sleep 1
+	sombrero_panel &
+
 .PHONY: all debug clean depend $(SUBDIRS)
