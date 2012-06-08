@@ -52,7 +52,7 @@
   \begin{block}{Window}
     \begin{itemize}
       \item Fenêtre (zone de dessin rectangulaire) affichée à l'écran.
-      \item Forment un arbre n-aire, l'ordre des fils d'une fenêtre détermine leur profondeur à l'intérieur de cette fenêtre
+      \item Les objets Window forment un arbre n-aire, l'ordre des fils d'une fenêtre détermine leur profondeur à l'intérieur de cette fenêtre
       \item Une fenêtre ne peut pas dessiner :
         \begin{itemize}
           \item En dehors de son père
@@ -86,13 +86,14 @@
 \frame{
   \frametitle{Pronlib}
 
-  \begin{block}{}
+  \begin{block}{Librairie cliente de pron}
     \begin{itemize}
-      \item Librairie cliente de pron
       \item Permet aux applications d'interagir avec le serveur graphique :
       \begin{itemize}
         \item Connexion
-        \item Création
+        \item Création et gestion des fenêtres
+        \item Dessin
+        \item Gestion des événements
       \end{itemize}
       \item Librairie relativement bas niveau
         \begin{itemize}
