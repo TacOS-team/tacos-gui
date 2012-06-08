@@ -117,7 +117,7 @@ bool Screen::prepareDrawing(Drawable *d, GC *gc) {
 }
 
 void Screen::traceWindows() {
-  //this->tree->getRoot()->traceWindowsRec("");
+  this->tree->getRoot()->traceWindowsRec("");
   /*debug("TraceWindow : ");
   for (WindowsTree::IteratorDFS it = tree->beginDFS() ; it != tree->endDFS(); it++) {
     debug("%d ", it->getId());
