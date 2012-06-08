@@ -30,22 +30,24 @@ Screen::Screen(int width, int height, int bitsPerPixel) {
   ioctl(this->vesa_fd, SETMODE, &req);
   ioctl(this->vesa_fd, GETVIDEOADDR, &this->videoBuffer);
 
-  DIR *dp;
-  struct dirent *ep;  
-  dp = opendir("ressources/fonts");
-  if (dp != NULL) {
-    while ((ep = readdir(dp))) {
-      if (ep->d_type == DT_REG) {
-        char fileName[256] = "ressources/fonts/";
-        strcat(fileName, ep->d_name);
-        this->fonts.push_back(FontLoader::load(fileName));
-      }
-    }
-    closedir (dp);
-  } else {
+  struct dirent **namelist;
+  int n = scandir("ressources/fonts", &namelist, 0, alphasort);
+  if (n < 0) {
+    perror("scandir");
     fprintf(stderr, "Could not open the fonts directory.\n");
     exit(1);
   }
+  else {
+    for (int i = 0; i < n; i++) {
+      if (namelist[i]->d_type == DT_REG) {
+        char fileName[256] = "ressources/fonts/";
+        strcat(fileName, namelist[i]->d_name);
+        this->fonts.push_back(FontLoader::load(fileName));
+      }
+      free(namelist[i]);
+    }
+  }
+  free(namelist);
 
   this->clipWin = NULL;
   this->clipZone = new ClipZone(0, 0, this->width, this->height);
