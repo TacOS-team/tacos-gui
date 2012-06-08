@@ -361,5 +361,6 @@ void GWindow::raise() {
   GWindow *oldRaisedWindow = raisedWindow;
   raisedWindow = this;
   pronRaiseWindow(display, this->parent);
+  raisedWindow->decorate();
   oldRaisedWindow->decorate();
 }
