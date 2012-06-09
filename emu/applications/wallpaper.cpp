@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define DEFAULT_FOLDER "ressources/images/wallpapers"
+#define DEFAULT_FOLDER "resources/images/wallpapers"
 #define TIMER_PERIOD 30000
 
 using namespace std;

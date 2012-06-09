@@ -31,7 +31,7 @@ Screen::Screen(int width, int height, int bitsPerPixel) {
   ioctl(this->vesa_fd, GETVIDEOADDR, &this->videoBuffer);
 
   struct dirent **namelist;
-  int n = scandir("ressources/fonts", &namelist, 0, alphasort);
+  int n = scandir("resources/fonts", &namelist, 0, alphasort);
   if (n < 0) {
     perror("scandir");
     fprintf(stderr, "Could not open the fonts directory.\n");
@@ -40,7 +40,7 @@ Screen::Screen(int width, int height, int bitsPerPixel) {
   else {
     for (int i = 0; i < n; i++) {
       if (namelist[i]->d_type == DT_REG) {
-        char fileName[256] = "ressources/fonts/";
+        char fileName[256] = "resources/fonts/";
         strcat(fileName, namelist[i]->d_name);
         this->fonts.push_back(FontLoader::load(fileName));
       }

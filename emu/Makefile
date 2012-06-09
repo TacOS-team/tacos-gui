@@ -17,8 +17,8 @@ DEBUG=
 #-DDEBUG
 CURRENTDIR=$(realpath .)
 export INCLUDES= -I. -I$(CURRENTDIR)/include/ -I$(CURRENTDIR)/drivers/include/ -I$(CURRENTDIR)/libs/libtacos/ -I$(CURRENTDIR)/libs/pronlib/ -I$(CURRENTDIR)/libs/libtsock/ -I$(CURRENTDIR)/libs/sombrero/ -I$(CURRENTDIR)/libs/libcolor/ -I$(CURRENTDIR)/libs/libbmp/ -I$(CURRENTDIR)/libs/sigslot/
-export CFLAGS=-W -Wall -g $(DEBUG)
-export CXXFLAGS=-W -Wall -g $(DEBUG)
+export CFLAGS=-W -Wall -g $(DEBUG) -O3 -msse -msse2 -mssse3 -msse4.1 -msse4.2 -march=corei7 -mtune=corei7
+export CXXFLAGS=-W -Wall -g $(DEBUG) -O3 -msse -msse2 -mssse3 -msse4.1 -msse4.2 -march=corei7 -mtune=corei7
 export MFLAGS=-s
 
 # Build paths
@@ -67,9 +67,22 @@ run:
 	pron &
 	sleep 1
 	guacamole &
-	sleep 1
+	sleep 0.4
 	wallpaper &
-	sleep 1
+	sleep 0.4
 	sombrero_panel &
+
+presentationrun:
+	export PATH
+	export LANG
+	pron &
+	sleep 0.6
+	guacamole &
+	sleep 0.4
+	wallpaper -l &
+	sleep 0.4
+	sombrero_panel &
+	sleep 0.4
+	presentacion ../presentation/presentation_jpg/ &
 
 .PHONY: all debug clean depend $(SUBDIRS)
