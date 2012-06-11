@@ -33,8 +33,29 @@ Les développeur utilisant les distribution Debian ou Ubuntu, l'émulateur à é
 
 \subsubsection{Environnement TacOS}
 
-La libc de TacOS définit un certain nombre de fonctions au nom identique à celles de la libc linux. il a donc fallu surcharger ces fonctions et leur associé le comportement adéquat dans TacOS.
+La libc de TacOS définit un certain nombre de fonctions au nom identique à celles de la libc linux. il a donc fallu surcharger ces fonctions et leur associer le comportement adéquat de TacOS.
 
-Le cas le plus concret sonts les fonctions de gestion des fichiers : open, read, write, close, ...
+Le cas le plus concret sont les fonctions de gestion des fichiers : open, read, write, close, ioctl, ...
+\lstinputlisting{listings/open.c}
+
+\subsubsection{Drivers}
+
+L'émulation des différents drivers cités plus haut se fait par le biais d'une librairie graphique, la SDL, au dessus de X.org. Le driver souris est implémenté grâce aux évènements souris de la SDL, les évènements claviers fonctionnent de la même manière. 
+
+Pour ce qui est du driver VESA, la SDL étant une librairie graphique, elle permet de créer un fenêtre X, qui représentera notre écran physique. 
 
 
+\subsubsection{Librairie de sockets}
+
+Au moment du développement de la librairie de socket libtsock, il n'y avait pas d'IPC développée sous TacOS, nous avons donc pu développer la notre sans contrainte particulière, en commençant par une implémentation sur l'émulateur. 
+
+Cette première implémentation utilise les sockets UNIX domain.
+
+Voici la liste exhaustive des fonctions de la librairie de socket que nous avons défini.
+
+\lstinputlisting{listings/tsock.c}
+
+\subsubsection{Libc TacOS}
+
+En plus de la surcharge des fonctions de la libc linux, il faut définir les fonctions de la libc TacOS non existantes. Exemple avec exec\_elf.
+\lstinputlisting{listings/exec_elf.c}
