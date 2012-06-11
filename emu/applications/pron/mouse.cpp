@@ -17,7 +17,7 @@
 Mouse*       Mouse::instance       = NULL;
 unsigned int Mouse::defaultPointer = 0;
 
-static int alphaColor = 0x00ff2cf3;
+static int alphaColor = 0x00ff2cf3; /**< Alpha color (will be considered as transparent) */
 
 Mouse::Mouse() {
   this->fd = open("/dev/mouse", 0);

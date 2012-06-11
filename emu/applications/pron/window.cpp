@@ -1,5 +1,5 @@
 /**
- * @file window.cpp
+ * @file pron/window.cpp
  * Window class implementation.
  */
 
@@ -321,6 +321,8 @@ void Window::deliverEvent(PronEvent *e, unsigned int size) {
 
 void Window::deliverWindowEvent(PronEvent *e, unsigned int size) {
   this->deliverEvent(e, size);
+  e->window = this->getId();
+  printf("deliver window event to %x\n", e->window);
   if (this->parent) {
     this->parent->deliverEvent(e, size);
   }
@@ -331,7 +333,7 @@ void Window::deliverDeviceEvent(PronEvent *e, unsigned int size) {
 
   // Set the event window
   e->window = this->getId();
-
+  printf("deliver device event to %x\n", e->window);
   this->deliverEvent(e, size);
 
   if (this->parent && !(this->dontPropagateMask & eventMask)) {

@@ -88,6 +88,8 @@ struct EventPointerMoved : public PronEvent {
    * @param y The y-coordinate of the mouse (relative to window)
    * @param xRoot The x-coordinate of the mouse (relative to the root window)
    * @param yRoot The y-coordinate of the mouse (relative to the root window)
+   * @param xMove The mouse x movement
+   * @param yMove The mouse y movement
    */
   EventPointerMoved(unsigned int window, int x, int y, int xRoot, int yRoot, int xMove, int yMove)
       : PronEvent(EV_POINTER_MOVED, window) {
@@ -115,6 +117,19 @@ struct EventPointerMoved : public PronEvent {
  */
 struct EventMouseButton : public PronEvent {
  protected:
+  /**
+   * Initialization of a MouseButton event.
+   * @param b1 The state of button 1 (left button)
+   * @param b2 The state of button 2 (right button)
+   * @param b3 The state of button 3
+   * @param b4 The state of button 4
+   * @param b5 The state of button 5
+   * @param b6 The state of button 6
+   * @param x The x-coordinate of the mouse (relative to window)
+   * @param y The y-coordinate of the mouse (relative to window)
+   * @param xRoot The x-coordinate of the mouse (relative to the root window)
+   * @param yRoot The y-coordinate of the mouse (relative to the root window)
+   */
   void init(bool b1, bool b2, bool b3, bool b4, bool b5, bool b6, 
       int x, int y, int xRoot, int yRoot) {
     this->b1 = b1;
@@ -128,6 +143,7 @@ struct EventMouseButton : public PronEvent {
     this->xRoot = xRoot;
     this->yRoot = yRoot;
   }
+
  public:
   /**
    * Constructor.
@@ -148,6 +164,7 @@ struct EventMouseButton : public PronEvent {
       : PronEvent(EV_MOUSE_BUTTON, window) {
     this->init(b1, b2, b3, b4, b5, b6, x, y, xRoot, yRoot);
   }
+
   /**
    * Default constructor
    */

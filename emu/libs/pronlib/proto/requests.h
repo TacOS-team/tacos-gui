@@ -93,7 +93,7 @@ struct RqCreateWindowExtended : public PronRequest {
    * Constructor.
    * @param id The id of the window to create
    * @param parent The id of the the parent window
-   * @param attributes The attributes of the new window
+   * @param attr The attributes of the new window
    * @param mask The mask that specifies the attributes to be set
    */
   RqCreateWindowExtended(unsigned int id, unsigned int parent,
@@ -631,6 +631,8 @@ struct RqPutImage : public PronRequest {
    * @param format The format of the image (XYBitmap, XYPixmap, ZPixmap)
    * @param depth The depth of the image (8, 16 or 24 bits)
    * @param bytesPerPixel The bytes per pixel of the image (1, 2 or 3 bpp)
+   * @param offset The offset of the current image fragment (in bytes)
+   * @param size The size of the current image fragment (in bytes)
    */
   RqPutImage(unsigned int drawable, unsigned int gc, int x, int y,
       int width, int height, int format, int depth, int bytesPerPixel,
@@ -658,8 +660,8 @@ struct RqPutImage : public PronRequest {
   int depth; /**< Depth of the image (8, 16, 24 bits) */
   int format; /**< Format of the image (XYBitmap, XYPixmap, ZPixmap) */
   int bytesPerPixel; /**< Bytes per pixel of the image (1, 2, 3 bpp) */
-  int offset; /**< The byte offset of the current part of the image */
-  int size; /**< The byte size of the current part of the image */
+  int offset; /**< Byte offset of the current part of the image */
+  int size; /**< Byte size of the current part of the image */
 };
 
 /**
@@ -735,7 +737,8 @@ struct RqFreePixmap : public PronRequest {
 struct RqSetCursor : public PronRequest {
   /**
    * Constructor.
-   * @param pixmap The pixmap to free
+   * @param pixmap The pixmap containing the cursor to set
+   * @param window The window for which to set the cursor
    */
   RqSetCursor(unsigned int pixmap, unsigned int window)
       : PronRequest(RQ_SET_CURSOR) {

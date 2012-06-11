@@ -20,6 +20,8 @@
 class Mouse {
  private: 
   static Mouse *instance; /**< Unique Mouse instance (singleton) */
+  static unsigned int defaultPointer; /**< Id of the pixmap containing the default pointer */
+
   int fd; /**< File descriptor used to communicate with the mouse driver */
   
   int mouseX; /**< Mouse absolute x position */
@@ -47,7 +49,6 @@ class Mouse {
   Mouse();
 
  public:
-  static unsigned int defaultPointer;
   /**
    * Returns the unique Mouse instance (singleton). Creates it if necessary.
    * @return the unique Mouse instance (singleton)

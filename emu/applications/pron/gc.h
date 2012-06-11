@@ -2,7 +2,7 @@
 #define __GC_H__
 
 /**
- * @file gc.h
+ * @file pron/gc.h
  * GC class definition.
  */
 
@@ -22,8 +22,8 @@ class GC {
 
  public:
   unsigned int id; /**< GC id */
-  unsigned int bgValue; /** Value of the background color for the screen depth */
-  unsigned int fgValue; /** Value of the foreground color for the screen depth */
+  unsigned int bgValue; /**< Value of the background color for the screen depth */
+  unsigned int fgValue; /**< Value of the foreground color for the screen depth */
   int font_num; /**< Id of the current font */
 
   /**

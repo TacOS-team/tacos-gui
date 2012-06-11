@@ -184,7 +184,7 @@ class Screen {
 
   /**
    * Sets the window currently grabbed.
-   * @param mouseWin the window currently grabbed.
+   * @param grabWin the window currently grabbed.
    */
   void setGrabWin(Window *grabWin) {
     this->grabWin = grabWin;

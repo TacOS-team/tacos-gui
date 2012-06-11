@@ -104,7 +104,7 @@ Window pronCreateWindow(Display *d, Window parent, int x, int y, int width, int 
  * Creates a new window with extended attributes.
  * @param d The connection to pron
  * @param parent The id of the the parent window
- * @param attributes The attributes of the new window
+ * @param attr The attributes of the new window
  * @param mask The mask that specifies the attributes to be set
  * @return The window id of the created window
  */
@@ -402,7 +402,7 @@ void pronCopyArea(Display *d, Drawable src, Drawable dest, GC gc,
  * Draws a text.
  * @param d The connection to pron
  * @param gc The graphics context to use
- * @param window The window in which to draw the text
+ * @param w The window in which to draw the text
  * @param x The x-coordinate of the origin of the first character
  * @param y The y-coordinate of the origin of the first character
  * @param text The text to draw

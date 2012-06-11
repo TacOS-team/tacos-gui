@@ -2,7 +2,7 @@
 #define __WINDOW_H__
 
 /**
- * @file window.h
+ * @file pron/window.h
  * Window class definition.
  */
 
@@ -337,9 +337,9 @@ class Window : public Drawable {
    * @return true if the window accepts one of the events
    */
   bool acceptsEvents(int eventMask);
+
   /**
    * Utility function used by Screen::traceWindows.
-   * @param w The current window to show
    * @param prefix The current prefix to show
    */
   void traceWindowsRec(string prefix); 
