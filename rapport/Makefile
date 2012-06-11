@@ -3,7 +3,7 @@ all: *.tex
 	pdflatex rapport.tex
 
 open: all
-	evince presentation.pdf
+	evince rapport.pdf
 
 clean:
 	rm *.aux *.log *.nav *.out *.pdf *.snm *.toc
