@@ -4,12 +4,37 @@
 
 Toute la difficulté du développement de TacOS-GUI réside dans le fait que ce projet soit intimement lié à un système d'exploitation en constante évolution. Une des voies que nous aurions pu suivre est de développer directement pour TacOS. Plusieurs problèmes découlent de ce choix. 
 
-Le premier est que TacOS, pour l'instant, n'implémente pas la totalité de la libc. De plus ayant choisi le c++ comme language de programmation pour la GUI, nous aurions du développer en premier la STL sur TacOS, qui, étant écrit en c, ne l'implémentait pas.
+Le premier est que TacOS, pour l'instant, n'implémente pas la totalité de la libc. De plus ayant choisi le c++ comme language de programmation pour la GUI, nous aurions du développer en premier la STL sur TacOS.
 
 Le deuxième problème se situe au niveau des drivers de la carte graphique et de la souris, qui n'existaient pas non plus.
 
 Enfin TacOS-GUI utilisant un système de fenêtrage client/serveur, il nous fallait un système de communication inter-processus (IPC), cela impliquait le développement d'une librairie de socket.
 
-Tous ces prérequis, auraient empéché un développement en parallèle de Tacos-GUI. Nous avons donc opté pour la solution vivement conseillée par nos tuteurs qui consistais à développer un émulteur TacOS.
+Tous ces prérequis, auraient empéché un développement en parallèle de Tacos-GUI. Nous avons donc opté pour la solution vivement conseillée par nos tuteurs qui consistait à développer un émulteur TacOS.
 
 \subsection{Émulateur TacOS}
+
+Les développeur utilisant les distribution Debian ou Ubuntu, l'émulateur à été développé pour linux. Comme spécifié dans l'introduction de cette partie, voici les différents points à implémenter dans l'émulateur.
+
+\begin{itemize}
+  \item Environnement TacOS
+  \item Drivers
+  \begin{itemize}
+    \item Vesa
+    \item Clavier
+    \item Souris 
+  \end{itemize}
+  \item Sockets (libtsock)
+  \item Libc TacOS
+  \begin{itemize}
+    \item exec\_elf
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{Environnement TacOS}
+
+La libc de TacOS définit un certain nombre de fonctions au nom identique à celles de la libc linux. il a donc fallu surcharger ces fonctions et leur associé le comportement adéquat dans TacOS.
+
+Le cas le plus concret sonts les fonctions de gestion des fichiers : open, read, write, close, ...
+
+
