@@ -1,0 +1,110 @@
+\documentclass[10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[francais]{babel}
+\usepackage{geometry}
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{lscape}
+\usepackage{pdflscape}
+\usepackage{pstricks}
+\usepackage{pstcol,pst-fill,pst-grad}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{float}
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=black,
+    urlcolor=black
+}
+
+\geometry{ hmargin=2cm, vmargin=2cm}
+
+\def\blurb{%
+Rapport projet tutoré}
+
+\def\abstract{%
+	\input{abstract}
+}
+
+\def\ligne#1{%
+  \hbox to \hsize{%
+    \vbox{\centering #1}}}%
+
+\makeatletter
+\def\maketitle{%
+	\null
+	\vfill
+	\vbox{\centering \Large \textbf{\blurb}}
+	\vspace{15mm}
+	\vbox{\centering \LARGE \textbf{\@title}}
+	\vspace{15mm}
+	\vbox{\centering \@author}
+	\vspace{8mm}
+	\vbox{\centering \@date}
+	\vspace{15mm}
+	\vbox{\centering \textbf{Résumé du projet}}
+	\vspace{5mm}
+	\vbox{%
+		\setlength{\fboxsep}{10pt}
+		\centering \fbox{%
+		\begin{minipage}{0.9\textwidth}
+			\setlength{\parindent}{1cm}
+			\setlength{\parskip}{2ex plus .4ex minus .4ex}
+			\abstract
+		\end{minipage}%
+	}
+%
+	}
+	\vfill
+	\clearpage
+}
+
+\title{Développement d'une interface graphique pour TacOS}
+\author{Nicolas Hug \texttt{<hug@etud.insa-toulouse.fr>}\\
+Julien Marchand \texttt{<jmarchan@etud.insa-toulouse.fr>}\\
+Benoît Morgan \texttt{<morgan@etud.insa-toulouse.fr>}\\
+Adrien Sulpice \texttt{<sulpice@etud.insa-toulouse.fr>}}
+\date{4ème année Informatique}
+
+\begin{document}
+
+  \pagestyle{empty}
+  \setlength{\parskip}{.6ex plus .4ex minus .4ex}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0.6pt}
+  \fancyhf{}
+  \fancyhead{} 
+  \lfoot{\blurb}
+  \rfoot{Page \thepage}
+  \maketitle \clearpage
+  \tableofcontents \clearpage
+  
+  \setlength{\parskip}{1.2ex plus .4ex minus .4ex}
+  \setcounter{page}{1}
+  \pagestyle{fancyplain}
+
+  \input{architecture.tex}
+  
+  \clearpage
+
+  \input{methodologie.tex}
+  
+  \clearpage
+
+  \input{pron.tex}
+  
+  \clearpage
+
+  \input{guacamole.tex}
+  
+  \clearpage
+
+  \input{sombrero.tex}
+  
+  \clearpage
+
+  \input{apports.tex}
+
+\end{document}
