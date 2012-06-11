@@ -38,6 +38,8 @@ La libc de TacOS définit un certain nombre de fonctions au nom identique à cel
 Le cas le plus concret sont les fonctions de gestion des fichiers : open, read, write, close, ioctl, ...
 \lstinputlisting{listings/open.c}
 
+L'environnement TacOS est décrit dans la librairie du même non, libtacos. Cette librairie permet de développer sans se soucier de l'implémentation sous TacOS, ça sera au moment du portage de cette librairie que les fonctions non existantes devront être créées et que le comportement des fonctions existantes devra être adapté.
+
 \subsubsection{Drivers}
 
 L'émulation des différents drivers cités plus haut se fait par le biais d'une librairie graphique, la SDL, au dessus de X.org. Le driver souris est implémenté grâce aux évènements souris de la SDL, les évènements claviers fonctionnent de la même manière. 
