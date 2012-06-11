@@ -1,7 +1,8 @@
 #ifndef __WINDOW_H__
 #define __WINDOW_H__
+
 /**
- * @file window.h
+ * @file sombrero/window.h
  * Window class definition
  */
 

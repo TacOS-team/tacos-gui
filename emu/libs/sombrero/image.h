@@ -1,7 +1,8 @@
 #ifndef __IMAGE_H__
 #define __IMAGE_H__
+
 /**
- * @file image.h
+ * @file sombrero/image.h
  * Image class definition
  */
 
