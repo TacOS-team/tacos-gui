@@ -1,1 +1,22 @@
 \section{Sombrero}
+Sombrero est la librairie de widgets de TacOS-GUI. Son rôle est d'apporter au programmeur un niveau d'abstraction supplémentaire par rapport à la Pronlib, afin de faciliter la création d'interfaces graphiques pour les applications.
+\subsection{L'application Sombrero}
+Le fonctionnement de la librairie de widgets Sombrero est basé sur l'application Sombrero. L'application Sombrero est chargée de faire le lien entre le fonctionnement bas niveau de Pron et l'utilisation haut niveau des widgets par le développeur. Pour ce faire, nous avons décidé de lier chaque widget avec une pronWindow. Le widget dispose d'une et une seule pronWindow, et celle-ci est utilisée pour représenter le widget au sein de Pron : c'est sur elle que seront propagés les événéments Pron, comme par exemple des événements clavier ou des événements souris. 
+L'application Sombrero garde une correspondance entre chaque widget créé et la pronWindow qui lui correspond, ceci grâce à une table de hachage. Lorsqu'un événement survient sur une pronWindow liée à un widget, c'est à l'application Sombrero d'appeller la méthode adéquate sur le widget correspondant. Ce travail est réalisé par la méthode sombrerun, qui est appellée à la fin de chaque programme utilisant Sombrero, et qui exécute la boucle infinie suivante :
+\lstinputlisting{listings/sombrerun.cpp}
+Les événements Pron sont récupérés via l'appel à la méthode pronNextEvent(). Comme nous pouvons le voir, c'est le display de l'application sombrero que l'on passe en paramètre puisque c'est elle qui joue le rôle d'interface entre Pron et les widgets. Evidemment, lorsque les pronWindow sont créées, c'est aussi le display de l'application sombrero qui est utilisé. Pour chaque événement Pron récupéré, on détermine le widget associé à l'événement (grâce à la table de hachage), et on appelle le handler d'événement correspondant. L'intérêt des handlers est détaillé dans la sous-section suivante.
+\subsection{Les widgets}
+Sombrero permet la création de nombreux widgets, parmi lesquels figurent les boutons, les zones de textes, les conteneurs... Chaque widget hérite d'une classe parente Widget, comme le montre la figure \ref{fig:classDiagWidget} qui illustre le diagramme de classe de la classe Widget.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=17cm]{images/classDiagWidget.png}
+  \caption{Diagramme de classe de la classe Widget}
+  \label{fig:classDiagWidget}
+\end{figure}
+Dans la classe parente Widget sont implémentés les handlers d'événements. Ce sont les méthodes qui sont appellées par l'application Sombrero lorsqu'un événement Pron survient sur la pronWindow liée au widget. Dans la plupart des cas, aucune action par défaut n'est prévue dans les handlers. Les handlers sont des méthodes virtuelles qui sont redéfinies dans les classes filles en fonction des besoins propre au widget. Dans la classe Checkbox par exemple, le handler lié à un événement de clic souris est redéfini, afin de changer la valeur de l'attribut \textit{checked}.
+\subsection{Utilisation de sombrero}
+L'utilisation des widgets de Sombrero peut se faire de deux manières différentes. 
+La première consiste à créer une classe fille héritant d'un widget particulier. Il suffit alors de redéfinir le(s) handler(s) d'événement souhaité(s) et d'effectuer l'action appropriée à l'intérieur. En fait, on spécialise un widget de base en modifiant son comportement, de manière à ce que le widget réponde aux exigences d'une application particulière.
+La seconde manière d'utiliser les widgets de sombrero, moins contraignante, est d'utiliser le système signal/slot mis en place par la librairie. Le système signal/slot permet une implémentation simple du pattern observeur/observable. Certains widgets disposent d'un ou de plusieurs signaux (tous relatifs à un événement donné), et ces signaux sont émis dans les handlers d'événements, c'est à dire à chaque fois qu'un événement a eut lieu. L'intérêt des signaux est qu'il est possible d'appeller automatiquement une fonction (ou callback) sur réception d'un signal, de la façon suivante :
+\lstinputlisting{listings/signalSlot.cpp}
+Lorsque l'utilisateur cliquera sur le bouton, le signal \textit{clicked} du widget Button sera émis dans le handler lié au clic souris, et la fonction de callback \textit{monCallback} sera ainsi appellée.
