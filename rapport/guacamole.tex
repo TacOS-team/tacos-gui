@@ -174,5 +174,61 @@ Le nouvel arbre de fenêtres de Pron est maintenant :
   \end{tikzpicture}
 \end{center}
 
+L'affichage pour pron est donc maintenant le suivant :
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=8cm]{images/pron_cube_avec_decoration.jpg}
+  \caption{Application PronCube avec décoration}
+  \label{fig:pron_cube_avec_decoration}
+\end{figure}
+
+On voit bien la décoration au dessus de la fenêtre avec le titre de la fenêtre à gauche, et les deux boutons de maximisation et de fermeture à droite.
+Et également le bouton tout en bas à droite
+\footnote{Petit carré plus clair en premier plan.}
+de l'application pour redimensionner la fenêtre.
 
 \subsection{Gestion des fenêtres}
+
+Maintenant que nos fenêtres sont décorées, nous avons tous les éléments pour manipuler nos fenêtres.
+Pour pouvoir réagir aux actions de l'utilisateur, il faut s'abonner à différents évènements.
+
+\subsubsection{Fermeture et maximisation}
+
+La gestion de la fermeture et de la maximisation sont assez simples.
+Il suffit de s'abonner aux évènements de clics sur ces boutons.
+Pour la fermeture, lorsqu'un clic est détecté, il faut détruire la fenêtre de décoration.
+Ceci détruiera également la fenêtre de l'application.
+Pron enverra donc à l'application un évènement et elle se terminera proprement.
+
+La maximisation est également faite lors du clic sur le bouton de maximisation.
+Pour maximiser la fenêtre, il faut redimensionner la fenêtre de décoration à la taille de la root window et la placer en coordonnées (0,0).
+Il faut également redimensionner la fenêtre de l'application et changer le dessin du bouton de maximisation.
+
+\subsubsection{Déplacement et redimensionnement}
+
+Le déplacement et le redimensionnement sont assez particuliers.
+Il faut à la fois gérer le clic mais également les mouvements de la souris.
+Pour le déplacement, lors du clic sur la barre de décoration, on s'abonne aux évènements de la souris.
+On passe ensuite dans un état ``redimensionnement''.
+A chaque mouvement de souris, on va déplacer la fenêtre de décoration d'autant de pixels que la souris s'est déplacée.
+
+Lors d'un déplacement d'une fenêtre par Pron, il déplace automatiquement toutes les fenêtres filles.
+Il n'est donc pas nécessaire de déplacer toutes les fenêtres une par une.
+Seulement la fenêtre racine qui est la fenêtre de décoration.
+Pour des problèmes de performances, lors du déplacement, on évite de redessiner la fenêtre à chaque évènement de souris qui sont très nombreux.
+Pour cela, au début du déplacement, on unmap la fenêtre de l'application.
+Puis lorsque l'utilisateur relâche la souris, on remap la fenêtre qui s'affiche de nouveau une seule fois.
+
+Pour le redimensionnement, c'est exactement le même principe sauf qu'on passe dans l'état ``redimensionnement''.
+Une fois le redimensionnement terminé, l'application est remapée et informée qu'elle a été redimensionnée.
+C'est ensuite à elle de mettre à jour les tailles de ses fenêtres filles si besoin et de les afficher de nouveau.
+
+
+
+\subsection{Implémentation}
+
+A l'heure de l'écriture de ce document, Guacamole est codé avec la Pronlib directement.
+Il y a donc la boucle d'évènements codée directement dans la fonction main, les boutons sont codés dans Guacamole.
+Il faudrait donc réimplémenter Guacamole avec la librairie de Widgets.
+Utiliser les widgets et la classe Application.
