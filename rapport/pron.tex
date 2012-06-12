@@ -10,10 +10,20 @@ pron est notre système de fenêtrage, également appelé "serveur graphique" ca
 \item Affichage d'images
 \end{itemize}
 
+\vspace{1em}
+
 C'est également lui qui dialogue avec les périphériques et gère les entrées/sorties :
 \begin{itemize}
   \item Périphériques d'entrée (clavier, souris), afin de détecter et de transmettre des événements aux applications (touche "a" appuyée, bouton gauche de la souris enfoncé dans telle ou telle fenêtre...)
   \item Périphériques de sortie (carte vidéo), afin d'afficher le pointeur de la souris et l'ensemble des fenêtres à l'écran.
+\end{itemize}
+
+\subsection{TODO Protocole}
+
+\begin{itemize}
+  \item requête, réponse, événement, erreur + structure messages
+  \item le max de requêtes sans réponses
+  \item identifiants des ressources choisis par le client dans une fenêtre
 \end{itemize}
 
 \subsection{Architecture}
@@ -27,6 +37,8 @@ Jusqu'à présent, nous avions appelé "fenêtres" les zones de dessin rectangul
   \item Les \verb|Window|, qui sont des fenêtres affichées à l'écran et ne sont pas stockées en mémoire. Si elle est obscurcie (par une autre \verb|Window|, ou parce qu'elle est déplacée en dehors de l'écran), l'application qui l'a créée devra la redessiner (entièrement ou en partie, nous verrons comment dans la section sur les événements).
   \item Les \verb|Pixmap|, qui sont des zones de dessin stockées en mémoire et non visibles à l'écran. Une pixmap peut cependant être copiée dans une \verb|Window| à tout moment (et vice-versa).
 \end{itemize}
+
+\vspace{1em}
 
 Tous les \verb|Drawable| proposent les primitives de dessin suivantes :
 \begin{itemize}
@@ -43,27 +55,24 @@ Tous les \verb|Drawable| proposent les primitives de dessin suivantes :
   \item \verb|setPixel| : écriture de la couleur d'un pixel
 \end{itemize}
 
-Le déroulement des primitives de dessin est le suivant :
+\vspace{1em}
+
+Avant leur appel, la méthode \verb|prepareDrawing| du \verb|Screen| est appelée. Elle se charge de la mise à jour du contexte graphique si besoin est. Dans le cas du dessin dans une \verb|Window|, elle effectue des vérifications supplémentaires : visbilité de la fenêtre (inutile de dessiner dans une fenêtre qui n'est pas affichée à l'écran), et mise à jour de la zone de clipping.
+
+Toutes les fonctions de dessin font alors appel à deux callbacks de dessin :
 \begin{itemize}
-  \item Avant leur appel, la méthode \verb|prepareDrawing| du \verb|Screen| est appelée. Elle se charge de la mise à jour du contexte graphique si besoin est. Dans le cas du dessin dans une \verb|Window|, elle effectue des vérifications supplémentaires : visbilité de la fenêtre (inutile de dessiner dans une fenêtre qui n'est pas affichée à l'écran), et mise à jour de la zone de clipping.
-  \item Toutes les fonctions de dessin font alors appel à deux callbacks de dessin :
-    \begin{itemize}
-      \item \verb|beforeDrawing| : appelée avant de dessiner, elle reçoit en argument la zone rectangulaire dans laquelle le dessin est contenu. Elle renvoie le statut de cette zone : totalement visible, totalement masquée ou partiellement visible. Cela permet de choisir une stratégie de dessin (dessin rapide, pas de dessin du tout ou dessin en prêtant attention à ne pas écrire dans des parties masquées). Chaque classe fille de \verb|Drawable| est libre d'y ajouter les traitements qu'elle souhaite. Les \verb|Window|, par exemple, utilisent \verb|beforeDrawing| pour vérifier que le dessin ne va pas recouvrir le pointeur de la souris. Si tel est le cas, le pointeur de la souris est masqué avant le dessin.
-      \item \verb|afterDrawing| : appelée après le dessin. Les \verb|Window| l'utilisent pour redessiner le pointeur de la souris dans le cas où il a été masqué lors du \verb|beforeDrawing|.
-    \end{itemize}
+  \item \verb|beforeDrawing| : appelée avant de dessiner, elle reçoit en argument la zone rectangulaire dans laquelle le dessin est contenu. Elle renvoie le statut de cette zone : totalement visible, totalement masquée ou partiellement visible. Cela permet de choisir une stratégie de dessin (dessin rapide, pas de dessin du tout ou dessin en prêtant attention à ne pas écrire dans des parties masquées). Chaque classe fille de \verb|Drawable| est libre d'y ajouter les traitements qu'elle souhaite. Les \verb|Window|, par exemple, utilisent \verb|beforeDrawing| pour vérifier que le dessin ne va pas recouvrir le pointeur de la souris. Si tel est le cas, le pointeur de la souris est masqué avant le dessin.
+  \item \verb|afterDrawing| : appelée après le dessin. Les \verb|Window| l'utilisent pour redessiner le pointeur de la souris dans le cas où il a été masqué lors du \verb|beforeDrawing|.
 \end{itemize}
 
-Fonctions de dessin...
-* prepareDrawing (Window => check realized, setClipWin, setClippingCheck ; dans tous les cas => checkGC)
-* beforeDrawing (Window => check clipping, check pointer et hide si besoin)
-* afterDrawing (Window => restore pointer)
-* pixelAddr/isValid
+\vspace{1em}
 
-Primitives sur les Drawable
-
-Gestion des images
-Découpage etc
-
+TODO:
+\begin{itemize}
+  \item pixelAddr/isValid à implémenter dans les Drawable
+  \item Gestion des images (découpage etc)
+  \item Gestion du texte
+\end{itemize}
 
 \subsubsection{Window}
 
@@ -87,23 +96,26 @@ En plus du créateur de la fenêtre, n'importe quel autre client peut s'abonner 
 
 La plupart des événements sont délivrés seulement à la fenêtre pour laquelle ils ont lieu\footnote{Par ``délivrés à la fenêtre'', on entend ``délivrés à tous les clients qui sont abonnés à ce type d'événement pour cette fenêtre''} (exposition, redimensionnement...). Les événements concernant la structure des fenêtres (création, destruction, reparenting) sont également délivrés à la fenêtre parente. Enfin, les événements liés aux périphériques d'entrée (clavier et souris) se propagent de la fenêtre dans laquelle ils ont eu lieu jusqu'à la fenêtre racine, de parent en parent. Cette propagation peut être stoppée en incluant le type d'événement voulu dans le masque de non-propagation (primitive \verb|pronDontPropagateEvent|).
 
-\paragraph{Conditions de dessin dans une Window}
-- realized (mapped + unmappedParents == 0)
-- clipZoneNous reviendrons sur la notion de zone de clipping dans la section suivante, mais elle peut être vue comme un "cache" posé sur l'écran, qui détermine les zones dans lesquelles on peut dessiner ou non.
+\paragraph{TODO Conditions de dessin dans une Window}
+\begin{itemize}
+  \item realized (mapped + unmappedParents == 0)
+  \item clipZone Nous reviendrons sur la notion de zone de clipping dans la section suivante, mais elle peut être vue comme un "cache" posé sur l'écran, qui détermine les zones dans lesquelles on peut dessiner ou non.
+\end{itemize}
 
-\subsubsection{WindowsTree}
+\subsubsection{TODO WindowsTree}
 Organisation des windows en arbre
-- Arbre n-aire
-- Frères doublement chaînés
-- Notion de profondeur
-- Itérateurs pour parcourir plus aisément
+\begin{itemize}
+  \item Arbre n-aire
+  \item Frères doublement chaînés
+  \item Notion de profondeur
+  \item Itérateurs pour parcourir plus aisément
+\end{itemize}
 
 \subsubsection{Screen}
 
 La classe \verb|Screen| est l'entité principale de pron. Elle représente l'écran et contient toutes les fenêtres gérées par le serveur. Elle est en charge du dialogue avec le driver vidéo : c'est à la construction de l'instance de \verb|Screen| que le basculement en mode graphique est effectué, et que la résolution (largeur, hauteur et pronfondeur de couleurs) est configurée. Le rendu des fenêtres à l'écran passe également par le \verb|Screen| afin d'afficher chaque pixel au bon endroit.
 
 Revenons maintenant sur quelques champs de la classe \verb|Screen| :
-
 \paragraph{clipWin, mouseWin, grabWin, focusWin}
 La classe \verb|Screen| contient 4 pointeurs vers des \verb|Window| jouant un rôle particulier : la \verb|clipWin| est la fenêtre pour laquelle la zone de clipping est actuellement configurée, et qui est donc prête pour le dessin. La \verb|mouseWin| est la fenêtre la plus profonde contenant le pointeur de la souris, c'est elle qui recevra les événements souris. La \verb|grabWin| est la fenêtre qui a "grabbé" le pointeur de la souris, c'est à dire que tous les événements souris sont redirigés vers elle, même s'ils ont eu lieu dans une autre fenêtre. Le grab peut être explicite ou implicite, un exemple de grab implicite est lors d'un drag and drop : tant que la souris n'est pas relâchée, tous les événements souris sont envoyés à la fenêtre en train d'être déplacée (celle où le bouton gauche de la souris est appuyé). Enfin, la \verb|focusWin| est la fenêtre qui a actuellement le focus, et qui recevra les événements clavier.
 
@@ -122,7 +134,7 @@ Le \verb|Screen| contient la liste des polices de caractères chargées au déma
 \paragraph{clipZone}
 Il s'agit de la zone de clipping actuellement configurée pour la \verb|clipWin|. Cela signifie que le dessin se fait dans le contexte de la \verb|clipWin| : on ne peut dessiner ni en dehors de cette fenêtre, ni dans des zones de cette fenêtre recouvertes par d'autres fenêtres.
 
-\subsubsection{GC}
+\subsubsection{TODO GC}
 Contexte graphique, utilisé par toutes les fonctions de dessin. Doit être configuré en amont de leur appel (prepareDrawing).
 \begin{itemize}
   \item Couleur d'avant-plan
@@ -131,21 +143,28 @@ Contexte graphique, utilisé par toutes les fonctions de dessin. Doit être conf
   \item ...
 \end{itemize}
 
-Couleurs : utilisation de la classe couleur pour la communication client <=> serveur. Représentation indépendante de la profondeur de couleurs utilisée, la véritable couleur n'est calculée que lors de la création du GC côté serveur.
+\paragraph{TODO Couleurs}
+Utilisation de la classe couleur pour la communication client <=> serveur. Représentation indépendante de la profondeur de couleurs utilisée, la véritable couleur n'est calculée que lors de la création du GC côté serveur.
 
-\subsubsection{Font}
+\subsubsection{TODO Font}
 Polices de caractère bitmap. Format utilisé : BDF, simple à parser. Chargées par le loader \verb|FontLoader|.
 
-\subsubsection{Client}
+\subsubsection{TODO Client}
 
-\subsubsection{Keyboard/Mouse}
+\subsubsection{TODO Keyboard/Mouse}
 
-\subsubsection{ClipZone}
+\subsubsection{TODO ClipZone}
 
-\subsection{Boucle principale}
+\subsection{TODO Boucle principale}
 
-\subsection{Pronlib}
+\subsection{TODO Pronlib}
 
-\subsubsection{Display}
+\subsubsection{TODO Display}
 
-\subsubsection{Squelette d'application utilisant la pronlib}
+\begin{itemize}
+  \item "connexion" à pron passée à toutes les primitives
+  \item gère le compteur d'id de ressources
+  \item abstrait la lecture (queue des événements, attente d'un message particulier etc)
+\end{itemize}
+
+\subsubsection{TODO Squelette d'application utilisant la pronlib}
