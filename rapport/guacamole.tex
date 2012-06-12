@@ -11,7 +11,7 @@ Le gestionnaire de fenêtres est l'acteur permettant de :
   \item Gérer le plein écran et les maximisation des fenêtres
 \end{itemize}
 
-Dans l'architecture que nous avons mise en place, Guacamole est un client comme tous les autres. Il n'a pas un \"status\" différent des autres clients. Il ne fait que s'abonner à des évènements en plus. Pour faire son travail, il a besoin d'être averti lors de la création d'une fenêtre et lors de sa destruction. Il s'abonne donc aux évènements correspondants. Lorsqu'on lance notre système, on a donc Pron et Guacamole qui sont deux entités distinctes comme ci-dessous.
+Dans l'architecture que nous avons mise en place, Guacamole est un client comme tous les autres. Il n'a pas un ``statut'' différent des autres clients. Il ne fait que s'abonner à des évènements en plus. Pour faire son travail, il a besoin d'être averti lors de la création d'une fenêtre et lors de sa destruction. Il s'abonne donc aux évènements correspondants. Lorsqu'on lance notre système, on a donc Pron et Guacamole qui sont deux entités distinctes comme ci-dessous.
 
 \begin{figure}[H]
   \centering
@@ -20,7 +20,7 @@ Dans l'architecture que nous avons mise en place, Guacamole est un client comme 
   \label{fig:guacamole_anim_1}
 \end{figure}
 
-Lorsqu'une application graphique va démarrer, elle va se connecter à Pron et va envoyer un message de demande de création d'une fenêtre.
+Lorsqu'une application graphique va démarrer, elle va se connecter à Pron et va envoyer une requête de création d'une fenêtre.
 
 \begin{figure}[H]
   \centering
@@ -29,7 +29,7 @@ Lorsqu'une application graphique va démarrer, elle va se connecter à Pron et v
   \label{fig:guacamole_anim_2}
 \end{figure}
 
-Dès la réception de ce message, Pron va créer la fenêtre sans décoration ni rien.
+Dès la réception de ce message, Pron va créer la fenêtre sans décoration : pour lui, une fenêtre n'est rien d'autre qu'une zone de dessin rectangulaire.
 Le nouvel arbre interne des fenêtres de Pron sera le suivant après le lancement de l'application PronCube :
 
 \begin{center}
@@ -42,7 +42,7 @@ Le nouvel arbre interne des fenêtres de Pron sera le suivant après le lancemen
   \end{tikzpicture}
 \end{center}
 
-Il va ensuite regarder s'il y a des applications abonnées aux évènements de créations de fenêtres.
+Il va ensuite regarder s'il y a des applications abonnées aux évènements de création de fenêtres.
 Si Guacamole n'a pas été lancé, on a donc une fenêtre non décorée qui apparaît à l'écran.
 Le client fonctionne parfaitement et s'affiche comme ceci :
 
