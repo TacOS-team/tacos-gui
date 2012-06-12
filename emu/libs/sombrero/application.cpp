@@ -72,8 +72,8 @@ void Application::sombrerun() {
 
     //printf("event received %x\n", e->window);
 
-    map<pron::Window, Widget*>::iterator it = Application::getInstance()->widgets.find(e->window);
-    if(it != Application::getInstance()->widgets.end()) {
+    map<pron::Window, Widget*>::iterator it = this->widgets.find(e->window);
+    if(it != this->widgets.end()) {
       Widget *w = it->second;
       switch (e->type) {
         case pron::EV_WINDOW_CREATED:
