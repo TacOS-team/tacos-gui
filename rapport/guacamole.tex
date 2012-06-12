@@ -1,1 +1,132 @@
 \section{Guacamole}
+
+Guacamole est notre gestionnaire de fenêtres flottantes.
+Nous allons commencer par rappeller rapidement le rôle d'un gestionnaire de fenêtres mais pour avoir plus de détails, il est conseillé de lire le rapport bibliographique.
+Le gestionnaire de fenêtres est l'acteur permettant de :
+
+\begin{itemize}
+  \item Décorer\footnote{La décoration d'une fenêtre est le cadre qui contiendra le titre de la fenêtre ainsi que des boutons permettant de la manipuler.} les fenêtres
+  \item Fermer, déplacer et redimensionner les fenêtres
+  \item Gestion des superpositions
+  \item Gérer le plein écran et les maximisation des fenêtres
+\end{itemize}
+
+Dans l'architecture que nous avons mise en place, Guacamole est un client comme tous les autres. Il n'a pas un \"status\" différent des autres clients. Il ne fait que s'abonner à des évènements en plus. Pour faire son travail, il a besoin d'être averti lors de la création d'une fenêtre et lors de sa destruction. Il s'abonne donc aux évènements correspondants. Lorsqu'on lance notre système, on a donc Pron et Guacamole qui sont deux entités distinctes comme ci-dessous.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=8cm]{images/Guacamole_anim_1.jpg}
+  \caption{Guacamole et Pron}
+  \label{fig:guacamole_anim_1}
+\end{figure}
+
+Lorsqu'une application graphique va démarrer, elle va se connecter à Pron et va envoyer un message de demande de création d'une fenêtre.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=8cm]{images/Guacamole_anim_2.jpg}
+  \caption{Demande de création d'une fenêtre}
+  \label{fig:guacamole_anim_2}
+\end{figure}
+
+Dès la réception de ce message, Pron va créer la fenêtre sans décoration ni rien.
+Le nouvel arbre interne des fenêtres de Pron sera le suivant après le lancement de l'application PronCube :
+
+\begin{center}
+  \begin{tikzpicture}[
+    grow via three points={one child at (0.5,-0.7) and
+    two children at (0.5,-0.7) and (0.5,-1.4)},
+    edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)}]
+    \node [root] {Root Window}
+      child { node {PronCube}};
+  \end{tikzpicture}
+\end{center}
+
+Il va ensuite regarder s'il y a des applications abonnées aux évènements de créations de fenêtres.
+Si Guacamole n'a pas été lancé, on a donc une fenêtre non décorée qui apparaît à l'écran.
+Le client fonctionne parfaitement et s'affiche comme ceci :
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=8cm]{images/pron_cube_sans_decoration.jpg}
+  \caption{Application PronCube sans décoration}
+  \label{fig:pron_cube_sans_decoration}
+\end{figure}
+
+En revanche, si Guacamole est lancé, Pron le notifie de la création d'une fenêtre. Il lui envoie donc un message :
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=8cm]{images/Guacamole_anim_3.jpg}
+  \caption{Notification de Guacamole de la création d'une fenêtre}
+  \label{fig:guacamole_anim_3}
+\end{figure}
+
+Ce message contient plusieurs informations intéressantes :
+
+\begin{itemize}
+  \item L'identifiant Pron de la nouvelle fenêtre
+  \item L'identifiant Pron de la fenêtre parente
+  \item Un booléen autorisant ou non la décoration de la fenêtre
+\end{itemize}
+
+Une fois ce message reçu, Guacamole va décorer la fenêtre sauf dans deux cas :
+
+\begin{itemize}
+  \item Le booléen de demande de décoration est à faux
+  \item Le parent de la fenêtre n'est pas la root window de Pron (Pron id = 0)
+            \footnote{On rappelle que chaque application peut créer plusieurs fenêtres à l'intérieur de sa propre fenêtre pour créer les divers éléments graphiques (boutons, labels, et tout autre widget). On ne souhaite donc pas qu'un bouton soit décoré.} 
+\end{itemize}
+
+Si la fenêtre doit être décorée, Guacamole va ajouter cette fenêtre à sa liste interne de fenêtres décorées.
+Il va ensuite créer la fenêtre de décoration.
+Cette fenêtre est donc une fenêtre un peu plus grande que la fenêtre du client.
+Elle dépasse notament au dessus pour afficher la décoration.
+Guacamole envoie donc une demande à Pron :
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=8cm]{images/Guacamole_anim_4.jpg}
+  \caption{Création de la fenêtre de décoration}
+  \label{fig:guacamole_anim_4}
+\end{figure}
+
+Du coté de Pron, le nouvel arbre des fenêtres est donc le suivant :
+
+\begin{center}
+  \begin{tikzpicture}[
+    grow via three points={one child at (0.5,-0.7) and
+    two children at (0.5,-0.7) and (0.5,-1.4)},
+    edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)}]
+    \node [root] {Root Window}
+      child { node {PronCube}}
+      child { node {Décoration de PronCube}};
+  \end{tikzpicture}
+\end{center}
+
+Guacamole définit ensuite la fenêtre de décoration comme fenêtre parente à la fenêtre du client.
+Il envoie donc un message à Pron.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=8cm]{images/Guacamole_anim_5.jpg}
+  \caption{Reparenting de la fenêtre de l'application}
+  \label{fig:guacamole_anim_5}
+\end{figure}
+
+Le nouvel arbre des fenêtres de Pron est donc le suivant :
+
+\begin{center}
+  \begin{tikzpicture}[
+    grow via three points={one child at (0.5,-0.7) and
+    two children at (0.5,-0.7) and (0.5,-1.4)},
+    edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)}]
+    \node [root] {Root Window}
+      child { node {Décoration de PronCube}
+        child { node {PronCube}}
+      };
+  \end{tikzpicture}
+\end{center}
+
+
+En réalité l'application PronCube n'a pas qu'une seule fenêtre..... => Montrer arbre d'une plus grande application

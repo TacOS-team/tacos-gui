@@ -12,8 +12,8 @@ void Application::sombrerun() {
     }
 
     map<pron::Window, Widget*>::iterator it = 
-      Application::getInstance()->widgets.find(e->window);
-    if(it != Application::getInstance()->widgets.end()) {
+      this.diapoTimer->widgets.find(e->window);
+    if(it != this.diapoTimer->widgets.end()) {
       Widget *w = it->second;
       switch (e->type) {
         case pron::EV_WINDOW_CREATED:
