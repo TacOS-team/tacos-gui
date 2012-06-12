@@ -11,7 +11,15 @@ Le gestionnaire de fenêtres est l'acteur permettant de :
   \item Gérer le plein écran et les maximisation des fenêtres
 \end{itemize}
 
-Dans l'architecture que nous avons mise en place, Guacamole est un client comme tous les autres. Il n'a pas un \"status\" différent des autres clients. Il ne fait que s'abonner à des évènements en plus. Pour faire son travail, il a besoin d'être averti lors de la création d'une fenêtre et lors de sa destruction. Il s'abonne donc aux évènements correspondants. Lorsqu'on lance notre système, on a donc Pron et Guacamole qui sont deux entités distinctes comme ci-dessous.
+\subsection{Création d'une fenêtre par un client}
+
+
+Dans l'architecture que nous avons mise en place, Guacamole est un client comme tous les autres.
+Il n'a pas un \"status\" différent des autres clients.
+Il ne fait que s'abonner à des évènements en plus.
+Pour faire son travail, il a besoin d'être averti lors de la création d'une fenêtre et lors de sa destruction.
+Il s'abonne donc aux évènements correspondants.
+Lorsqu'on lance notre système, on a donc Pron et Guacamole qui sont deux entités distinctes comme ci-dessous.
 
 \begin{figure}[H]
   \centering
@@ -53,7 +61,8 @@ Le client fonctionne parfaitement et s'affiche comme ceci :
   \label{fig:pron_cube_sans_decoration}
 \end{figure}
 
-En revanche, si Guacamole est lancé, Pron le notifie de la création d'une fenêtre. Il lui envoie donc un message :
+En revanche, si Guacamole est lancé, Pron le notifie de la création d'une fenêtre.
+Il lui envoie donc un message :
 
 \begin{figure}[H]
   \centering
@@ -99,12 +108,13 @@ Du coté de Pron, le nouvel arbre des fenêtres est donc le suivant :
     two children at (0.5,-0.7) and (0.5,-1.4)},
     edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)}]
     \node [root] {Root Window}
-      child { node {PronCube}}
-      child { node {Décoration de PronCube}};
+      child { node {Décoration de PronCube}}
+      child { node {PronCube}};
   \end{tikzpicture}
 \end{center}
 
 Guacamole définit ensuite la fenêtre de décoration comme fenêtre parente à la fenêtre du client.
+Et positionner la fenêtre de l'application à la bonne position, à l'intérieur de la fenêtre de décoration.
 Il envoie donc un message à Pron.
 
 \begin{figure}[H]
@@ -128,5 +138,41 @@ Le nouvel arbre des fenêtres de Pron est donc le suivant :
   \end{tikzpicture}
 \end{center}
 
+Maintenant que la fenêtre de décoration est créée et à la bonne position.
+Il reste deux choses à faire :
 
-En réalité l'application PronCube n'a pas qu'une seule fenêtre..... => Montrer arbre d'une plus grande application
+\begin{itemize}
+  \item Créer les boutons de fermeture, maximisation et redimentionnement de la fenêtre
+  \item Trouver un emplacement libre et y déplacer la fenêtre
+\end{itemize}
+
+Les boutons de fermeture sont donc de nouvelles fenêtres pour Pron auxquelles Guacamole va s'abonner sur divers évènements que nous verrons plus tard.
+Ces boutons seront donc dans la fenêtre de décoration qui sera leur fenêtre parente.
+Guacamole envoie donc à Pron plusieurs message de création de fenêtre :
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=8cm]{images/Guacamole_anim_6.jpg}
+  \caption{Création des boutons par Guacamole}
+  \label{fig:guacamole_anim_6}
+\end{figure}
+
+Le nouvel arbre de fenêtres de Pron est maintenant :
+
+\begin{center}
+  \begin{tikzpicture}[
+    grow via three points={one child at (0.5,-0.7) and
+    two children at (0.5,-0.7) and (0.5,-1.4)},
+    edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)}]
+    \node [root] {Root Window}
+      child { node {Décoration de PronCube}
+        child { node {Bouton de fermeture}}
+        child { node {Bouton de maximisation}}
+        child { node {Bouton de redimensionnement}}
+        child { node {PronCube}}
+      };
+  \end{tikzpicture}
+\end{center}
+
+
+\subsection{Gestion des fenêtres}
