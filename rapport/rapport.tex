@@ -13,6 +13,15 @@
 \usepackage{float}
 \usepackage{listings}
 \usepackage{listingsutf8}
+% Tikz pour l'affichage d'arbres
+\usepackage{tikz}
+\usetikzlibrary{trees}
+\tikzstyle{every node}=[draw=black,thick,anchor=west]
+\tikzstyle{root}=[fill=blue!20]
+\tikzstyle{selected}=[draw=red,fill=red!30]
+\tikzstyle{optional}=[dashed,fill=gray!50]
+
+
 \hypersetup{
   colorlinks,
   citecolor=black,
@@ -54,7 +63,6 @@
   escapeinside={\%*}{*)},         % if you want to add a comment within your code
   morekeywords={*,...}            % if you want to add more keywords to the set
 }
-
 
 \geometry{ hmargin=2cm, vmargin=2cm}
 
@@ -143,5 +151,9 @@ Adrien Sulpice \texttt{<sulpice@etud.insa-toulouse.fr>}}
 \clearpage
 
 \input{apports.tex}
+
+\clearpage
+
+\input{conclusion.tex}
 
 \end{document}
