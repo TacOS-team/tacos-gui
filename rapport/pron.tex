@@ -50,7 +50,7 @@ Le graphe de collaboration ci-dessous présente les classes principales de pron,
 
 Jusqu'à présent, nous avions appelé ``fenêtres'' les zones de dessin rectangulaires gérées par le serveur graphique. Il existe en réalité deux types de zones de dessin :
 \begin{itemize}
-  \item Les \verb|Window|, qui sont des fenêtres affichées à l'écran et ne sont pas stockées en mémoire. Si elle est obscurcie (par une autre \verb|Window|, ou parce qu'elle est déplacée en dehors de l'écran), l'application qui l'a créée devra la redessiner (entièrement ou en partie, nous verrons comment dans la section sur les événements).
+  \item Les \verb|Window|, qui sont des fenêtres affichées à l'écran et ne sont pas stockées en mémoire. Si elle est obscurcie (par une autre \verb|Window|, ou parce qu'elle est déplacée en dehors de l'écran), l'application qui l'a créée devra la redessiner (entièrement ou en partie, nous verrons comment dans la section \ref{evenements}).
   \item Les \verb|Pixmap|, qui sont des zones de dessin stockées en mémoire et non visibles à l'écran. Une pixmap peut cependant être copiée dans une \verb|Window| à tout moment (et vice-versa).
 \end{itemize}
 
@@ -103,10 +103,10 @@ En plus des primitives exposées par \verb|Drawable|, les \verb|Window| proposen
   \item \verb|resize| : permet de redimensionner une fenêtre. Envoie un événement de redimensionnement.
 \end{itemize}
 
-\paragraph{Événements}
+\paragraph{Événements}\label{evenements}
 Le serveur graphique communique avec ses clients via des \textbf{événements} lorsqu'il s'agit de les informer d'entrées de l'utilisateur (frappes au clavier, déplacement ou clics de la souris), ou de changements sur les fenêtres (création, destruction, exposition, redimensionnement...).
 
-Ces événements sont envoyés au créateur de la fenêtre en fonction des types d'événements auxquels il s'est abonné. En effet, un client peut être intéressé par les événements clavier, mais pas par les événements souris. Il peut alors décider de s'abonner seulement aux événements clavier. Il construit pour cela un masque d'événements (\verb|OU| binaire des différents types d'événéments) qu'il transmet au serveur via la primitive \verb|pronSelectInput| (cf la section sur la pronlib). L'abonnement aux événements se fait de manière individuelle pour chaque fenêtre.
+Ces événements sont envoyés au créateur de la fenêtre en fonction des types d'événements auxquels il s'est abonné. En effet, un client peut être intéressé par les événements clavier, mais pas par les événements souris. Il peut alors décider de s'abonner seulement aux événements clavier. Il construit pour cela un masque d'événements (\verb|OU| binaire des différents types d'événéments) qu'il transmet au serveur via la primitive \verb|pronSelectInput| (cf \ref{Pronlib}). L'abonnement aux événements se fait de manière individuelle pour chaque fenêtre.
 
 En plus du créateur de la fenêtre, n'importe quel autre client peut s'abonner à des événements pour n'importe quelle fenêtre : c'est le but du vecteur \verb|OtherClients| dans le graphe de collaboration, qui contient la liste des clients intéressés par des événements sur une fenêtre (autres que son créateur), ainsi que le masque d'événements qu'ils ont choisi.
 
@@ -115,7 +115,7 @@ La plupart des événements sont délivrés seulement à la fenêtre pour laquel
 \paragraph{TODO Conditions de dessin dans une Window}
 \begin{itemize}
   \item realized (mapped + unmappedParents == 0)
-  \item clipZone Nous reviendrons sur la notion de zone de clipping dans la section suivante, mais elle peut être vue comme un ``cache'' posé sur l'écran, qui détermine les zones dans lesquelles on peut dessiner ou non.
+  \item clipZone Nous reviendrons sur la notion de zone de clipping dans la section \ref{ClipZone}, mais elle peut être vue comme un ``cache'' posé sur l'écran, qui détermine les zones dans lesquelles on peut dessiner ou non.
 \end{itemize}
 
 \subsubsection{TODO WindowsTree}
@@ -128,6 +128,7 @@ Organisation des windows en arbre
 \end{itemize}
 
 \subsubsection{Screen}
+\label{Screen}
 
 La classe \verb|Screen| est l'entité principale de pron. Elle représente l'écran et contient toutes les fenêtres gérées par le serveur. Elle est en charge du dialogue avec le driver vidéo : c'est à la construction de l'instance de \verb|Screen| que le basculement en mode graphique est effectué, et que la résolution (largeur, hauteur et pronfondeur de couleurs) est configurée. Le rendu des fenêtres à l'écran passe également par le \verb|Screen| afin d'afficher chaque pixel au bon endroit.
 
@@ -205,6 +206,7 @@ Dans le cas d'un événement souris, il y a deux cas de figure à traiter :
 \paragraph{Grabs} Comme vu à la section \ref{Screen}, une fenêtre peut ``grabber'' le pointeur de la souris. Tous les événements souris sont alors redirigés vers elle, même s'ils ont eu lieu dans une autre fenêtre. Cela se traduit simplement par un envoi des événements à la \verb|grabWin| au lieu de la \verb|mouseWin| lorsque la \verb|grabWin| n'est pas \verb|NULL|. Pour l'instant, nous ne supportons que les ``grabs'' implicites, c'est à dire lorsque le bouton gauche de la souris est enfoncé dans une fenêtre. La mise à jour de la \verb|grabWin| est donc très simple : lorsque l'on détecte un changement d'état des boutons et que le bouton gauche est enfoncé, la \verb|mouseWin| devient la \verb|grabWin|. Lorsque ce bouton est relâché, la \verb|grabWin| redevient \verb|NULL|.
 
 \subsubsection{ClipZone}
+\label{ClipZone}
 
 Nous avons vu que les fenêtres peuvent se superposer. Il est alors important de s'assurer qu'une fenêtre B placée en-dessous d'une autre fenêtre A ne peut pas dessiner par-dessus A. C'est le rôle de la zone de clipping, que l'on peut voir comme une sorte de ``masque'' posé sur l'écran, qui nous empêche de déborder des zones dans lesquelles on peut dessiner.
 
@@ -225,6 +227,7 @@ Le listing ci-dessous illustre le fonctionnement très simple de la boucle princ
 \lstinputlisting{listings/pron_main.cpp}
 
 \subsection{TODO Pronlib}
+\label{Pronlib}
 
 \subsubsection{TODO Display}
 
