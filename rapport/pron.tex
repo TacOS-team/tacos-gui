@@ -144,26 +144,73 @@ Le \verb|Screen| contient la liste des polices de caractères chargées au déma
 \paragraph{clipZone}
 Il s'agit de la zone de clipping actuellement configurée pour la \verb|clipWin|. Cela signifie que le dessin se fait dans le contexte de la \verb|clipWin| : on ne peut dessiner ni en dehors de cette fenêtre, ni dans des zones de cette fenêtre recouvertes par d'autres fenêtres.
 
-\subsubsection{TODO GC}
-Contexte graphique, utilisé par toutes les fonctions de dessin. Doit être configuré en amont de leur appel (prepareDrawing).
+\subsubsection{GC (Graphics context)}
+
+Les GC (graphics contexts, ou contextes graphiques) contiennent les paramètres graphiques utilisés par toutes les primitives de dessin :
 \begin{itemize}
   \item Couleur d'avant-plan
   \item Couleur d'arrière-plan
   \item Police de caractères utilisée
-  \item ...
 \end{itemize}
 
-\paragraph{TODO Couleurs}
-Utilisation de la classe couleur pour la communication client <=> serveur. Représentation indépendante de la profondeur de couleurs utilisée, la véritable couleur n'est calculée que lors de la création du GC côté serveur.
+L'utilisation des contextes graphiques permet d'éviter de repasser tous ces paramètres à chaque appel d'une primitive de dessin. Cela permet également à l'utilisateur de créer des ``environnements graphiques'' qu'il peut réutiliser. Leur contenu est pour l'instant restreint, mais il sera étendu à l'avenir (largeur des traits, style de ligne, style de remplissage...).
 
-\subsubsection{TODO Font}
-Polices de caractère bitmap. Format utilisé : BDF, simple à parser. Chargées par le loader \verb|FontLoader|.
+Toutes les primitives de dessin utilisent le contexte graphique configuré au moment de leur appel. Les requêtes de dessin contiennent toujours le contexte graphique à utiliser, qui peut donc être configuré par la méthode \verb|prepareDrawing| de la classe \verb|Screen| avant l'invocation de la primitive de dessin demandée.
 
-\subsubsection{TODO Client}
+\paragraph{Couleurs}
+Nous avons créé une classe \verb|Color| afin de manipuler les couleurs et les échanger entre le client et le serveur. Elle permet de manipuler les couleurs facilement (diférents constructeurs acceptant des composantes RVB de 0 à 255, de 0 à 1 (flottant), des codes couleurs hexadécimaux ; getters/setters composante par composante...) mais offre surtout une représentation interne unique : des composantes RVB flottantes de 0 à 1. Cela permet de manipuler les couleurs indépendamment de la profondeur de couleurs utilisée sur le serveur : la conversion est effectuée au dernier moment, lors de la création ou de la modification du contexte graphique sur le serveur. Les clients peuvent ainsi utiliser n'importe quelle couleur, la conversion dans la profondeur utilisée par le serveur graphique (16 couleurs, 256 couleurs, 16 bits, 24 bits, 32 bits...) sera effectuée de manière totalement transparente.
 
-\subsubsection{TODO Keyboard/Mouse}
+\subsubsection{Font}
+Nous avons choisi d'implémenter un support des polices de caractères au format BDF (Glyph Bitmap Distribution Format). Nous avons choisi ce format car il se présente sous la forme d'un fichier texte à la fois lisible par des humains et très facile à parser. De plus, la manipulation de polices bitmap est beaucoup simple que la manipulation de polices vectorielles, malgré les limitations que cela engendre (pas de redimensionnement notamment, et donc un fichier différent par taille de police).
 
-\subsubsection{TODO ClipZone}
+Nous proposons deux primitives de manipulation du texte :
+\begin{itemize}
+  \item \textbf{drawText :} comme son nom l'indique, elle permet de dessiner du texte à une position $(x, y)$ donnée. Notons tout de même que cette primitive permet d'aligner le texte par rapport à cette position, horizontalement (aligné à gauche, à droite ou centré) et verticalement (aligné en haut, en bas ou au milieu).
+  \item \textbf{textSize :} elle permet de connaître la taille d'un texte rendu avec la police demandée (largeur et hauteur). Elle est notamment utile lorsque l'on veut wrapper du texte.
+\end{itemize}
+
+\vspace{1em}
+
+Ces deux primitives utilisent la police de caractères configurée dans le contexte graphique courant.
+
+\subsubsection{Client}
+
+Très peu de choses à dire sur la classe \verb|Client|, si ce n'est qu'elle représente un client et se charge de la communication avec lui. La méthode principale, \verb|handle|, vérifie si un nouveau message est disponible sur la socket associée à ce client, et le traite via un \verb|switch| sur le type de message. Ce \verb|switch| se présente comme un contrôleur : il vérifie le type de message (toujours une requête pour un client) ainsi que la validité des paramètres de la requête (identifiant de la fenêtre ou pixmap dans laquelle il veut dessiner, du contexte graphique à utiliser...). C'est à ce moment que la méthode de préparation de dessin (\verb|prepareDrawing|) est appelée, pour configurer le nouveau contexte graphique notamment, et que la primitive demandée par le client est appelée.
+
+\verb|handle| détecte également la déconnexion du client, ce qui déclenche la destruction de l'objet \verb|Client| associé. Le destructeur se charge alors de détruire toutes les ressources allouées par ce client (fenêtres, pixmaps et contextes graphiques).
+
+\subsubsection{Keyboard/Mouse}
+
+Ces deux entités permettent de dialoguer avec le clavier et la souris. Ce sont eux qui communiquent avec les drivers de ces deux périphériques d'entrée. Leur méthode principale, \verb|checkEvents|, détecte si un nouvel événement a eu lieu (touche du clavier appuyée ou relâchée, souris déplacée...) et effectue les actions appropriées en conséquence.
+
+Dans le cas d'un événement clavier, c'est très simple : on envoie simplement un événement \verb|EventKeyPressed| ou \verb|EventKeyReleased| à la fenêtre qui a le focus (\verb|focusWin|).
+
+Dans le cas d'un événement souris, il y a deux cas de figure à traiter :
+\begin{itemize}
+  \item La souris a bougé : après avoir sauvegardé les nouvelles coordonnées de la souris, on procède en 3 étapes.
+    \begin{itemize}
+      \item Il faut tout d'abord déplacer le pointeur à l'écran en conséquence. Pour cela, avant chaque dessin du pointeur, la zone dans laquelle il s'apprête à être dessiné est sauvegardée. Cette sauvegarde peut ensuite être restaurée afin de faire disparaître le pointeur de son ancienne position, avant de le redessiner à sa nouvelle position.
+      \item Il faut ensuite mettre à jour la fenêtre qui contient le pointeur de la souris (\verb|mouseWin|). Pour cela, on part simplement de la fenêtre racine, et on descend en prenant la fenêtre ``realized'' de Z maximal qui contient le curseur. On obtient ainsi la fenêtre la plus ``profonde'' dans l'arbre, visible à l'écran, qui contient le pointeur de la souris.
+      \item On envoie ensuite un événement \verb|EventPointerMoved| à la \verb|mouseWin| fraîchement mise à jour.
+    \end{itemize}
+  \item L'état des boutons de la souris a changé : après avoir sauvegardé le nouvel état des boutons, on envoie simplement un événement \verb|EventMouseButton| à la \verb|mouseWin|.
+\end{itemize}
+
+\paragraph{Grabs} Comme vu à la section \ref{Screen}, une fenêtre peut ``grabber'' le pointeur de la souris. Tous les événements souris sont alors redirigés vers elle, même s'ils ont eu lieu dans une autre fenêtre. Cela se traduit simplement par un envoi des événements à la \verb|grabWin| au lieu de la \verb|mouseWin| lorsque la \verb|grabWin| n'est pas \verb|NULL|. Pour l'instant, nous ne supportons que les ``grabs'' implicites, c'est à dire lorsque le bouton gauche de la souris est enfoncé dans une fenêtre. La mise à jour de la \verb|grabWin| est donc très simple : lorsque l'on détecte un changement d'état des boutons et que le bouton gauche est enfoncé, la \verb|mouseWin| devient la \verb|grabWin|. Lorsque ce bouton est relâché, la \verb|grabWin| redevient \verb|NULL|.
+
+\subsubsection{ClipZone}
+
+Nous avons vu que les fenêtres peuvent se superposer. Il est alors important de s'assurer qu'une fenêtre B placée en-dessous d'une autre fenêtre A ne peut pas dessiner par-dessus A. C'est le rôle de la zone de clipping, que l'on peut voir comme une sorte de ``masque'' posé sur l'écran, qui nous empêche de déborder des zones dans lesquelles on peut dessiner.
+
+La \verb|ClipZone| contient donc un ensemble de \verb|ClipRect|, qui représentent les rectangles dans lesquels on peut dessiner. Lors de la construction de la \verb|ClipZone|, on part du rectangle délimitant la fenêtre dans laquelle on veut dessiner, et on le restreint pour qu'il ne dépasse pas des rectangles délimitant les fenêtres parentes (on ne peut pas dessiner en dehors de son parent).
+
+On parcourt ensuite tous les frères de droite de la fenêtre (ceux qui ont un Z supérieur et sont donc susceptibles de la recouvrir) afin de détecter les zones recouvertes. Chaque fois qu'un rectangle jusqu'alors visible est recouvert (en totalité ou en partie), ce rectangle est découpé en rectangles plus petits afin de ne conserver que des zones non recouvertes. Ce traitement est répété pour tous les parents de la fenêtre considérée (si un des parents de la fenêtre est obscurci, la fenêtre peut l'être aussi).
+
+Une fois la \verb|ClipZone| construite, il suffit de vérifier, pour chaque pixel à dessiner, s'il appartient ou non à un des rectangles qui la composent. Afin d'éviter d'effectuer la vérification pour chaque pixel, des optimisations ont été mises en place :
+\begin{itemize}
+  \item En plus de la vérification point par point, une méthode permet de vérifier si une zone rectangulaire appartient à la \verb|ClipZone|. La réponse est soit ``oui'', soit ``non'', soit ``partiellement''. Si la réponse est ``non'', on peut simplement ne pas effectuer le dessin. Si la réponse est ``oui'', le dessin peut être réalisé sans vérification supplémentaire pour chaque pixel. Sinon, on peut soit faire la vérification pixel par pixel, soit tester des zones plus petites.
+  \item Lorsque l'on a demandé une vérification pour un pixel, il y a de fortes chances pour que les vérifications ultérieures portent sur des pixels voisins. Afin d'accélérer les prochaines vérifications, les réponses sont mises en cache : si le pixel demandé appartient bien à la \verb|ClipZone|, le \verb|ClipRect| dans lequel il a été trouvé est stocké dans le cache ainsi que la réponse à la vérification (``oui''). Toutes les vérifications ultérieures portant sur un pixel appartenant à ce rectangle renverront alors ``oui'' sans avoir à reparcourir l'ensemble des \verb|ClipRect| de la \verb|ClipZone|. Si le pixel demandé n'appartenait pas à la ClipZone, un algorithme recherche rapidement le plus grand rectangle qui n'appartient pas à la \verb|ClipZone| et contenant ce pixel. Toutes les vérifications ultérieures portant sur un pixel appartenant à ce rectangle pourront alors renvoyer ``non'' directement.
+\end{itemize}
 
 \subsection{TODO Boucle principale}
 
