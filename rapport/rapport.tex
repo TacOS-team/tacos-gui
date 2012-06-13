@@ -38,7 +38,7 @@
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 
 \lstset{ %
-  language=C,                     % the language of the code
+  language=C++,                   % the language of the code
   basicstyle=\footnotesize,       % the size of the fonts that are used for the code
   numbers=left,                   % where to put the line-numbers
   numberstyle=\tiny\color{gray},  % the style that is used for the line-numbers
@@ -61,13 +61,13 @@
   commentstyle=\color{dkgreen},   % comment style
   stringstyle=\color{mauve},      % string literal style
   escapeinside={\%*}{*)},         % if you want to add a comment within your code
-  morekeywords={*,...}            % if you want to add more keywords to the set
+  morekeywords={*,vector, iterator} % if you want to add more keywords to the set
 }
 
 \geometry{ hmargin=2cm, vmargin=2cm}
 
 \def\blurb{%
-Rapport projet tutoré}
+Rapport projet tutoré Tacos-GUI}
 
 \def\abstract{%
   \input{abstract}
@@ -124,11 +124,11 @@ Adrien Sulpice \texttt{<sulpice@etud.insa-toulouse.fr>}}
 \lfoot{\blurb}
 \rfoot{Page \thepage}
 \maketitle \clearpage
-\tableofcontents \clearpage
 
 \setlength{\parskip}{1.2ex plus .4ex minus .4ex}
-\setcounter{page}{1}
 \pagestyle{fancyplain}
+
+\tableofcontents \clearpage
 
 \input{architecture.tex}
 

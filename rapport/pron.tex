@@ -182,6 +182,9 @@ Ces deux primitives utilisent la police de caractères configurée dans le conte
 
 \subsubsection{Client}
 
+\subsubsection{TODO Pointeur de souris}
+
+\subsubsection{TODO Client}
 Très peu de choses à dire sur la classe \verb|Client|, si ce n'est qu'elle représente un client et se charge de la communication avec lui. La méthode principale, \verb|handle|, vérifie si un nouveau message est disponible sur la socket associée à ce client, et le traite via un \verb|switch| sur le type de message. Ce \verb|switch| se présente comme un contrôleur : il vérifie le type de message (toujours une requête pour un client) ainsi que la validité des paramètres de la requête (identifiant de la fenêtre ou pixmap dans laquelle il veut dessiner, du contexte graphique à utiliser...). C'est à ce moment que la méthode de préparation de dessin (\verb|prepareDrawing|) est appelée, pour configurer le nouveau contexte graphique notamment, et que la primitive demandée par le client est appelée.
 
 \verb|handle| détecte également la déconnexion du client, ce qui déclenche la destruction de l'objet \verb|Client| associé. Le destructeur se charge alors de détruire toutes les ressources allouées par ce client (fenêtres, pixmaps et contextes graphiques).

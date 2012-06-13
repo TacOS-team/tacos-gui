@@ -3,53 +3,215 @@
 Sombrero est la librairie de widgets de TacOS-GUI.
 Son rôle est d'apporter au programmeur un niveau d'abstraction supplémentaire par rapport à la Pronlib, afin de faciliter la création d'interfaces graphiques pour les applications.
 
-\subsection{L'application Sombrero}
+\subsection{Conception de la librairie}
 
-Le fonctionnement de la librairie de widgets Sombrero est basé sur l'application Sombrero.
-L'application Sombrero est chargée de faire le lien entre le fonctionnement bas niveau de Pron et l'utilisation haut niveau des widgets par le développeur.
-Pour ce faire, nous avons décidé de lier chaque widget avec une pronWindow.
-Le widget dispose d'une et une seule pronWindow, et celle-ci est utilisée pour représenter le widget au sein de Pron : c'est sur elle que seront propagés les événéments Pron, comme par exemple des événements clavier ou des événements souris. 
-L'application Sombrero garde une correspondance entre chaque widget créé et la pronWindow qui lui correspond, ceci grâce à une table de hachage.
-Lorsqu'un événement survient sur une pronWindow liée à un widget, c'est à l'application Sombrero d'appeller la méthode adéquate sur le widget correspondant.
-Ce travail est réalisé par la méthode sombrerun, qui est appellée à la fin de chaque programme utilisant Sombrero, et qui exécute la boucle infinie suivante :
+La plupart des librairies de Widgets veulent être multi-plateformes.
+Pour cela, elles utilisent au minimum le système de fenêtrage et gèrent en interne un maximum de choses.
+Le développement de Sombrero ayant un but pédagogique, nous avons au contraire essayer d'exploiter au maximum les fonctionnalités de Pron et de faire le mimimum dans la librairie.
+Dans cette optique, nous avons décidé que à tout widget correspondait une Window dans pron.
+Ainsi c'est pron qui détermine à qui transmettre les évènements claviers, souris, expose, etc.
 
-\lstinputlisting{listings/sombrerun.cpp}
+\subsubsection{Widgets}
 
-Les événements Pron sont récupérés via l'appel à la méthode pronNextEvent().
-Comme nous pouvons le voir, c'est le display de l'application sombrero que l'on passe en paramètre puisque c'est elle qui joue le rôle d'interface entre Pron et les widgets.
-Evidemment, lorsque les pronWindow sont créées, c'est aussi le display de l'application sombrero qui est utilisé.
-Pour chaque événement Pron récupéré, on détermine le widget associé à l'événement (grâce à la table de hachage), et on appelle le handler d'événement correspondant.
-L'intérêt des handlers est détaillé dans la sous-section suivante.
+Nous avons distingué deux grandes familles d'éléments graphiques :
 
-\subsection{Les widgets}
+\begin{itemize}
+  \item Les widgets : ce sont tous les éléments graphiques de l'interface : boutons, labels, textarea, etc.
+  \item Les conteneurs : ils contiennent des widgets (ou d'autres conteneurs) et permettent de les disposer dans la fenêtre.
+\end{itemize}
 
-Sombrero permet la création de nombreux widgets, parmi lesquels figurent les boutons, les zones de textes, les conteneurs...
-Chaque widget hérite d'une classe parente Widget, comme le montre la figure \ref{fig:classDiagWidget} qui illustre le diagramme de classe de la classe Widget.
+Tout objet susceptible de contenir d'autres widgets héritera donc de container.
+Pour gérer facilement ces imbrications, un conteneur est lui-même un Widget et a sa propre Pron Window.
+On retrouvera bien chez pron un arbre de fenêtres correspondant à la hiérarchie des widgets.
+
+Voici le diagramme de classes de la librairie. On peut voir les différentes classes conteneurs et les différentes classes de Widget implémentées :
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=17cm]{images/classDiagWidget.png}
-  \caption{Diagramme de classe de la classe Widget}
-  \label{fig:classDiagWidget}
+  \includegraphics[width=17.5cm]{images/classDiagWidget.png}
+  \caption{Diagramme de classes de Sombrero}
+  \label{fig:diagrame_classes_sombrero}
 \end{figure}
 
-Dans la classe parente Widget sont implémentés les handlers d'événements.
-Ce sont les méthodes qui sont appellées par l'application Sombrero lorsqu'un événement Pron survient sur la pronWindow liée au widget.
-Dans la plupart des cas, aucune action par défaut n'est prévue dans les handlers.
-Les handlers sont des méthodes virtuelles qui sont redéfinies dans les classes filles en fonction des besoins propre au widget.
-Dans la classe Checkbox par exemple, le handler lié à un événement de clic souris est redéfini, afin de changer la valeur de l'attribut \textit{checked}.
+La classe Widget est bien à la racine.
+Elle contient tout ce qui est commun à tous les widgets dont notamment la position.
+Il est à noter que, contrairement à Pron, la position est relative au widget parent.
+Ceci facilite le placement des widgets par les conteneurs, ils sont placés relativement au conteneur et pas en position absolue.
 
-\subsection{Utilisation de sombrero}
+Dans les conteneurs, on peut voir la classe Bin.
+Cette classe est la classe mère de tous les conteneurs ne contenant qu'un seul élément.
+Notamment les scrollPanes et les Window.
+La classe Window est une fenêtre qui sera décorée.
+C'est le seul widget qui peut être décoré.
+Une Window peut ensuite contenir un seul widget.
+Si on veut afficher une fenêtre décorée, c'est cette classe qu'il faut utiliser.
+Ensuite il faut y mettre soit un conteneur soit un widget.
 
-L'utilisation des widgets de Sombrero peut se faire de deux manières différentes. 
-La première consiste à créer une classe fille héritant d'un widget particulier.
-Il suffit alors de redéfinir le(s) handler(s) d'événement souhaité(s) et d'effectuer l'action appropriée à l'intérieur.
-En fait, on spécialise un widget de base en modifiant son comportement, de manière à ce que le widget réponde aux exigences d'une application particulière.
-La seconde manière d'utiliser les widgets de sombrero, moins contraignante, est d'utiliser le système signal/slot mis en place par la librairie.
-Le système signal/slot permet une implémentation simple du pattern observeur/observable.
-Certains widgets disposent d'un ou de plusieurs signaux (tous relatifs à un événement donné), et ces signaux sont émis dans les handlers d'événements, c'est à dire à chaque fois qu'un événement a eut lieu.
-L'intérêt des signaux est qu'il est possible d'appeller automatiquement une fonction (ou callback) sur réception d'un signal, de la façon suivante :
+Prenons l'exemple de l'application gestionnaire de fichier.
+Cette application contient un label pour afficher le répertoire courant ainsi que un bouton pour chaque fichier dans un scrollPane. On retrouve donc l'arborescence de widgets suivante :
+
+\begin{center}
+  \begin{tikzpicture}[
+    grow via three points={one child at (0.5,-0.7) and
+    two children at (0.5,-0.7) and (0.5,-1.4)},
+    edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)}]
+    \node [root] {Window}
+      child { node {Conteneur Grid}
+        child { node {Label}}
+        child { node {ScrollPane}
+          child { node {Conteneur Grid}
+            child { node {Bouton Fichier 1}}
+            child { node {Bouton Fichier 2}}
+            child { node {Bouton Fichier 3}}
+            child { node {...}}
+          }
+        }
+      };
+  \end{tikzpicture}
+\end{center}
+
+\subsubsection{Gestion de la Pron Window}
+
+Instinctivement, on voudrait créer la pronWindow au moment de la construction de Widget.
+Il faudrait donc le faire dans le constructeur.
+Ceci marche très bien pour un un objet fenêtre qui a pour PronWindow mère la root Window de pron.
+Seulement pour les autres widgets imbriqués, dans le constructeur, on ne connait pas encore le widget père.
+Si on crée une PronWindow avec comme fenêtre mère la root Window de Pron, on se retrouvera avec un widget décoré par Guacamole et ce n'est pas ce que l'on veut.
+C'est pourquoi il faut ajouter une fonction setParent aux widgets.
+Lorsqu'on définit le parent du widget avec setParent(), on peut donc créer la Pron window avec comme Window mère la Window du widget père.
+
+Ceci fonctionne parfaitement mais cela oblige l'utilisateur à bien créer ses objets dans l'ordre et faire les setParent() dans l'ordre également.
+Ceci est très contraignant.
+Pour éviter cela, il suffit lors du setParent de regarder si le père a déjà été initialisé.
+Si oui, on crée la Pron Window.
+Si non, on ne fait rien.
+Ceci nécessite donc aux classes de conteneurs de faire les setParents à tous ses widgets fils dans son propre setParent().
+Ainsi, on peut créer toute notre arborescence de widgets et dès qu'on ajoute le premier widget dans la fenêtre, elle appelle la fonction setParent() de ce widget qui l'appelle à ses fils s'il en a et ainsi de suite.
+L'utilisateur peut donc créer ses widgets dans n'importe quel ordre et faire le setParent quand il le veut ce qui est beaucoup plus agréable.
+
+Pour les conteneurs, le code de setParent() étant le même pour tous, la fonction a été implémentée de la façon suivante dans la classe Container :
+
+\lstinputlisting{listings/container_setparent.cpp}
+
+La fonction getChildren() est une fonction virtuelle. Toutes classes dérivant directement ou indirectement de Container devra la surcharger et renvoyer tous ses fils dans un vector. Ainsi, plus aucun conteneur n'a à se soucier du setParent().
+
+\subsubsection{Gestion des évènements}
+
+Comme nous l'avons dit auparavant, nous avons laissé Pron gérer les évènements et les propager.
+Chaque widget s'abonne aux évènements dont il a besoin.
+Ces évènements sont ensuite traduits par des appels de fonctions virtuelles (handlers) de la classe Widget
+\footnote{Nous verrons comment cela a été fait plus tard en parlant de l'application.}.
+Par exemple lorsqu'un évènement souris arrive sur un widget, la fonction handleEventMouseButton() de celui-ci est appellée.
+Lorsqu'on crée un nouveau widget, il suffit de surcharger les handlers qui nous intéressent. Il faut penser tout de même à rappeller la fonction handler de la classe parente.
+
+En effet, nous avons mis dans les handlers des widgets un maximum de fonctionnalités communes au plus grand nombre des widgets.
+Pour garder l'exemple des évènements des boutons de la souris, la fonction handleEventMouseButton() prend en paramètre un pointeur vers un pron::EventMouseButton.
+Cet objet contient l'état des boutons et pas quel bouton a changé.
+Pour détecter un clic, il faut donc sauvegarder l'état des boutons et regarder à chaque nouvel évènement lequel a changé.
+Pour éviter de le coder dans chaque widget, cette fonction a été implémentée dans la classe Widget comme ça le code n'est pas dupliqué.
+Dans cette fonction, on détecte les clics sur les différents boutons, double clic, etc.
+Dès qu'un évènement est détecté, on appelle une nouvelle méthode virtuelle spécifique à l'évènement.
+Voici le code de cette fonction. On remarque que avec le clic gauche, il y a également le clic et double clic à gérer en plus des mouseDown et mouseRelease :
+
+\lstinputlisting{listings/handleEventMouseButton.cpp}
+
+Si on crée maintenant un widget bouton, il suffit de surcharger la méthode handleClick() et de mettre le code correspondant à cet évènement à l'intérieur.
+Pas besoin de coder de nouveau la gestion des boutons.
+
+\subsubsection{Mise à jour des widgets : update()}
+
+Lors de la gestion d'un évènement, il est courant de devoir mettre à jour certaines positions ou modifier l'agencement des widgets ou tout autre mise à jour de l'interface.
+Lors de ces mises à jour, on modifie les variables dans widgets.
+Seulement cela ne modifie pas ces informations dans Pron.
+Il est donc nécessaire d'envoyer un message à Pron pour le notifier des changements.
+Pour cela, il y a trois fonction à appeller :
+
+\begin{itemize}
+  \item updatePronSize : cette fonction met la taille à jour si elle a changé
+  \item updatePronPosition : met à jour la position
+  \item updateBGColor : met à jour la couleur de fond
+\end{itemize}
+
+Après un changement d'un seul paramètre, on peut n'appeller qu'une seule de ces fonctions.
+Lors d'une mise à jour, un conteneur va modifier les informations des widgets qu'il contient.
+Sachant que ces widgets peuvent être eux-même des conteneurs, si on a modifié leurs dimensions, ils vont devoir de nouveau mettre à jour leur propres fils et ainsi de suite jusqu'aux feuilles de l'arbre.
+Pour généraliser cette mise à jour, il y a une fonction update() commune à tous les widgets.
+Par défaut elle ne fait qu'appeler les trois fonctions de mise à jour citées précédemment.
+Si le widget a besoin de faire des choses supplémentaires
+\footnote{Par exemple le conteneur de grille va redimensionner tous ses widgets fils si on modifie sa taille.}
+lors d'un update, il suffit de surcharger la fonction update().
+
+Cette méthode fonctionne bien mais il s'avère que bien souvent les mises à jours bouclent.
+En effet, il est fréquent de mettre à jour un widget, de notifier Pron de cette mise à jour, qui lui-même renvoie un nouvel évènement au widget qui relance une mise à jour.
+Pour éviter ce problème, nous avons créé un code commun de update() à tous les widgets et déplacé le code de mise à jour dans la fonction execUpdate().
+Si on veut modifier la mise à jour il faut surcharger la fonction execUpdate() et surtout pas la fonction update().
+La fonction update() commune va unmaper la fenêtre, la mettre à jour puis la remapper. Ceci limite considérablement le nombre d'évènements et décharge Pron.
+Pour éviter des boucles dans la librairie elle-même, on sauvegarde également si l'objet est en train d'être mis à jour pour éviter qu'un de ses fils le remmette à jour et ainsi créer une boucle.
+Le code de la fonction d'update est donc le suivant :
+
+\lstinputlisting{listings/widget_update.cpp}
+
+Attention : dans les surcharges des fonctions execUpdate(), il est nécessaire d'appeler la fonction de la classe parente sinon l'objet ne sera pas mis à jour dans Pron.
+
+\subsubsection{Dessin des widgets}
+
+Pour dessiner un widget, il suffit qu'il dessine dans sa propre Pron Window.
+Le code du dessin doit tout simplement être mis dans la fonction draw().
+Cette fonction sera automatiquement appellée à chaque réception d'un évènement d'exposition de Pron
+\footnote{Il n'est pas nécessaire de l'appeler après un update, ce sera également fait automatiquement par Pron après le remap qui enverra un évènement d'exposition.}.
+
+Remarque : Lors de la rédaction de ce document, cette fonction redessine l'intégralité du widget.
+Lors de la réception d'un évènement d'exposition, Pron précise quelle a été la nouvelle zone exposée.
+Une amélioration serait donc de ne redessiner qu'à l'intérieur de cette zone et pas redessiner systèmatiquement tout le widget.
+Cependant cela n'est pas toujours facile à faire.
+
+\subsection{La classe Application}
+
+La classe Application est l'objet permettant de communiquer avec Pron.
+C'est elle qui englobe la boucle d'évènements.
+C'est une classe singleton.
+Si le constructeur est appelé deux fois, l'application est tout de suite fermée avec un message d'erreur.
+L'application tient à jour une map contenant la correspondance entre un identifiant de Pron Window et un widget.
+Tous les widgets ont accès à l'instance de l'application.
+Lors de la création de leur Pron Window, ils se référencent automatiquement auprès de la classe application.
+A la fin du main, lorsque l'utilisateur a créé tous ses widgets, il appelle la fonction sombrerun() de la classe Application.
+Cette fonction exécute la boucle d'évènements.
+A chaque fois qu'elle récupère un évènement, elle trouve le widget correspondant et appelle les fonctions handle que nous avons présentées auparavant.
+
+Ceci marche parfaitement pour les évènements sur les widgets.
+Seulement parfois il est nécessaire de s'abonner à d'autres évènements tels que les créations de fenêtres, etc.
+Ceci n'est donc pas spécifique à un widget.
+Pour gérer ces cas, dans la fonction sombrerun(), avant d'essayer de transmettre l'évènement à un widget, on regarde si c'est un des évènements ``général''.
+Si oui, on appelle une fonction handler virtuelle.
+Pour accéder à ces évènements, il suffit donc de surcharger la classe Application et d'implémenter ces fonctions.
+
+\lstinputlisting{listings/sombrerun.cpp}
+
+Attention : L'application étant une instance unique, si vous voulez utiliser votre instance d'Application, il faut qu'elle soit instanciée avant le premier Application::getInstance() soit avant la création d'un widget.
+Sinon ce sera l'application par défaut qui sera appelée.
+
+\subsection{Signaux et slots}
+
+Nous avons vu que pour gérer les évènements, il y avait différents handlers à surcharger si besoin est.
+Ceci est très pratique pour le développement de la bibliothèque mais pour l'utilisateur final ce n'est pas très pratique.
+Pour résoudre ce problème, nous avons décidé de nous inspirer du système de signaux de Qt
+\footnote{Qt est une librairie multi-plateforme développée par Nokia. Plus d'informations sur le site officiel : http://qt.nokia.com/products/}.
+
+Ce système correspond au design pattern observeur/observable.
+Nous avons utilisé une librairie qui proposait une implémentation
+\footnote{La librairie utilisée est Sigslot. Nous allons bientôt utiliser notre propre implémentation car il lui manque quelque fonctionnalités comme l'éméteur du signal.}.
+Les signaux peuvent être émis par différentes classes.
+Il est possible d'envoyer des variables en paramètres de ces signaux.
+A un signal, il est possible de connecter des slots qui sont en fait de simples fonctions d'une classe ayant les mêmes paramètres que le signal.
+La classe contenant les slots doit dériver de la classe hasslots.
+
+Le signaux sont en fait des objets des classes signal0 à signal8. Avec le nombre étant le nombre de paramètres du signal.
+Ces classes sont génériques.
+Elle prennent un paramètre template par paramètre du signal.
+
+Voici un exemple simple de l'utilisation des signaux d'une scrollBar :
 
 \lstinputlisting{listings/signalSlot.cpp}
 
-Lorsque l'utilisateur cliquera sur le bouton, le signal \textit{clicked} du widget Button sera émis dans le handler lié au clic souris, et la fonction de callback \textit{monCallback} sera ainsi appellée.
+On remarque que pour l'utilisateur c'est vraiment très pratique. Il n'a pas besoin de surcharger des handlers.
+Il lui suffit de créer un slot et de le connecter.
