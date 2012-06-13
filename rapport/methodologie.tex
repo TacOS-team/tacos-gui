@@ -3,34 +3,29 @@
 \subsection{Enjeux}
 
 Toute la difficulté du développement de TacOS-GUI réside dans le fait que ce projet soit intimement lié à un système d'exploitation en constante évolution.
-Une des voies que nous aurions pu suivre est de développer directement pour TacOS.
-Plusieurs problèmes découlent de ce choix.
+Une des voies que nous aurions pu suivre est de développer directement pour TacOS, mais plusieurs problèmes découlent de ce choix.
 
-Le premier est que TacOS, pour l'instant, n'implémente pas la totalité de la libc.
-De plus ayant choisi le c++ comme language de programmation pour la GUI, nous aurions du développer en premier la STL sur TacOS.
+Le premier est que TacOS, pour l'instant, n'implémente pas la totalité de la libC.
+De plus, ayant choisi le C++ comme language de programmation pour notre projet, nous aurions dû développer en premier la STL sur TacOS.
+Enfin, TacOS-GUI utilisant un système de fenêtrage client/serveur, il nous fallait un système de communication inter-processus (IPC) ``sockets-like'', ce qui impliquait le développement d'une librairie de sockets.
 
-Le deuxième problème se situe au niveau des drivers de la carte graphique et de la souris, qui n'existaient pas non plus.
-
-Enfin TacOS-GUI utilisant un système de fenêtrage client/serveur, il nous fallait un système de communication inter-processus (IPC), cela impliquait le développement d'une librairie de socket.
-
-Tous ces prérequis, auraient empéché un développement en parallèle de Tacos-GUI.
-Nous avons donc opté pour la solution vivement conseillée par nos tuteurs qui consistait à développer un émulteur TacOS.
+Tous ces prérequis auraient fortement retardé le début du développement de TacOS-GUI, et nous auraient empêché de paralléliser les tâches.
+Nous avons donc opté pour la solution vivement conseillée par nos tuteurs : développer un émulateur qui nous permettrait de développer sous Linux, tout en simulant un environnement TacOS.
 
 \subsection{Émulateur TacOS}
 
-Les développeur utilisant les distribution Debian ou Ubuntu, l'émulateur à été développé pour linux.
-Comme spécifié dans l'introduction de cette partie, voici les différents points à implémenter dans l'émulateur.
+L'émulateur a été développé pour Linux. Comme spécifié dans l'introduction de cette partie, voici les différents points que nous avons dû implémenter :
 
 \begin{itemize}
   \item Environnement TacOS
   \item Drivers
   \begin{itemize}
-    \item Vesa
+    \item VESA
     \item Clavier
     \item Souris 
   \end{itemize}
-  \item Sockets (libtsock)
-  \item Libc TacOS
+  \item Sockets (\verb|libtsock|)
+  \item LibC TacOS
   \begin{itemize}
     \item exec\_elf
   \end{itemize}
@@ -38,34 +33,31 @@ Comme spécifié dans l'introduction de cette partie, voici les différents poin
 
 \subsubsection{Environnement TacOS}
 
-La libc de TacOS définit un certain nombre de fonctions au nom identique à celles de la libc linux.
-Il a donc fallu surcharger ces fonctions et leur associer le comportement adéquat de TacOS.
+L'environnement TacOS est décrit dans la librairie du même nom, \verb|libtacos|.
 
-Le cas le plus concret sont les fonctions de gestion des fichiers : open, read, write, close, ioctl, ...
+La libC de TacOS définissant un certain nombre de fonctions au nom identique à celles de la libC Linux, il nous a fallu surcharger ces fonctions pour leur associer le même comportement que sous TacOS.
+
+Le cas le plus concret concerne les fonctions de manipulation des fichiers : open, read, write, close, ioctl...
 \lstinputlisting{listings/open.c}
-
-L'environnement TacOS est décrit dans la librairie du même non, libtacos.
-Cette librairie permet de développer sans se soucier de l'implémentation sous TacOS, ça sera au moment du portage de cette librairie que les fonctions non existantes devront être créées et que le comportement des fonctions existantes devra être adapté.
 
 \subsubsection{Drivers}
 
 L'émulation des différents drivers cités plus haut se fait par le biais d'une librairie graphique, la SDL, au dessus de X.org.
-Le driver souris est implémenté grâce aux évènements souris de la SDL, les évènements claviers fonctionnent de la même manière.
+Le driver souris est implémenté grâce aux évènements souris de la SDL, les évènements clavier fonctionnent de la même manière.
 
-Pour ce qui est du driver VESA, la SDL étant une librairie graphique, elle permet de créer un fenêtre X, qui représentera notre écran physique. 
-
+Pour ce qui est du driver VESA, la SDL étant une librairie graphique, elle permet de créer un fenêtre X qui représentera notre écran physique. 
 
 \subsubsection{Librairie de sockets}
 
-Au moment du développement de la librairie de socket libtsock, il n'y avait pas d'IPC développée sous TacOS, nous avons donc pu développer la notre sans contrainte particulière, en commençant par une implémentation sur l'émulateur.
+Au moment du développement de la librairie de sockets \verb|libtsock|, il n'y avait pas d'IPC de ce type développée sous TacOS, nous avons donc pu développer la nôtre sans contrainte particulière, en commençant par une implémentation sur l'émulateur.
 
-Cette première implémentation utilise les sockets UNIX domain.
+Cette première implémentation utilise les sockets UNIX domain. L'implémentation TacOS utilise des buffers alloués en espace noyau, qui représentent la file de messages de chaque socket.
 
-Voici la liste exhaustive des fonctions de la librairie de socket que nous avons défini.
+Voici la liste exhaustive des primitives de la librairie de sockets que nous avons défini.
 
 \lstinputlisting{listings/tsock.c}
 
-\subsubsection{Libc TacOS}
+\subsubsection{LibC TacOS}
 
-En plus de la surcharge des fonctions de la libc linux, il faut définir les fonctions de la libc TacOS non existantes. Exemple avec exec\_elf.
+En plus de la surcharge des fonctions de la libC Linux, nous avons dû définir les fonctions spécifiques à la libC TacOS. Exemple avec \verb|exec_elf| :
 \lstinputlisting{listings/exec_elf.c}
