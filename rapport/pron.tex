@@ -40,6 +40,12 @@ Les identifiants de ressources sont codés sur 4 octets, avec l'identifiant du c
 
 Le graphe de collaboration ci-dessous présente les classes principales de pron, articulées autour d'une classe centrale : \verb|Screen|.
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=14cm]{images/collab_screen.png}
+  \caption{Diagramme de collaboration articulé autour de la classe Screen}
+\end{figure}
+
 \subsubsection{Drawable}
 
 Jusqu'à présent, nous avions appelé ``fenêtres'' les zones de dessin rectangulaires gérées par le serveur graphique. Il existe en réalité deux types de zones de dessin :
@@ -212,7 +218,11 @@ Une fois la \verb|ClipZone| construite, il suffit de vérifier, pour chaque pixe
   \item Lorsque l'on a demandé une vérification pour un pixel, il y a de fortes chances pour que les vérifications ultérieures portent sur des pixels voisins. Afin d'accélérer les prochaines vérifications, les réponses sont mises en cache : si le pixel demandé appartient bien à la \verb|ClipZone|, le \verb|ClipRect| dans lequel il a été trouvé est stocké dans le cache ainsi que la réponse à la vérification (``oui''). Toutes les vérifications ultérieures portant sur un pixel appartenant à ce rectangle renverront alors ``oui'' sans avoir à reparcourir l'ensemble des \verb|ClipRect| de la \verb|ClipZone|. Si le pixel demandé n'appartenait pas à la ClipZone, un algorithme recherche rapidement le plus grand rectangle qui n'appartient pas à la \verb|ClipZone| et contenant ce pixel. Toutes les vérifications ultérieures portant sur un pixel appartenant à ce rectangle pourront alors renvoyer ``non'' directement.
 \end{itemize}
 
-\subsection{TODO Boucle principale}
+\subsection{Boucle principale}
+
+Le listing ci-dessous illustre le fonctionnement très simple de la boucle principale de pron. On commence par accepter les éventuels nouveaux clients en attente de connexion. On vérifie ensuite, pour chaque client, s'il a envoyé une requête qu'il faut traiter. La déconnexion des clients est gérée à ce niveau (dans le \verb|handle| des objets \verb|Client|). Enfin, on vérifie si les périphériques d'entrée ne nous ont pas remonté de nouveaux événements.
+
+\lstinputlisting{listings/pron_main.cpp}
 
 \subsection{TODO Pronlib}
 
