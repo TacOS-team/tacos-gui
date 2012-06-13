@@ -2,7 +2,7 @@
 
 \subsection{Rôle et fonctionnalités}
 
-pron est notre système de fenêtrage, également appelé "serveur graphique" car il permet à différents clients (les applications) de créer des fenêtres, qui ne sont à ce niveau que de simples zones de dessin rectangulaires. Il leur propose pour cela des primitives de dessin basiques :
+Pron est notre système de fenêtrage, également appelé ``serveur graphique'' car il permet à différents clients (les applications) de créer des fenêtres, qui ne sont à ce niveau que de simples zones de dessin rectangulaires. Il leur propose pour cela des primitives de dessin basiques :
 \begin{itemize}
 \item Création et gestion (redimensionnement, déplacement, effacement, destruction) de zones de dessin
 \item Dessin de formes géométriques (points, lignes, rectangles, ellipses...)
@@ -14,17 +14,27 @@ pron est notre système de fenêtrage, également appelé "serveur graphique" ca
 
 C'est également lui qui dialogue avec les périphériques et gère les entrées/sorties :
 \begin{itemize}
-  \item Périphériques d'entrée (clavier, souris), afin de détecter et de transmettre des événements aux applications (touche "a" appuyée, bouton gauche de la souris enfoncé dans telle ou telle fenêtre...)
+  \item Périphériques d'entrée (clavier, souris), afin de détecter et de transmettre des événements aux applications (touche ``a'' appuyée, bouton gauche de la souris enfoncé dans telle ou telle fenêtre...)
   \item Périphériques de sortie (carte vidéo), afin d'afficher le pointeur de la souris et l'ensemble des fenêtres à l'écran.
 \end{itemize}
 
-\subsection{TODO Protocole}
+\subsection{Protocole}
 
+Le protocole de communication entre Pron et ses clients comporte quatre catégorie de messages :
 \begin{itemize}
-  \item requête, réponse, événement, erreur + structure messages
-  \item le max de requêtes sans réponses
-  \item identifiants des ressources choisis par le client dans une fenêtre
+  \item \textbf{requête :} demande d'un client au serveur (création de fenêtre, dessin de ligne, récupération des attributs d'une fenêtre...). Ne nécessite pas forcément une réponse.
+  \item \textbf{réponse :} réponse du serveur suite à une requête (message de bienvenue, valeurs des attributs demandés...)
+  \item \textbf{événement :} message envoyé par le serveur lorsqu'un événement survient (entrée clavier ou souris, exposition d'une fenêtre...)
+  \item \textbf{erreur :} envoyé par le serveur suite à une requête invalide (dessin dans une fenêtre inexistante, attributs incorrects...)
 \end{itemize}
+
+\vspace{1em}
+
+Les types de messages sont codés sur 4 octets. La catégorie est identifiée par les deux octets de poids fort\footnote{Oui, c'est large !}. On peut donc avoir $2^{16} = 65536$ événements par catégorie (codés sur les deux octets restants)\footnote{C'est large aussi.}. Par exemple, un message de type \verb|EV_EXPOSE| (événement d'exposition) a un type égal à \verb|0x20003| : \verb|0x2 << 16| (identifiant de la catégorie ``événements'') \verb=| 0x3= (l'événement d'exposition est le 3ème message de la catégorie des événements).
+
+Afin d'optimiser les performances, une requête n'attend pas forcément une réponse. La plupart des requêtes sont au contraire conçues de manière à ce qu'une réponse ne soit pas nécessaire. Toutes les requêtes de création de ressources par exemple (fenêtres, pixmaps, contextes graphiques...) fournissent elles-mêmes l'identifiant de la ressource qu'elles veulent créer. Cela permet de ne pas attendre une réponse du serveur indiquant l'identifiant de la ressource nouvellement créée.
+
+Les identifiants de ressources sont codés sur 4 octets, avec l'identifiant du client sur les deux octets de poids fort. On peut donc avoir $65536$ clients différents, qui créent chacun $65536$ ressources. Chaque client peut donc demander à créer une ressource dans l'intervalle d'identifiants $[id_{client} << 16 ; (id_{client} + 1) << 16 - 1]$.
 
 \subsection{Architecture}
 
@@ -32,7 +42,7 @@ Le graphe de collaboration ci-dessous présente les classes principales de pron,
 
 \subsubsection{Drawable}
 
-Jusqu'à présent, nous avions appelé "fenêtres" les zones de dessin rectangulaires gérées par le serveur graphique. Il existe en réalité deux types de zones de dessin :
+Jusqu'à présent, nous avions appelé ``fenêtres'' les zones de dessin rectangulaires gérées par le serveur graphique. Il existe en réalité deux types de zones de dessin :
 \begin{itemize}
   \item Les \verb|Window|, qui sont des fenêtres affichées à l'écran et ne sont pas stockées en mémoire. Si elle est obscurcie (par une autre \verb|Window|, ou parce qu'elle est déplacée en dehors de l'écran), l'application qui l'a créée devra la redessiner (entièrement ou en partie, nous verrons comment dans la section sur les événements).
   \item Les \verb|Pixmap|, qui sont des zones de dessin stockées en mémoire et non visibles à l'écran. Une pixmap peut cependant être copiée dans une \verb|Window| à tout moment (et vice-versa).
@@ -99,7 +109,7 @@ La plupart des événements sont délivrés seulement à la fenêtre pour laquel
 \paragraph{TODO Conditions de dessin dans une Window}
 \begin{itemize}
   \item realized (mapped + unmappedParents == 0)
-  \item clipZone Nous reviendrons sur la notion de zone de clipping dans la section suivante, mais elle peut être vue comme un "cache" posé sur l'écran, qui détermine les zones dans lesquelles on peut dessiner ou non.
+  \item clipZone Nous reviendrons sur la notion de zone de clipping dans la section suivante, mais elle peut être vue comme un ``cache'' posé sur l'écran, qui détermine les zones dans lesquelles on peut dessiner ou non.
 \end{itemize}
 
 \subsubsection{TODO WindowsTree}
@@ -117,7 +127,7 @@ La classe \verb|Screen| est l'entité principale de pron. Elle représente l'éc
 
 Revenons maintenant sur quelques champs de la classe \verb|Screen| :
 \paragraph{clipWin, mouseWin, grabWin, focusWin}
-La classe \verb|Screen| contient 4 pointeurs vers des \verb|Window| jouant un rôle particulier : la \verb|clipWin| est la fenêtre pour laquelle la zone de clipping est actuellement configurée, et qui est donc prête pour le dessin. La \verb|mouseWin| est la fenêtre la plus profonde contenant le pointeur de la souris, c'est elle qui recevra les événements souris. La \verb|grabWin| est la fenêtre qui a "grabbé" le pointeur de la souris, c'est à dire que tous les événements souris sont redirigés vers elle, même s'ils ont eu lieu dans une autre fenêtre. Le grab peut être explicite ou implicite, un exemple de grab implicite est lors d'un drag and drop : tant que la souris n'est pas relâchée, tous les événements souris sont envoyés à la fenêtre en train d'être déplacée (celle où le bouton gauche de la souris est appuyé). Enfin, la \verb|focusWin| est la fenêtre qui a actuellement le focus, et qui recevra les événements clavier.
+La classe \verb|Screen| contient 4 pointeurs vers des \verb|Window| jouant un rôle particulier : la \verb|clipWin| est la fenêtre pour laquelle la zone de clipping est actuellement configurée, et qui est donc prête pour le dessin. La \verb|mouseWin| est la fenêtre la plus profonde contenant le pointeur de la souris, c'est elle qui recevra les événements souris. La \verb|grabWin| est la fenêtre qui a ``grabbé'' le pointeur de la souris, c'est à dire que tous les événements souris sont redirigés vers elle, même s'ils ont eu lieu dans une autre fenêtre. Le grab peut être explicite ou implicite, un exemple de grab implicite est lors d'un drag and drop : tant que la souris n'est pas relâchée, tous les événements souris sont envoyés à la fenêtre en train d'être déplacée (celle où le bouton gauche de la souris est appuyé). Enfin, la \verb|focusWin| est la fenêtre qui a actuellement le focus, et qui recevra les événements clavier.
 
 \paragraph{drawables}
 Le \verb|Screen| contient un vecteur de \verb|Drawable| qui recense toutes les zones de dessin gérées par le serveur graphique. Celui-ci permet tout simplement de retrouver le \verb|Drawable| dans lequel un client veut dessiner lorsqu'il émet une requête : dans une requête, le \verb|Drawable| est représenté par un identifiant numérique. Le serveur graphique parcourt donc son vecteur de \verb|Drawable| afin de retrouver l'objet associé. Une structure de données beaucoup plus adaptée pour ce travail serait une \verb|map| ou une \verb|hashmap|, mais nous ne les avions pas encore implémentées lors de l'écriture de pron. Cela fera partie des améliorations futures.
