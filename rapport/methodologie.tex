@@ -6,7 +6,7 @@ Toute la difficulté du développement de TacOS-GUI réside dans le fait que ce 
 Une des voies que nous aurions pu suivre est de développer directement pour TacOS, mais plusieurs problèmes découlent de ce choix.
 
 Le premier est que TacOS, pour l'instant, n'implémente pas la totalité de la libC.
-De plus, ayant choisi le C++ comme language de programmation pour notre projet, nous aurions dû développer en premier la STL sur TacOS.
+De plus, ayant choisi le C++ comme langage de programmation pour notre projet, nous aurions dû développer en premier la STL sur TacOS.
 Enfin, TacOS-GUI utilisant un système de fenêtrage client/serveur, il nous fallait un système de communication inter-processus (IPC) ``sockets-like'', ce qui impliquait le développement d'une librairie de sockets.
 
 Tous ces prérequis auraient fortement retardé le début du développement de TacOS-GUI, et nous auraient empêché de paralléliser les tâches.
@@ -61,3 +61,5 @@ Voici la liste exhaustive des primitives de la librairie de sockets que nous avo
 
 En plus de la surcharge des fonctions de la libC Linux, nous avons dû définir les fonctions spécifiques à la libC TacOS. Exemple avec \verb|exec_elf| :
 \lstinputlisting{listings/exec_elf.c}
+
+\subsubsection{TODO Travail en équipe}
