@@ -14,7 +14,13 @@ Nous avons donc opté pour la solution vivement conseillée par nos tuteurs : d�
 
 \subsection{Émulateur TacOS}
 
-L'émulateur a été développé pour Linux. Comme spécifié dans l'introduction de cette partie, voici les différents points que nous avons dû implémenter :
+L'émulateur a été développé pour Linux.
+Il permet en fait de coder Pron, Guacamole est les applications comme si elles étaient sous TacOS.
+Pour cela, nous avons créé des librairies qui ont exactement les même fonctions que sous TacOS mais en interne elles ne font pas la même chose.
+L'émulateur est juste une fenêtre créée par la SDL.
+Lors des appels aux fonctions des drivers, au lieu de vraiment faire des appels systèmes, ce sont des appels à la SDL qui sont faits.
+Au lieu de dessiner à l'écran, on dessine donc notre fenêtre simulant l'écran sans que l'application ait ``conscience'' qu'elle n'est pas sur TacOS.
+Comme spécifié dans l'introduction de cette partie, voici les différents points que nous avons dû implémenter :
 
 \begin{itemize}
   \item Environnement TacOS
@@ -38,6 +44,12 @@ L'environnement TacOS est décrit dans la librairie du même nom, \verb|libtacos
 La libC de TacOS définissant un certain nombre de fonctions au nom identique à celles de la libC Linux, il nous a fallu surcharger ces fonctions pour leur associer le même comportement que sous TacOS.
 
 Le cas le plus concret concerne les fonctions de manipulation des fichiers : open, read, write, close, ioctl...
+
+Par exemple, sous Tacos, les drivers sont implémentés avec des devices.
+Pour utiliser le driver VESA par exemple, il faut ouvrir le fichier /dev/vesa.
+Il faut donc modifier la fonction open pour qu'elle simule ce comportement.
+Voici donc le wrapper de la fonction open() :
+
 \lstinputlisting{listings/open.c}
 
 \subsubsection{Drivers}
