@@ -101,12 +101,13 @@ Toutes les fonctions de dessin font alors appel à deux callbacks de dessin :
 
 \vspace{1em}
 
-TODO:
+Pour que les primitives de dessin fonctionnent, les classes qui dérivent de \verb|Drawable| doivent implémenter deux méthodes virtuelles pures :
 \begin{itemize}
-  \item pixelAddr/isValid à implémenter dans les Drawable
-  \item Gestion des images (découpage etc)
-  \item Gestion du texte
+  \item \textbf{pixelAddr :} indique, pour une position $(x, y)$, l'adresse en mémoire où le pixel doit être écrit (en mémoire vidéo pour les fenêtres, en mémoire vive pour les pixmaps)
+  \item \textbf{isValid :} indique, pour une position $(x, y)$, s'il est possible de dessiner à cet endroit. Il faut bien sûr veiller à ne pas déborder de la fenêtre ou de la pixmap, et pour les fenêtres il faut vérifier que le point appartient bien à la zone de clipping.
 \end{itemize}
+
+\paragraph{TODO Texte et images}
 
 \subsubsection{Window}
 
@@ -121,6 +122,9 @@ En plus des primitives exposées par \verb|Drawable|, les \verb|Window| proposen
   \item \textbf{resize :} permet de redimensionner une fenêtre. Envoie un événement de redimensionnement.
 \end{itemize}
 
+\paragraph{Conditions de dessin dans une Window}
+Pour pouvoir dessiner dans une \verb|Window|, il faut tout d'abord que celle-ci soit ``realized'', c'est à dire qu'elle soit mappée et que tous ses parents aussi. Cette condition est vérifiée par la méthode \verb|prepareDrawing|, avant d'exécuter la primitive de dessin demandée. Il faut également que chaque point dans lequel on souhaite dessiner appartienne à la zone de clipping. Nous reviendrons sur la notion de zone de clipping dans la section \ref{ClipZone}, mais elle peut être vue comme un ``cache'' posé sur l'écran, qui détermine les zones dans lesquelles on peut dessiner ou non.
+
 \paragraph{Événements}\label{evenements}
 Le serveur graphique communique avec ses clients via des \textbf{événements} lorsqu'il s'agit de les informer d'entrées de l'utilisateur (frappes au clavier, déplacement ou clics de la souris), ou de changements sur les fenêtres (création, destruction, exposition, redimensionnement...).
 
@@ -130,29 +134,20 @@ En plus du créateur de la fenêtre, n'importe quel autre client peut s'abonner 
 
 La plupart des événements sont délivrés seulement à la fenêtre pour laquelle ils ont lieu\footnote{Par ``délivrés à la fenêtre'', on entend ``délivrés à tous les clients qui sont abonnés à ce type d'événement pour cette fenêtre''} (exposition, redimensionnement...). Les événements concernant la structure des fenêtres (création, destruction, reparenting) sont également délivrés à la fenêtre parente. Enfin, les événements liés aux périphériques d'entrée (clavier et souris) se propagent de la fenêtre dans laquelle ils ont eu lieu jusqu'à la fenêtre racine, de parent en parent. Cette propagation peut être stoppée en incluant le type d'événement voulu dans le masque de non-propagation (primitive \verb|pronDontPropagateEvent|).
 
-\paragraph{TODO Conditions de dessin dans une Window}
-\begin{itemize}
-  \item realized (mapped + unmappedParents == 0)
-  \item clipZone Nous reviendrons sur la notion de zone de clipping dans la section \ref{ClipZone}, mais elle peut être vue comme un ``cache'' posé sur l'écran, qui détermine les zones dans lesquelles on peut dessiner ou non.
-\end{itemize}
+\subsubsection{WindowsTree}
+Les fenêtres sont organisées sous la forme d'un arbre n-aire, dans lequel les frères sont doublement chaînés. La position d'une fenêtre dans la liste des fils de son père détermine sa profondeur : il y a une notion de $z$, en plus de la position $(x, y)$. Les fenêtres affichées à l'écran peuvent êtres vues comme des feuilles de papier disposées sur une table : elles peuvent se recouvrir les unes les autres, totalement ou partiellement. La convention que nous avons adoptée est que le \verb|firstChild| d'une fenêtre est son fils de $z$ le plus bas (en arrière-plan). Le \verb|lastChild| est, à l'inverse, le fils de $z$ le plus haut (en avant plan). À partir d'une fenêtre, on peut donc obtenir ses frères de $z$ inférieur (en suivant les liens \verb|prevSibling|) ou ses frères de $z$ supérieur (en suivant les liens \verb|nextSibling|).
 
-\subsubsection{TODO WindowsTree}
-Organisation des windows en arbre
-\begin{itemize}
-  \item Arbre n-aire
-  \item Frères doublement chaînés
-  \item Notion de profondeur
-  \item Itérateurs pour parcourir plus aisément
-\end{itemize}
+Afin de parcourir cet arbre des fenêtres plus facilement (comme une liste, et non comme un arbre), nous avons implémenté deux itérateurs : \verb|IteratorDFS| et \verb|IteratorBFS|. Comme leur nom l'indique, ils permettent respectivement de parcourir l'arbre des fenêtres en effectuant un parcours en profondeur ou un parcours en largeur. Cela nous est très utile, notamment pour effectuer des traitements sur une fenêtre et l'ensemble de ses fils : plutôt que d'avoir recours à une fonction auxiliaire récursive, on peut simplement écrire :
+\lstinputlisting{listings/iterator.cpp}
 
 \subsubsection{ClipZone}
 \label{ClipZone}
 
-Nous avons vu que les fenêtres peuvent se superposer. Il est alors important de s'assurer qu'une fenêtre B placée en-dessous d'une autre fenêtre A ne peut pas dessiner par-dessus A. C'est le rôle de la zone de clipping, que l'on peut voir comme une sorte de ``masque'' posé sur l'écran, qui nous empêche de déborder des zones dans lesquelles on peut dessiner.
+Nous avons vu que les fenêtres peuvent se superposer. Il est alors important de s'assurer qu'une fenêtre B placée en-dessous d'une autre fenêtre A ne peut pas dessiner par-dessus A. C'est le rôle de la zone de clipping, que l'on peut voir comme une sorte de ``cache'' posé sur l'écran, qui nous empêche de déborder des zones dans lesquelles on peut dessiner.
 
 La \verb|ClipZone| contient donc un ensemble de \verb|ClipRect|, qui représentent les rectangles dans lesquels on peut dessiner. Lors de la construction de la \verb|ClipZone|, on part du rectangle délimitant la fenêtre dans laquelle on veut dessiner, et on le restreint pour qu'il ne dépasse pas des rectangles délimitant les fenêtres parentes (on ne peut pas dessiner en dehors de son parent).
 
-On parcourt ensuite tous les frères de droite de la fenêtre (ceux qui ont un Z supérieur et sont donc susceptibles de la recouvrir) afin de détecter les zones recouvertes. Chaque fois qu'un rectangle jusqu'alors visible est recouvert (en totalité ou en partie), ce rectangle est découpé en rectangles plus petits afin de ne conserver que des zones non recouvertes. Ce traitement est répété pour tous les parents de la fenêtre considérée (si un des parents de la fenêtre est obscurci, la fenêtre peut l'être aussi).
+On parcourt ensuite tous les frères de droite de la fenêtre (ceux qui ont un $z$ supérieur et sont donc susceptibles de la recouvrir) afin de détecter les zones recouvertes. Chaque fois qu'un rectangle jusqu'alors visible est recouvert (en totalité ou en partie), ce rectangle est découpé en rectangles plus petits afin de ne conserver que des zones non recouvertes. Ce traitement est répété pour tous les parents de la fenêtre considérée (si un des parents de la fenêtre est obscurci, la fenêtre peut l'être aussi).
 
 Une fois la \verb|ClipZone| construite, il suffit de vérifier, pour chaque pixel à dessiner, s'il appartient ou non à un des rectangles qui la composent. Afin d'éviter d'effectuer la vérification pour chaque pixel, des optimisations ont été mises en place :
 \begin{itemize}
@@ -160,7 +155,9 @@ Une fois la \verb|ClipZone| construite, il suffit de vérifier, pour chaque pixe
   \item Lorsque l'on a demandé une vérification pour un pixel, il y a de fortes chances pour que les vérifications ultérieures portent sur des pixels voisins. Afin d'accélérer les prochaines vérifications, les réponses sont mises en cache : si le pixel demandé appartient bien à la \verb|ClipZone|, le \verb|ClipRect| dans lequel il a été trouvé est stocké dans le cache ainsi que la réponse à la vérification (``oui''). Toutes les vérifications ultérieures portant sur un pixel appartenant à ce rectangle renverront alors ``oui'' sans avoir à reparcourir l'ensemble des \verb|ClipRect| de la \verb|ClipZone|. Si le pixel demandé n'appartenait pas à la ClipZone, un algorithme recherche rapidement le plus grand rectangle qui n'appartient pas à la \verb|ClipZone| et contenant ce pixel. Toutes les vérifications ultérieures portant sur un pixel appartenant à ce rectangle pourront alors renvoyer ``non'' directement.
 \end{itemize}
 
-\subsubsection{TODO Pixmaps}
+\subsubsection{Pixmap}
+
+Rien de spécial à ajouter sur les \verb|Pixmap|, leur fonctionnement est relativement simple. Elles n'implémentent rien de plus que ce qui est déjà défini dans la classe \verb|Drawable|, à part les deux fonctions virtuelles \verb|pixelAddr| et \verb|isValid|. \verb|pixelAddr| se contente de renvoyer l'adresse d'un pixel dans le buffer de la pixmap ($buffer + (y * width + x) * bpp\footnote{Bytes per pixel : 1, 2 ou 3 selon la profondeur de couleurs utilisée (16 couleurs, 256 couleurs, 16 bits, 24 bits, 32 bits).}$). \verb|isValid| vérifie simplement que le point $(x, y)$ ne sort pas des limites de la pixmap $(0, 0, width, height)$.
 
 \subsubsection{Screen}
 \label{Screen}
@@ -215,7 +212,7 @@ Dans le cas d'un événement souris, il y a deux cas de figure à traiter :
   \item La souris a bougé : après avoir sauvegardé les nouvelles coordonnées de la souris, on procède en 3 étapes.
     \begin{itemize}
       \item Il faut tout d'abord déplacer le pointeur à l'écran en conséquence. Pour cela, avant chaque dessin du pointeur, la zone dans laquelle il s'apprête à être dessiné est sauvegardée. Cette sauvegarde peut ensuite être restaurée afin de faire disparaître le pointeur de son ancienne position, avant de le redessiner à sa nouvelle position.
-      \item Il faut ensuite mettre à jour la fenêtre qui contient le pointeur de la souris (\verb|mouseWin|). Pour cela, on part simplement de la fenêtre racine, et on descend en prenant la fenêtre ``realized'' de Z maximal qui contient le curseur. On obtient ainsi la fenêtre la plus ``profonde'' dans l'arbre, visible à l'écran, qui contient le pointeur de la souris.
+      \item Il faut ensuite mettre à jour la fenêtre qui contient le pointeur de la souris (\verb|mouseWin|). Pour cela, on part simplement de la fenêtre racine, et on descend en prenant la fenêtre ``realized'' de $z$ maximal qui contient le curseur. On obtient ainsi la fenêtre la plus ``profonde'' dans l'arbre, visible à l'écran, qui contient le pointeur de la souris.
       \item On envoie ensuite un événement \verb|EventPointerMoved| à la \verb|mouseWin| fraîchement mise à jour.
     \end{itemize}
   \item L'état des boutons de la souris a changé : après avoir sauvegardé le nouvel état des boutons, on envoie simplement un événement \verb|EventMouseButton| à la \verb|mouseWin|.
@@ -229,16 +226,39 @@ Le listing ci-dessous illustre le fonctionnement très simple de la boucle princ
 
 \lstinputlisting{listings/pron_main.cpp}
 
-\subsection{TODO Pronlib}
+\subsection{Pronlib}
 \label{Pronlib}
 
-\subsubsection{TODO Display}
+La pronlib est la librairie cliente de pron. Elle permet aux applications d'interagir avec le serveur graphique : connexion, création et manipulation de fenêtres, dessin, gestion des événements... C'est une librairie relativement bas niveau : chaque primitive qu'elle propose correspond à une primitive de pron. Les fonctions de la pronlib se contentent de forger une requête pron à partir des arguments qu'elles reçoivent, et d'envoyer cette requête au serveur. Certaines d'entre elles attendent ensuite la réponse du serveur pour la transmettre à l'application.
+
+\subsubsection{Display}
+
+Le \verb|Display| est une entité spécifique à la pronlib. Il représente la ``connexion'' à pron, établie par la primitive \verb|pronConnect|. Il est passé comme premier argument à toutes les primitives de la pronlib.
+
+C'est également lui qui gère les identifiants des ressources créées par l'application : nous avons vu à la section \ref{Architecture} que pour des raisons de performances, c'est le client lui-même qui choisit les identifiants des ressources qu'il veut créer. Cette tâche est en réalité prise en charge par la pronlib, afin de l'abstraire à l'application. Lors de la connexion à pron, la pronlib reçoit un message de bienvenue qui contient la page d'identifiants utilisables pour créer des ressources. Cette information est stockée dans le \verb|Display| qui peut alors tenir un compteur d'identifiants incrémenté à chaque création de nouvelle ressource (fenêtre, pixmap, contexte graphique...).
+
+Le \verb|Display| abstrait également la lecture de messages depuis le serveur. En effet, l'application est susceptible de recevoir trois types de messages de la part du serveur :
+\begin{itemize}
+  \item Une réponse, attendue à la suite de certaines requêtes (attributs d'une fenêtre, valeurs d'un contexte graphique...). La pronlib attend alors un type de réponse spécifique pour pouvoir le remonter à l'application. Si elle reçoit un message qui ne correspond pas, elle doit lever une erreur. Si elle reçoit un événement, elle doit le placer dans une file pour qu'il puisse être consulté lors de la prochaine lecture des événements, et se remettre en attente de la réponse.
+  \item Un événement, attendu suite à l'appel de la primitive de lecture des événements (\verb|pronNextEvent|). Si des événements sont présents dans la file d'attente
+  \item Une erreur. Quel que soit le contexte dans lequel la réception d'un message d'erreur a lieu (attente d'une réponse à une requête ou d'un événement), il est transmis à un gestionnaire d'erreur qui peut agir en conséquence. Pour l'instant, le gestionnaire d'erreur est extrêmement basique et se contente de quitter l'application.
+\end{itemize}
+
+\vspace{1em}
+
+TODO MAL DIT Le \verb|Display| permet donc à la pronlib de gérer tous ces cas de figures aisément en proposant une méthode \verb|read| de ``haut niveau'', qui prend en charge tous ces détails.
 
 \begin{itemize}
   \item "connexion" à pron passée à toutes les primitives
   \item gère le compteur d'id de ressources
   \item abstrait la lecture (queue des événements, attente d'un message particulier etc)
 \end{itemize}
+
+\subsubsection{TODO Gestion des événements}
+
+\subsubsection{Liste des primitives de la pronlib}
+
+\lstinputlisting{listings/pronlib.h}
 
 \subsubsection{Squelette d'application utilisant la pronlib}
 
