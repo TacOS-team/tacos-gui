@@ -18,7 +18,7 @@ C'est également lui qui dialogue avec les périphériques et gère les entrées
   \item Périphériques de sortie (carte vidéo), afin d'afficher le pointeur de la souris et l'ensemble des fenêtres à l'écran.
 \end{itemize}
 
-\subsection{Protocole}
+\subsection{Description du protocole utilisé}
 
 Le protocole de communication entre Pron et ses clients comporte quatre catégorie de messages :
 \begin{itemize}
@@ -36,8 +36,8 @@ Afin d'optimiser les performances, une requête n'attend pas forcément une rép
 
 Les identifiants de ressources sont codés sur 4 octets, avec l'identifiant du client sur les deux octets de poids fort. On peut donc avoir $65536$ clients différents, qui créent chacun $65536$ ressources. Chaque client peut donc demander à créer une ressource dans l'intervalle d'identifiants $[id_{client} << 16 ; (id_{client} + 1) << 16 - 1]$.
 
-\subsection{Architecture}
-
+\subsection{Architecture et description des acteurs}
+\label{Architecture}
 Le graphe de collaboration ci-dessous présente les classes principales de pron, articulées autour d'une classe centrale : \verb|Screen|.
 
 \begin{figure}[H]
@@ -46,7 +46,9 @@ Le graphe de collaboration ci-dessous présente les classes principales de pron,
   \caption{Diagramme de collaboration articulé autour de la classe Screen}
 \end{figure}
 
-\subsubsection{GC (Graphics context)}
+Dans cette section, nous allons présenter brièvement les différents acteurs qui composent Pron. Le \verb|Screen| ne sera pas présenté le premier, car il dépend de beaucoup d'autres acteurs que nous devons introduire au préalable.
+
+\subsubsection{GC}
 
 Les GC (graphics contexts, ou contextes graphiques) contiennent les paramètres graphiques utilisés par toutes les primitives de dessin :
 \begin{itemize}
@@ -107,11 +109,12 @@ Pour que les primitives de dessin fonctionnent, les classes qui dérivent de \ve
   \item \textbf{isValid :} indique, pour une position $(x, y)$, s'il est possible de dessiner à cet endroit. Il faut bien sûr veiller à ne pas déborder de la fenêtre ou de la pixmap, et pour les fenêtres il faut vérifier que le point appartient bien à la zone de clipping.
 \end{itemize}
 
-\paragraph{TODO Texte et images}
+\paragraph{Texte et images}
+Outre les primitives de dessin classiques (dessin de formes géométriques), pron gère le dessin de texte et d'images. La gestion du texte est basée sur des polices de caractères bitmap au format BDF, qui seront présentées à la section \ref{Font}. La gestion des images est plus simple et s'apparente à la copie d'une zone rectangulaire dans une autre : l'image est passée à pron sous forme d'un vecteur de composantes RVB, et est copiée à la position voulue dans le \verb|Drawable| de destination. La taille des messages étant limitée, cela nécessite de découper les images (cf section \ref{PronlibImages}).
 
 \subsubsection{Window}
 
-En plus des primitives exposées par \verb|Drawable|, les \verb|Window| proposent des primitives qui leur sont propres :
+En plus des primitives exposées par la classe \verb|Drawable|, les \verb|Window| proposent des primitives qui leur sont propres :
 \begin{itemize}
   \item \textbf{map/unmap :} le ``mapping'' d'une fenêtre la rend affichable à l'écran. L'``unmapping'' est l'opération inverse. Une fenêtre n'est réellement affichée à l'écran que lorsqu'elle est ``mapped'', et que tous ses parents sont également ``mapped'' : on dit alors qu'elle est ``realized''.
   \item \textbf{clear :} efface le contenu de la fenêtre, en la remplissant avec sa couleur de fond.
@@ -184,6 +187,7 @@ Le \verb|Screen| contient la liste des polices de caractères chargées au déma
 Il s'agit de la zone de clipping actuellement configurée pour la \verb|clipWin|. Cela signifie que le dessin se fait dans le contexte de la \verb|clipWin| : on ne peut dessiner ni en dehors de cette fenêtre, ni dans des zones de cette fenêtre recouvertes par d'autres fenêtres.
 
 \subsubsection{Font}
+\label{Font}
 Nous avons choisi d'implémenter un support des polices de caractères au format BDF (Glyph Bitmap Distribution Format). Nous avons choisi ce format car il se présente sous la forme d'un fichier texte à la fois lisible par des humains et très facile à parser. De plus, la manipulation de polices bitmap est beaucoup simple que la manipulation de polices vectorielles, malgré les limitations que cela engendre (pas de redimensionnement notamment, et donc un fichier différent par taille de police).
 
 Nous proposons deux primitives de manipulation du texte :
@@ -220,22 +224,24 @@ Dans le cas d'un événement souris, il y a deux cas de figure à traiter :
 
 \paragraph{Grabs} Comme vu à la section \ref{Screen}, une fenêtre peut ``grabber'' le pointeur de la souris. Tous les événements souris sont alors redirigés vers elle, même s'ils ont eu lieu dans une autre fenêtre. Cela se traduit simplement par un envoi des événements à la \verb|grabWin| au lieu de la \verb|mouseWin| lorsque la \verb|grabWin| n'est pas \verb|NULL|. Pour l'instant, nous ne supportons que les ``grabs'' implicites, c'est à dire lorsque le bouton gauche de la souris est enfoncé dans une fenêtre. La mise à jour de la \verb|grabWin| est donc très simple : lorsque l'on détecte un changement d'état des boutons et que le bouton gauche est enfoncé, la \verb|mouseWin| devient la \verb|grabWin|. Lorsque ce bouton est relâché, la \verb|grabWin| redevient \verb|NULL|.
 
-\subsection{Boucle principale}
+\subsection{Boucle principale de Pron}
 
 Le listing ci-dessous illustre le fonctionnement très simple de la boucle principale de pron. On commence par accepter les éventuels nouveaux clients en attente de connexion. On vérifie ensuite, pour chaque client, s'il a envoyé une requête qu'il faut traiter. La déconnexion des clients est gérée à ce niveau (dans le \verb|handle| des objets \verb|Client|). Enfin, on vérifie si les périphériques d'entrée ne nous ont pas remonté de nouveaux événements.
 
 \lstinputlisting{listings/pron_main.cpp}
 
-\subsection{Pronlib}
+\subsection{Pronlib : librairie cliente de Pron}
 \label{Pronlib}
 
 La pronlib est la librairie cliente de pron. Elle permet aux applications d'interagir avec le serveur graphique : connexion, création et manipulation de fenêtres, dessin, gestion des événements... C'est une librairie relativement bas niveau : chaque primitive qu'elle propose correspond à une primitive de pron. Les fonctions de la pronlib se contentent de forger une requête pron à partir des arguments qu'elles reçoivent, et d'envoyer cette requête au serveur. Certaines d'entre elles attendent ensuite la réponse du serveur pour la transmettre à l'application.
 
-\subsubsection{Display}
+\subsubsection{Notion de ``Display''}
 
 Le \verb|Display| est une entité spécifique à la pronlib. Il représente la ``connexion'' à pron, établie par la primitive \verb|pronConnect|. Il est passé comme premier argument à toutes les primitives de la pronlib.
 
-C'est également lui qui gère les identifiants des ressources créées par l'application : nous avons vu à la section \ref{Architecture} que pour des raisons de performances, c'est le client lui-même qui choisit les identifiants des ressources qu'il veut créer. Cette tâche est en réalité prise en charge par la pronlib, afin de l'abstraire à l'application. Lors de la connexion à pron, la pronlib reçoit un message de bienvenue qui contient la page d'identifiants utilisables pour créer des ressources. Cette information est stockée dans le \verb|Display| qui peut alors tenir un compteur d'identifiants incrémenté à chaque création de nouvelle ressource (fenêtre, pixmap, contexte graphique...).
+La connexion à pron consiste en l'envoi d'une requête \verb|Hello|. Pron envoie alors une réponse \verb|Welcome| contenant l'identifiant de la root window (0 par convention) ainsi que la plage d'identifiants que le nouveau client peut utiliser pour créer des ressources.
+
+Nous avons en effet vu à la section \ref{Architecture} que pour des raisons de performances, c'est le client lui-même qui choisit les identifiants des ressources qu'il veut créer. Cette tâche est en réalité prise en charge par la pronlib, afin de l'abstraire à l'application. La page d'identifiants transmise dans la réponse \verb|Welcome| est stockée dans le \verb|Display| qui peut alors tenir un compteur d'identifiants incrémenté à chaque création de nouvelle ressource (fenêtre, pixmap, contexte graphique...).
 
 Le \verb|Display| abstrait également la lecture de messages depuis le serveur. En effet, l'application est susceptible de recevoir trois types de messages de la part du serveur :
 \begin{itemize}
@@ -246,20 +252,28 @@ Le \verb|Display| abstrait également la lecture de messages depuis le serveur. 
 
 \vspace{1em}
 
-TODO MAL DIT Le \verb|Display| permet donc à la pronlib de gérer tous ces cas de figures aisément en proposant une méthode \verb|read| de ``haut niveau'', qui prend en charge tous ces détails.
+Le \verb|Display| permet donc à la pronlib de gérer ces différents cas de figure aisément en proposant une méthode \verb|read(MessageType type)| de ``haut niveau'', permettant de recevoir un message de type prédéfini (réponse à une requête, événement) tout en prenant en charge tous ces détails.
 
-\begin{itemize}
-  \item "connexion" à pron passée à toutes les primitives
-  \item gère le compteur d'id de ressources
-  \item abstrait la lecture (queue des événements, attente d'un message particulier etc)
-\end{itemize}
+\subsubsection{Gestion des événements}
 
-\subsubsection{TODO Gestion des événements}
+Toute application utilisant la pronlib doit contenir une boucle de gestion des événements. C'est grâce à cette boucle qu'elle est notifiée des différents éléments qui vont survenir pendant toute la vie de l'application : entrées de l'utilisateur, exposition de la fenêtre, redimensionnement, fermeture...
+
+La primitive \verb|pronNextEvent| permet à l'application de récupérer le prochain événement transmis par le serveur. Comme toutes les primitives de la pronlib, son premier argument est le \verb|Display|. Son deuxième argument est une structure \verb|PronEvent|, qui doit être préalablement allouée via la primitive \verb|getPronEvent|. Ce \verb|PronEvent| n'a besoin d'être alloué qu'une seule fois (avant de rentrer dans la boucle de gestion des événements) et peut être ensuite réutilisé par chaque appel à \verb|pronNextEvent|. Enfin, le dernier argument définit le comportement de la primitive en cas d'absence de nouvel événement : par défaut, \verb|pronNextEvent| est bloquante et attendra jusqu'à la réception d'un nouvel événement.
+
+L'application peut demander à ce que la lecture des événements soit non bloquante en passant le troisième argument \verb|nonBlocking| à ``vrai''. Dans ce cas, en l'absence d'événement à retourner, \verb|pronNextEvent| retournera immédiatement avec un code de retour égal à 0 (``faux''). Pour distinguer une absence d'événement d'une erreur de lecture, l'application pourra utiliser le même mécanisme que pour la manipulation de sockets non bloquantes, via la variable globale \verb|errno|.
+
+Un exemple de boucle de gestion des événements est donné à la section \ref{Squelette}.
+
+\subsubsection{Gestion des images}
+\label{PronlibImages}
+
+La seule primitive non triviale de la pronlib est \verb|pronPutImage|. En effet, il faut d'une manière ou d'une autre transférer l'image sur le serveur, image dont la taille est bien souvent supérieure à la taille maximale d'un message pron\footnote{Pour l'instant 1Kio, mais augmenter cette taille ne fait que repousser le problème.}. \verb|pronPutImage| se charge donc de segmenter l'image en autant de messages que nécessaire. Chaque message est une requête \verb|PutImage| qui contient l'identifiant du \verb|Drawable| dans lequel dessiner, la position $(x, y)$ à laquelle dessiner l'image, sa taille (largeur et hauteur), son format (seul le format ZPixmap\footnote{Simple vecteur de composantes RVB.} est supporté pour le moment) et sa profondeur de couleurs. Le reste du message contient le fragment d'image à transmettre. Pour que l'image soit correctement réassemblée côté serveur, deux informations sont ajoutées dans chaque message : l'offset du fragment actuel, ainsi que sa taille.
 
 \subsubsection{Liste des primitives de la pronlib}
 
 \lstinputlisting{listings/pronlib.h}
 
 \subsubsection{Squelette d'application utilisant la pronlib}
+\label{Squelette}
 
 \lstinputlisting{listings/appli_pronlib.cpp}
