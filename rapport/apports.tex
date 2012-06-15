@@ -2,7 +2,16 @@
 
 Comme précisé dans la partie méthodologie, la librairie libtacos, couche d'abstraction de TacOS, pour le développement de TacOS-GUI doit être implémentée sous TacOS.
 
-Voici une liste non exhaustive des apports de TacOS-GUI à TacOS.
+Pour ce projet, nous avons décidé d'utiliser le C++.
+Le C++ était disponible par défaut sous TacOS sauf pour :
+
+\begin{itemize}
+  \item La fonction new : il a été nécessaire de l'implémenter en utilisant malloc()
+  \item Les fonctions delete : pareil en utilisant free()
+  \item Les exceptions : pour gérer les exceptions, il est nécessaire d'utiliser plusieurs librairies demandant beaucoup de dépendances. Nous n'avons pas utilisé les exceptions pour cette raison
+\end{itemize}
+
+Voici une liste non exhaustive des apports de TacOS-GUI à TacOS :
   
 \begin{itemize}
   \item STL (C++)
@@ -10,7 +19,6 @@ Voici une liste non exhaustive des apports de TacOS-GUI à TacOS.
     \begin{itemize}
       \item qsort
       \item gettimeofday
-      \item time
     \end{itemize}
   \item driver
     \begin{itemize}

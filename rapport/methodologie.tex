@@ -6,7 +6,7 @@ Toute la difficulté du développement de TacOS-GUI réside dans le fait que ce 
 Une des voies que nous aurions pu suivre est de développer directement pour TacOS, mais plusieurs problèmes découlent de ce choix.
 
 Le premier est que TacOS, pour l'instant, n'implémente pas la totalité de la libC.
-De plus, ayant choisi le C++ comme language de programmation pour notre projet, nous aurions dû développer en premier la STL sur TacOS.
+De plus, ayant choisi le C++ comme langage de programmation pour notre projet, nous aurions dû développer en premier la STL sur TacOS.
 Enfin, TacOS-GUI utilisant un système de fenêtrage client/serveur, il nous fallait un système de communication inter-processus (IPC) ``sockets-like'', ce qui impliquait le développement d'une librairie de sockets.
 
 Tous ces prérequis auraient fortement retardé le début du développement de TacOS-GUI, et nous auraient empêché de paralléliser les tâches.
@@ -14,7 +14,13 @@ Nous avons donc opté pour la solution vivement conseillée par nos tuteurs : d�
 
 \subsection{Émulateur TacOS}
 
-L'émulateur a été développé pour Linux. Comme spécifié dans l'introduction de cette partie, voici les différents points que nous avons dû implémenter :
+L'émulateur a été développé pour Linux.
+Il permet en fait de coder Pron, Guacamole est les applications comme si elles étaient sous TacOS.
+Pour cela, nous avons créé des librairies qui ont exactement les même fonctions que sous TacOS mais en interne elles ne font pas la même chose.
+L'émulateur est juste une fenêtre créée par la SDL.
+Lors des appels aux fonctions des drivers, au lieu de vraiment faire des appels systèmes, ce sont des appels à la SDL qui sont faits.
+Au lieu de dessiner à l'écran, on dessine donc notre fenêtre simulant l'écran sans que l'application ait ``conscience'' qu'elle n'est pas sur TacOS.
+Comme spécifié dans l'introduction de cette partie, voici les différents points que nous avons dû implémenter :
 
 \begin{itemize}
   \item Environnement TacOS
@@ -38,6 +44,12 @@ L'environnement TacOS est décrit dans la librairie du même nom, \verb|libtacos
 La libC de TacOS définissant un certain nombre de fonctions au nom identique à celles de la libC Linux, il nous a fallu surcharger ces fonctions pour leur associer le même comportement que sous TacOS.
 
 Le cas le plus concret concerne les fonctions de manipulation des fichiers : open, read, write, close, ioctl...
+
+Par exemple, sous Tacos, les drivers sont implémentés avec des devices.
+Pour utiliser le driver VESA par exemple, il faut ouvrir le fichier /dev/vesa.
+Il faut donc modifier la fonction open pour qu'elle simule ce comportement.
+Voici donc le wrapper de la fonction open() :
+
 \lstinputlisting{listings/open.c}
 
 \subsubsection{Drivers}
@@ -61,3 +73,5 @@ Voici la liste exhaustive des primitives de la librairie de sockets que nous avo
 
 En plus de la surcharge des fonctions de la libC Linux, nous avons dû définir les fonctions spécifiques à la libC TacOS. Exemple avec \verb|exec_elf| :
 \lstinputlisting{listings/exec_elf.c}
+
+\subsubsection{TODO Travail en équipe}
