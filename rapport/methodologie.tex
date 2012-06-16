@@ -6,11 +6,11 @@ Toute la difficulté du développement de TacOS-GUI réside dans le fait que ce 
 Une des voies que nous aurions pu suivre est de développer directement pour TacOS, mais plusieurs problèmes découlent de ce choix.
 
 Le premier est que TacOS, pour l'instant, n'implémente pas la totalité de la libC.
-De plus, ayant choisi le C++ comme langage de programmation pour notre projet, nous aurions dû développer en premier la STL sur TacOS.
+De plus, ayant choisi le C++ comme langage de programmation pour notre projet, nous aurions dû développer en premier lieu la STL sur TacOS.
 Enfin, TacOS-GUI utilisant un système de fenêtrage client/serveur, il nous fallait un système de communication inter-processus (IPC) ``sockets-like'', ce qui impliquait le développement d'une librairie de sockets.
 
 Tous ces prérequis auraient fortement retardé le début du développement de TacOS-GUI, et nous auraient empêché de paralléliser les tâches.
-Nous avons donc opté pour la solution vivement conseillée par nos tuteurs : développer un émulateur qui nous permettrait de développer sous Linux, tout en simulant un environnement TacOS.
+Nous avons donc opté pour la solution vivement conseillée par nos tuteurs : développer un émulateur qui nous permette de développer sous Linux, tout en simulant un environnement TacOS.
 
 \subsection{Émulateur TacOS}
 

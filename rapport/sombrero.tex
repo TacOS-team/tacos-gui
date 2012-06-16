@@ -5,26 +5,26 @@ Son rôle est d'apporter au programmeur un niveau d'abstraction supplémentaire 
 
 \subsection{Conception de la librairie}
 
-La plupart des librairies de Widgets veulent être multi-plateformes.
+La plupart des librairies de widgets se veulent multi-plateformes.
 Pour cela, elles utilisent au minimum le système de fenêtrage et gèrent en interne un maximum de choses.
-Le développement de Sombrero ayant un but pédagogique, nous avons au contraire essayer d'exploiter au maximum les fonctionnalités de Pron et de faire le mimimum dans la librairie.
-Dans cette optique, nous avons décidé que à tout widget correspondait une Window dans pron.
-Ainsi c'est pron qui détermine à qui transmettre les évènements claviers, souris, expose, etc.
+Le développement de Sombrero ayant un but pédagogique, nous avons au contraire essayé d'exploiter au maximum les fonctionnalités de Pron et de faire le minimum dans la librairie. Ceci afin de respecter au mieux le modèle en couches que nous avons choisi, où chaque couche s'appuie sur les couches inférieures.
+Dans cette optique, nous avons décidé qu'à tout widget correspondrait une fenêtre (\verb|Window|) Pron.
+Ainsi, la gestion des événements est effectuée par Pron, et le widget n'a plus qu'à s'abonner aux événements de sa fenêtre qui l'intéressent.
 
 \subsubsection{Widgets}
 
 Nous avons distingué deux grandes familles d'éléments graphiques :
 
 \begin{itemize}
-  \item Les widgets : ce sont tous les éléments graphiques de l'interface : boutons, labels, textarea, etc.
-  \item Les conteneurs : ils contiennent des widgets (ou d'autres conteneurs) et permettent de les disposer dans la fenêtre.
+  \item Les \textbf{widgets} : ce sont tous les éléments graphiques de l'interface : boutons, labels, textarea, etc.
+  \item Les \textbf{conteneurs} : ils contiennent des widgets (ou d'autres conteneurs) et permettent de les disposer dans la fenêtre.
 \end{itemize}
 
-Tout objet susceptible de contenir d'autres widgets héritera donc de container.
-Pour gérer facilement ces imbrications, un conteneur est lui-même un Widget et a sa propre Pron Window.
-On retrouvera bien chez pron un arbre de fenêtres correspondant à la hiérarchie des widgets.
+Tout objet susceptible de contenir d'autres widgets héritera donc de la classe \verb|Container|.
+Pour gérer facilement ces imbrications, un \verb|Container| est lui-même un \verb|Widget| et possède sa propre \verb|Window| Pron.
+Côté Pron, on retrouve bien un arbre de fenêtres correspondant à la hiérarchie des widgets.
 
-Voici le diagramme de classes de la librairie. On peut voir les différentes classes conteneurs et les différentes classes de Widget implémentées :
+Voici le diagramme de classes de la librairie. On peut voir les différents \verb|Container| et \verb|Widget| implémentés :
 
 \begin{figure}[H]
   \centering
@@ -33,22 +33,19 @@ Voici le diagramme de classes de la librairie. On peut voir les différentes cla
   \label{fig:diagrame_classes_sombrero}
 \end{figure}
 
-La classe Widget est bien à la racine.
-Elle contient tout ce qui est commun à tous les widgets dont notamment la position.
-Il est à noter que, contrairement à Pron, la position est relative au widget parent.
-Ceci facilite le placement des widgets par les conteneurs, ils sont placés relativement au conteneur et pas en position absolue.
+La classe \verb|Widget| est bien à la racine.
+Elle contient tout ce qui est commun à tous les widgets, notamment leur taille et leur position.
+Il est à noter que, contrairement à la position des des \verb|Window| Pron, la position d'un \verb|Widget| est relative au widget parent.
+Cela facilite leur placement par les conteneurs : ils sont placés relativement à leur conteneur, et non pas en position absolue.
 
-Dans les conteneurs, on peut voir la classe Bin.
-Cette classe est la classe mère de tous les conteneurs ne contenant qu'un seul élément.
-Notamment les scrollPanes et les Window.
-La classe Window est une fenêtre qui sera décorée.
-C'est le seul widget qui peut être décoré.
-Une Window peut ensuite contenir un seul widget.
-Si on veut afficher une fenêtre décorée, c'est cette classe qu'il faut utiliser.
-Ensuite il faut y mettre soit un conteneur soit un widget.
+Parmi les \verb|Container| figure la classe \verb|Bin|.
+Cette classe est la classe mère de tous les conteneurs ne contenant qu'un seul élément, notamment les \verb|Window| et les \verb|ScrollPane|.
+La classe \verb|Window| est une fenêtre qui sera décorée par le gestionnaire de fenêtres.
+C'est le seul widget qui peut être décoré : si on veut afficher une fenêtre décorée, c'est cette classe qu'il faut utiliser.
+Une \verb|Window| peut ensuite contenir un seul widget, mais rappelons qu'un conteneur est un widget : on peut donc placer un autre conteneur à l'intérieur d'une \verb|Window| afin d'y disposer plusieurs widgets.
 
-Prenons l'exemple de l'application gestionnaire de fichier.
-Cette application contient un label pour afficher le répertoire courant ainsi que un bouton pour chaque fichier dans un scrollPane. On retrouve donc l'arborescence de widgets suivante :
+Prenons l'exemple de l'application ``Gestionnaire de fichiers''.
+Cette application contient un \verb|Label| pour afficher le répertoire courant, ainsi qu'un \verb|ScrollPane| contenant un \verb|Button| pour chaque fichier. On retrouve donc l'arborescence de widgets suivante :
 
 \begin{center}
   \begin{tikzpicture}[
@@ -70,7 +67,7 @@ Cette application contient un label pour afficher le répertoire courant ainsi q
   \end{tikzpicture}
 \end{center}
 
-\subsubsection{Gestion de la Pron Window}
+\subsubsection{Gestion de la Window Pron}
 
 Instinctivement, on voudrait créer la pronWindow au moment de la construction de Widget.
 Il faudrait donc le faire dans le constructeur.

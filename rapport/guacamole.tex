@@ -5,20 +5,18 @@ Nous allons commencer par rappeller rapidement le rôle d'un gestionnaire de fen
 Le gestionnaire de fenêtres est l'acteur permettant de :
 
 \begin{itemize}
-  \item Décorer\footnote{La décoration d'une fenêtre est le cadre qui contiendra le titre de la fenêtre ainsi que des boutons permettant de la manipuler.} les fenêtres
+  \item Décorer\footnote{La décoration d'une fenêtre est le cadre qui contient son titre ainsi que des boutons permettant de la manipuler.} les fenêtres
   \item Fermer, déplacer et redimensionner les fenêtres
-  \item Gestion des superpositions
-  \item Gérer le plein écran et les maximisation des fenêtres
+  \item Gérer la navigation entre les fenêtres et leur passage au premier plan
+  \item Gérer le plein écran et les maximisations des fenêtres
 \end{itemize}
 
 \subsection{Création d'une fenêtre par un client}
 
-
 Dans l'architecture que nous avons mise en place, Guacamole est un client comme tous les autres.
-Il n'a pas un ``statut'' différent des autres clients.
-Il ne fait que s'abonner à des évènements en plus.
+Il n'a pas un ``statut'' différent des autres clients et ne fait que s'abonner à des événements en plus.
 Pour faire son travail, il a besoin d'être averti lors de la création d'une fenêtre et lors de sa destruction.
-Il s'abonne donc aux évènements correspondants.
+Il s'abonne donc aux événements correspondants.
 Lorsqu'on lance notre système, on a donc Pron et Guacamole qui sont deux entités distinctes comme ci-dessous.
 
 \begin{figure}[H]
@@ -28,7 +26,7 @@ Lorsqu'on lance notre système, on a donc Pron et Guacamole qui sont deux entit�
   \label{fig:guacamole_anim_1}
 \end{figure}
 
-Lorsqu'une application graphique va démarrer, elle va se connecter à Pron et va envoyer une requête de création d'une fenêtre.
+Lorsqu'une application graphique démarre, elle se connecte à Pron et envoie une requête de création d'une fenêtre.
 
 \begin{figure}[H]
   \centering
@@ -37,8 +35,8 @@ Lorsqu'une application graphique va démarrer, elle va se connecter à Pron et v
   \label{fig:guacamole_anim_2}
 \end{figure}
 
-Dès la réception de ce message, Pron va créer la fenêtre sans décoration : pour lui, une fenêtre n'est rien d'autre qu'une zone de dessin rectangulaire.
-Le nouvel arbre interne des fenêtres de Pron sera le suivant après le lancement de l'application PronCube :
+Dès la réception de ce message, Pron crée la fenêtre sans décoration : pour lui, une fenêtre n'est rien d'autre qu'une zone de dessin rectangulaire.
+Le nouvel arbre interne des fenêtres de Pron sera le suivant après le lancement de l'application \verb|PronCube| :
 
 \begin{center}
   \begin{tikzpicture}[
@@ -50,9 +48,9 @@ Le nouvel arbre interne des fenêtres de Pron sera le suivant après le lancemen
   \end{tikzpicture}
 \end{center}
 
-Il va ensuite regarder s'il y a des applications abonnées aux évènements de création de fenêtres.
+Pron envoie ensuite un événement de création de fenêtre, sous réserve qu'une application s'y soit abonnée.
 Si Guacamole n'a pas été lancé, on a donc une fenêtre non décorée qui apparaît à l'écran.
-Le client fonctionne parfaitement et s'affiche comme ceci :
+Le client fonctionne parfaitement et se présente comme ceci :
 
 \begin{figure}[H]
   \centering
@@ -61,8 +59,7 @@ Le client fonctionne parfaitement et s'affiche comme ceci :
   \label{fig:pron_cube_sans_decoration}
 \end{figure}
 
-En revanche, si Guacamole est lancé, Pron le notifie de la création d'une fenêtre.
-Il lui envoie donc un message :
+En revanche, si Guacamole est lancé, il reçoit la notification de création de la fenêtre.
 
 \begin{figure}[H]
   \centering
@@ -79,19 +76,18 @@ Ce message contient plusieurs informations intéressantes :
   \item Un booléen autorisant ou non la décoration de la fenêtre
 \end{itemize}
 
-Une fois ce message reçu, Guacamole va décorer la fenêtre sauf dans deux cas :
+Une fois ce message reçu, Guacamole décore la fenêtre si deux conditions sont réunies :
 
 \begin{itemize}
-  \item Le booléen de demande de décoration est à faux
-  \item Le parent de la fenêtre n'est pas la root window de Pron (Pron id = 0)
-            \footnote{On rappelle que chaque application peut créer plusieurs fenêtres à l'intérieur de sa propre fenêtre pour créer les divers éléments graphiques (boutons, labels, et tout autre widget). On ne souhaite donc pas qu'un bouton soit décoré.} 
+  \item Le booléen autorisant la décoration est ``vrai''
+  \item La fenêtre est une ``top window'', c'est à dire que son parent est la root window (fenêtre de premier niveau dans l'arbre des fenêtres)
+    \footnote{On rappelle que chaque application peut créer plusieurs fenêtres à l'intérieur de sa propre fenêtre pour créer les divers éléments graphiques (boutons, labels, et tout autre widget). Seules les fenêtres ``principales'' doivent être décorées : on ne souhaite pas qu'un bouton ou un label le soit.} 
 \end{itemize}
 
-Si la fenêtre doit être décorée, Guacamole va ajouter cette fenêtre à sa liste interne de fenêtres décorées.
-Il va ensuite créer la fenêtre de décoration.
-Cette fenêtre est donc une fenêtre un peu plus grande que la fenêtre du client.
+Si la fenêtre doit être décorée, Guacamole ajoute cette fenêtre à sa liste interne de fenêtres décorées.
+Il crée ensuite la fenêtre de décoration, qui est une fenêtre un peu plus grande que la fenêtre du client.
 Elle dépasse notament au dessus pour afficher la décoration.
-Guacamole envoie donc une demande à Pron :
+Guacamole envoie donc une requête à Pron :
 
 \begin{figure}[H]
   \centering
@@ -113,9 +109,8 @@ Du coté de Pron, le nouvel arbre des fenêtres est donc le suivant :
   \end{tikzpicture}
 \end{center}
 
-Guacamole définit ensuite la fenêtre de décoration comme fenêtre parente à la fenêtre du client.
-Et positionner la fenêtre de l'application à la bonne position, à l'intérieur de la fenêtre de décoration.
-Il envoie donc un message à Pron.
+Guacamole définit ensuite la fenêtre de décoration comme fenêtre parente de la fenêtre de l'application\footnote{Cette opération porte le nom de ``reparenting''.}, qu'il place à la bonne position à l'intérieur de son nouveau parent.
+Il envoie donc une requête à Pron.
 
 \begin{figure}[H]
   \centering
@@ -138,17 +133,16 @@ Le nouvel arbre des fenêtres de Pron est donc le suivant :
   \end{tikzpicture}
 \end{center}
 
-Maintenant que la fenêtre de décoration est créée et à la bonne position.
-Il reste deux choses à faire :
+Maintenant que la fenêtre de décoration est créée et la fenêtre de l'application correctement placée à l'intérieur, il reste deux choses à faire :
 
 \begin{itemize}
-  \item Créer les boutons de fermeture, maximisation et redimentionnement de la fenêtre
-  \item Trouver un emplacement libre et y déplacer la fenêtre
+  \item Créer les boutons de fermeture, maximisation et redimensionnement de la fenêtre
+  \item Trouver un emplacement libre sur l'écran et y déplacer la fenêtre
 \end{itemize}
 
-Les boutons de fermeture sont donc de nouvelles fenêtres pour Pron auxquelles Guacamole va s'abonner sur divers évènements que nous verrons plus tard.
-Ces boutons seront donc dans la fenêtre de décoration qui sera leur fenêtre parente.
-Guacamole envoie donc à Pron plusieurs message de création de fenêtre :
+Les boutons de fermeture sont de nouvelles fenêtres Pron, pour lesquelles Guacamole va s'abonner à divers événements que nous présenterons à la section \ref{GestionFenetres}.
+Ces boutons sont créés à l'intérieur de la fenêtre de décoration, qui est leur fenêtre parente.
+Guacamole envoie donc à Pron plusieurs requêtes de création de fenêtre :
 
 \begin{figure}[H]
   \centering
@@ -174,7 +168,7 @@ Le nouvel arbre de fenêtres de Pron est maintenant :
   \end{tikzpicture}
 \end{center}
 
-L'affichage pour pron est donc maintenant le suivant :
+L'affichage devient alors :
 
 \begin{figure}[H]
   \centering
@@ -183,52 +177,47 @@ L'affichage pour pron est donc maintenant le suivant :
   \label{fig:pron_cube_avec_decoration}
 \end{figure}
 
-On voit bien la décoration au dessus de la fenêtre avec le titre de la fenêtre à gauche, et les deux boutons de maximisation et de fermeture à droite.
-Et également le bouton tout en bas à droite
-\footnote{Petit carré plus clair en premier plan.}
-de l'application pour redimensionner la fenêtre.
+On voit bien la décoration au dessus de la fenêtre avec le titre de la fenêtre à gauche, et les boutons de maximisation et de fermeture à droite.
+Le bouton de redimensionnement se trouve quand à lui en bas à droite de la fenêtre\footnote{Petit carré plus clair en premier plan.}.
 
 \subsection{Gestion des fenêtres}
+\label{GestionFenetres}
 
-Maintenant que nos fenêtres sont décorées, nous avons tous les éléments pour manipuler nos fenêtres.
-Pour pouvoir réagir aux actions de l'utilisateur, il faut s'abonner à différents évènements.
+Maintenant que nos fenêtres sont décorées, nous avons à notre disposition tous les éléments permettant à l'utilisateur de les manipuler.
+Pour pouvoir réagir aux actions de l'utilisateur, il ne reste plus qu'à s'abonner à différents événements.
 
 \subsubsection{Fermeture et maximisation}
 
-La gestion de la fermeture et de la maximisation sont assez simples.
-Il suffit de s'abonner aux évènements de clics sur ces boutons.
-Pour la fermeture, lorsqu'un clic est détecté, il faut détruire la fenêtre de décoration.
-Ceci détruiera également la fenêtre de l'application.
-Pron enverra donc à l'application un évènement et elle se terminera proprement.
+La gestion de la fermeture et de la maximisation est assez simple, il suffit de s'abonner aux événements de clics sur les boutons correspondants.
 
-La maximisation est également faite lors du clic sur le bouton de maximisation.
-Pour maximiser la fenêtre, il faut redimensionner la fenêtre de décoration à la taille de la root window et la placer en coordonnées (0,0).
-Il faut également redimensionner la fenêtre de l'application et changer le dessin du bouton de maximisation.
+Pour la fermeture, lorsqu'un clic est détecté, il faut détruire la fenêtre de décoration.
+La destruction d'une fenêtre entraînant celle de toutes ses filles, cela détruira également la fenêtre de l'application.
+Pron enverra donc à l'application un événement de destruction, et elle se terminera proprement.
+
+La maximisation est également effectuée lors du clic sur le bouton de maximisation.
+Pour maximiser la fenêtre, il faut redimensionner la fenêtre de décoration pour qu'elle occupe la totalité de l'écran (taille de la root window) et la placer aux coordonnées $(0, 0)$.
+Il faut également redimensionner la fenêtre de l'application et changer le dessin du bouton de maximisation, qui devient un bouton ``restaurer''.
+La taille et la position de la fenêtre sont sauvegardées avant la maximisation, afin de pouvoir être rétablies lors du clic sur le bouton de restauration.
 
 \subsubsection{Déplacement et redimensionnement}
 
-Le déplacement et le redimensionnement sont assez particuliers.
-Il faut à la fois gérer le clic mais également les mouvements de la souris.
-Pour le déplacement, lors du clic sur la barre de décoration, on s'abonne aux évènements de la souris.
+Le déplacement et le redimensionnement sont assez particuliers, car il faut à la fois gérer le clic et les mouvements de la souris.
+Pour le déplacement, lors du clic sur la barre de décoration, on s'abonne aux événements de déplacement de la souris.
 On passe ensuite dans un état ``redimensionnement''.
-A chaque mouvement de souris, on va déplacer la fenêtre de décoration d'autant de pixels que la souris s'est déplacée.
+À chaque mouvement de souris, on déplace la fenêtre de décoration d'autant de pixels que la souris s'est déplacée.
 
 Lors d'un déplacement d'une fenêtre par Pron, il déplace automatiquement toutes les fenêtres filles.
-Il n'est donc pas nécessaire de déplacer toutes les fenêtres une par une.
-Seulement la fenêtre racine qui est la fenêtre de décoration.
-Pour des problèmes de performances, lors du déplacement, on évite de redessiner la fenêtre à chaque évènement de souris qui sont très nombreux.
-Pour cela, au début du déplacement, on unmap la fenêtre de l'application.
-Puis lorsque l'utilisateur relâche la souris, on remap la fenêtre qui s'affiche de nouveau une seule fois.
+Il n'est donc pas nécessaire de déplacer toutes les fenêtres une par une, seulement la fenêtre mère qui est la fenêtre de décoration.
+Afin d'optimiser les performances, lors du déplacement, on évite de redessiner la fenêtre à chaque événement de mouvement de la souris, qui sont très nombreux.
+Pour cela, au début du déplacement, on ``unmap'' la fenêtre de l'application.
+Puis, lorsque l'utilisateur relâche la souris, on ``remap'' la fenêtre qui s'affiche de nouveau une seule fois.
 
-Pour le redimensionnement, c'est exactement le même principe sauf qu'on passe dans l'état ``redimensionnement''.
-Une fois le redimensionnement terminé, l'application est remapée et informée qu'elle a été redimensionnée.
+Pour le redimensionnement, le principe est exactement le même, à ceci près que l'on que l'on passe dans un état ``redimensionnement''.
+Une fois le redimensionnement terminé, la fenêtre de l'application est ``remappée'' et informée qu'elle a été redimensionnée.
 C'est ensuite à elle de mettre à jour les tailles de ses fenêtres filles si besoin et de les afficher de nouveau.
-
-
 
 \subsection{Implémentation}
 
-A l'heure de l'écriture de ce document, Guacamole est codé avec la Pronlib directement.
-Il y a donc la boucle d'évènements codée directement dans la fonction main, les boutons sont codés dans Guacamole.
-Il faudrait donc réimplémenter Guacamole avec la librairie de Widgets.
-Utiliser les widgets et la classe Application.
+À l'heure de l'écriture de ce document, Guacamole a été développé directement avec la Pronlib.
+La Pronlib offrant un niveau d'abstraction quasi nul, le code de Guacamole est assez dense et complexe : le dispatching des événements est géré manuellement dans le \verb|main|, les boutons sont gérés ``à la main'' grâce aux événements souris...
+Afin d'alléger le code de Guacamole et de se concentrer sur son objectif principal (la gestion des fenêtres), il serait bénéfique de le réimplémenter en utilisant Sombrero, notre librairie de widgets.

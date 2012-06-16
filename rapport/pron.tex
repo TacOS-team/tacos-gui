@@ -126,7 +126,7 @@ En plus des primitives exposées par la classe \verb|Drawable|, les \verb|Window
 \end{itemize}
 
 \paragraph{Conditions de dessin dans une Window}
-Pour pouvoir dessiner dans une \verb|Window|, il faut tout d'abord que celle-ci soit ``realized'', c'est à dire qu'elle soit mappée et que tous ses parents aussi. Cette condition est vérifiée par la méthode \verb|prepareDrawing|, avant d'exécuter la primitive de dessin demandée. Il faut également que chaque point dans lequel on souhaite dessiner appartienne à la zone de clipping. Nous reviendrons sur la notion de zone de clipping dans la section \ref{ClipZone}, mais elle peut être vue comme un ``cache'' posé sur l'écran, qui détermine les zones dans lesquelles on peut dessiner ou non.
+Pour pouvoir dessiner dans une \verb|Window|, il faut tout d'abord que celle-ci soit ``realized'', c'est à dire qu'elle soit ``mappée'' et que tous ses parents aussi. Cette condition est vérifiée par la méthode \verb|prepareDrawing|, avant d'exécuter la primitive de dessin demandée. Il faut également que chaque point dans lequel on souhaite dessiner appartienne à la zone de clipping. Nous reviendrons sur la notion de zone de clipping dans la section \ref{ClipZone}, mais elle peut être vue comme un ``cache'' posé sur l'écran, qui détermine les zones dans lesquelles on peut dessiner ou non.
 
 \paragraph{Événements}\label{evenements}
 Le serveur graphique communique avec ses clients via des \textbf{événements} lorsqu'il s'agit de les informer d'entrées de l'utilisateur (frappes au clavier, déplacement ou clics de la souris), ou de changements sur les fenêtres (création, destruction, exposition, redimensionnement...).
