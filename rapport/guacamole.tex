@@ -36,7 +36,7 @@ Lorsqu'une application graphique démarre, elle se connecte à Pron et envoie un
 \end{figure}
 
 Dès la réception de ce message, Pron crée la fenêtre sans décoration : pour lui, une fenêtre n'est rien d'autre qu'une zone de dessin rectangulaire.
-Le nouvel arbre interne des fenêtres de Pron sera le suivant après le lancement de l'application \verb|PronCube| :
+Le nouvel arbre interne des fenêtres de Pron est le suivant après le lancement de l'application \verb|PronCube| :
 
 \begin{center}
   \begin{tikzpicture}[
@@ -86,7 +86,7 @@ Une fois ce message reçu, Guacamole décore la fenêtre si deux conditions sont
 
 Si la fenêtre doit être décorée, Guacamole ajoute cette fenêtre à sa liste interne de fenêtres décorées.
 Il crée ensuite la fenêtre de décoration, qui est une fenêtre un peu plus grande que la fenêtre du client.
-Elle dépasse notament au dessus pour afficher la décoration.
+Elle dépasse notamment au dessus pour afficher la décoration.
 Guacamole envoie donc une requête à Pron :
 
 \begin{figure}[H]
@@ -96,7 +96,7 @@ Guacamole envoie donc une requête à Pron :
   \label{fig:guacamole_anim_4}
 \end{figure}
 
-Du coté de Pron, le nouvel arbre des fenêtres est donc le suivant :
+Du coté de Pron, le nouvel arbre des fenêtres est le suivant :
 
 \begin{center}
   \begin{tikzpicture}[
@@ -119,7 +119,7 @@ Il envoie donc une requête à Pron.
   \label{fig:guacamole_anim_5}
 \end{figure}
 
-Le nouvel arbre des fenêtres de Pron est donc le suivant :
+Le nouvel arbre des fenêtres de Pron est alors le suivant :
 
 \begin{center}
   \begin{tikzpicture}[
@@ -140,7 +140,7 @@ Maintenant que la fenêtre de décoration est créée et la fenêtre de l'applic
   \item Trouver un emplacement libre sur l'écran et y déplacer la fenêtre
 \end{itemize}
 
-Les boutons de fermeture sont de nouvelles fenêtres Pron, pour lesquelles Guacamole va s'abonner à divers événements que nous présenterons à la section \ref{GestionFenetres}.
+Les boutons de fermeture, de maximisation et de redimensionnement sont de nouvelles fenêtres Pron, pour lesquelles Guacamole va s'abonner à divers événements que nous présenterons à la section \ref{GestionFenetres}.
 Ces boutons sont créés à l'intérieur de la fenêtre de décoration, qui est leur fenêtre parente.
 Guacamole envoie donc à Pron plusieurs requêtes de création de fenêtre :
 
@@ -151,7 +151,7 @@ Guacamole envoie donc à Pron plusieurs requêtes de création de fenêtre :
   \label{fig:guacamole_anim_6}
 \end{figure}
 
-Le nouvel arbre de fenêtres de Pron est maintenant :
+Le nouvel arbre des fenêtres de Pron est maintenant :
 
 \begin{center}
   \begin{tikzpicture}[
@@ -177,8 +177,8 @@ L'affichage devient alors :
   \label{fig:pron_cube_avec_decoration}
 \end{figure}
 
-On voit bien la décoration au dessus de la fenêtre avec le titre de la fenêtre à gauche, et les boutons de maximisation et de fermeture à droite.
-Le bouton de redimensionnement se trouve quand à lui en bas à droite de la fenêtre\footnote{Petit carré plus clair en premier plan.}.
+On voit bien la décoration au dessus de la fenêtre avec son titre à gauche, et les boutons de maximisation et de fermeture à droite.
+Le bouton de redimensionnement se trouve quand à lui en bas à droite de la fenêtre (petit carré plus clair au premier plan).
 
 \subsection{Gestion des fenêtres}
 \label{GestionFenetres}
@@ -195,7 +195,7 @@ La destruction d'une fenêtre entraînant celle de toutes ses filles, cela détr
 Pron enverra donc à l'application un événement de destruction, et elle se terminera proprement.
 
 La maximisation est également effectuée lors du clic sur le bouton de maximisation.
-Pour maximiser la fenêtre, il faut redimensionner la fenêtre de décoration pour qu'elle occupe la totalité de l'écran (taille de la root window) et la placer aux coordonnées $(0, 0)$.
+Pour maximiser la fenêtre, il faut redimensionner la fenêtre de décoration pour qu'elle occupe la totalité de l'écran (taille de la root window), la placer aux coordonnées $(0, 0)$ et la passer au premier plan.
 Il faut également redimensionner la fenêtre de l'application et changer le dessin du bouton de maximisation, qui devient un bouton ``restaurer''.
 La taille et la position de la fenêtre sont sauvegardées avant la maximisation, afin de pouvoir être rétablies lors du clic sur le bouton de restauration.
 
@@ -212,9 +212,9 @@ Afin d'optimiser les performances, lors du déplacement, on évite de redessiner
 Pour cela, au début du déplacement, on ``unmap'' la fenêtre de l'application.
 Puis, lorsque l'utilisateur relâche la souris, on ``remap'' la fenêtre qui s'affiche de nouveau une seule fois.
 
-Pour le redimensionnement, le principe est exactement le même, à ceci près que l'on que l'on passe dans un état ``redimensionnement''.
+Pour le redimensionnement, le principe est exactement le même, à ceci près que l'on passe dans un état ``redimensionnement''.
 Une fois le redimensionnement terminé, la fenêtre de l'application est ``remappée'' et informée qu'elle a été redimensionnée.
-C'est ensuite à elle de mettre à jour les tailles de ses fenêtres filles si besoin et de les afficher de nouveau.
+C'est ensuite à elle de mettre à jour les tailles de ses fenêtres filles si besoin est.
 
 \subsection{Implémentation}
 
