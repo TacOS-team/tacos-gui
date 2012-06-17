@@ -4,11 +4,12 @@ Sombrero est la librairie de widgets de TacOS-GUI.
 Son rôle est d'apporter au programmeur un niveau d'abstraction supplémentaire par rapport à la Pronlib, afin de faciliter la création d'interfaces graphiques pour les applications.
 
 \subsection{Conception de la librairie}
+\label{Conception}
 
 La plupart des librairies de widgets se veulent multi-plateformes.
 Pour cela, elles utilisent au minimum le système de fenêtrage et gèrent en interne un maximum de choses.
 Le développement de Sombrero ayant un but pédagogique, nous avons au contraire essayé d'exploiter au maximum les fonctionnalités de Pron et de faire le minimum dans la librairie. Ceci afin de respecter au mieux le modèle en couches que nous avons choisi, où chaque couche s'appuie sur les couches inférieures.
-Dans cette optique, nous avons décidé qu'à tout widget correspondrait une fenêtre (\verb|Window|) Pron.
+Dans cette optique, nous avons décidé qu'à tout widget correspondrait une fenêtre (\verb|Window|) Pron\footnote{L'identifiant de cette Window étant stocké dans l'attribut ``pronWindow'' du widget, nous la désignerons par la suite par le terme ``pronWindow''.}.
 Ainsi, la gestion des événements est effectuée par Pron, et le widget n'a plus qu'à s'abonner aux événements de sa fenêtre qui l'intéressent.
 
 \subsubsection{Widgets}
@@ -21,7 +22,7 @@ Nous avons distingué deux grandes familles d'éléments graphiques :
 \end{itemize}
 
 Tout objet susceptible de contenir d'autres widgets héritera donc de la classe \verb|Container|.
-Pour gérer facilement ces imbrications, un \verb|Container| est lui-même un \verb|Widget| et possède sa propre \verb|Window| Pron.
+Pour gérer facilement ces imbrications, un \verb|Container| est lui-même un \verb|Widget| et possède sa propre \verb|pronWindow|.
 Côté Pron, on retrouve bien un arbre de fenêtres correspondant à la hiérarchie des widgets.
 
 Voici le diagramme de classes de la librairie. On peut voir les différents \verb|Container| et \verb|Widget| implémentés :
@@ -34,17 +35,18 @@ Voici le diagramme de classes de la librairie. On peut voir les différents \ver
 \end{figure}
 
 La classe \verb|Widget| est bien à la racine.
-Elle contient tout ce qui est commun à tous les widgets, notamment leur taille et leur position.
+Elle contient tout ce qui est commun à tous les widgets, notamment leur taille, leur position et leur \verb|pronWindow|.
 Il est à noter que, contrairement à la position des des \verb|Window| Pron, la position d'un \verb|Widget| est relative au widget parent.
 Cela facilite leur placement par les conteneurs : ils sont placés relativement à leur conteneur, et non pas en position absolue.
 
 Parmi les \verb|Container| figure la classe \verb|Bin|.
 Cette classe est la classe mère de tous les conteneurs ne contenant qu'un seul élément, notamment les \verb|Window| et les \verb|ScrollPane|.
-La classe \verb|Window| est une fenêtre qui sera décorée par le gestionnaire de fenêtres.
-C'est le seul widget qui peut être décoré : si on veut afficher une fenêtre décorée, c'est cette classe qu'il faut utiliser.
-Une \verb|Window| peut ensuite contenir un seul widget, mais rappelons qu'un conteneur est un widget : on peut donc placer un autre conteneur à l'intérieur d'une \verb|Window| afin d'y disposer plusieurs widgets.
 
-Prenons l'exemple de l'application ``Gestionnaire de fichiers''.
+La classe \verb|Window| est une fenêtre qui sera décorée par le gestionnaire de fenêtres.
+C'est le seul widget qui peut être décoré : si l'on veut afficher une fenêtre décorée, c'est cette classe qu'il faut utiliser.
+Une \verb|Window| peut ensuite contenir un seul widget, mais rappelons qu'un conteneur est également un widget : on peut donc placer un autre conteneur à l'intérieur d'une \verb|Window| afin d'y disposer plusieurs widgets.
+
+Prenons l'exemple de l'application ``Gestionnaire de fichiers'' (\textit{Velo}).
 Cette application contient un \verb|Label| pour afficher le répertoire courant, ainsi qu'un \verb|ScrollPane| contenant un \verb|Button| pour chaque fichier. On retrouve donc l'arborescence de widgets suivante :
 
 \begin{center}
@@ -67,148 +69,145 @@ Cette application contient un \verb|Label| pour afficher le répertoire courant,
   \end{tikzpicture}
 \end{center}
 
-\subsubsection{Gestion de la Window Pron}
+\subsubsection{Gestion de la pronWindow}
 
-Instinctivement, on voudrait créer la pronWindow au moment de la construction de Widget.
+Instinctivement, on voudrait créer la \verb|pronWindow| au moment de la construction du widget.
 Il faudrait donc le faire dans le constructeur.
-Ceci marche très bien pour un un objet fenêtre qui a pour PronWindow mère la root Window de pron.
-Seulement pour les autres widgets imbriqués, dans le constructeur, on ne connait pas encore le widget père.
-Si on crée une PronWindow avec comme fenêtre mère la root Window de Pron, on se retrouvera avec un widget décoré par Guacamole et ce n'est pas ce que l'on veut.
-C'est pourquoi il faut ajouter une fonction setParent aux widgets.
-Lorsqu'on définit le parent du widget avec setParent(), on peut donc créer la Pron window avec comme Window mère la Window du widget père.
+Ceci fonctionne très bien pour un un objet fenêtre qui a pour \verb|pronWindow| la root window de Pron.
+En revanche, pour les autres widgets imbriqués, dans le constructeur, on ne connait pas encore le widget père.
+Si l'on crée une \verb|pronWindow| avec comme fenêtre mère la root window de Pron, on se retrouvera avec un widget décoré par Guacamole et ce n'est pas ce que l'on souhaite.
+C'est pourquoi nous avons ajouté une méthode \verb|setParent| aux widgets.
+Lorsque l'on définit le parent du widget avec \verb|setParent|, on peut créer sa \verb|pronWindow| avec comme \verb|Window| mère la \verb|pronWindow| du widget père.
 
-Ceci fonctionne parfaitement mais cela oblige l'utilisateur à bien créer ses objets dans l'ordre et faire les setParent() dans l'ordre également.
-Ceci est très contraignant.
-Pour éviter cela, il suffit lors du setParent de regarder si le père a déjà été initialisé.
-Si oui, on crée la Pron Window.
+Ceci fonctionne parfaitement mais cela oblige l'utilisateur à faire les appels à \verb|add| ou \verb|setParent|
+\footnote{Un utilisateur ``lambda'' de la librairie (qui se contente d'utiliser les widgets fournis) ne se préoccupe pas du ``setParent'' et ne sait même pas qu'il existe : il crée ses widgets dans l'ordre qu'il souhaite et les ajoute simplement dans des conteneurs via leur méthode ``add'', qui se charge de faire elle-même le ``setParent'' sur le widget passé en argument du ``add''. ``setParent'' peut toutefois être utilisé directement par des utilisateurs avancés qui souhaitent créer leurs propres widgets par composition de widgets existants.}
+dans le bon ordre (pour ne pas utiliser comme parent un widget qui n'a pas encore de \verb|pronWindow|), ce qui est très contraignant.
+Pour éviter cela, il suffit lors du \verb|setParent| de regarder si la \verb|pronWindow| du père a déjà été créée.
+Si oui, on crée la \verb|pronWindow| du fils.
 Si non, on ne fait rien.
-Ceci nécessite donc aux classes de conteneurs de faire les setParents à tous ses widgets fils dans son propre setParent().
-Ainsi, on peut créer toute notre arborescence de widgets et dès qu'on ajoute le premier widget dans la fenêtre, elle appelle la fonction setParent() de ce widget qui l'appelle à ses fils s'il en a et ainsi de suite.
-L'utilisateur peut donc créer ses widgets dans n'importe quel ordre et faire le setParent quand il le veut ce qui est beaucoup plus agréable.
+Ceci nécessite également que les classes \verb|Container| appellent le \verb|setParent| de tous leurs widgets fils dans leur propre \verb|setParent|.
+Ainsi, on peut créer toute notre arborescence de widgets et dès que l'on ajoute le premier widget dans la fenêtre principale, elle appelle le \verb|setParent| de ce widget qui le propage sur tous ses fils et ainsi de suite.
+L'utilisateur peut donc créer ses widgets dans n'importe quel ordre et faire les \verb|setParent| quand il le souhaite, ce qui est beaucoup plus agréable.
 
-Pour les conteneurs, le code de setParent() étant le même pour tous, la fonction a été implémentée de la façon suivante dans la classe Container :
+Pour les conteneurs, le code de \verb|setParent| étant le même pour tous, la fonction a été implémentée de la façon suivante dans la classe \verb|Container| :
 
 \lstinputlisting{listings/container_setparent.cpp}
 
-La fonction getChildren() est une fonction virtuelle. Toutes classes dérivant directement ou indirectement de Container devra la surcharger et renvoyer tous ses fils dans un vector. Ainsi, plus aucun conteneur n'a à se soucier du setParent().
+La fonction \verb|getChildren| est une fonction virtuelle. Toute classe dérivant directement ou indirectement de \verb|Container| devra la surcharger et renvoyer tous ses fils dans un \verb|vector<Widget*>|. Ainsi, plus aucun conteneur n'a à se soucier du \verb|setParent|.
 
-\subsubsection{Gestion des évènements}
+\subsubsection{Gestion des événements}
+\label{Evenements}
 
-Comme nous l'avons dit auparavant, nous avons laissé Pron gérer les évènements et les propager.
-Chaque widget s'abonne aux évènements dont il a besoin.
-Ces évènements sont ensuite traduits par des appels de fonctions virtuelles (handlers) de la classe Widget
-\footnote{Nous verrons comment cela a été fait plus tard en parlant de l'application.}.
-Par exemple lorsqu'un évènement souris arrive sur un widget, la fonction handleEventMouseButton() de celui-ci est appellée.
-Lorsqu'on crée un nouveau widget, il suffit de surcharger les handlers qui nous intéressent. Il faut penser tout de même à rappeller la fonction handler de la classe parente.
+Comme nous l'avons évoqué à la section \ref{Conception}, nous avons laissé Pron gérer les événements et les propager.
+Chaque widget s'abonne aux événements dont il a besoin sur sa \verb|pronWindow|.
+Ces événements déclenchent ensuite des appels de fonctions virtuelles (handlers) de la classe \verb|Widget|
+\footnote{Nous verrons comment cela fonctionne dans la section \ref{Application} sur la classe Application.}.
+Il existe un handler pour chaque événement.
+Par exemple, lorsqu'un événement de changement d'état des boutons de la souris survient sur un widget, la fonction \verb|handleEventMouseButton| de celui-ci est appellée.
+Lorsque l'on crée un nouveau widget, il suffit de surcharger les handlers qui nous intéressent. Il faut tout de même penser à rappeller le handler de la classe parente.
 
-En effet, nous avons mis dans les handlers des widgets un maximum de fonctionnalités communes au plus grand nombre des widgets.
-Pour garder l'exemple des évènements des boutons de la souris, la fonction handleEventMouseButton() prend en paramètre un pointeur vers un pron::EventMouseButton.
-Cet objet contient l'état des boutons et pas quel bouton a changé.
-Pour détecter un clic, il faut donc sauvegarder l'état des boutons et regarder à chaque nouvel évènement lequel a changé.
-Pour éviter de le coder dans chaque widget, cette fonction a été implémentée dans la classe Widget comme ça le code n'est pas dupliqué.
-Dans cette fonction, on détecte les clics sur les différents boutons, double clic, etc.
-Dès qu'un évènement est détecté, on appelle une nouvelle méthode virtuelle spécifique à l'évènement.
-Voici le code de cette fonction. On remarque que avec le clic gauche, il y a également le clic et double clic à gérer en plus des mouseDown et mouseRelease :
+En effet, nous avons placé dans l'implémentation de base des handlers de la classe \verb|Widget| un maximum de fonctionnalités communes au plus grand nombre de widgets.
+Pour garder l'exemple des événements des boutons de la souris, la fonction \verb|handleEventMouseButton| prend en paramètre un pointeur vers un \verb|pron::EventMouseButton|.
+Cet objet contient l'état des boutons, mais n'indique pas quel bouton a changé.
+Pour détecter un clic, il faut donc sauvegarder l'état des boutons et regarder à chaque nouvel événement lequel a changé.
+Pour éviter de réimplémenter cette fonctionnalité dans chaque widget, elle a été écrite dans le handler \verb|handleEventMouseButton| de la classe \verb|Widget|.
+Dans cette fonction, on détecte les clics sur les différents boutons (clic gauche, clic milieu, clic droit, double clic).
+Dès qu'un événement est détecté, on appelle une nouvelle méthode virtuelle spécifique à l'événement.
+
+Voici le code correspondant. On remarque que dans le cas du clic gauche, il y a également le clic et double clic à gérer en plus des mouseDown et mouseRelease :
 
 \lstinputlisting{listings/handleEventMouseButton.cpp}
 
-Si on crée maintenant un widget bouton, il suffit de surcharger la méthode handleClick() et de mettre le code correspondant à cet évènement à l'intérieur.
-Pas besoin de coder de nouveau la gestion des boutons.
+Si l'on crée maintenant un widget \verb|Button|, il suffit de surcharger la méthode virtuelle \verb|handleClick| et d'y placer le code de gestion de cet événement. La gestion des boutons est déjà prise en charge par la classe \verb|Widget|.
 
 \subsubsection{Mise à jour des widgets : update()}
 
-Lors de la gestion d'un évènement, il est courant de devoir mettre à jour certaines positions ou modifier l'agencement des widgets ou tout autre mise à jour de l'interface.
-Lors de ces mises à jour, on modifie les variables dans widgets.
-Seulement cela ne modifie pas ces informations dans Pron.
-Il est donc nécessaire d'envoyer un message à Pron pour le notifier des changements.
-Pour cela, il y a trois fonction à appeller :
+Lors de la gestion d'un événement, il est courant de devoir mettre à jour certaines positions, de modifier l'agencement des widgets ou toute autre mise à jour de l'interface.
+Lors de ces mises à jour, on modifie les attributs des objets \verb|Widget|, mais cela ne modifie en rien les attributs des \verb|Window| correspondantes côté Pron.
+Il est donc nécessaire d'envoyer un message à Pron afin de le notifier des changements.
+Pour cela, il y a trois fonctions à appeller : après le changement d'un seul attribut, on peut n'appeller qu'une seule de ces fonctions.
+Elles gardent trace de la dernière valeur envoyée à Pron, et n'envoient un nouveau message que si cette valeur a changé.
 
 \begin{itemize}
-  \item updatePronSize : cette fonction met la taille à jour si elle a changé
-  \item updatePronPosition : met à jour la position
-  \item updateBGColor : met à jour la couleur de fond
+  \item \textbf{updatePronSize :} met à jour la taille du widget.
+  \item \textbf{updatePronPosition :} met à jour la position du widget
+  \item \textbf{updateBGColor :} met à jour la couleur de fond du widget.
 \end{itemize}
 
-Après un changement d'un seul paramètre, on peut n'appeller qu'une seule de ces fonctions.
-Lors d'une mise à jour, un conteneur va modifier les informations des widgets qu'il contient.
-Sachant que ces widgets peuvent être eux-même des conteneurs, si on a modifié leurs dimensions, ils vont devoir de nouveau mettre à jour leur propres fils et ainsi de suite jusqu'aux feuilles de l'arbre.
-Pour généraliser cette mise à jour, il y a une fonction update() commune à tous les widgets.
-Par défaut elle ne fait qu'appeler les trois fonctions de mise à jour citées précédemment.
-Si le widget a besoin de faire des choses supplémentaires
-\footnote{Par exemple le conteneur de grille va redimensionner tous ses widgets fils si on modifie sa taille.}
-lors d'un update, il suffit de surcharger la fonction update().
+Lors d'une mise à jour, un conteneur va modifier les attributs des widgets qu'il contient.
+Sachant que ces widgets peuvent être eux-même des conteneurs, si l'on a modifié leurs dimensions, ils vont devoir de nouveau mettre à jour leurs propres fils et ainsi de suite jusqu'aux feuilles de l'arbre.
+Pour généraliser cette mise à jour, tous les widgets implémentent une méthode \verb|update()|.
+Par défaut, elle ne fait qu'appeler les trois fonctions de mise à jour citées précédemment.
+Si le widget a besoin d'effectuer des traitements supplémentaires
+\footnote{Par exemple, le conteneur ``Grille'' va redimensionner tous ses widgets fils si l'on modifie sa taille.},
+il suffit de surcharger la fonction \verb|update()|.
 
-Cette méthode fonctionne bien mais il s'avère que bien souvent les mises à jours bouclent.
-En effet, il est fréquent de mettre à jour un widget, de notifier Pron de cette mise à jour, qui lui-même renvoie un nouvel évènement au widget qui relance une mise à jour.
-Pour éviter ce problème, nous avons créé un code commun de update() à tous les widgets et déplacé le code de mise à jour dans la fonction execUpdate().
-Si on veut modifier la mise à jour il faut surcharger la fonction execUpdate() et surtout pas la fonction update().
-La fonction update() commune va unmaper la fenêtre, la mettre à jour puis la remapper. Ceci limite considérablement le nombre d'évènements et décharge Pron.
-Pour éviter des boucles dans la librairie elle-même, on sauvegarde également si l'objet est en train d'être mis à jour pour éviter qu'un de ses fils le remmette à jour et ainsi créer une boucle.
-Le code de la fonction d'update est donc le suivant :
+Cette méthode fonctionne mais il s'avère que bien souvent les mises à jours bouclent.
+En effet, il est fréquent de mettre à jour un widget et de notifier Pron de cette mise à jour, qui lui-même renvoie un nouvel événement au widget et redéclenche une mise à jour.
+Pour éviter ce problème, nous avons déplacé le code de la mise à jour dans une méthode \verb|execUpdate()|. \verb|update()| devient alors un wrapper autour de \verb|execUpdate()| : elle ``unmap'' la fenêtre, la met à jour puis la ``remap''.
+Cela limite considérablement le nombre d'événements envoyés par Pron (tous les événements d'exposition, par exemple, ne sont envoyés qu'aux fenêtres ``realized'') et évite un effet désagréable de ``clignotement'' de la fenêtre pendant que tous ses fils se redessinent.
+Pour éviter les boucles de mise à jour, on passe également le widget dans un état ``en cours de mise à jour'' le temps de l'exécution de l'update, afin d'éviter que l'un de ses fils ne le remette à jour.
+
+Le code de la fonction d'update devient donc le suivant :
 
 \lstinputlisting{listings/widget_update.cpp}
 
-Attention : dans les surcharges des fonctions execUpdate(), il est nécessaire d'appeler la fonction de la classe parente sinon l'objet ne sera pas mis à jour dans Pron.
+Si l'on veut modifier le comportement de la mise à jour d'un widget, il faut donc surcharger la méthode \verb|execUpdate()| et non la méthode \verb|update()|. Il faut également penser à rappeler le \verb|execUpdate()| de la classe parente (qui contient les trois appels aux fonctions de synchronisation avec Pron) afin que Pron soit informé des changements. Ces appels étant a priori indispensables, cette contrainte pourra être supprimée dans une prochaine version de la librairie en les plaçant directement dans le code de \verb|update()|, et en remplaçant \verb|execUpdate()| par un hook \verb|onUpdate()| où l'utilisateur pourra placer ses traitements supplémentaires.
 
 \subsubsection{Dessin des widgets}
 
-Pour dessiner un widget, il suffit qu'il dessine dans sa propre Pron Window.
-Le code du dessin doit tout simplement être mis dans la fonction draw().
-Cette fonction sera automatiquement appellée à chaque réception d'un évènement d'exposition de Pron
-\footnote{Il n'est pas nécessaire de l'appeler après un update, ce sera également fait automatiquement par Pron après le remap qui enverra un évènement d'exposition.}.
+Pour dessiner un widget, il suffit qu'il dessine dans sa propre \verb|pronWindow|.
+Le code du dessin doit tout simplement être placé dans la fonction \verb|draw()|.
+Cette fonction sera automatiquement appelée à chaque réception d'un événement d'exposition de Pron
+\footnote{Il n'est pas nécessaire de l'appeler après un update, car il se termine par un ``remap'' au cours duquel Pron envoie un événement d'exposition.}.
 
-Remarque : Lors de la rédaction de ce document, cette fonction redessine l'intégralité du widget.
-Lors de la réception d'un évènement d'exposition, Pron précise quelle a été la nouvelle zone exposée.
-Une amélioration serait donc de ne redessiner qu'à l'intérieur de cette zone et pas redessiner systèmatiquement tout le widget.
-Cependant cela n'est pas toujours facile à faire.
+\paragraph{Remarque :}
+Lors de la rédaction de ce document, cette fonction redessine l'intégralité du widget.
+Pourtant, lors de la réception d'un événement d'exposition, Pron précise quelle a été la nouvelle zone exposée.
+Une amélioration serait donc de ne redessiner qu'à l'intérieur de cette zone plutôt que de redessiner systématiquement l'intégralité du widget.
+Cependant, cela n'est pas toujours facile à faire.
 
 \subsection{La classe Application}
+\label{Application}
 
-La classe Application est l'objet permettant de communiquer avec Pron.
-C'est elle qui englobe la boucle d'évènements.
-C'est une classe singleton.
-Si le constructeur est appelé deux fois, l'application est tout de suite fermée avec un message d'erreur.
-L'application tient à jour une map contenant la correspondance entre un identifiant de Pron Window et un widget.
-Tous les widgets ont accès à l'instance de l'application.
-Lors de la création de leur Pron Window, ils se référencent automatiquement auprès de la classe application.
-A la fin du main, lorsque l'utilisateur a créé tous ses widgets, il appelle la fonction sombrerun() de la classe Application.
-Cette fonction exécute la boucle d'évènements.
-A chaque fois qu'elle récupère un évènement, elle trouve le widget correspondant et appelle les fonctions handle que nous avons présentées auparavant.
+La classe \verb|Application| est l'acteur permettant de communiquer avec Pron.
+C'est elle qui englobe la boucle d'événements.
+C'est une classe singleton ; si le constructeur est appelé deux fois, l'application est tout de suite fermée avec un message d'erreur.
+L'\verb|Application| tient à jour une \verb|map<Pron::Window, Sombrero::Widget*>| contenant la correspondance entre un identifiant de \verb|Window| Pron et le widget associé\footnote{Rappel : chaque widget est associé une Window Pron (attribut ``pronWindow'').}.
+Tous les widgets ont accès à l'instance d'\verb|Application|, et s'y inscrivent automatiquement lors de la création de leur \verb|pronWindow|.
+À la fin du \verb|main| de son application, lorsque l'utilisateur a créé tous ses widgets, il appelle la méthode \verb|sombrerun()| de la classe \verb|Application|.
+Cette fonction exécute la boucle d'événements : pour chaque événement qu'elle reçoit, elle trouve le widget correspondant et appelle les handlers que nous avons présentés auparavant.
 
-Ceci marche parfaitement pour les évènements sur les widgets.
-Seulement parfois il est nécessaire de s'abonner à d'autres évènements tels que les créations de fenêtres, etc.
-Ceci n'est donc pas spécifique à un widget.
-Pour gérer ces cas, dans la fonction sombrerun(), avant d'essayer de transmettre l'évènement à un widget, on regarde si c'est un des évènements ``général''.
-Si oui, on appelle une fonction handler virtuelle.
-Pour accéder à ces évènements, il suffit donc de surcharger la classe Application et d'implémenter ces fonctions.
+Ceci fonctionne parfaitement pour les événements sur les widgets, mais il est parfois nécessaire de s'abonner à d'autres événements, tels que les créations de fenêtres ou leur destruction.
+Ces événements ne sont pas spécifiques à un widget, et ne peuvent donc pas être traités via les handlers habituels.
+Pour gérer ces cas particuliers, un test est réalisé dans la méthode \verb|sombrerun()| avant d'essayer d'appeler le handler d'un widget : si l'événement fait partie de ces événements ``généraux'', un handler dédié est appelé.
+Afin d'être notifié de ces événements, il suffit donc de surcharger la classe \verb|Application| et d'implémenter ces handlers qui sont de simples fonctions virtuelles (\verb|windowCreated|, \verb|windowDestroyed|...).
 
 \lstinputlisting{listings/sombrerun.cpp}
 
-Attention : L'application étant une instance unique, si vous voulez utiliser votre instance d'Application, il faut qu'elle soit instanciée avant le premier Application::getInstance() soit avant la création d'un widget.
-Sinon ce sera l'application par défaut qui sera appelée.
+\paragraph{Attention :}
+La classe \verb|Application| étant un singleton, il n'en existe à tout moment qu'une unique instance.
+Si l'utilisateur la surcharge et veut utiliser une instance de sa propre classe (\verb|MyApplication| par exemple), il doit l'instancier avant le premier \verb|Application::getInstance()| effectué par la librairie lors de la création d'un widget. Sinon, c'est une instance de la classe de base \verb|Application| qui sera créée et utilisée, et non une instance de la classe dérivée \verb|MyApplication|.
 
 \subsection{Signaux et slots}
 
-Nous avons vu que pour gérer les évènements, il y avait différents handlers à surcharger si besoin est.
-Ceci est très pratique pour le développement de la bibliothèque mais pour l'utilisateur final ce n'est pas très pratique.
+Nous avons vu dans la section \ref{Evenements} que la gestion des événements par Sombrero passait par la surcharge des handlers correspondants.
+Ce système est tout à fait adapté pour le développement de nouveaux widgets, mais pas vraiment pour l'utilisateur final.
 Pour résoudre ce problème, nous avons décidé de nous inspirer du système de signaux de Qt
-\footnote{Qt est une librairie multi-plateforme développée par Nokia. Plus d'informations sur le site officiel : http://qt.nokia.com/products/}.
+\footnote{Qt est une librairie de widgets multi-plateforme développée par Nokia. Plus d'informations sur le site officiel : http://qt.nokia.com/products/.}.
 
-Ce système correspond au design pattern observeur/observable.
-Nous avons utilisé une librairie qui proposait une implémentation
-\footnote{La librairie utilisée est Sigslot. Nous allons bientôt utiliser notre propre implémentation car il lui manque quelque fonctionnalités comme l'éméteur du signal.}.
-Les signaux peuvent être émis par différentes classes.
-Il est possible d'envoyer des variables en paramètres de ces signaux.
-A un signal, il est possible de connecter des slots qui sont en fait de simples fonctions d'une classe ayant les mêmes paramètres que le signal.
-La classe contenant les slots doit dériver de la classe has\_slots.
+Ce système correspond au design pattern \textit{observer/observable}.
+Nous avons utilisé une librairie qui en proposait une implémentation simple et portable relativement facilement
+\footnote{La librairie utilisée est \textit{sigslot}. Nous allons bientôt utiliser notre propre implémentation car il lui manque certaines fonctionnalités, comme la mise à disposition de l'émetteur du signal dans les slots.}.
+Les signaux peuvent être émis par différentes classes, et il est possible de leur passer des paramètres.
+On peut ensuite connecter un signal à des slots qui sont en réalité de simples méthodes d'une classe ayant les mêmes paramètres que le signal.
+La classe contenant les slots doit dériver de la classe \verb|has_slots|.
 
-Le signaux sont en fait des objets des classes signal0 à signal8. Avec le nombre étant le nombre de paramètres du signal.
-Ces classes sont génériques.
-Elle prennent un paramètre template par paramètre du signal.
+Les signaux sont en réalité des objets des classes \verb|signal<n>|, avec \verb|<n>| le nombre de paramètres du signal (de 0 à 8).
+Ces classes sont génériques et prennent un paramètre de généricité par paramètre du signal.
 
-Voici un exemple simple de l'utilisation des signaux d'une scrollBar :
+Voici un exemple simple de l'utilisation des signaux d'une \verb|ScrollBar| :
 
 \lstinputlisting{listings/signalSlot.cpp}
 
-On remarque que pour l'utilisateur c'est vraiment très pratique. Il n'a pas besoin de surcharger des handlers.
-Il lui suffit de créer un slot et de le connecter.
+C'est très pratique pour l'utilisateur : il n'a pas besoin de surcharger des handlers, il lui suffit de créer un slot et de le connecter.

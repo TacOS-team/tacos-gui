@@ -1,7 +1,9 @@
 void Application::sombrerun() {
   pron::PronEvent *e = pron::getPronEvent();
+
   // Boucle d'evenements
-  while (continue) {
+  bool stop = false;
+  while (!stop) {
     if (!pron::pronNextEvent(this->d, e)) {
       fprintf(stderr, "pron has closed the connection, exiting.\n");
       exit(1);
@@ -18,9 +20,9 @@ void Application::sombrerun() {
       this->keyReleased((pron::EventKeyReleased*) e);
     }
     
-    // Evenements des widgets
+    // Evenements sur les widgets
     map<pron::Window, Widget*>::iterator it = this->widgets.find(e->window);
-    if(it != this->widgets.end()) {
+    if (it != this->widgets.end()) {
       Widget *w = it->second;
       switch (e->type) {
         case pron::EV_WINDOW_CREATED:
@@ -29,7 +31,7 @@ void Application::sombrerun() {
         case pron::EV_EXPOSE:
           w->handleEventExpose();
           break;
-        case ...
+        // ...
       }
     }
   }
