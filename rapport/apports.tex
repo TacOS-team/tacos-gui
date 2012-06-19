@@ -1,6 +1,12 @@
 \section{Apports à TacOS}
 
-Comme précisé dans la partie méthodologie, la librairie libtacos, couche d'abstraction de TacOS, pour le développement de TacOS-GUI doit être implémentée sous TacOS.
+Malgrès notre investissement, nous n'avons pas eu le temps de porter ce projet sur TacOS dans sa version finale.
+En effet, le projet dépends de beaucoup de fonctions qui ne sont pas implémentées sous TacOS.
+Notamment la STL
+\footnote{Librairie standard du C++ contenant vector, map, list, etc.}.
+Il a donc été nécessaire d'implémenter ces classes pas nous-même.
+Lors de la tentative de portage finale, nous avons remarqué qu'il en manquait encore quelques-unes.
+Notamment la liste chainée, nous n'avions implémenté que la liste doublement chaînée.
 
 Pour ce projet, nous avons décidé d'utiliser le C++.
 Le C++ était disponible par défaut sous TacOS sauf pour :
@@ -28,3 +34,4 @@ Voici une liste non exhaustive des apports de TacOS-GUI à TacOS :
     \end{itemize}
 \end{itemize}
 
+Une fois que le portage aura été effectué, ce projet apportera plusieurs logiciels graphiques à TacOS.
