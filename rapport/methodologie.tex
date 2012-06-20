@@ -3,23 +3,26 @@
 \subsection{Enjeux}
 
 Toute la difficulté du développement de TacOS-GUI réside dans le fait que ce projet soit intimement lié à un système d'exploitation en constante évolution.
-Une des voies que nous aurions pu suivre est de développer directement pour TacOS, mais plusieurs problèmes découlent de ce choix.
+Une des voies que nous aurions pu suivre était de développer directement pour TacOS, mais cela aurait posé plusieurs problèmes.
 
 Le premier est que TacOS, pour l'instant, n'implémente pas la totalité de la libC.
-De plus, ayant choisi le C++ comme langage de programmation pour notre projet, nous aurions dû développer en premier lieu la STL sur TacOS.
-Enfin, TacOS-GUI utilisant un système de fenêtrage client/serveur, il nous fallait un système de communication inter-processus (IPC) ``sockets-like'', ce qui impliquait le développement d'une librairie de sockets.
+De plus, ayant choisi le C++ comme langage de programmation pour notre projet, nous aurions dû commencer par implémenter notre propre version de la STL pour TacOS (ou porter une implémentation existante).
+Enfin, TacOS-GUI utilisant un système de fenêtrage client/serveur, nous avions besoin d'un système de communication inter-processus (IPC) ``sockets-like'', ce qui impliquait le développement d'une librairie de sockets.
 
 Tous ces prérequis auraient fortement retardé le début du développement de TacOS-GUI, et nous auraient empêché de paralléliser les tâches.
 Nous avons donc opté pour la solution vivement conseillée par nos tuteurs : développer un émulateur qui nous permette de développer sous Linux, tout en simulant un environnement TacOS.
 
 \subsection{Émulateur TacOS}
+\label{emulateur}
 
-L'émulateur a été développé pour Linux.
-Il permet en fait de coder Pron, Guacamole est les applications comme si elles étaient sous TacOS.
-Pour cela, nous avons créé des librairies qui ont exactement les même fonctions que sous TacOS mais en interne elles ne font pas la même chose.
-L'émulateur est juste une fenêtre créée par la SDL.
-Lors des appels aux fonctions des drivers, au lieu de vraiment faire des appels systèmes, ce sont des appels à la SDL qui sont faits.
-Au lieu de dessiner à l'écran, on dessine donc notre fenêtre simulant l'écran sans que l'application ait ``conscience'' qu'elle n'est pas sur TacOS.
+L'émulateur a été développé pour Linux, qui est le système d'exploitation utilisé par tous les membres de l'équipe.
+Il nous a permis de développer Pron, Guacamole et toutes les applications comme si nous étions sous TacOS.
+Pour cela, nous avons créé des librairies qui offrent exactement les mêmes fonctionnalités que sous TacOS, mais qui sont écrites différemment en interne afin de pouvoir être exécutées dans un environnement Linux.
+
+L'émulateur se présente comme une fenêtre créée par la SDL\footnote{Simple DirectMedia Layer, une librairie multimédia multi-plateforme. Plus d'informations sur le site officiel : http://www.libsdl.org.}.
+Lors de la communication avec les drivers, les appels système sont convertis en appels à des primitives de la SDL.
+Plutôt que de dessiner directement à l'écran, on dessine donc dans notre fenêtre qui représente l'affichage tel qu'on le verrait sous TacOS.
+L'application n'a évidemment pas ``conscience'' qu'elle n'est pas réellement sous TacOS, et aucun changement n'est nécessaire dans son code.
 Comme spécifié dans l'introduction de cette partie, voici les différents points que nous avons dû implémenter :
 
 \begin{itemize}
@@ -43,29 +46,27 @@ L'environnement TacOS est décrit dans la librairie du même nom, \verb|libtacos
 
 La libC de TacOS définissant un certain nombre de fonctions au nom identique à celles de la libC Linux, il nous a fallu surcharger ces fonctions pour leur associer le même comportement que sous TacOS.
 
-Le cas le plus concret concerne les fonctions de manipulation des fichiers : open, read, write, close, ioctl...
-
-Par exemple, sous Tacos, les drivers sont implémentés avec des devices.
-Pour utiliser le driver VESA par exemple, il faut ouvrir le fichier /dev/vesa.
-Il faut donc modifier la fonction open pour qu'elle simule ce comportement.
-Voici donc le wrapper de la fonction open() :
+Le cas le plus concret concerne les fonctions de manipulation des fichiers : \verb|open|, \verb|read|, \verb|write|, \verb|close|, \verb|ioctl|...
+En effet, sous TacOS, les drivers utilisent le VFS, et plus précisément le DevFS : chaque ``device'' est associé à un fichier spécial dans \verb|/dev|. La communication avec le driver se fait en manipulant ce fichier. Il nous a donc fallu surcharger ces fonctions de manipulation des fichiers afin de modifier leur comportement : si elles manipulent un device TacOS, on passe la main à nos drivers émulés. Sinon, on appelle la fonction d'origine de la libC. Exemple avec \verb|open| et \verb|read| :
 
 \lstinputlisting{listings/open.c}
+\lstinputlisting{listings/read.c}
+
+Les fonctions \verb|libc_*| sont en réalité des pointeurs de fonctions initialisés lors du lancement de l'application linkée avec la \verb|libtacos| (\verb|__attribute__((constructor))|) :
+
+\lstinputlisting{listings/initlibtacos.c}
 
 \subsubsection{Drivers}
 
-L'émulation des différents drivers cités plus haut se fait par le biais d'une librairie graphique, la SDL, au dessus de X.org.
-Le driver souris est implémenté grâce aux événements souris de la SDL, les événements clavier fonctionnent de la même manière.
-
-Pour ce qui est du driver VESA, la SDL étant une librairie graphique, elle permet de créer un fenêtre X qui représentera notre écran physique. 
+L'émulation des différents drivers cités à la section \ref{emulateur} se fait par le biais d'une librairie multimédia, la SDL, au dessus de X.Org.
+Elle permet de créer une fenêtre X qui représente l'écran tel qu'il apparaîtrait sous TacOS. Les drivers VGA et VESA configurent cette fenêtre (taille/résolution, profondeur de couleurs) puis se contentent de dessiner à l'intérieur. Plus précisément, ils donnent à l'application l'adresse de base de la ``mémoire vidéo'', qui est en réalité un buffer de la SDL pour cette fenêtre. L'application dessine donc directement dans ce buffer, qui est ensuite flushé (affiché à l'intérieur de la fenêtre) à intervalles réguliers.
+Les drivers clavier et souris sont quand à eux implémentés grâce aux événements de la SDL (fonctions \verb|SDL_PeepEvents| et \verb|SDL_GetMouseState| notamment). 
 
 \subsubsection{Librairie de sockets}
 
-Au moment du développement de la librairie de sockets \verb|libtsock|, il n'y avait pas d'IPC de ce type développée sous TacOS, nous avons donc pu développer la nôtre sans contrainte particulière, en commençant par une implémentation sur l'émulateur.
+Au moment du développement de la librairie de sockets \verb|libtsock|, il n'existait pas d'IPC de ce type sous TacOS. Nous avons donc pu développer la nôtre sans contrainte particulière, en commençant par une implémentation sur émulateur qui utilise les sockets UNIX domain. L'implémentation TacOS utilise des buffers alloués en espace noyau, qui représentent la file de messages de chaque socket.
 
-Cette première implémentation utilise les sockets UNIX domain. L'implémentation TacOS utilise des buffers alloués en espace noyau, qui représentent la file de messages de chaque socket.
-
-Voici la liste exhaustive des primitives de la librairie de sockets que nous avons défini.
+Voici la liste exhaustive des primitives de notre librairie de sockets :
 
 \lstinputlisting{listings/tsock.c}
 
@@ -76,30 +77,28 @@ En plus de la surcharge des fonctions de la libC Linux, nous avons dû définir 
 
 \subsubsection{Travail en équipe}
 
-Pour mener à bien ce projet, nous avons du mettre en place une méthodologie de travail en équipe.
-Pour cela nous avons commencé par choisir nos outils de travail.
+Afin de mener à bien ce projet, nous avons dû mettre en place une méthodologie de travail en équipe.
+Pour cela, nous avons commencé par choisir nos outils de travail.
 
 Pour la gestion des sources, nous avons opté pour le gestionnaire de versions Git qui est pour nous le gestionnaire le plus performant et le plus adapté à nos besoins.
-Pour le gestionnaire de projet, nous avons hésité entre utiliser github qui est le gestionnaire de projet utilisé pour le projet TacOS.
-Cela permettait de facilement intégrer notre projet à TacOS tout en créant un projet à part.
-Seulement, nous avons estimé que github n'était pas assez complet, il lui manquait notamment un bon gestionnaire de tickets.
-Nous avons donc opté pour redmine hébergé sur le serveur étudiant de l'INSA.
+Pour la gestion de projet, nous avons hésité à utiliser GitHub, qui est le gestionnaire de projet utilisé par TacOS.
+Cela aurait permis d'intégrer facilement notre projet à TacOS, tout créant un projet à part.
+Malgré cela, nous avons estimé que GitHub n'était pas assez complet et qu'il lui manquait notamment un bon gestionnaire de tickets.
+Nous avons donc opté pour Redmine, hébergé sur le serveur étudiant de l'INSA.
 
-Nous avons donc utilisé redmine pour la répartition des tâches.
+Nous avons donc utilisé Redmine pour la répartition des tâches.
 Nous nous sommes également régulièrement réunis pour discuter de l'avancement du projet et des prochaines étapes.
-Au début du projet, nous avons estimé les différentes grandes étapes du projet.
-Nous avons donc créé plusieurs versions.
-Les versions sont très bien gérées par redmine.
-Il est possible de créer des versions avec des objectifs et créer des tickets pour chaque version.
+Au début du projet, nous avons estimé les grandes étapes de son développement.
+Nous avons donc créé plusieurs versions, qui sont très bien gérées par Redmine : il est possible de créer des versions avec des objectifs, et d'assigner des tickets à chaque version.
 On peut donc suivre l'avancement d'une version en fonction de l'avancement des tickets qui lui sont attribués.
 
-Avant de commencer, voici les différentes versions que nous avions estimées :
+Avant de commencer, voici les différentes versions que nous avions prévues :
 
 \begin{itemize}
   \item 0.1
     \begin{itemize}
       \item Création de l'émulateur
-      \item Création/conception de pron et la pronlib avec :
+      \item Conception/implémentation initiale de pron et de la pronlib
         \begin{itemize}
           \item Connexion d'un client
           \item Création d'une fenêtre
@@ -109,15 +108,15 @@ Avant de commencer, voici les différentes versions que nous avions estimées :
   \item 0.2
     \begin{itemize}
       \item Mise en place des événements (création de fenêtres)
-      \item Début mise en place du gestionnaire de fenêtres Guacamole qui déplace une fenêtre lors de sa création
+      \item Début de mise en place du gestionnaire de fenêtres Guacamole qui déplace une fenêtre lors de sa création
   \end{itemize}
   \item 0.3
     \begin{itemize}
       \item Amélioration du système de fenêtrage Pron
         \begin{itemize}
-          \item Gestion superposition des fenêtres
+          \item Gestion de la superposition des fenêtres
           \item Création de primitives de dessin (ligne, rectange, ellipses)
-          \item Gestion des évènements claviers
+          \item Gestion des événements claviers
       \end{itemize}
   \end{itemize}
   \item 0.4
@@ -126,7 +125,7 @@ Avant de commencer, voici les différentes versions que nous avions estimées :
         \begin{itemize}
           \item Gestion de la souris et du pointeur de souris
           \item Déplacement, redimensionnement et destruction des fenêtres
-          \item Envoi des évènements souris aux clients
+          \item Envoi des événements souris aux clients
       \end{itemize}
       \item Amélioration du gestionnaire de fenêtres Guacamole
         \begin{itemize}
@@ -136,7 +135,7 @@ Avant de commencer, voici les différentes versions que nous avions estimées :
   \end{itemize}
   \item 0.5
     \begin{itemize}
-      \item Création/conception de la librairie de widgets Sombrero
+      \item Conception/implémentation initiale de la librairie de widgets Sombrero
         \begin{itemize}
           \item Boutons
           \item Labels (textes)
@@ -146,6 +145,7 @@ Avant de commencer, voici les différentes versions que nous avions estimées :
       \item Amélioration du système de fenêtrage Pron
         \begin{itemize}
           \item Gestion du texte
+          \item Gestion des images
       \end{itemize}
   \end{itemize}
   \item 0.5
@@ -154,14 +154,14 @@ Avant de commencer, voici les différentes versions que nous avions estimées :
         \begin{itemize}
           \item Layout de grille
           \item Textarea
-          \item CheckBox/Radiobutton
+          \item CheckBox/RadioButton
           \item Application
         \end{itemize}
     \end{itemize}
   \item 1.0
     \begin{itemize}
       \item Intégration de TacosGUI dans TacOS
-      \item création d'applications graphiques
+      \item Création d'applications graphiques
         \begin{itemize}
           \item Émulateur de terminal graphique
           \item Logiciel de dessin Paint-like
@@ -173,4 +173,4 @@ Avant de commencer, voici les différentes versions que nous avions estimées :
     \end{itemize}
 \end{itemize}
 
-L'objectif de la version 1.0 était de pouvoir faire notre présentation orale du projet sous notre propre système de fenêtrage, ce qui a été fait avec succès et sans erreur de segmentation.
+L'objectif de la version 1.0 était de pouvoir faire notre présentation orale sous notre propre système de fenêtrage tout en effectuant une démonstration de l'ensemble du projet, ce qui a été fait avec succès et sans erreur de segmentation\footnote{Achievement unlocked.}.
